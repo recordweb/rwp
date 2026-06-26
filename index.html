@@ -1,0 +1,3180 @@
+<!doctype html><html lang="en">
+ <head>
+  <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+  <title>RecordWeb Protocol (RWP)</title>
+  <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+  <link href="https://www.w3.org/StyleSheets/TR/2021/cg-draft" rel="stylesheet">
+  <meta content="Bikeshed version d113b2e81, updated Tue Jun 9 14:57:55 2026 -0700" name="generator">
+  <link href="https://recordweb.github.io/rwp/" rel="canonical">
+  <meta content="16568e8cf7aefb2f5706fa5109928bdc43a47c55" name="revision">
+  <meta content="dark light" name="color-scheme">
+  <link href="https://www.w3.org/StyleSheets/TR/2021/dark.css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css">
+<style>/* Boilerplate: style-autolinks */
+.css.css, .property.property, .descriptor.descriptor {
+    color: var(--a-normal-text);
+    font-size: inherit;
+    font-family: inherit;
+}
+.css::before, .property::before, .descriptor::before {
+    content: "‘";
+}
+.css::after, .property::after, .descriptor::after {
+    content: "’";
+}
+.property, .descriptor {
+    /* Don't wrap property and descriptor names */
+    white-space: nowrap;
+}
+.type { /* CSS value <type> */
+    font-style: italic;
+}
+pre .property::before, pre .property::after {
+    content: "";
+}
+[data-link-type="property"]::before,
+[data-link-type="propdesc"]::before,
+[data-link-type="descriptor"]::before,
+[data-link-type="value"]::before,
+[data-link-type="function"]::before,
+[data-link-type="at-rule"]::before,
+[data-link-type="selector"]::before,
+[data-link-type="maybe"]::before {
+    content: "‘";
+}
+[data-link-type="property"]::after,
+[data-link-type="propdesc"]::after,
+[data-link-type="descriptor"]::after,
+[data-link-type="value"]::after,
+[data-link-type="function"]::after,
+[data-link-type="at-rule"]::after,
+[data-link-type="selector"]::after,
+[data-link-type="maybe"]::after {
+    content: "’";
+}
+
+[data-link-type].production::before,
+[data-link-type].production::after,
+.prod [data-link-type]::before,
+.prod [data-link-type]::after {
+    content: "";
+}
+
+[data-link-type=element],
+[data-link-type=element-attr] {
+    font-family: Menlo, Consolas, "DejaVu Sans Mono", monospace;
+    font-size: .9em;
+}
+[data-link-type=element]::before { content: "<" }
+[data-link-type=element]::after  { content: ">" }
+
+[data-link-type=biblio] {
+    white-space: pre;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --selflink-text: black;
+        --selflink-bg: silver;
+        --selflink-hover-text: white;
+    }
+}
+</style>
+<style>/* Boilerplate: style-colors */
+/* Any --*-text not paired with a --*-bg is assumed to have a transparent bg */
+:root {
+    color-scheme: light dark;
+
+    --text: black;
+    --bg: white;
+
+    --unofficial-watermark: url(https://www.w3.org/StyleSheets/TR/2016/logos/UD-watermark);
+
+    --logo-bg: #1a5e9a;
+    --logo-active-bg: #c00;
+    --logo-text: white;
+
+    --tocnav-normal-text: #707070;
+    --tocnav-normal-bg: var(--bg);
+    --tocnav-hover-text: var(--tocnav-normal-text);
+    --tocnav-hover-bg: #f8f8f8;
+    --tocnav-active-text: #c00;
+    --tocnav-active-bg: var(--tocnav-normal-bg);
+
+    --tocsidebar-text: var(--text);
+    --tocsidebar-bg: #f7f8f9;
+    --tocsidebar-shadow: rgba(0,0,0,.1);
+    --tocsidebar-heading-text: hsla(203,20%,40%,.7);
+
+    --toclink-text: var(--text);
+    --toclink-underline: #3980b5;
+    --toclink-visited-text: var(--toclink-text);
+    --toclink-visited-underline: #054572;
+
+    --heading-text: #005a9c;
+
+    --hr-text: var(--text);
+
+    --algo-border: #def;
+
+    --del-text: red;
+    --del-bg: transparent;
+    --ins-text: #080;
+    --ins-bg: transparent;
+
+    --a-normal-text: #034575;
+    --a-normal-underline: #bbb;
+    --a-visited-text: var(--a-normal-text);
+    --a-visited-underline: #707070;
+    --a-hover-bg: rgba(75%, 75%, 75%, .25);
+    --a-active-text: #c00;
+    --a-active-underline: #c00;
+
+    --blockquote-border: silver;
+    --blockquote-bg: transparent;
+    --blockquote-text: currentcolor;
+
+    --issue-border: #e05252;
+    --issue-bg: #fbe9e9;
+    --issue-text: var(--text);
+    --issueheading-text: #831616;
+
+    --example-border: #e0cb52;
+    --example-bg: #fcfaee;
+    --example-text: var(--text);
+    --exampleheading-text: #574b0f;
+
+    --note-border: #52e052;
+    --note-bg: #e9fbe9;
+    --note-text: var(--text);
+    --noteheading-text: hsl(120, 70%, 30%);
+    --notesummary-underline: silver;
+
+    --assertion-border: #aaa;
+    --assertion-bg: #eee;
+    --assertion-text: black;
+
+    --advisement-border: orange;
+    --advisement-bg: #fec;
+    --advisement-text: var(--text);
+    --advisementheading-text: #b35f00;
+
+    --warning-border: red;
+    --warning-bg: hsla(40,100%,50%,0.95);
+    --warning-text: var(--text);
+
+    --amendment-border: #330099;
+    --amendment-bg: #F5F0FF;
+    --amendment-text: var(--text);
+    --amendmentheading-text: #220066;
+
+    --def-border: #8ccbf2;
+    --def-bg: #def;
+    --def-text: var(--text);
+    --defrow-border: #bbd7e9;
+
+    --datacell-border: silver;
+
+    --indexinfo-text: #707070;
+
+    --indextable-hover-text: black;
+    --indextable-hover-bg: #f7f8f9;
+
+    --outdatedspec-bg: rgba(0, 0, 0, .5);
+    --outdatedspec-text: black;
+    --outdated-bg: maroon;
+    --outdated-text: white;
+    --outdated-shadow: red;
+
+    --editedrec-bg: darkorange;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --text: #ddd;
+        --bg: black;
+
+        --unofficial-watermark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cg fill='%23100808' transform='translate(200 200) rotate(-45) translate(-200 -200)' stroke='%23100808' stroke-width='3'%3E%3Ctext x='50%25' y='220' style='font: bold 70px sans-serif; text-anchor: middle; letter-spacing: 6px;'%3EUNOFFICIAL%3C/text%3E%3Ctext x='50%25' y='305' style='font: bold 70px sans-serif; text-anchor: middle; letter-spacing: 6px;'%3EDRAFT%3C/text%3E%3C/g%3E%3C/svg%3E");
+
+        --logo-bg: #1a5e9a;
+        --logo-active-bg: #c00;
+        --logo-text: white;
+
+        --tocnav-normal-text: #999;
+        --tocnav-normal-bg: var(--bg);
+        --tocnav-hover-text: var(--tocnav-normal-text);
+        --tocnav-hover-bg: #080808;
+        --tocnav-active-text: #f44;
+        --tocnav-active-bg: var(--tocnav-normal-bg);
+
+        --tocsidebar-text: var(--text);
+        --tocsidebar-bg: #080808;
+        --tocsidebar-shadow: rgba(255,255,255,.1);
+        --tocsidebar-heading-text: hsla(203,20%,40%,.7);
+
+        --toclink-text: var(--text);
+        --toclink-underline: #6af;
+        --toclink-visited-text: var(--toclink-text);
+        --toclink-visited-underline: #054572;
+
+        --heading-text: #8af;
+
+        --hr-text: var(--text);
+
+        --algo-border: #456;
+
+        --del-text: #f44;
+        --del-bg: transparent;
+        --ins-text: #4a4;
+        --ins-bg: transparent;
+
+        --a-normal-text: #6af;
+        --a-normal-underline: #555;
+        --a-visited-text: var(--a-normal-text);
+        --a-visited-underline: var(--a-normal-underline);
+        --a-hover-bg: rgba(25%, 25%, 25%, .2);
+        --a-active-text: #f44;
+        --a-active-underline: var(--a-active-text);
+
+        --borderedblock-bg: rgba(255, 255, 255, .05);
+
+        --blockquote-border: silver;
+        --blockquote-bg: var(--borderedblock-bg);
+        --blockquote-text: currentcolor;
+
+        --issue-border: #e05252;
+        --issue-bg: var(--borderedblock-bg);
+        --issue-text: var(--text);
+        --issueheading-text: hsl(0deg, 70%, 70%);
+
+        --example-border: hsl(50deg, 90%, 60%);
+        --example-bg: var(--borderedblock-bg);
+        --example-text: var(--text);
+        --exampleheading-text: hsl(50deg, 70%, 70%);
+
+        --note-border: hsl(120deg, 100%, 35%);
+        --note-bg: var(--borderedblock-bg);
+        --note-text: var(--text);
+        --noteheading-text: hsl(120, 70%, 70%);
+        --notesummary-underline: silver;
+
+        --assertion-border: #444;
+        --assertion-bg: var(--borderedblock-bg);
+        --assertion-text: var(--text);
+
+        --advisement-border: orange;
+        --advisement-bg: #222218;
+        --advisement-text: var(--text);
+        --advisementheading-text: #f84;
+
+        --warning-border: red;
+        --warning-bg: hsla(40,100%,20%,0.95);
+        --warning-text: var(--text);
+
+        --amendment-border: #330099;
+        --amendment-bg: #080010;
+        --amendment-text: var(--text);
+        --amendmentheading-text: #cc00ff;
+
+        --def-border: #8ccbf2;
+        --def-bg: #080818;
+        --def-text: var(--text);
+        --defrow-border: #136;
+
+        --datacell-border: silver;
+
+        --indexinfo-text: #aaa;
+
+        --indextable-hover-text: var(--text);
+        --indextable-hover-bg: #181818;
+
+        --outdatedspec-bg: rgba(255, 255, 255, .5);
+        --outdatedspec-text: black;
+        --outdated-bg: maroon;
+        --outdated-text: white;
+        --outdated-shadow: red;
+
+        --editedrec-bg: darkorange;
+    }
+    /* In case a transparent-bg image doesn't expect to be on a dark bg,
+       which is quite common in practice... */
+    img { background: white; }
+}
+</style>
+<style>/* Boilerplate: style-counters */
+body {
+    counter-reset: example figure issue table;
+}
+.issue {
+    counter-increment: issue;
+}
+.issue:not(.no-marker)::before {
+    content: "Issue " counter(issue);
+}
+
+.example {
+    counter-increment: example;
+}
+.example:not(.no-marker)::before {
+    content: "Example " counter(example);
+}
+.invalid.example:not(.no-marker)::before,
+.illegal.example:not(.no-marker)::before {
+    content: "Invalid Example " counter(example);
+}
+
+figcaption {
+    counter-increment: figure;
+}
+figcaption:not(.no-marker)::before {
+    content: "Figure " counter(figure) " ";
+}
+
+figure.table figcaption {
+    counter-increment: table;
+}
+figure.table figcaption:not(.no-marker)::before {
+    content: "Table " counter(table) " ";
+}
+</style>
+<style>/* Boilerplate: style-dfn-panel */
+:root {
+    --dfnpanel-bg: #ddd;
+    --dfnpanel-text: var(--text);
+    --dfnpanel-target-bg: #ffc;
+    --dfnpanel-target-outline: orange;
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+        --dfnpanel-target-bg: #333;
+        --dfnpanel-target-outline: silver;
+    }
+}
+.dfn-panel {
+    position: absolute;
+    z-index: 35;
+    width: 20em;
+    width: 300px;
+    height: auto;
+    max-height: 500px;
+    overflow: auto;
+    padding: 0.5em 0.75em;
+    font: small Helvetica Neue, sans-serif, Droid Sans Fallback;
+    background: var(--dfnpanel-bg);
+    color: var(--dfnpanel-text);
+    border: outset 0.2em;
+    white-space: normal; /* in case it's moved into a pre */
+}
+.dfn-panel:not(.on) { display: none; }
+.dfn-panel * { margin: 0; padding: 0; text-indent: 0; }
+.dfn-panel > b { display: block; }
+.dfn-panel a { color: var(--dfnpanel-text); }
+.dfn-panel a:not(:hover) { text-decoration: none !important; border-bottom: none !important; }
+.dfn-panel a:focus {
+    outline: 5px auto Highlight;
+    outline: 5px auto -webkit-focus-ring-color;
+}
+.dfn-panel > b + b { margin-top: 0.25em; }
+.dfn-panel ul { padding: 0 0 0 1em; list-style: none; }
+.dfn-panel li a {
+    max-width: calc(300px - 1.5em - 1em);
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.dfn-panel.activated {
+    display: inline-block;
+    position: fixed;
+    left: 8px;
+    bottom: 2em;
+    margin: 0 auto;
+    max-width: calc(100vw - 1.5em - .4em - .5em);
+    max-height: 30vh;
+    transition: left 1s ease-out, bottom 1s ease-out;
+}
+
+.dfn-panel .link-item:hover {
+    text-decoration: underline;
+}
+.dfn-panel .link-item .copy-icon {
+    opacity: 0;
+}
+.dfn-panel .link-item:hover .copy-icon,
+.dfn-panel .link-item .copy-icon:focus {
+    opacity: 1;
+}
+
+.dfn-panel .copy-icon {
+    display: inline-block;
+    margin-right: 0.5em;
+    width: 0.85em;
+    height: 1em;
+    border-radius: 3px;
+    background-color: #ccc;
+    cursor: pointer;
+}
+
+.dfn-panel .copy-icon .icon {
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.dfn-panel .copy-icon .icon::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 1px solid black;
+    background-color: #ccc;
+    opacity: 0.25;
+    transform: translate(3px, -3px);
+}
+
+.dfn-panel .copy-icon:active .icon::before {
+    opacity: 1;
+}
+
+.dfn-paneled[role="button"] { cursor: help; }
+
+.highlighted {
+    animation: target-fade 3s;
+}
+
+@keyframes target-fade {
+    from {
+        background-color: var(--dfnpanel-target-bg);
+        outline: 5px solid var(--dfnpanel-target-outline);
+    }
+    to {
+        color: var(--a-normal-text);
+        background-color: transparent;
+        outline: transparent;
+    }
+}
+</style>
+<style>/* Boilerplate: style-issues */
+a[href].issue-return {
+    float: right;
+    float: inline-end;
+    color: var(--issueheading-text);
+    font-weight: bold;
+    text-decoration: none;
+}
+</style>
+<style>/* Boilerplate: style-md-lists */
+/* This is a weird hack for me not yet following the commonmark spec
+   regarding paragraph and lists. */
+[data-md] > :first-child {
+    margin-top: 0;
+}
+[data-md] > :last-child {
+    margin-bottom: 0;
+}
+</style>
+<style>/* Boilerplate: style-ref-hints */
+:root {
+    --ref-hint-bg: #ddd;
+    --ref-hint-text: var(--text);
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --ref-hint-bg: #222;
+        --ref-hint-text: var(--text);
+    }
+}
+
+.ref-hint {
+    display: inline-block;
+    position: absolute;
+    z-index: 35;
+    width: 20em;
+    width: 300px;
+    height: auto;
+    max-height: 500px;
+    overflow: auto;
+    padding: 0.5em 0.5em;
+    font: small Helvetica Neue, sans-serif, Droid Sans Fallback;
+    background: var(--ref-hint-bg);
+    color: var(--ref-hint-text);
+    border: outset 0.2em;
+    white-space: normal; /* in case it's moved into a pre */
+}
+
+.ref-hint * { margin: 0; padding: 0; text-indent: 0; }
+
+.ref-hint ul { padding: 0 0 0 1em; list-style: none; }
+</style>
+<style>/* Boilerplate: style-selflinks */
+:root {
+    --selflink-text: white;
+    --selflink-bg: gray;
+    --selflink-hover-text: black;
+}
+.heading, .issue, .note, .example, li, dt {
+    position: relative;
+}
+a.self-link {
+    position: absolute;
+    top: 0;
+    left: calc(-1 * (3.5rem - 26px));
+    width: calc(3.5rem - 26px);
+    height: 2em;
+    text-align: center;
+    border: none;
+    transition: opacity .2s;
+    opacity: .5;
+}
+a.self-link:hover {
+    opacity: 1;
+}
+.heading > a.self-link {
+    font-size: 83%;
+}
+.example > a.self-link,
+.note > a.self-link,
+.issue > a.self-link {
+    /* These blocks are overflow:auto, so positioning outside
+       doesn't work. */
+    left: auto;
+    right: 0;
+}
+li > a.self-link {
+    left: calc(-1 * (3.5rem - 26px) - 2em);
+}
+dfn > a.self-link {
+    top: auto;
+    left: auto;
+    opacity: 0;
+    width: 1.5em;
+    height: 1.5em;
+    background: var(--selflink-bg);
+    color: var(--selflink-text);
+    font-style: normal;
+    transition: opacity .2s, background-color .2s, color .2s;
+}
+dfn:hover > a.self-link {
+    opacity: 1;
+}
+dfn > a.self-link:hover {
+    color: var(--selflink-hover-text);
+}
+
+a.self-link::before            { content: "¶"; }
+.heading > a.self-link::before { content: "§"; }
+dfn > a.self-link::before      { content: "#"; }
+</style>
+<style>/* Boilerplate: style-syntax-highlighting */
+code.highlight { padding: .1em; border-radius: .3em; }
+pre.highlight, pre > code.highlight { display: block; padding: 1em; margin: .5em 0; overflow: auto; border-radius: 0; }
+
+.highlight:not(.idl) { background: rgba(0, 0, 0, .03); }
+c-[a] { color: #990055 } /* Keyword.Declaration */
+c-[b] { color: #990055 } /* Keyword.Type */
+c-[c] { color: #708090 } /* Comment */
+c-[d] { color: #708090 } /* Comment.Multiline */
+c-[e] { color: #0077aa } /* Name.Attribute */
+c-[f] { color: #669900 } /* Name.Tag */
+c-[g] { color: #222222 } /* Name.Variable */
+c-[k] { color: #990055 } /* Keyword */
+c-[l] { color: #000000 } /* Literal */
+c-[m] { color: #000000 } /* Literal.Number */
+c-[n] { color: #0077aa } /* Name */
+c-[o] { color: #999999 } /* Operator */
+c-[p] { color: #999999 } /* Punctuation */
+c-[s] { color: #a67f59 } /* Literal.String */
+c-[t] { color: #a67f59 } /* Literal.String.Single */
+c-[u] { color: #a67f59 } /* Literal.String.Double */
+c-[cp] { color: #708090 } /* Comment.Preproc */
+c-[c1] { color: #708090 } /* Comment.Single */
+c-[cs] { color: #708090 } /* Comment.Special */
+c-[kc] { color: #990055 } /* Keyword.Constant */
+c-[kn] { color: #990055 } /* Keyword.Namespace */
+c-[kp] { color: #990055 } /* Keyword.Pseudo */
+c-[kr] { color: #990055 } /* Keyword.Reserved */
+c-[ld] { color: #000000 } /* Literal.Date */
+c-[nc] { color: #0077aa } /* Name.Class */
+c-[no] { color: #0077aa } /* Name.Constant */
+c-[nd] { color: #0077aa } /* Name.Decorator */
+c-[ni] { color: #0077aa } /* Name.Entity */
+c-[ne] { color: #0077aa } /* Name.Exception */
+c-[nf] { color: #0077aa } /* Name.Function */
+c-[nl] { color: #0077aa } /* Name.Label */
+c-[nn] { color: #0077aa } /* Name.Namespace */
+c-[py] { color: #0077aa } /* Name.Property */
+c-[ow] { color: #999999 } /* Operator.Word */
+c-[mb] { color: #000000 } /* Literal.Number.Bin */
+c-[mf] { color: #000000 } /* Literal.Number.Float */
+c-[mh] { color: #000000 } /* Literal.Number.Hex */
+c-[mi] { color: #000000 } /* Literal.Number.Integer */
+c-[mo] { color: #000000 } /* Literal.Number.Oct */
+c-[sb] { color: #a67f59 } /* Literal.String.Backtick */
+c-[sc] { color: #a67f59 } /* Literal.String.Char */
+c-[sd] { color: #a67f59 } /* Literal.String.Doc */
+c-[se] { color: #a67f59 } /* Literal.String.Escape */
+c-[sh] { color: #a67f59 } /* Literal.String.Heredoc */
+c-[si] { color: #a67f59 } /* Literal.String.Interpol */
+c-[sx] { color: #a67f59 } /* Literal.String.Other */
+c-[sr] { color: #a67f59 } /* Literal.String.Regex */
+c-[ss] { color: #a67f59 } /* Literal.String.Symbol */
+c-[vc] { color: #0077aa } /* Name.Variable.Class */
+c-[vg] { color: #0077aa } /* Name.Variable.Global */
+c-[vi] { color: #0077aa } /* Name.Variable.Instance */
+c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
+
+@media (prefers-color-scheme: dark) {
+    .highlight:not(.idl) { background: rgba(255, 255, 255, .05); }
+
+    c-[a] { color: #d33682 } /* Keyword.Declaration */
+    c-[b] { color: #d33682 } /* Keyword.Type */
+    c-[c] { color: #2aa198 } /* Comment */
+    c-[d] { color: #2aa198 } /* Comment.Multiline */
+    c-[e] { color: #268bd2 } /* Name.Attribute */
+    c-[f] { color: #b58900 } /* Name.Tag */
+    c-[g] { color: #cb4b16 } /* Name.Variable */
+    c-[k] { color: #d33682 } /* Keyword */
+    c-[l] { color: #657b83 } /* Literal */
+    c-[m] { color: #657b83 } /* Literal.Number */
+    c-[n] { color: #268bd2 } /* Name */
+    c-[o] { color: #657b83 } /* Operator */
+    c-[p] { color: #657b83 } /* Punctuation */
+    c-[s] { color: #6c71c4 } /* Literal.String */
+    c-[t] { color: #6c71c4 } /* Literal.String.Single */
+    c-[u] { color: #6c71c4 } /* Literal.String.Double */
+    c-[ch] { color: #2aa198 } /* Comment.Hashbang */
+    c-[cp] { color: #2aa198 } /* Comment.Preproc */
+    c-[cpf] { color: #2aa198 } /* Comment.PreprocFile */
+    c-[c1] { color: #2aa198 } /* Comment.Single */
+    c-[cs] { color: #2aa198 } /* Comment.Special */
+    c-[kc] { color: #d33682 } /* Keyword.Constant */
+    c-[kn] { color: #d33682 } /* Keyword.Namespace */
+    c-[kp] { color: #d33682 } /* Keyword.Pseudo */
+    c-[kr] { color: #d33682 } /* Keyword.Reserved */
+    c-[ld] { color: #657b83 } /* Literal.Date */
+    c-[nc] { color: #268bd2 } /* Name.Class */
+    c-[no] { color: #268bd2 } /* Name.Constant */
+    c-[nd] { color: #268bd2 } /* Name.Decorator */
+    c-[ni] { color: #268bd2 } /* Name.Entity */
+    c-[ne] { color: #268bd2 } /* Name.Exception */
+    c-[nf] { color: #268bd2 } /* Name.Function */
+    c-[nl] { color: #268bd2 } /* Name.Label */
+    c-[nn] { color: #268bd2 } /* Name.Namespace */
+    c-[py] { color: #268bd2 } /* Name.Property */
+    c-[ow] { color: #657b83 } /* Operator.Word */
+    c-[mb] { color: #657b83 } /* Literal.Number.Bin */
+    c-[mf] { color: #657b83 } /* Literal.Number.Float */
+    c-[mh] { color: #657b83 } /* Literal.Number.Hex */
+    c-[mi] { color: #657b83 } /* Literal.Number.Integer */
+    c-[mo] { color: #657b83 } /* Literal.Number.Oct */
+    c-[sa] { color: #6c71c4 } /* Literal.String.Affix */
+    c-[sb] { color: #6c71c4 } /* Literal.String.Backtick */
+    c-[sc] { color: #6c71c4 } /* Literal.String.Char */
+    c-[dl] { color: #6c71c4 } /* Literal.String.Delimiter */
+    c-[sd] { color: #6c71c4 } /* Literal.String.Doc */
+    c-[se] { color: #6c71c4 } /* Literal.String.Escape */
+    c-[sh] { color: #6c71c4 } /* Literal.String.Heredoc */
+    c-[si] { color: #6c71c4 } /* Literal.String.Interpol */
+    c-[sx] { color: #6c71c4 } /* Literal.String.Other */
+    c-[sr] { color: #6c71c4 } /* Literal.String.Regex */
+    c-[ss] { color: #6c71c4 } /* Literal.String.Symbol */
+    c-[fm] { color: #268bd2 } /* Name.Function.Magic */
+    c-[vc] { color: #cb4b16 } /* Name.Variable.Class */
+    c-[vg] { color: #cb4b16 } /* Name.Variable.Global */
+    c-[vi] { color: #cb4b16 } /* Name.Variable.Instance */
+    c-[vm] { color: #cb4b16 } /* Name.Variable.Magic */
+    c-[il] { color: #657b83 } /* Literal.Number.Integer.Long */
+}
+
+@media print {
+    /* Darken colors for print that would otherwise print too faintly */
+    c-[c]  { color: #555555 } /* Comment */
+    c-[d]  { color: #555555 } /* Comment.Multiline */
+    c-[cp] { color: #555555 } /* Comment.Preproc */
+    c-[c1] { color: #555555 } /* Comment.Single */
+    c-[cs] { color: #555555 } /* Comment.Special */
+    c-[o]  { color: #222222 } /* Operator */
+    c-[p]  { color: #222222 } /* Punctuation */
+    c-[ow] { color: #222222 } /* Operator.Word */
+    c-[s]  { color: #664400 } /* Literal.String */
+    c-[t]  { color: #664400 } /* Literal.String.Single */
+    c-[u]  { color: #664400 } /* Literal.String.Double */
+    c-[sb] { color: #664400 } /* Literal.String.Backtick */
+    c-[sc] { color: #664400 } /* Literal.String.Char */
+    c-[sd] { color: #664400 } /* Literal.String.Doc */
+    c-[se] { color: #664400 } /* Literal.String.Escape */
+    c-[sh] { color: #664400 } /* Literal.String.Heredoc */
+    c-[si] { color: #664400 } /* Literal.String.Interpol */
+    c-[sx] { color: #664400 } /* Literal.String.Other */
+    c-[sr] { color: #664400 } /* Literal.String.Regex */
+    c-[ss] { color: #664400 } /* Literal.String.Symbol */
+}
+</style>
+ <body class="h-entry">
+  <div class="head">
+   <h1 class="no-ref p-name" id="title">RecordWeb Protocol (RWP)</h1>
+   <p id="w3c-state"><a href="https://www.w3.org/standards/types/#CG-DRAFT">Draft Community Group Report</a>,
+    <time class="dt-updated" datetime="2026-06-26">26 June 2026</time></p>
+   <div data-fill-with="spec-metadata">
+    <dl>
+     <dt>This version:
+     <dd><a class="u-url" href="https://recordweb.github.io/rwp/">https://recordweb.github.io/rwp/</a>
+     <dt>Previous Versions:
+     <dd><a href="https://doi.org/10.5281/zenodo.20475345" rel="prev">https://doi.org/10.5281/zenodo.20475345</a>
+     <dt>Version History:
+     <dd><a href="https://github.com/recordweb/rwp/commits/main/index.bs">https://github.com/recordweb/rwp/commits/main/index.bs</a>
+     <dt>Issue Tracking:
+     <dd><a href="https://github.com/recordweb/rwp/issues/">GitHub</a>
+     <dt class="editor">Editor:
+     <dd class="editor h-card p-author vcard"><a class="email fn p-name u-email" href="mailto:nik@triebwerkstatt.ch">Nik Jenzer</a>
+    </dl>
+   </div>
+   <div data-fill-with="warning"></div>
+   <hr title="Separator for header">
+  </div>
+  <div class="p-summary" data-fill-with="abstract">
+   <h2 class="heading no-num no-ref no-toc settled" id="abstract"><span class="content">Abstract</span></h2>
+   <p>The RecordWeb Protocol (RWP) is the normative technical specification for the creation, identification, versioning, linking, and cryptographic proof of Records in RWP-compliant systems. It defines the requirements a system must fulfil in order to create, manage, link, and prove Records in the sense of the RecordWeb Concept (<a data-link-type="biblio" href="#biblio-rwc" title="RecordWeb Concept (RWC)">[RWC]</a>). RWP uses RFC 2119 compliance terminology and covers Record identity (DID), snapshot structure, payload validation, version graph (DAG), Case specification, integrity procedures, federation, and payload deletion across 14 chapters and three normative annexes.</p>
+  </div>
+  <div data-fill-with="at-risk"></div>
+  <h2 class="heading no-num no-ref no-toc settled" id="status"><span class="content">Status of this document</span></h2>
+  <div data-fill-with="status">
+   <p>
+  This specification was published by the <a href="https://www.w3.org/community/wicg/">Web Platform Incubator Community Group</a>.
+  It is not a W3C Standard nor is it on the W3C Standards Track.
+
+  Please note that under the
+  <a href="https://www.w3.org/community/about/agreements/cla/">W3C Community Contributor License Agreement (CLA)</a>
+  there is a limited opt-out and other conditions apply.
+
+  Learn more about
+  <a href="http://www.w3.org/community/">W3C Community and Business Groups</a>.
+</p>
+   <p></p>
+  </div>
+  <div data-fill-with="at-risk"></div>
+  <nav data-fill-with="table-of-contents" id="toc">
+   <h2 class="no-num no-ref no-toc" id="contents">Table of Contents</h2>
+   <ol class="toc">
+    <li>
+     <a href="#intro"><span class="secno">1</span> <span class="content">Introduction</span></a>
+     <ol class="toc">
+      <li><a href="#doc-status"><span class="secno">1.1</span> <span class="content">Status of This Document</span></a>
+     </ol>
+    <li>
+     <a href="#scope"><span class="secno">2</span> <span class="content">1 Introduction and Scope</span></a>
+     <ol class="toc">
+      <li><a href="#purpose"><span class="secno">2.1</span> <span class="content">1.1 Purpose</span></a>
+      <li><a href="#scope-section"><span class="secno">2.2</span> <span class="content">1.2 Scope</span></a>
+      <li><a href="#related-standards"><span class="secno">2.3</span> <span class="content">1.3 Relationship to Other Standards</span></a>
+      <li><a href="#doc-versioning"><span class="secno">2.4</span> <span class="content">1.4 Versioning of This Document</span></a>
+     </ol>
+    <li>
+     <a href="#record-identity"><span class="secno">3</span> <span class="content">2 Record Identity (DID)</span></a>
+     <ol class="toc">
+      <li><a href="#identity-requirements"><span class="secno">3.1</span> <span class="content">2.1 Requirements for Record Identity</span></a>
+      <li><a href="#did-format"><span class="secno">3.2</span> <span class="content">2.2 DID Format</span></a>
+      <li><a href="#did-document"><span class="secno">3.3</span> <span class="content">2.3 DID Document</span></a>
+      <li><a href="#did-resolver"><span class="secno">3.4</span> <span class="content">2.4 DID Resolver Requirements</span></a>
+     </ol>
+    <li>
+     <a href="#structure"><span class="secno">4</span> <span class="content">3 Record Structure</span></a>
+     <ol class="toc">
+      <li><a href="#structure-overview"><span class="secno">4.1</span> <span class="content">3.1 Overview</span></a>
+      <li><a href="#snapshot-definition"><span class="secno">4.2</span> <span class="content">3.2 Snapshot Definition</span></a>
+      <li><a href="#metadata-set"><span class="secno">4.3</span> <span class="content">3.3 Minimum Metadata Set</span></a>
+      <li><a href="#snapshot-hash"><span class="secno">4.4</span> <span class="content">3.4 Snapshot Hash Calculation</span></a>
+     </ol>
+    <li>
+     <a href="#payload-chapter"><span class="secno">5</span> <span class="content">4 Payload and Formats</span></a>
+     <ol class="toc">
+      <li><a href="#payload-definition"><span class="secno">5.1</span> <span class="content">4.1 Payload Definition</span></a>
+      <li><a href="#payload-types"><span class="secno">5.2</span> <span class="content">4.2 Permitted Payload Types</span></a>
+      <li><a href="#multi-representation"><span class="secno">5.3</span> <span class="content">4.3 Multi-Representation</span></a>
+      <li><a href="#format-requirements"><span class="secno">5.4</span> <span class="content">4.4 Format Requirements per State</span></a>
+      <li><a href="#payload-conversion"><span class="secno">5.5</span> <span class="content">4.5 Conversion During Finalisation</span></a>
+     </ol>
+    <li>
+     <a href="#schemas"><span class="secno">6</span> <span class="content">5 Record Types and Schemas</span></a>
+     <ol class="toc">
+      <li><a href="#record-type"><span class="secno">6.1</span> <span class="content">5.1 Record Type Definition</span></a>
+      <li><a href="#schema-record"><span class="secno">6.2</span> <span class="content">5.2 SchemaRecord</span></a>
+      <li><a href="#core-types"><span class="secno">6.3</span> <span class="content">5.3 Core Record Types (normative)</span></a>
+      <li><a href="#schema-versioning"><span class="secno">6.4</span> <span class="content">5.4 Schema Versioning and Backward Compatibility</span></a>
+     </ol>
+    <li>
+     <a href="#states"><span class="secno">7</span> <span class="content">6 States and Transitions</span></a>
+     <ol class="toc">
+      <li><a href="#state-model"><span class="secno">7.1</span> <span class="content">6.1 State Model</span></a>
+      <li><a href="#linkability"><span class="secno">7.2</span> <span class="content">6.2 Linkability</span></a>
+      <li><a href="#finalisation-requirements"><span class="secno">7.3</span> <span class="content">6.3 Finalisation Requirements</span></a>
+      <li><a href="#irreversibility"><span class="secno">7.4</span> <span class="content">6.4 Irreversibility of Finalisation</span></a>
+     </ol>
+    <li>
+     <a href="#version-graph-chapter"><span class="secno">8</span> <span class="content">7 Version Graph (DAG)</span></a>
+     <ol class="toc">
+      <li><a href="#graph-structure"><span class="secno">8.1</span> <span class="content">7.1 Graph Structure</span></a>
+      <li><a href="#graph-nodes"><span class="secno">8.2</span> <span class="content">7.2 Nodes</span></a>
+      <li><a href="#graph-edges"><span class="secno">8.3</span> <span class="content">7.3 Edges (Parent References)</span></a>
+      <li><a href="#graph-branches"><span class="secno">8.4</span> <span class="content">7.4 Branches</span></a>
+      <li><a href="#graph-merges"><span class="secno">8.5</span> <span class="content">7.5 Merges</span></a>
+      <li><a href="#cross-record-merges"><span class="secno">8.6</span> <span class="content">7.6 Cross-Record Merges</span></a>
+     </ol>
+    <li>
+     <a href="#cases-chapter"><span class="secno">9</span> <span class="content">8 Case Specification</span></a>
+     <ol class="toc">
+      <li><a href="#case-type"><span class="secno">9.1</span> <span class="content">8.1 Case as a Specialised Record Type</span></a>
+      <li><a href="#case-schema"><span class="secno">9.2</span> <span class="content">8.2 Case Schema (normative)</span></a>
+      <li><a href="#case-elements"><span class="secno">9.3</span> <span class="content">8.3 Case Elements (normative)</span></a>
+      <li><a href="#links"><span class="secno">9.4</span> <span class="content">8.4 Hard and Soft Links</span></a>
+      <li><a href="#merkle-root-calc"><span class="secno">9.5</span> <span class="content">8.5 Case Merkle Root</span></a>
+      <li><a href="#case-completeness"><span class="secno">9.6</span> <span class="content">8.6 Case Completeness Check</span></a>
+     </ol>
+    <li>
+     <a href="#integrity"><span class="secno">10</span> <span class="content">9 Integrity and Hashing Procedures</span></a>
+     <ol class="toc">
+      <li><a href="#hashing"><span class="secno">10.1</span> <span class="content">9.1 Hashing Procedure</span></a>
+      <li><a href="#canonical-json"><span class="secno">10.2</span> <span class="content">9.2 Canonical JSON Serialisation</span></a>
+      <li><a href="#snapshot-integrity"><span class="secno">10.3</span> <span class="content">9.3 Snapshot Integrity</span></a>
+      <li><a href="#signature"><span class="secno">10.4</span> <span class="content">9.4 Signature Procedure</span></a>
+      <li><a href="#merkle-algorithm"><span class="secno">10.5</span> <span class="content">9.5 Merkle Tree Algorithm</span></a>
+     </ol>
+    <li>
+     <a href="#ledger"><span class="secno">11</span> <span class="content">10 Optional Ledger Anchoring</span></a>
+     <ol class="toc">
+      <li><a href="#ledger-purpose"><span class="secno">11.1</span> <span class="content">10.1 Purpose and Scope</span></a>
+      <li><a href="#ledger-requirements"><span class="secno">11.2</span> <span class="content">10.2 Requirements for the Ledger</span></a>
+      <li><a href="#anchoring-protocol"><span class="secno">11.3</span> <span class="content">10.3 Anchoring Protocol</span></a>
+      <li><a href="#anchoring-reference"><span class="secno">11.4</span> <span class="content">10.4 Anchoring Reference in the Case</span></a>
+     </ol>
+    <li>
+     <a href="#access-control"><span class="secno">12</span> <span class="content">11 Access Control (Delegation Framework)</span></a>
+     <ol class="toc">
+      <li><a href="#access-principles"><span class="secno">12.1</span> <span class="content">11.1 Scope and Principles</span></a>
+      <li><a href="#access-policy"><span class="secno">12.2</span> <span class="content">11.2 Access Policy Block</span></a>
+      <li><a href="#delegation-chain"><span class="secno">12.3</span> <span class="content">11.3 Delegation Chain</span></a>
+     </ol>
+    <li>
+     <a href="#federation-chapter"><span class="secno">13</span> <span class="content">12 Federation</span></a>
+     <ol class="toc">
+      <li><a href="#federation-model"><span class="secno">13.1</span> <span class="content">12.1 Federation Model</span></a>
+      <li><a href="#namespace-registry"><span class="secno">13.2</span> <span class="content">12.2 Namespace Registry</span></a>
+      <li><a href="#resolver-requirements"><span class="secno">13.3</span> <span class="content">12.3 Resolver Requirements</span></a>
+      <li><a href="#cross-namespace"><span class="secno">13.4</span> <span class="content">12.4 Cross-Namespace Links</span></a>
+     </ol>
+    <li>
+     <a href="#deletion-chapter"><span class="secno">14</span> <span class="content">13 Payload Deletion</span></a>
+     <ol class="toc">
+      <li><a href="#deletion-principles"><span class="secno">14.1</span> <span class="content">13.1 Deletion Principles</span></a>
+      <li><a href="#deletion-regimes"><span class="secno">14.2</span> <span class="content">13.2 Deletion Regimes</span></a>
+      <li><a href="#deletion-record"><span class="secno">14.3</span> <span class="content">13.3 DeletionRecord Protocol</span></a>
+      <li><a href="#solid-delivery"><span class="secno">14.4</span> <span class="content">13.4 Solid Pod Delivery (optional)</span></a>
+     </ol>
+    <li>
+     <a href="#conformance-requirements"><span class="secno">15</span> <span class="content">14 Conformance Requirements</span></a>
+     <ol class="toc">
+      <li><a href="#conformance-levels"><span class="secno">15.1</span> <span class="content">14.1 Conformance Levels</span></a>
+      <li><a href="#level-1-checklist"><span class="secno">15.2</span> <span class="content">14.2 Level 1 Checklist</span></a>
+      <li><a href="#level-2-checklist"><span class="secno">15.3</span> <span class="content">14.3 Level 2 Checklist</span></a>
+     </ol>
+    <li>
+     <a href="#annex-a"><span class="secno">16</span> <span class="content">Annex A: Normative JSON Schemas</span></a>
+     <ol class="toc">
+      <li><a href="#schema-snapshot"><span class="secno">16.1</span> <span class="content">A.1 Snapshot Metadata Schema</span></a>
+      <li><a href="#schema-case"><span class="secno">16.2</span> <span class="content">A.2 CaseRecord Payload Schema</span></a>
+      <li><a href="#schema-deletion"><span class="secno">16.3</span> <span class="content">A.3 DeletionRecord Payload Schema</span></a>
+     </ol>
+    <li>
+     <a href="#annex-b"><span class="secno">17</span> <span class="content">Annex B: Reference Implementation Notes (non-normative)</span></a>
+     <ol class="toc">
+      <li><a href="#impl-tech"><span class="secno">17.1</span> <span class="content">B.1 Technology Choices</span></a>
+      <li><a href="#impl-pilot"><span class="secno">17.2</span> <span class="content">B.2 Pilot Scope Recommendation</span></a>
+     </ol>
+    <li>
+     <a href="#w3c-conformance"><span class="secno"></span> <span class="content">Conformance</span></a>
+     <ol class="toc">
+      <li><a href="#w3c-conventions"><span class="secno"></span> <span class="content">Document conventions</span></a>
+     </ol>
+    <li>
+     <a href="#index"><span class="secno"></span> <span class="content">Index</span></a>
+     <ol class="toc">
+      <li><a href="#index-defined-here"><span class="secno"></span> <span class="content">Terms defined by this specification</span></a>
+     </ol>
+    <li>
+     <a href="#references"><span class="secno"></span> <span class="content">References</span></a>
+     <ol class="toc">
+      <li><a href="#normative"><span class="secno"></span> <span class="content">Normative References</span></a>
+      <li><a href="#informative"><span class="secno"></span> <span class="content">Non-Normative References</span></a>
+     </ol>
+   </ol>
+  </nav>
+  <main>
+   <h2 class="heading settled" data-level="1" id="intro"><span class="secno">1. </span><span class="content">Introduction</span><a class="self-link" href="#intro"></a></h2>
+   <h3 class="heading settled" data-level="1.1" id="doc-status"><span class="secno">1.1. </span><span class="content">Status of This Document</span><a class="self-link" href="#doc-status"></a></h3>
+   <p>This document is a <strong>CG Draft</strong> of the RecordWeb Community Group. It is an Editor’s Draft and does not represent a W3C standard or endorsed position.</p>
+   <p>The published baseline is available at <a data-link-type="biblio" href="#biblio-zenodo-rwp" title="RecordWeb Protocol (RWP) v0.1 — Published baseline">[ZENODO-RWP]</a> (Version 0.1, DOI: 10.5281/zenodo.20475345). This working document reflects ongoing development toward the Community Group deliverable.</p>
+   <p>Feedback is invited via <a href="https://github.com/recordweb/rwp/issues">GitHub Issues</a>.</p>
+   <h2 class="heading settled" data-level="2" id="scope"><span class="secno">2. </span><span class="content">1 Introduction and Scope</span><a class="self-link" href="#scope"></a></h2>
+   <h3 class="heading settled" data-level="2.1" id="purpose"><span class="secno">2.1. </span><span class="content">1.1 Purpose</span><a class="self-link" href="#purpose"></a></h3>
+   <p>The RecordWeb Protocol (RWP) defines the technical standards for the creation, identification, versioning, linking, and proof of <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="records">Records</dfn> in an RWP-compliant system.</p>
+   <p>RWP is the normative counterpart to the RecordWeb Concept (<a data-link-type="biblio" href="#biblio-rwc" title="RecordWeb Concept (RWC)">[RWC]</a>). The RWC describes the conceptual foundations; RWP translates these into binding technical requirements that MUST be observed for interoperable implementation.</p>
+   <h3 class="heading settled" data-level="2.2" id="scope-section"><span class="secno">2.2. </span><span class="content">1.2 Scope</span><a class="self-link" href="#scope-section"></a></h3>
+   <p>This document applies to:</p>
+   <ul>
+    <li data-md>
+     <p>Systems that create, store, or manage <a data-link-type="dfn" href="#records" id="ref-for-records">Records</a> in the sense of the <a data-link-type="biblio" href="#biblio-rwc" title="RecordWeb Concept (RWC)">[RWC]</a></p>
+    <li data-md>
+     <p>Systems that import <a data-link-type="dfn" href="#records" id="ref-for-records①">Records</a> from other RWP-compliant systems or access them</p>
+    <li data-md>
+     <p>Implementations claiming interoperability with other RWP-compliant systems</p>
+   </ul>
+   <p>This document does not apply to:</p>
+   <ul>
+    <li data-md>
+     <p>The internal storage architecture of a compliant system (database, file system, object store)</p>
+    <li data-md>
+     <p>User interfaces and workflows built on top of an RWP-compliant system</p>
+    <li data-md>
+     <p>The content of payloads, insofar as these are not standardised by the schema of the Record type</p>
+   </ul>
+   <h3 class="heading settled" data-level="2.3" id="related-standards"><span class="secno">2.3. </span><span class="content">1.3 Relationship to Other Standards</span><a class="self-link" href="#related-standards"></a></h3>
+   <table class="data">
+    <thead>
+     <tr>
+      <th>Standard
+      <th>Relationship
+    <tbody>
+     <tr>
+      <td><a data-link-type="biblio" href="#biblio-iso15489" title="ISO 15489-1:2016 — Records management">[ISO15489]</a>
+      <td>RWP structurally implements the requirements for authenticity, reliability, integrity, and usability
+     <tr>
+      <td><a data-link-type="biblio" href="#biblio-iso14721" title="ISO 14721:2012 — Open Archival Information System (OAIS)">[ISO14721]</a> (OAIS)
+      <td>RWP is complementary; finalised <a data-link-type="dfn" href="#records" id="ref-for-records②">Records</a> MAY be migrated to long-term archives according to OAIS principles
+     <tr>
+      <td><a data-link-type="biblio" href="#biblio-did-core" title="Decentralized Identifiers (DIDs) v1.0">[DID-CORE]</a>
+      <td>RWP uses DIDs as the identity mechanism; conformance with W3C DID Core 1.0 is REQUIRED
+     <tr>
+      <td><a data-link-type="biblio" href="#biblio-provo" title="PROV-O: The PROV Ontology">[PROVO]</a>
+      <td>RWP lineage MAY be serialised as PROV-O; this is non-normative
+     <tr>
+      <td><a data-link-type="biblio" href="#biblio-ech-0164" title="eCH-0164 — Information lifecycle in public administration">[ECH-0164]</a>
+      <td>RWP maps the eCH information lifecycle as states; no structural dependency
+     <tr>
+      <td><a data-link-type="biblio" href="#biblio-rwc" title="RecordWeb Concept (RWC)">[RWC]</a> v1.0
+      <td>Conceptual foundation; in the event of conflict, RWP takes precedence
+   </table>
+   <h3 class="heading settled" data-level="2.4" id="doc-versioning"><span class="secno">2.4. </span><span class="content">1.4 Versioning of This Document</span><a class="self-link" href="#doc-versioning"></a></h3>
+   <p>This document uses semantic versioning (SemVer): <code>MAJOR.MINOR.PATCH</code>.</p>
+   <ul>
+    <li data-md>
+     <p><strong>MAJOR</strong>: Incompatible changes to existing standards</p>
+    <li data-md>
+     <p><strong>MINOR</strong>: Backward-compatible extensions</p>
+    <li data-md>
+     <p><strong>PATCH</strong>: Corrections without substantive change</p>
+   </ul>
+   <p>The current version is <strong>0.0.1</strong> (Draft — not yet approved for production implementations).</p>
+   <h2 class="heading settled" data-level="3" id="record-identity"><span class="secno">3. </span><span class="content">2 Record Identity (DID)</span><a class="self-link" href="#record-identity"></a></h2>
+   <h3 class="heading settled" data-level="3.1" id="identity-requirements"><span class="secno">3.1. </span><span class="content">2.1 Requirements for Record Identity</span><a class="self-link" href="#identity-requirements"></a></h3>
+   <p>Every <a data-link-type="dfn" href="#records" id="ref-for-records③">Record</a> MUST possess a globally unique, permanent <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="identity">identity</dfn>.</p>
+   <p>This identity:</p>
+   <ul>
+    <li data-md>
+     <p>MUST be independent of the physical storage location of the <a data-link-type="dfn" href="#records" id="ref-for-records④">Record</a></p>
+    <li data-md>
+     <p>MUST be independent of the organisation managing the <a data-link-type="dfn" href="#records" id="ref-for-records⑤">Record</a></p>
+    <li data-md>
+     <p>MUST NOT be changed after the <a data-link-type="dfn" href="#records" id="ref-for-records⑥">Record</a> has been created</p>
+    <li data-md>
+     <p>MUST remain valid without change even after a system migration</p>
+    <li data-md>
+     <p>MUST be machine-resolvable (a resolver MUST be able to retrieve the DID document from the identity)</p>
+   </ul>
+   <h3 class="heading settled" data-level="3.2" id="did-format"><span class="secno">3.2. </span><span class="content">2.2 DID Format</span><a class="self-link" href="#did-format"></a></h3>
+   <p>The identity of a <a data-link-type="dfn" href="#records" id="ref-for-records⑦">Record</a> MUST be expressed as a Decentralized Identifier (DID) in accordance with <a data-link-type="biblio" href="#biblio-did-core" title="Decentralized Identifiers (DIDs) v1.0">[DID-CORE]</a>.</p>
+   <p><strong>Normative format:</strong>
+<code>did:rwp:{namespace}:{unique-id}</code></p>
+   <table class="data">
+    <thead>
+     <tr>
+      <th>Component
+      <th>Requirement
+    <tbody>
+     <tr>
+      <td><code>did</code>
+      <td>Literal; immutable
+     <tr>
+      <td><code>rwp</code>
+      <td>DID method for RecordWeb Protocol; immutable
+     <tr>
+      <td><code>&lt;namespace></code>
+      <td>Identifier of the organisation or system; MUST be uniquely registered. During the transition phase, a namespace MAY be formed on the basis of the DNS domain name of the organisation (e.g. <code>did:rwp:bern.ch:&lt;uuid></code>).
+     <tr>
+      <td><code>&lt;unique-id></code>
+      <td>Unique identifier of the <a data-link-type="dfn" href="#records" id="ref-for-records⑧">Record</a> within the namespace; MUST be a UUID v4 or a cryptographically equivalent random value
+   </table>
+   <p><strong>Example:</strong>
+did:rwp:bern.ch:f47ac10b-58cc-4372-a567-0e02b2c3d479</p>
+   <h3 class="heading settled" data-level="3.3" id="did-document"><span class="secno">3.3. </span><span class="content">2.3 DID Document</span><a class="self-link" href="#did-document"></a></h3>
+   <p>For every Record DID, a DID document MUST exist containing the following fields:</p>
+<pre class="highlight language-json"><c- p>{</c->
+  <c- f>"@context"</c-><c- p>:</c-> <c- u>"https://www.w3.org/ns/did/v1"</c-><c- p>,</c->
+  <c- f>"id"</c-><c- p>:</c-> <c- u>"did:rwp:bern.ch:f47ac10b-58cc-4372-a567-0e02b2c3d479"</c-><c- p>,</c->
+  <c- f>"recordEndpoint"</c-><c- p>:</c-> <c- u>"https://records.bern.ch/api/v1/records/f47ac10b"</c-><c- p>,</c->
+  <c- f>"created"</c-><c- p>:</c-> <c- u>"2026-05-31T14:00:00Z"</c-><c- p>,</c->
+  <c- f>"updated"</c-><c- p>:</c-> <c- u>"2026-05-31T14:00:00Z"</c-><c- p>,</c->
+  <c- f>"currentVersion"</c-><c- p>:</c-> <c- u>"sha256:e3b0c44298fc1c149afb..."</c-><c- p>,</c->
+  <c- f>"controller"</c-><c- p>:</c-> <c- u>"did:rwp:bern.ch:controller-001"</c-><c- p>,</c->
+  <c- f>"verificationMethod"</c-><c- p>:</c-> <c- p>[</c->
+    <c- p>{</c->
+      <c- f>"id"</c-><c- p>:</c-> <c- u>"did:rwp:bern.ch:f47ac10b#key-1"</c-><c- p>,</c->
+      <c- f>"type"</c-><c- p>:</c-> <c- u>"Ed25519VerificationKey2020"</c-><c- p>,</c->
+      <c- f>"controller"</c-><c- p>:</c-> <c- u>"did:rwp:bern.ch:controller-001"</c-><c- p>,</c->
+      <c- f>"publicKeyMultibase"</c-><c- p>:</c-> <c- u>"z6MkhaXgBZDvotDkL..."</c->
+    <c- p>}</c->
+  <c- p>]</c->
+<c- p>}</c->
+</pre>
+   <table class="data">
+    <thead>
+     <tr>
+      <th>Field
+      <th>Required
+      <th>Description
+    <tbody>
+     <tr>
+      <td><code>@context</code>
+      <td>MUST
+      <td>W3C DID Context URI
+     <tr>
+      <td><code>id</code>
+      <td>MUST
+      <td>DID of the <a data-link-type="dfn" href="#records" id="ref-for-records⑨">Record</a>; identical to the Record DID
+     <tr>
+      <td><code>recordEndpoint</code>
+      <td>MUST
+      <td>URL at which the <a data-link-type="dfn" href="#records" id="ref-for-records①⓪">Record</a> can be retrieved
+     <tr>
+      <td><code>created</code>
+      <td>MUST
+      <td>ISO 8601 timestamp of DID creation
+     <tr>
+      <td><code>updated</code>
+      <td>MUST
+      <td>ISO 8601 timestamp of last DID document update
+     <tr>
+      <td><code>currentVersion</code>
+      <td>MUST
+      <td>Content hash of the current finalised version (empty for pure draft)
+     <tr>
+      <td><code>controller</code>
+      <td>MUST
+      <td>DID of the controlling entity (organisation or person)
+     <tr>
+      <td><code>verificationMethod</code>
+      <td>MUST
+      <td>At least one verification method for signature validation
+   </table>
+   <p>The DID document MUST be updated when the physical storage location changes (<code>recordEndpoint</code>, <code>updated</code>, <code>currentVersion</code>). All other fields MUST NOT be changed.</p>
+   <h3 class="heading settled" data-level="3.4" id="did-resolver"><span class="secno">3.4. </span><span class="content">2.4 DID Resolver Requirements</span><a class="self-link" href="#did-resolver"></a></h3>
+   <p>An RWP-compliant system MUST provide a DID resolver that:</p>
+   <ul>
+    <li data-md>
+     <p>Resolves DIDs of the method <code>rwp</code> and returns the associated DID document</p>
+    <li data-md>
+     <p>Delivers the DID document as JSON-LD in accordance with <a data-link-type="biblio" href="#biblio-did-core" title="Decentralized Identifiers (DIDs) v1.0">[DID-CORE]</a></p>
+    <li data-md>
+     <p>Returns HTTP 200 when the DID is known</p>
+    <li data-md>
+     <p>Returns HTTP 404 when the DID is unknown</p>
+    <li data-md>
+     <p>Returns HTTP 410 when the DID is known but the <a data-link-type="dfn" href="#records" id="ref-for-records①①">Record</a> has been deleted (payload deletion per Chapter 13)</p>
+   </ul>
+   <h2 class="heading settled" data-level="4" id="structure"><span class="secno">4. </span><span class="content">3 Record Structure</span><a class="self-link" href="#structure"></a></h2>
+   <h3 class="heading settled" data-level="4.1" id="structure-overview"><span class="secno">4.1. </span><span class="content">3.1 Overview</span><a class="self-link" href="#structure-overview"></a></h3>
+   <p>Every <a data-link-type="dfn" href="#records" id="ref-for-records①②">Record</a> MUST consist of exactly three components:</p>
+   <ol>
+    <li data-md>
+     <p>**<a data-link-type="dfn" href="#identity" id="ref-for-identity">Identity</a>** — the DID of the <a data-link-type="dfn" href="#records" id="ref-for-records①③">Record</a> (Chapter 2)</p>
+    <li data-md>
+     <p>**<a data-link-type="dfn" href="#payload" id="ref-for-payload">Payload</a>** — the content of the <a data-link-type="dfn" href="#records" id="ref-for-records①④">Record</a> (Chapter 4)</p>
+    <li data-md>
+     <p>**<a data-link-type="dfn" href="#metadata" id="ref-for-metadata">Metadata</a>** — descriptive dimensions of the <a data-link-type="dfn" href="#records" id="ref-for-records①⑤">Record</a> (Section 3.3)</p>
+   </ol>
+   <p>Together, these three components form a <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="snapshot">snapshot</dfn> — an immutable, versioned representation of the <a data-link-type="dfn" href="#records" id="ref-for-records①⑥">Record</a> at a specific point in time.</p>
+   <h3 class="heading settled" data-level="4.2" id="snapshot-definition"><span class="secno">4.2. </span><span class="content">3.2 Snapshot Definition</span><a class="self-link" href="#snapshot-definition"></a></h3>
+   <p>A <a data-link-type="dfn" href="#snapshot" id="ref-for-snapshot">snapshot</a> is the atomic unit of versioning in RecordWeb.</p>
+   <p>A <a data-link-type="dfn" href="#snapshot" id="ref-for-snapshot①">snapshot</a> MUST fulfil the following properties:</p>
+   <ul>
+    <li data-md>
+     <p>It is immutable after its creation</p>
+    <li data-md>
+     <p>It is uniquely identifiable by its content hash</p>
+    <li data-md>
+     <p>It references exactly one version of the payload (or multiple representations per Section 4.3)</p>
+    <li data-md>
+     <p>It references exactly one version of the schema of its Record type</p>
+    <li data-md>
+     <p>It is linked to its predecessor snapshots by directed edges in the version graph</p>
+   </ul>
+   <h3 class="heading settled" data-level="4.3" id="metadata-set"><span class="secno">4.3. </span><span class="content">3.3 Minimum Metadata Set</span><a class="self-link" href="#metadata-set"></a></h3>
+   <p>Every <a data-link-type="dfn" href="#snapshot" id="ref-for-snapshot②">snapshot</a> MUST contain the following <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="metadata">metadata</dfn> fields:</p>
+<pre class="highlight language-json"><c- p>{</c->
+  <c- f>"did"</c-><c- p>:</c-> <c- u>"did:rwp:bern.ch:f47ac10b-58cc-4372-a567-0e02b2c3d479"</c-><c- p>,</c->
+  <c- f>"snapshotHash"</c-><c- p>:</c-> <c- u>"sha256:e3b0c44298fc1c149afb4c8996fb924..."</c-><c- p>,</c->
+  <c- f>"recordType"</c-><c- p>:</c-> <c- u>"did:rwp:ech-standards.ch:schema-baubewilligung-antrag"</c-><c- p>,</c->
+  <c- f>"schemaVersion"</c-><c- p>:</c-> <c- u>"sha256:a665a45920422f9d417e4867efdc4fb8a..."</c-><c- p>,</c->
+  <c- f>"state"</c-><c- p>:</c-> <c- u>"finalized"</c-><c- p>,</c->
+  <c- f>"created"</c-><c- p>:</c-> <c- u>"2026-05-31T14:00:00Z"</c-><c- p>,</c->
+  <c- f>"finalized"</c-><c- p>:</c-> <c- u>"2026-05-31T15:30:00Z"</c-><c- p>,</c->
+  <c- f>"owner"</c-><c- p>:</c-> <c- u>"did:rwp:bern.ch:user-petra-muster"</c-><c- p>,</c->
+  <c- f>"parents"</c-><c- p>:</c-> <c- p>[</c-><c- u>"sha256:previousSnapshotHash..."</c-><c- p>],</c->
+  <c- f>"classification"</c-><c- p>:</c-> <c- u>"internal"</c-><c- p>,</c->
+  <c- f>"retentionPolicy"</c-><c- p>:</c-> <c- u>"did:rwp:bern.ch:retention-bauakten-30y"</c-><c- p>,</c->
+  <c- f>"tags"</c-><c- p>:</c-> <c- p>[</c-><c- u>"building-permit"</c-><c- p>,</c-> <c- u>"parcel-451"</c-><c- p>,</c-> <c- u>"2026"</c-><c- p>],</c->
+  <c- f>"accessPolicy"</c-><c- p>:</c-> <c- kc>null</c-><c- p>,</c->
+  <c- f>"payloadHash"</c-><c- p>:</c-> <c- u>"sha256:d2d2d2d2d2..."</c-><c- p>,</c->
+  <c- f>"payloadFormat"</c-><c- p>:</c-> <c- u>"application/pdf;profile=PDF-A-2b"</c-><c- p>,</c->
+  <c- f>"signature"</c-><c- p>:</c-> <c- u>"z3FttV7..."</c->
+<c- p>}</c->
+</pre>
+   <table class="data">
+    <thead>
+     <tr>
+      <th>Field
+      <th>Required
+      <th>Type
+      <th>Description
+    <tbody>
+     <tr>
+      <td><code>did</code>
+      <td>MUST
+      <td>DID
+      <td>Identity of the <a data-link-type="dfn" href="#records" id="ref-for-records①⑦">Record</a>
+     <tr>
+      <td><code>snapshotHash</code>
+      <td>MUST
+      <td>SHA-256
+      <td>Hash of this snapshot (incl. payload and metadata)
+     <tr>
+      <td><code>recordType</code>
+      <td>MUST
+      <td>DID
+      <td>Reference to the SchemaRecord of the type
+     <tr>
+      <td><code>schemaVersion</code>
+      <td>MUST
+      <td>SHA-256
+      <td>Hash of the schema version against which this snapshot was validated
+     <tr>
+      <td><code>state</code>
+      <td>MUST
+      <td>Enum
+      <td><code>draft</code> or <code>finalized</code>; additional values permitted per type schema
+     <tr>
+      <td><code>created</code>
+      <td>MUST
+      <td>ISO 8601
+      <td>Timestamp of snapshot creation
+     <tr>
+      <td><code>finalized</code>
+      <td>MUST (when finalized)
+      <td>ISO 8601
+      <td>Timestamp of finalisation
+     <tr>
+      <td><code>owner</code>
+      <td>MUST
+      <td>DID
+      <td>Responsible person or organisational unit
+     <tr>
+      <td><code>parents</code>
+      <td>MUST
+      <td>Array&lt;SHA-256>
+      <td>Hashes of predecessor snapshots; empty for first snapshot
+     <tr>
+      <td><code>classification</code>
+      <td>SHOULD
+      <td>String
+      <td>Protection level per the organisation’s internal scheme
+     <tr>
+      <td><code>retentionPolicy</code>
+      <td>SHOULD
+      <td>DID
+      <td>Reference to retention rule
+     <tr>
+      <td><code>tags</code>
+      <td>MAY
+      <td>Array&lt;String>
+      <td>Free-text markers for search and filtering
+     <tr>
+      <td><code>accessPolicy</code>
+      <td>MAY
+      <td>Object|null
+      <td>Delegated authorisation model (Chapter 11)
+     <tr>
+      <td><code>payloadHash</code>
+      <td>MUST
+      <td>SHA-256
+      <td>Hash of the payload
+     <tr>
+      <td><code>payloadFormat</code>
+      <td>MUST
+      <td>MIME-Type
+      <td>Format of the primary payload incl. profiles
+     <tr>
+      <td><code>signature</code>
+      <td>MUST (when finalized)
+      <td>Multibase
+      <td>Cryptographic signature of the record owner over the snapshot hash
+   </table>
+   <h3 class="heading settled" data-level="4.4" id="snapshot-hash"><span class="secno">4.4. </span><span class="content">3.4 Snapshot Hash Calculation</span><a class="self-link" href="#snapshot-hash"></a></h3>
+   <p>The <code>snapshotHash</code> MUST be calculated as follows:</p>
+   <ol>
+    <li data-md>
+     <p>Serialise the metadata fields (without <code>snapshotHash</code> itself) as canonical JSON (<a data-link-type="biblio" href="#biblio-rfc8785" title="JSON Canonicalization Scheme (JCS)">[RFC8785]</a>)</p>
+    <li data-md>
+     <p>Concatenate: <code>canonicalMetadataJSON || payloadBytes</code></p>
+    <li data-md>
+     <p>Calculate SHA-256 over the result</p>
+   </ol>
+<pre>snapshotHash = SHA-256( canonicalize(metadata \ {snapshotHash}) || payloadBytes )
+</pre>
+   <p>A system MUST verify the <code>snapshotHash</code> after every finalisation before the snapshot is accepted as valid.</p>
+   <h2 class="heading settled" data-level="5" id="payload-chapter"><span class="secno">5. </span><span class="content">4 Payload and Formats</span><a class="self-link" href="#payload-chapter"></a></h2>
+   <h3 class="heading settled" data-level="5.1" id="payload-definition"><span class="secno">5.1. </span><span class="content">4.1 Payload Definition</span><a class="self-link" href="#payload-definition"></a></h3>
+   <p>The <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="payload">payload</dfn> of a <a data-link-type="dfn" href="#records" id="ref-for-records①⑧">Record</a> is the content the <a data-link-type="dfn" href="#records" id="ref-for-records①⑨">Record</a> carries, the actual information.</p>
+   <p>A <a data-link-type="dfn" href="#payload" id="ref-for-payload①">payload</a>:</p>
+   <ul>
+    <li data-md>
+     <p>MUST conform to the schema of the Record type in the referenced schema version</p>
+    <li data-md>
+     <p>MUST be validated against the schema before finalisation</p>
+    <li data-md>
+     <p>MUST NOT be changed after finalisation</p>
+    <li data-md>
+     <p>MUST be uniquely identified in the <code>payloadHash</code> of the <a data-link-type="dfn" href="#snapshot" id="ref-for-snapshot③">snapshot</a></p>
+   </ul>
+   <h3 class="heading settled" data-level="5.2" id="payload-types"><span class="secno">5.2. </span><span class="content">4.2 Permitted Payload Types</span><a class="self-link" href="#payload-types"></a></h3>
+   <p>RWP distinguishes three payload categories:</p>
+   <table class="data">
+    <thead>
+     <tr>
+      <th>Category
+      <th>Description
+      <th>Examples
+    <tbody>
+     <tr>
+      <td>Structured
+      <td>Machine-readable, schema-validatable data
+      <td>JSON, XML, YAML
+     <tr>
+      <td>Documentary
+      <td>Human-readable documents with defined structure
+      <td>PDF/A, DOCX, ODT, Markdown
+     <tr>
+      <td>Binary
+      <td>Non-textual data with descriptive schema
+      <td>TIFF, JPEG 2000, MP4, ZIP
+   </table>
+   <h3 class="heading settled" data-level="5.3" id="multi-representation"><span class="secno">5.3. </span><span class="content">4.3 Multi-Representation</span><a class="self-link" href="#multi-representation"></a></h3>
+   <p>A <a data-link-type="dfn" href="#snapshot" id="ref-for-snapshot④">snapshot</a> MAY carry multiple representations of the same <a data-link-type="dfn" href="#payload" id="ref-for-payload②">payload</a>. This is provided in particular for the transition from working format (draft) to long-term format (finalised).</p>
+   <p>If a <a data-link-type="dfn" href="#snapshot" id="ref-for-snapshot⑤">snapshot</a> contains multiple representations, ALL of the following MUST apply:</p>
+   <ul>
+    <li data-md>
+     <p>All representations MUST depict the same content</p>
+    <li data-md>
+     <p>All representations MUST be individually hashed and referenced in the snapshot</p>
+    <li data-md>
+     <p>One representation MUST be designated as primary (<code>primary: true</code>)</p>
+    <li data-md>
+     <p>The <code>payloadHash</code> MUST contain the hash of the primary representation</p>
+   </ul>
+<pre class="highlight language-json"><c- p>{</c->
+  <c- f>"payloadRepresentations"</c-><c- p>:</c-> <c- p>[</c->
+    <c- p>{</c->
+      <c- f>"format"</c-><c- p>:</c-> <c- u>"text/markdown"</c-><c- p>,</c->
+      <c- f>"hash"</c-><c- p>:</c-> <c- u>"sha256:aabbcc..."</c-><c- p>,</c->
+      <c- f>"primary"</c-><c- p>:</c-> <c- kc>false</c-><c- p>,</c->
+      <c- f>"role"</c-><c- p>:</c-> <c- u>"source"</c->
+    <c- p>},</c->
+    <c- p>{</c->
+      <c- f>"format"</c-><c- p>:</c-> <c- u>"application/pdf;profile=PDF-A-2b"</c-><c- p>,</c->
+      <c- f>"hash"</c-><c- p>:</c-> <c- u>"sha256:ddeeff..."</c-><c- p>,</c->
+      <c- f>"primary"</c-><c- p>:</c-> <c- kc>true</c-><c- p>,</c->
+      <c- f>"role"</c-><c- p>:</c-> <c- u>"publication"</c->
+    <c- p>}</c->
+  <c- p>]</c->
+<c- p>}</c->
+</pre>
+   <table class="data">
+    <thead>
+     <tr>
+      <th>Field
+      <th>Required
+      <th>Description
+    <tbody>
+     <tr>
+      <td><code>format</code>
+      <td>MUST
+      <td>MIME type incl. profiles
+     <tr>
+      <td><code>hash</code>
+      <td>MUST
+      <td>SHA-256 of this representation
+     <tr>
+      <td><code>primary</code>
+      <td>MUST
+      <td>Exactly one representation MUST be <code>true</code>
+     <tr>
+      <td><code>role</code>
+      <td>SHOULD
+      <td>Semantic role: <code>source</code>, <code>publication</code>, <code>preview</code>, <code>archive</code>
+   </table>
+   <h3 class="heading settled" data-level="5.4" id="format-requirements"><span class="secno">5.4. </span><span class="content">4.4 Format Requirements per State</span><a class="self-link" href="#format-requirements"></a></h3>
+   <p>The schema of a Record type MUST define the permitted payload formats for each state. If a schema contains no explicit format requirements, the following defaults apply:</p>
+   <table class="data">
+    <thead>
+     <tr>
+      <th>State
+      <th>Permitted formats (default)
+    <tbody>
+     <tr>
+      <td><code>draft</code>
+      <td>All MIME types not explicitly excluded in the schema of the Record type
+     <tr>
+      <td><code>finalized</code>
+      <td>Only formats from the RWP list of archival-grade formats (Annex A, Table A-1)
+   </table>
+   <p><strong>RWP archival-grade formats (normative):</strong></p>
+   <table class="data">
+    <thead>
+     <tr>
+      <th>MIME Type
+      <th>Format
+      <th>Suitability
+    <tbody>
+     <tr>
+      <td><code>application/pdf;profile=PDF-A-1b</code>
+      <td>PDF/A-1b
+      <td>Documents without embedded multimedia
+     <tr>
+      <td><code>application/pdf;profile=PDF-A-2b</code>
+      <td>PDF/A-2b
+      <td>Documents with embedded files
+     <tr>
+      <td><code>application/pdf;profile=PDF-A-3b</code>
+      <td>PDF/A-3b
+      <td>Documents with arbitrary attachments
+     <tr>
+      <td><code>text/xml</code>
+      <td>XML (well-formed)
+      <td>Structured data
+     <tr>
+      <td><code>application/json</code>
+      <td>JSON
+      <td>Structured data (with schema reference)
+     <tr>
+      <td><code>image/tiff</code>
+      <td>TIFF
+      <td>Raster images
+     <tr>
+      <td><code>image/jp2</code>
+      <td>JPEG 2000
+      <td>Raster images (near-lossless)
+     <tr>
+      <td><code>text/plain;charset=UTF-8</code>
+      <td>Plain Text UTF-8
+      <td>Pure text documents
+     <tr>
+      <td><code>text/markdown</code>
+      <td>CommonMark Markdown
+      <td>Source format with publication representation
+   </table>
+   <h3 class="heading settled" data-level="5.5" id="payload-conversion"><span class="secno">5.5. </span><span class="content">4.5 Conversion During Finalisation</span><a class="self-link" href="#payload-conversion"></a></h3>
+   <p>When a system transitions a <a data-link-type="dfn" href="#records" id="ref-for-records②⓪">Record</a> from state <code>draft</code> to <code>finalized</code>, it MUST:</p>
+   <ol>
+    <li data-md>
+     <p>Validate the payload against the finalised format of the schema</p>
+    <li data-md>
+     <p>If the current payload is not in archival-grade format: convert automatically or request conversion from the operator</p>
+    <li data-md>
+     <p>Store both formats as multi-representation in the snapshot (SHOULD)</p>
+    <li data-md>
+     <p>Document the conversion act as metadata (<code>conversionMethod</code>, <code>conversionTimestamp</code>)</p>
+   </ol>
+   <p>A system MUST NOT finalise a <a data-link-type="dfn" href="#records" id="ref-for-records②①">Record</a> whose payload does not conform to the format defined for <code>finalized</code> and for which no archival-grade conversion is possible.</p>
+   <h2 class="heading settled" data-level="6" id="schemas"><span class="secno">6. </span><span class="content">5 Record Types and Schemas</span><a class="self-link" href="#schemas"></a></h2>
+   <h3 class="heading settled" data-level="6.1" id="record-type"><span class="secno">6.1. </span><span class="content">5.1 Record Type Definition</span><a class="self-link" href="#record-type"></a></h3>
+   <p>Every <a data-link-type="dfn" href="#records" id="ref-for-records②②">Record</a> MUST be assigned to a Record type. A Record type:</p>
+   <ul>
+    <li data-md>
+     <p>defines the schema of the <a data-link-type="dfn" href="#payload" id="ref-for-payload③">payload</a></p>
+    <li data-md>
+     <p>defines the permitted states and their transitions</p>
+    <li data-md>
+     <p>defines the format requirements per state</p>
+    <li data-md>
+     <p>defines mandatory and optional <a data-link-type="dfn" href="#metadata" id="ref-for-metadata①">metadata</a> fields beyond the minimum set</p>
+    <li data-md>
+     <p>is itself a <a data-link-type="dfn" href="#records" id="ref-for-records②③">Record</a> of the type <code>SchemaRecord</code></p>
+   </ul>
+   <h3 class="heading settled" data-level="6.2" id="schema-record"><span class="secno">6.2. </span><span class="content">5.2 SchemaRecord</span><a class="self-link" href="#schema-record"></a></h3>
+   <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="schemarecord">SchemaRecord</dfn> is a specialised Record type that carries the definition of another Record type.</p>
+   <p>A <a data-link-type="dfn" href="#schemarecord" id="ref-for-schemarecord">SchemaRecord</a> MUST:</p>
+   <ul>
+    <li data-md>
+     <p>fulfil all requirements for a regular <a data-link-type="dfn" href="#records" id="ref-for-records②④">Record</a> (DID, metadata, version graph)</p>
+    <li data-md>
+     <p>contain a JSON Schema (Draft 2020-12 or later, <a data-link-type="biblio" href="#biblio-json-schema" title="JSON Schema: A Media Type for Describing JSON Documents">[JSON-SCHEMA]</a>) in the payload</p>
+    <li data-md>
+     <p>contain the field <code>rwpSchemaVersion</code> in the payload with the RWP version for which it is valid</p>
+    <li data-md>
+     <p>contain the field <code>allowedStates</code> in the payload with the permitted states and their transitions</p>
+    <li data-md>
+     <p>contain the field <code>payloadFormats</code> in the payload with the permitted formats per state</p>
+   </ul>
+   <p><strong>Minimal SchemaRecord payload example:</strong></p>
+<pre class="highlight language-json"><c- p>{</c->
+  <c- f>"rwpSchemaVersion"</c-><c- p>:</c-> <c- u>"0.1"</c-><c- p>,</c->
+  <c- f>"schemaId"</c-><c- p>:</c-> <c- u>"did:rwp:bern.ch:schema-building-permit-application"</c-><c- p>,</c->
+  <c- f>"displayName"</c-><c- p>:</c-> <c- u>"Building Permit Application"</c-><c- p>,</c->
+  <c- f>"allowedStates"</c-><c- p>:</c-> <c- p>[</c-><c- u>"draft"</c-><c- p>,</c-> <c- u>"finalized"</c-><c- p>],</c->
+  <c- f>"stateTransitions"</c-><c- p>:</c-> <c- p>[</c->
+    <c- p>{</c-> <c- f>"from"</c-><c- p>:</c-> <c- u>"draft"</c-><c- p>,</c-> <c- f>"to"</c-><c- p>:</c-> <c- u>"finalized"</c-><c- p>,</c-> <c- f>"requiresOwnerSignature"</c-><c- p>:</c-> <c- kc>true</c-> <c- p>}</c->
+  <c- p>],</c->
+  <c- f>"payloadFormats"</c-><c- p>:</c-> <c- p>{</c->
+    <c- f>"draft"</c-><c- p>:</c-> <c- p>[</c-><c- u>"application/vnd.openxmlformats-officedocument.wordprocessingml.document"</c-><c- p>,</c->
+              <c- u>"text/markdown"</c-><c- p>],</c->
+    <c- f>"finalized"</c-><c- p>:</c-> <c- p>[</c-><c- u>"application/pdf;profile=PDF-A-2b"</c-><c- p>]</c->
+  <c- p>},</c->
+  <c- f>"jsonSchema"</c-><c- p>:</c-> <c- p>{</c->
+    <c- f>"$schema"</c-><c- p>:</c-> <c- u>"https://json-schema.org/draft/2020-12/schema"</c-><c- p>,</c->
+    <c- f>"type"</c-><c- p>:</c-> <c- u>"object"</c-><c- p>,</c->
+    <c- f>"required"</c-><c- p>:</c-> <c- p>[</c-><c- u>"parcelNumber"</c-><c- p>,</c-> <c- u>"applicant"</c-><c- p>,</c-> <c- u>"constructionProject"</c-><c- p>,</c-> <c- u>"date"</c-><c- p>],</c->
+    <c- f>"properties"</c-><c- p>:</c-> <c- p>{</c->
+      <c- f>"parcelNumber"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-> <c- p>},</c->
+      <c- f>"applicant"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-> <c- p>},</c->
+      <c- f>"constructionProject"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-> <c- p>},</c->
+      <c- f>"date"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"format"</c-><c- p>:</c-> <c- u>"date"</c-> <c- p>}</c->
+    <c- p>}</c->
+  <c- p>}</c->
+<c- p>}</c->
+</pre>
+   <h3 class="heading settled" data-level="6.3" id="core-types"><span class="secno">6.3. </span><span class="content">5.3 Core Record Types (normative)</span><a class="self-link" href="#core-types"></a></h3>
+   <p>RWP defines the following core Record types that every compliant system MUST support:</p>
+   <table class="data">
+    <thead>
+     <tr>
+      <th>Type Name
+      <th>DID Suffix
+      <th>Description
+    <tbody>
+     <tr>
+      <td><code>SchemaRecord</code>
+      <td><code>schema-record</code>
+      <td>Definition of a Record type
+     <tr>
+      <td><code>MergeRecord</code>
+      <td><code>merge-record</code>
+      <td>Documentation of a merge act
+     <tr>
+      <td><code>DeletionRecord</code>
+      <td><code>deletion-record</code>
+      <td>Log of a payload deletion (Chapter 13)
+     <tr>
+      <td><code>CaseRecord</code>
+      <td><code>case-record</code>
+      <td>Case (Chapter 8)
+     <tr>
+      <td><code>MigrationRecord</code>
+      <td><code>migration-record</code>
+      <td>Log of a system migration
+   </table>
+   <p>Additional Record types MAY be defined by organisations or standards bodies. They MUST be published as <a data-link-type="dfn" href="#schemarecord" id="ref-for-schemarecord①">SchemaRecords</a> and be resolvable via a DID.</p>
+   <h3 class="heading settled" data-level="6.4" id="schema-versioning"><span class="secno">6.4. </span><span class="content">5.4 Schema Versioning and Backward Compatibility</span><a class="self-link" href="#schema-versioning"></a></h3>
+   <p>When a <a data-link-type="dfn" href="#schemarecord" id="ref-for-schemarecord②">SchemaRecord</a> is finalised in a new version, the following applies:</p>
+   <ul>
+    <li data-md>
+     <p>Existing snapshots referencing an earlier schema version REMAIN valid</p>
+    <li data-md>
+     <p>The new schema MUST contain the field <code>previousSchemaVersion</code> in the payload with the hash of the predecessor schema</p>
+    <li data-md>
+     <p>Systems MUST keep all schema versions referenced by existing <a data-link-type="dfn" href="#records" id="ref-for-records②⑤">Records</a> permanently accessible</p>
+    <li data-md>
+     <p>A system MUST NOT retroactively change an existing <a data-link-type="dfn" href="#schemarecord" id="ref-for-schemarecord③">SchemaRecord</a>, corrections are made as a new version</p>
+   </ul>
+   <h2 class="heading settled" data-level="7" id="states"><span class="secno">7. </span><span class="content">6 States and Transitions</span><a class="self-link" href="#states"></a></h2>
+   <h3 class="heading settled" data-level="7.1" id="state-model"><span class="secno">7.1. </span><span class="content">6.1 State Model</span><a class="self-link" href="#state-model"></a></h3>
+   <p>Every <a data-link-type="dfn" href="#records" id="ref-for-records②⑥">Record</a> snapshot has exactly one *<em>state</em>. The state describes the validity and linkability status of the snapshot.</p>
+   <p><strong>Core states (normative, for all Record types):</strong></p>
+   <table class="data">
+    <thead>
+     <tr>
+      <th>State
+      <th>Linkable
+      <th>Immutable
+      <th>Description
+    <tbody>
+     <tr>
+      <td><code><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="draft">draft</dfn></code>
+      <td>NO
+      <td>NO
+      <td>Being processed; content may change
+     <tr>
+      <td><code><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="finalized">finalized</dfn></code>
+      <td>YES
+      <td>YES
+      <td>Complete; content cryptographically secured
+   </table>
+   <p>Record types MAY define additional states. These MUST be specified in the <a data-link-type="dfn" href="#schemarecord" id="ref-for-schemarecord④">SchemaRecord</a> and MUST be reachable from one of the core states or lead into one.</p>
+   <p><strong>Example of an extended state machine for type "contract":</strong></p>
+<pre>draft → in-review → finalized
+↓
+rejected (terminal state, not linkable)
+</pre>
+   <h3 class="heading settled" data-level="7.2" id="linkability"><span class="secno">7.2. </span><span class="content">6.2 Linkability</span><a class="self-link" href="#linkability"></a></h3>
+   <p>A <a data-link-type="dfn" href="#records" id="ref-for-records②⑦">Record</a> MUST NOT be used as the target of a hard link when its current state is <a data-link-type="dfn" href="#draft" id="ref-for-draft">draft</a>.</p>
+   <p>A system MUST return an error when an attempt is made to set a hard link to a <a data-link-type="dfn" href="#draft" id="ref-for-draft①">draft</a> Record.</p>
+   <p>Exception: Working references (soft links) per Section 8.4 MAY point to <a data-link-type="dfn" href="#draft" id="ref-for-draft②">draft</a> Records.</p>
+   <h3 class="heading settled" data-level="7.3" id="finalisation-requirements"><span class="secno">7.3. </span><span class="content">6.3 Finalisation Requirements</span><a class="self-link" href="#finalisation-requirements"></a></h3>
+   <p>A system MUST perform the following checks before finalising a <a data-link-type="dfn" href="#snapshot" id="ref-for-snapshot⑥">snapshot</a>:</p>
+   <ol>
+    <li data-md>
+     <p><strong>Schema validation</strong>: Payload conforms to the schema in the version defined for <code>finalized</code></p>
+    <li data-md>
+     <p><strong>Format validation</strong>: Payload format conforms to the <code>payloadFormats.finalized</code> requirements of the schema</p>
+    <li data-md>
+     <p><strong>Mandatory field check</strong>: All MUST metadata fields are present and correctly typed</p>
+    <li data-md>
+     <p><strong>Owner signature</strong>: If the schema defines <code>signaturePolicy: owner</code>, the record owner MUST have cryptographically signed the snapshot hash. For <code>signaturePolicy: system</code>, the signature MAY be generated by an authorised system key. For <code>signaturePolicy: none</code>, signature validation is omitted.</p>
+    <li data-md>
+     <p><strong>Parent integrity</strong>: All referenced parent hashes are resolvable in the system</p>
+   </ol>
+   <p>If any of these checks fails, the system MUST NOT finalise the <a data-link-type="dfn" href="#snapshot" id="ref-for-snapshot⑦">snapshot</a> and MUST return an error with a validation code.</p>
+   <h3 class="heading settled" data-level="7.4" id="irreversibility"><span class="secno">7.4. </span><span class="content">6.4 Irreversibility of Finalisation</span><a class="self-link" href="#irreversibility"></a></h3>
+   <p>A <a data-link-type="dfn" href="#finalized" id="ref-for-finalized">finalized</a> snapshot MUST NOT be reverted to the state <a data-link-type="dfn" href="#draft" id="ref-for-draft③">draft</a>.</p>
+   <p>Corrections to a <a data-link-type="dfn" href="#finalized" id="ref-for-finalized①">finalized</a> <a data-link-type="dfn" href="#records" id="ref-for-records②⑧">Record</a> are made exclusively by creating a new <a data-link-type="dfn" href="#snapshot" id="ref-for-snapshot⑧">snapshot</a> with:</p>
+   <ul>
+    <li data-md>
+     <p>Reference to the snapshot to be corrected as parent</p>
+    <li data-md>
+     <p>Reasoning field <code>correctionReason</code> in the metadata object</p>
+    <li data-md>
+     <p>Complete finalisation process per Section 6.3</p>
+   </ul>
+   <h2 class="heading settled" data-level="8" id="version-graph-chapter"><span class="secno">8. </span><span class="content">7 Version Graph (DAG)</span><a class="self-link" href="#version-graph-chapter"></a></h2>
+   <h3 class="heading settled" data-level="8.1" id="graph-structure"><span class="secno">8.1. </span><span class="content">7.1 Graph Structure</span><a class="self-link" href="#graph-structure"></a></h3>
+   <p>The totality of all snapshots of a <a data-link-type="dfn" href="#records" id="ref-for-records②⑨">Record</a> and their parent-child relationships forms the <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="version-graph">version graph</dfn>.</p>
+   <p>The <a data-link-type="dfn" href="#version-graph" id="ref-for-version-graph">version graph</a> MUST be a <strong>Directed Acyclic Graph (DAG)</strong>:</p>
+   <ul>
+    <li data-md>
+     <p><strong>Directed</strong>: Edges point from child to parent (backward in time)</p>
+    <li data-md>
+     <p><strong>Acyclic</strong>: There MUST be NO cycles — a snapshot MUST NOT be directly or indirectly its own ancestor</p>
+   </ul>
+   <p>A system MUST check upon receipt of a new <a data-link-type="dfn" href="#snapshot" id="ref-for-snapshot⑨">snapshot</a> whether adding its parent references would create a cycle. If so, the <a data-link-type="dfn" href="#snapshot" id="ref-for-snapshot①⓪">snapshot</a> MUST be rejected.</p>
+   <h3 class="heading settled" data-level="8.2" id="graph-nodes"><span class="secno">8.2. </span><span class="content">7.2 Nodes</span><a class="self-link" href="#graph-nodes"></a></h3>
+   <p>Every node in the <a data-link-type="dfn" href="#version-graph" id="ref-for-version-graph①">version graph</a> is a <a data-link-type="dfn" href="#snapshot" id="ref-for-snapshot①①">snapshot</a> per Section 3.2.</p>
+   <table class="data">
+    <thead>
+     <tr>
+      <th>Property
+      <th>Requirement
+    <tbody>
+     <tr>
+      <td>Unique identity
+      <td>SHA-256 of the snapshot (<code>snapshotHash</code>); MUST be unique
+     <tr>
+      <td>Immutability
+      <td>Finalised nodes MUST NOT be changed
+     <tr>
+      <td>Resolvability
+      <td>Every node MUST be retrievable in the system via its <code>snapshotHash</code>
+   </table>
+   <h3 class="heading settled" data-level="8.3" id="graph-edges"><span class="secno">8.3. </span><span class="content">7.3 Edges (Parent References)</span><a class="self-link" href="#graph-edges"></a></h3>
+   <p>An edge connects a <a data-link-type="dfn" href="#snapshot" id="ref-for-snapshot①②">snapshot</a> (child) with its predecessor <a data-link-type="dfn" href="#snapshot" id="ref-for-snapshot①③">snapshot</a> (parent).</p>
+   <ul>
+    <li data-md>
+     <p>A <a data-link-type="dfn" href="#snapshot" id="ref-for-snapshot①④">snapshot</a> MAY have zero, one, or multiple parent references</p>
+    <li data-md>
+     <p>A <a data-link-type="dfn" href="#snapshot" id="ref-for-snapshot①⑤">snapshot</a> without parents is the <strong>root snapshot</strong> (first snapshot of the <a data-link-type="dfn" href="#records" id="ref-for-records③⓪">Record</a>)</p>
+    <li data-md>
+     <p>A <a data-link-type="dfn" href="#snapshot" id="ref-for-snapshot①⑥">snapshot</a> with exactly one parent reference is a <strong>linear continuation</strong></p>
+    <li data-md>
+     <p>A <a data-link-type="dfn" href="#snapshot" id="ref-for-snapshot①⑦">snapshot</a> with multiple parent references is a <strong>merge snapshot</strong></p>
+   </ul>
+   <p>Edge requirements:</p>
+   <ul>
+    <li data-md>
+     <p>Every parent reference MUST be a valid <code>snapshotHash</code> of a known <a data-link-type="dfn" href="#snapshot" id="ref-for-snapshot①⑧">snapshot</a></p>
+    <li data-md>
+     <p>Edges MUST NOT point to snapshots of other <a data-link-type="dfn" href="#records" id="ref-for-records③①">Records</a>. Cross-Record connections are made via links in the <a data-link-type="dfn" href="#payload" id="ref-for-payload④">payload</a> or as Case linkage (Chapter 8)</p>
+   </ul>
+   <h3 class="heading settled" data-level="8.4" id="graph-branches"><span class="secno">8.4. </span><span class="content">7.4 Branches</span><a class="self-link" href="#graph-branches"></a></h3>
+   <p>A <strong>branch</strong> arises when two or more new <a data-link-type="dfn" href="#draft" id="ref-for-draft④">draft</a> snapshots with the same parent reference emerge from a <a data-link-type="dfn" href="#finalized" id="ref-for-finalized②">finalized</a> snapshot.</p>
+   <ul>
+    <li data-md>
+     <p>Branches are explicitly permitted in RecordWeb and MUST be made visible by the system</p>
+    <li data-md>
+     <p>A system MUST return all active branches (draft snapshots without successors) when a <a data-link-type="dfn" href="#records" id="ref-for-records③②">Record</a> is retrieved</p>
+    <li data-md>
+     <p>Branches MAY exist simultaneously as long as they are in state <a data-link-type="dfn" href="#draft" id="ref-for-draft⑤">draft</a></p>
+   </ul>
+   <h3 class="heading settled" data-level="8.5" id="graph-merges"><span class="secno">8.5. </span><span class="content">7.5 Merges</span><a class="self-link" href="#graph-merges"></a></h3>
+   <p>A merge snapshot is a <a data-link-type="dfn" href="#snapshot" id="ref-for-snapshot①⑨">snapshot</a> with two or more parent references. It consolidates two branches.</p>
+   <p>Before a merge snapshot can be finalised, a <code>MergeRecord</code> MUST be created:</p>
+<pre class="highlight language-json"><c- p>{</c->
+  <c- f>"mergeRecord"</c-><c- p>:</c-> <c- p>{</c->
+    <c- f>"mergedSnapshots"</c-><c- p>:</c-> <c- p>[</c->
+      <c- u>"sha256:branch-a-snapshot-hash..."</c-><c- p>,</c->
+      <c- u>"sha256:branch-b-snapshot-hash..."</c->
+    <c- p>],</c->
+    <c- f>"mergeReason"</c-><c- p>:</c-> <c- u>"Consolidation after coordination between departments"</c-><c- p>,</c->
+    <c- f>"mergedBy"</c-><c- p>:</c-> <c- u>"did:rwp:bern.ch:user-petra-muster"</c-><c- p>,</c->
+    <c- f>"mergedAt"</c-><c- p>:</c-> <c- u>"2026-05-31T16:00:00Z"</c-><c- p>,</c->
+    <c- f>"resultSnapshot"</c-><c- p>:</c-> <c- u>"sha256:merged-snapshot-hash..."</c->
+  <c- p>}</c->
+<c- p>}</c->
+</pre>
+   <p>The <code>MergeRecord</code> MUST be finalised before the merge snapshot can be finalised.</p>
+   <h3 class="heading settled" data-level="8.6" id="cross-record-merges"><span class="secno">8.6. </span><span class="content">7.6 Cross-Record Merges</span><a class="self-link" href="#cross-record-merges"></a></h3>
+   <p>When a new <a data-link-type="dfn" href="#records" id="ref-for-records③③">Record</a> arises from two or more existing <a data-link-type="dfn" href="#finalized" id="ref-for-finalized③">finalized</a> Records (cross-Record merge), the following MUST apply:</p>
+   <ul>
+    <li data-md>
+     <p>The new <a data-link-type="dfn" href="#records" id="ref-for-records③④">Record</a> MUST have a root snapshot with an empty <code>parents</code> array</p>
+    <li data-md>
+     <p>The <code>MergeRecord</code> MUST reference the DIDs of the source Records (not their snapshot hashes)</p>
+    <li data-md>
+     <p>The source Records MUST remain in state <a data-link-type="dfn" href="#finalized" id="ref-for-finalized④">finalized</a> and receive a metadata note <code>contributedTo</code> with the DID of the new <a data-link-type="dfn" href="#records" id="ref-for-records③⑤">Record</a></p>
+   </ul>
+   <h2 class="heading settled" data-level="9" id="cases-chapter"><span class="secno">9. </span><span class="content">8 Case Specification</span><a class="self-link" href="#cases-chapter"></a></h2>
+   <h3 class="heading settled" data-level="9.1" id="case-type"><span class="secno">9.1. </span><span class="content">8.1 Case as a Specialised Record Type</span><a class="self-link" href="#case-type"></a></h3>
+   <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="case">Case</dfn> is a <a data-link-type="dfn" href="#records" id="ref-for-records③⑥">Record</a> of type <code>CaseRecord</code>. It is subject to all requirements for regular <a data-link-type="dfn" href="#records" id="ref-for-records③⑦">Records</a> (Chapters 2–7) and supplements these with Case-specific requirements.</p>
+   <p>A <a data-link-type="dfn" href="#case" id="ref-for-case">Case</a> SHOULD be a standalone storage object, it is a persisted view of a set of linked <a data-link-type="dfn" href="#records" id="ref-for-records③⑧">Records</a>.</p>
+   <h3 class="heading settled" data-level="9.2" id="case-schema"><span class="secno">9.2. </span><span class="content">8.2 Case Schema (normative)</span><a class="self-link" href="#case-schema"></a></h3>
+   <p>A <code>CaseRecord</code> payload MUST contain the following fields:</p>
+<pre class="highlight language-json"><c- p>{</c->
+  <c- f>"caseId"</c-><c- p>:</c-> <c- u>"did:rwp:bern.ch:f47ac10b-case-001"</c-><c- p>,</c->
+  <c- f>"caseType"</c-><c- p>:</c-> <c- u>"did:rwp:bern.ch:schema-building-permit-case"</c-><c- p>,</c->
+  <c- f>"title"</c-><c- p>:</c-> <c- u>"Building Permit Musterstrasse 12, Parcel 451"</c-><c- p>,</c->
+  <c- f>"trigger"</c-><c- p>:</c-> <c- p>{</c->
+    <c- f>"type"</c-><c- p>:</c-> <c- u>"hard"</c-><c- p>,</c->
+    <c- f>"recordDid"</c-><c- p>:</c-> <c- u>"did:rwp:bern.ch:application-001"</c-><c- p>,</c->
+    <c- f>"snapshotHash"</c-><c- p>:</c-> <c- u>"sha256:application-finalized-hash..."</c->
+  <c- p>},</c->
+  <c- f>"context"</c-><c- p>:</c-> <c- p>[</c->
+    <c- p>{</c->
+      <c- f>"type"</c-><c- p>:</c-> <c- u>"hard"</c-><c- p>,</c->
+      <c- f>"recordDid"</c-><c- p>:</c-> <c- u>"did:rwp:bern.ch:zoning-plan-2024"</c-><c- p>,</c->
+      <c- f>"snapshotHash"</c-><c- p>:</c-> <c- u>"sha256:zoning-plan-hash..."</c-><c- p>,</c->
+      <c- f>"role"</c-><c- p>:</c-> <c- u>"Legal basis"</c->
+    <c- p>}</c->
+  <c- p>],</c->
+  <c- f>"process"</c-><c- p>:</c-> <c- p>[</c->
+    <c- p>{</c->
+      <c- f>"type"</c-><c- p>:</c-> <c- u>"hard"</c-><c- p>,</c->
+      <c- f>"recordDid"</c-><c- p>:</c-> <c- u>"did:rwp:bern.ch:minutes-site-inspection"</c-><c- p>,</c->
+      <c- f>"snapshotHash"</c-><c- p>:</c-> <c- u>"sha256:minutes-hash..."</c-><c- p>,</c->
+      <c- f>"role"</c-><c- p>:</c-> <c- u>"Investigation"</c->
+    <c- p>}</c->
+  <c- p>],</c->
+  <c- f>"decision"</c-><c- p>:</c-> <c- kc>null</c-><c- p>,</c->
+  <c- f>"result"</c-><c- p>:</c-> <c- kc>null</c-><c- p>,</c->
+  <c- f>"merkleRoot"</c-><c- p>:</c-> <c- u>"sha256:case-merkle-root..."</c->
+<c- p>}</c->
+</pre>
+   <h3 class="heading settled" data-level="9.3" id="case-elements"><span class="secno">9.3. </span><span class="content">8.3 Case Elements (normative)</span><a class="self-link" href="#case-elements"></a></h3>
+   <p>A complete <a data-link-type="dfn" href="#case" id="ref-for-case①">Case</a> MUST contain all five elements. A <a data-link-type="dfn" href="#case" id="ref-for-case②">Case</a> MAY be finalised if and only if all five elements are present as hard links.</p>
+   <table class="data">
+    <thead>
+     <tr>
+      <th>Element
+      <th>Required for finalisation
+      <th>Description
+    <tbody>
+     <tr>
+      <td><code>trigger</code>
+      <td>MUST
+      <td>Exactly one Record that triggered the Case; MUST be a hard link
+     <tr>
+      <td><code>context</code>
+      <td>SHOULD
+      <td>Information relevant to understanding and processing
+     <tr>
+      <td><code>process</code>
+      <td>MAY (empty allowed)
+      <td>Documentation of processing steps
+     <tr>
+      <td><code>decision</code>
+      <td>MAY (empty allowed)
+      <td>Record(s) documenting the decision; MUST be a hard link
+     <tr>
+      <td><code>result</code>
+      <td>MUST (min. 1)
+      <td>At least one Record documenting the outcome; MUST be a hard link
+   </table>
+   <p><strong>Exception — ad-hoc Case</strong>: A <a data-link-type="dfn" href="#case" id="ref-for-case③">Case</a> schema MAY be marked as <code>adhoc: true</code>. Ad-hoc Cases have no mandatory fields other than <code>trigger</code> and <code>caseId</code>. They MUST be marked in the metadata object as <code>caseVariant: "adhoc"</code>.</p>
+   <h3 class="heading settled" data-level="9.4" id="links"><span class="secno">9.4. </span><span class="content">8.4 Hard and Soft Links</span><a class="self-link" href="#links"></a></h3>
+   <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="hard-link">hard link</dfn> points to a <a data-link-type="dfn" href="#finalized" id="ref-for-finalized⑤">finalized</a> <a data-link-type="dfn" href="#snapshot" id="ref-for-snapshot②⓪">snapshot</a> (<code>snapshotHash</code> MUST be specified). It is immutable after finalisation of the <a data-link-type="dfn" href="#case" id="ref-for-case④">Case</a>.</p>
+   <p>A <strong>soft link</strong> (working reference) points to a Record DID without a snapshot reference. It MAY point to <a data-link-type="dfn" href="#finalized" id="ref-for-finalized⑥">finalized</a> or <a data-link-type="dfn" href="#draft" id="ref-for-draft⑥">draft</a> Records. Soft links prevent finalisation of the <a data-link-type="dfn" href="#case" id="ref-for-case⑤">Case</a> and MUST be converted to <a data-link-type="dfn" href="#hard-link" id="ref-for-hard-link">hard links</a> before <a data-link-type="dfn" href="#case" id="ref-for-case⑥">Case</a> finalisation.</p>
+   <p>A system MUST check during a <a data-link-type="dfn" href="#case" id="ref-for-case⑦">Case</a> finalisation attempt whether soft links are still present. If so, the system MUST reject the finalisation and return the open soft links.</p>
+   <h3 class="heading settled" data-level="9.5" id="merkle-root-calc"><span class="secno">9.5. </span><span class="content">8.5 Case Merkle Root</span><a class="self-link" href="#merkle-root-calc"></a></h3>
+   <p>The <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="merkle-root">Merkle root</dfn> of a <a data-link-type="dfn" href="#case" id="ref-for-case⑧">Case</a> MUST be calculated as follows:</p>
+   <ol>
+    <li data-md>
+     <p>Collect all <code>snapshotHash</code> values of all <a data-link-type="dfn" href="#hard-link" id="ref-for-hard-link①">hard links</a> in the <a data-link-type="dfn" href="#case" id="ref-for-case⑨">Case</a> (trigger, context, process, decision, result)</p>
+    <li data-md>
+     <p>Sort alphabetically by SHA-256 value</p>
+    <li data-md>
+     <p>Calculate the Merkle root over the sorted list (algorithm per Section 9.5)</p>
+   </ol>
+<pre>merkleRoot = MerkleRoot( sort( [snapshotHash_1, snapshotHash_2, ... snapshotHash_n] ) )
+</pre>
+   <p>The <a data-link-type="dfn" href="#merkle-root" id="ref-for-merkle-root">Merkle root</a> MUST be recalculated every time a <a data-link-type="dfn" href="#hard-link" id="ref-for-hard-link②">hard link</a> is added or removed. A system MUST verify the <a data-link-type="dfn" href="#merkle-root" id="ref-for-merkle-root①">Merkle root</a> before finalising the <a data-link-type="dfn" href="#case" id="ref-for-case①⓪">Case</a>.</p>
+   <h3 class="heading settled" data-level="9.6" id="case-completeness"><span class="secno">9.6. </span><span class="content">8.6 Case Completeness Check</span><a class="self-link" href="#case-completeness"></a></h3>
+   <p>A system SHOULD perform a completeness check on a <a data-link-type="dfn" href="#case" id="ref-for-case①①">Case</a> at any time upon request and return:</p>
+<pre class="highlight language-json"><c- p>{</c->
+  <c- f>"caseId"</c-><c- p>:</c-> <c- u>"did:rwp:bern.ch:f47ac10b-case-001"</c-><c- p>,</c->
+  <c- f>"complete"</c-><c- p>:</c-> <c- kc>false</c-><c- p>,</c->
+  <c- f>"missingElements"</c-><c- p>:</c-> <c- p>[</c-><c- u>"decision"</c-><c- p>,</c-> <c- u>"result"</c-><c- p>],</c->
+  <c- f>"openWorkingReferences"</c-><c- p>:</c-> <c- p>[</c-><c- u>"did:rwp:bern.ch:expert-opinion-draft-001"</c-><c- p>],</c->
+  <c- f>"merkleRootValid"</c-><c- p>:</c-> <c- kc>true</c->
+<c- p>}</c->
+</pre>
+   <h2 class="heading settled" data-level="10" id="integrity"><span class="secno">10. </span><span class="content">9 Integrity and Hashing Procedures</span><a class="self-link" href="#integrity"></a></h2>
+   <h3 class="heading settled" data-level="10.1" id="hashing"><span class="secno">10.1. </span><span class="content">9.1 Hashing Procedure</span><a class="self-link" href="#hashing"></a></h3>
+   <p>RWP uses exclusively <strong>SHA-256</strong> as the hashing procedure for:</p>
+   <ul>
+    <li data-md>
+     <p>Snapshot hashes (<code>snapshotHash</code>)</p>
+    <li data-md>
+     <p>Payload hashes (<code>payloadHash</code>)</p>
+    <li data-md>
+     <p>Schema version hashes (<code>schemaVersion</code>)</p>
+    <li data-md>
+     <p>Parent references (<code>parents</code>)</p>
+    <li data-md>
+     <p>Merkle root calculations</p>
+   </ul>
+   <p>A system MUST NOT use any hashing procedure other than SHA-256 for normative integrity proofs.</p>
+   <p class="note" role="note"><span class="marker">Note:</span> A future version of RWP MAY permit SHA-3 or other procedures as an alternative if cryptographic weaknesses in SHA-256 become known. Until then, SHA-256 is the only permitted procedure.</p>
+   <h3 class="heading settled" data-level="10.2" id="canonical-json"><span class="secno">10.2. </span><span class="content">9.2 Canonical JSON Serialisation</span><a class="self-link" href="#canonical-json"></a></h3>
+   <p>For all hash calculations over JSON objects, <strong>RFC 8785 (JSON Canonicalization Scheme, JCS)</strong> <a data-link-type="biblio" href="#biblio-rfc8785" title="JSON Canonicalization Scheme (JCS)">[RFC8785]</a> MUST be used.</p>
+   <p>Requirements:</p>
+   <ul>
+    <li data-md>
+     <p>Keys MUST be sorted alphabetically</p>
+    <li data-md>
+     <p>Unicode characters MUST be normalised (NFC)</p>
+    <li data-md>
+     <p>No superfluous whitespace or line breaks</p>
+    <li data-md>
+     <p>Numbers MUST be represented in their canonical form</p>
+   </ul>
+   <h3 class="heading settled" data-level="10.3" id="snapshot-integrity"><span class="secno">10.3. </span><span class="content">9.3 Snapshot Integrity</span><a class="self-link" href="#snapshot-integrity"></a></h3>
+   <p>A system MUST check the integrity of a <a data-link-type="dfn" href="#snapshot" id="ref-for-snapshot②①">snapshot</a> on the following events:</p>
+   <ul>
+    <li data-md>
+     <p>Receipt of a <a data-link-type="dfn" href="#snapshot" id="ref-for-snapshot②②">snapshot</a> from an external system</p>
+    <li data-md>
+     <p>Retrieval of a <a data-link-type="dfn" href="#snapshot" id="ref-for-snapshot②③">snapshot</a> for a linking operation</p>
+    <li data-md>
+     <p>Periodic integrity check</p>
+   </ul>
+   <p>If the integrity check fails, the system MUST:</p>
+   <ol>
+    <li data-md>
+     <p>Mark the <a data-link-type="dfn" href="#snapshot" id="ref-for-snapshot②④">snapshot</a> as <code>compromised</code></p>
+    <li data-md>
+     <p>Mark all dependent <a data-link-type="dfn" href="#records" id="ref-for-records③⑨">Records</a> as <code>integrity-warning</code></p>
+    <li data-md>
+     <p>Log the incident in the system log with timestamp and discrepancy</p>
+    <li data-md>
+     <p>Notify the responsible record owner via the DID (SHOULD)</p>
+   </ol>
+   <p>The system MUST NOT automatically attempt to reconstruct the original content.</p>
+   <h3 class="heading settled" data-level="10.4" id="signature"><span class="secno">10.4. </span><span class="content">9.4 Signature Procedure</span><a class="self-link" href="#signature"></a></h3>
+   <p>If the schema prescribes a signature (<code>signaturePolicy: owner</code> or <code>signaturePolicy: system</code>), the snapshot hash MUST be cryptographically signed during the finalisation act.</p>
+   <p>Requirements:</p>
+   <ul>
+    <li data-md>
+     <p>MUST be Ed25519 (EdDSA, <a data-link-type="biblio" href="#biblio-rfc8037" title="CFRG Elliptic Curves for JOSE and COSE (Ed25519)">[RFC8037]</a>) or P-256 (ECDSA, NIST)</p>
+    <li data-md>
+     <p>The signature MUST be calculated over the canonical <code>snapshotHash</code> value (as hex string)</p>
+    <li data-md>
+     <p>The signature MUST be stored in the <code>signature</code> field as a multibase-encoded value</p>
+    <li data-md>
+     <p>The key used MUST be published in the DID document of the record owner as a verification method</p>
+   </ul>
+   <h3 class="heading settled" data-level="10.5" id="merkle-algorithm"><span class="secno">10.5. </span><span class="content">9.5 Merkle Tree Algorithm</span><a class="self-link" href="#merkle-algorithm"></a></h3>
+   <p>For the calculation of the <a data-link-type="dfn" href="#case" id="ref-for-case①②">Case</a> <a data-link-type="dfn" href="#merkle-root" id="ref-for-merkle-root②">Merkle root</a>, the following algorithm MUST be used:</p>
+<pre>function merkleRoot(hashes: SHA256[]) -> SHA256:
+if hashes.length == 0: return SHA256("")
+if hashes.length == 1: return hashes
+
+sorted = sort(hashes) // alphabetically by hex string
+
+while sorted.length > 1:
+nextLevel = ]
+for i in range(0, sorted.length, 2):
+if i + 1 &lt; sorted.length:
+nextLevel.append( SHA256( sorted[i] || sorted[i+1] ) )
+else:
+nextLevel.append( sorted[i] ) // odd element carried over unchanged
+sorted = nextLevel
+
+return sorted
+</pre>
+   <h2 class="heading settled" data-level="11" id="ledger"><span class="secno">11. </span><span class="content">10 Optional Ledger Anchoring</span><a class="self-link" href="#ledger"></a></h2>
+   <h3 class="heading settled" data-level="11.1" id="ledger-purpose"><span class="secno">11.1. </span><span class="content">10.1 Purpose and Scope</span><a class="self-link" href="#ledger-purpose"></a></h3>
+   <p>Ledger anchoring is an <strong>optional extension</strong> of RWP. It enables the external, immutable proof of <a data-link-type="dfn" href="#case" id="ref-for-case①③">Case</a> <a data-link-type="dfn" href="#merkle-root" id="ref-for-merkle-root③">Merkle roots</a> on a distributed infrastructure.</p>
+   <p>A system MUST be fully RWP-compliant without ledger anchoring. Ledger anchoring supplements the internal integrity assurance with an external proof independent of the operating organisation.</p>
+   <h3 class="heading settled" data-level="11.2" id="ledger-requirements"><span class="secno">11.2. </span><span class="content">10.2 Requirements for the Ledger</span><a class="self-link" href="#ledger-requirements"></a></h3>
+   <p>If a system implements ledger anchoring, the ledger used MUST:</p>
+   <ul>
+    <li data-md>
+     <p>be permissioned (no public, anonymous blockchain)</p>
+    <li data-md>
+     <p>guarantee immutable entries (append-only)</p>
+    <li data-md>
+     <p>deliver a provable timestamp per entry</p>
+    <li data-md>
+     <p>be operated independently of the organisation that manages the <a data-link-type="dfn" href="#records" id="ref-for-records④⓪">Records</a></p>
+    <li data-md>
+     <p>be readable by all authorised verification parties</p>
+   </ul>
+   <p><strong>Recommended implementation</strong>: Hyperledger Fabric <a data-link-type="biblio" href="#biblio-hyperledger" title="Hyperledger Fabric">[HYPERLEDGER]</a>. Other permissioned distributed ledger technologies MAY be used if they fulfil the above requirements.</p>
+   <h3 class="heading settled" data-level="11.3" id="anchoring-protocol"><span class="secno">11.3. </span><span class="content">10.3 Anchoring Protocol</span><a class="self-link" href="#anchoring-protocol"></a></h3>
+   <p>When a finalised <a data-link-type="dfn" href="#case" id="ref-for-case①④">Case</a> is anchored, the ledger entry MUST contain the following fields:</p>
+<pre class="highlight language-json"><c- p>{</c->
+  <c- f>"rwpAnchor"</c-><c- p>:</c-> <c- p>{</c->
+    <c- f>"version"</c-><c- p>:</c-> <c- u>"0.1"</c-><c- p>,</c->
+    <c- f>"caseDid"</c-><c- p>:</c-> <c- u>"did:rwp:bern.ch:f47ac10b-case-001"</c-><c- p>,</c->
+    <c- f>"caseSnapshotHash"</c-><c- p>:</c-> <c- u>"sha256:case-finalized-snapshot-hash..."</c-><c- p>,</c->
+    <c- f>"merkleRoot"</c-><c- p>:</c-> <c- u>"sha256:case-merkle-root..."</c-><c- p>,</c->
+    <c- f>"anchoredAt"</c-><c- p>:</c-> <c- u>"2026-05-31T16:00:00Z"</c-><c- p>,</c->
+    <c- f>"anchoredBy"</c-><c- p>:</c-> <c- u>"did:rwp:bern.ch:controller-001"</c-><c- p>,</c->
+    <c- f>"ledgerTxId"</c-><c- p>:</c-> <c- u>"abc123..."</c->
+  <c- p>}</c->
+<c- p>}</c->
+</pre>
+   <p>The ledger entry MUST NOT contain any payload content, personal data, or classified information. Only cryptographic hash values and identifiers are permitted.</p>
+   <h3 class="heading settled" data-level="11.4" id="anchoring-reference"><span class="secno">11.4. </span><span class="content">10.4 Anchoring Reference in the Case</span><a class="self-link" href="#anchoring-reference"></a></h3>
+   <p>When a <a data-link-type="dfn" href="#case" id="ref-for-case①⑤">Case</a> has been anchored, the <a data-link-type="dfn" href="#case" id="ref-for-case①⑥">Case</a> snapshot MUST be updated with an <code>anchorReference</code> field:</p>
+<pre class="highlight language-json"><c- p>{</c->
+  <c- f>"anchorReference"</c-><c- p>:</c-> <c- p>{</c->
+    <c- f>"ledgerType"</c-><c- p>:</c-> <c- u>"hyperledger-fabric"</c-><c- p>,</c->
+    <c- f>"ledgerEndpoint"</c-><c- p>:</c-> <c- u>"https://ledger.bern.ch/api/v1"</c-><c- p>,</c->
+    <c- f>"txId"</c-><c- p>:</c-> <c- u>"abc123..."</c-><c- p>,</c->
+    <c- f>"anchoredAt"</c-><c- p>:</c-> <c- u>"2026-05-31T16:00:00Z"</c->
+  <c- p>}</c->
+<c- p>}</c->
+</pre>
+   <h2 class="heading settled" data-level="12" id="access-control"><span class="secno">12. </span><span class="content">11 Access Control (Delegation Framework)</span><a class="self-link" href="#access-control"></a></h2>
+   <h3 class="heading settled" data-level="12.1" id="access-principles"><span class="secno">12.1. </span><span class="content">11.1 Scope and Principles</span><a class="self-link" href="#access-principles"></a></h3>
+   <p>RWP deliberately defines no mandatory authorisation model. Data security and information protection are delegated to the implementing systems. This chapter defines an <strong>optional, interoperable delegation framework</strong> that compliant systems MAY implement.</p>
+   <p>The core principle: access control in RWP is <strong>attribute-based</strong> (ABAC) and <strong>delegatable</strong>. Rights are not assigned to roles in a fixed hierarchy, but expressed as verifiable claims attached to DIDs.</p>
+   <h3 class="heading settled" data-level="12.2" id="access-policy"><span class="secno">12.2. </span><span class="content">11.2 Access Policy Block</span><a class="self-link" href="#access-policy"></a></h3>
+   <p>A <a data-link-type="dfn" href="#records" id="ref-for-records④①">Record</a> snapshot MAY contain an <code>accessPolicy</code> block in the <a data-link-type="dfn" href="#metadata" id="ref-for-metadata②">metadata</a>:</p>
+<pre class="highlight language-json"><c- p>{</c->
+  <c- f>"accessPolicy"</c-><c- p>:</c-> <c- p>{</c->
+    <c- f>"visibility"</c-><c- p>:</c-> <c- u>"restricted"</c-><c- p>,</c->
+    <c- f>"readAccess"</c-><c- p>:</c-> <c- p>[</c->
+      <c- u>"did:rwp:bern.ch:unit-legal"</c-><c- p>,</c->
+      <c- u>"did:rwp:bern.ch:unit-planning"</c->
+    <c- p>],</c->
+    <c- f>"writeAccess"</c-><c- p>:</c-> <c- p>[</c->
+      <c- u>"did:rwp:bern.ch:user-petra-muster"</c->
+    <c- p>],</c->
+    <c- f>"delegationAllowed"</c-><c- p>:</c-> <c- kc>true</c-><c- p>,</c->
+    <c- f>"expiresAt"</c-><c- p>:</c-> <c- kc>null</c->
+  <c- p>}</c->
+<c- p>}</c->
+</pre>
+   <table class="data">
+    <thead>
+     <tr>
+      <th>Field
+      <th>Required
+      <th>Description
+    <tbody>
+     <tr>
+      <td><code>visibility</code>
+      <td>SHOULD
+      <td><code>public</code>, <code>restricted</code>, or <code>confidential</code>
+     <tr>
+      <td><code>readAccess</code>
+      <td>MAY
+      <td>Array of DIDs with read permission
+     <tr>
+      <td><code>writeAccess</code>
+      <td>MAY
+      <td>Array of DIDs with write permission (draft state only)
+     <tr>
+      <td><code>delegationAllowed</code>
+      <td>MAY
+      <td>Whether listed DIDs may further delegate access
+     <tr>
+      <td><code>expiresAt</code>
+      <td>MAY
+      <td>ISO 8601 timestamp after which access policy expires
+   </table>
+   <h3 class="heading settled" data-level="12.3" id="delegation-chain"><span class="secno">12.3. </span><span class="content">11.3 Delegation Chain</span><a class="self-link" href="#delegation-chain"></a></h3>
+   <p>When <code>delegationAllowed: true</code>, a listed DID MAY issue a signed delegation token granting access to a third DID. The delegation token MUST:</p>
+   <ul>
+    <li data-md>
+     <p>be signed by the delegating DID’s verification key</p>
+    <li data-md>
+     <p>reference the original Record DID</p>
+    <li data-md>
+     <p>specify the access level being delegated (<code>read</code> or <code>write</code>)</p>
+    <li data-md>
+     <p>include an expiry timestamp</p>
+   </ul>
+   <p>Implementing systems MAY enforce delegation chains and MUST validate delegation token signatures before granting access.</p>
+   <h2 class="heading settled" data-level="13" id="federation-chapter"><span class="secno">13. </span><span class="content">12 Federation</span><a class="self-link" href="#federation-chapter"></a></h2>
+   <h3 class="heading settled" data-level="13.1" id="federation-model"><span class="secno">13.1. </span><span class="content">12.1 Federation Model</span><a class="self-link" href="#federation-model"></a></h3>
+   <p>RWP federation is modelled after the DNS architecture: a <strong>decentralised, hierarchical namespace model</strong> without a single point of failure.</p>
+   <p>Every RWP namespace (the <code>&lt;namespace></code> component of a DID, e.g. <code>bern.ch</code>) is operated by the owning organisation. Namespace resolvers are federated: each resolver knows its own namespace and can route resolution requests for unknown namespaces to peer resolvers.</p>
+   <h3 class="heading settled" data-level="13.2" id="namespace-registry"><span class="secno">13.2. </span><span class="content">12.2 Namespace Registry</span><a class="self-link" href="#namespace-registry"></a></h3>
+   <p>The authoritative namespace registry is the subject of a future RWP extension. During the transition phase, the following applies:</p>
+   <ul>
+    <li data-md>
+     <p>A namespace SHOULD be formed on the basis of the DNS domain name of the organisation (e.g. <code>bern.ch</code>, <code>bag.admin.ch</code>, <code>usz.ch</code>)</p>
+    <li data-md>
+     <p>DNS ownership of the domain implies namespace authority, no separate registration required during transition</p>
+    <li data-md>
+     <p>Namespace conflicts are resolved by DNS priority</p>
+   </ul>
+   <h3 class="heading settled" data-level="13.3" id="resolver-requirements"><span class="secno">13.3. </span><span class="content">12.3 Resolver Requirements</span><a class="self-link" href="#resolver-requirements"></a></h3>
+   <p>An RWP federation resolver MUST:</p>
+   <ul>
+    <li data-md>
+     <p>Accept DID resolution requests of the method <code>rwp</code></p>
+    <li data-md>
+     <p>Resolve DIDs within its own namespace directly</p>
+    <li data-md>
+     <p>For unknown namespaces: query the DNS TXT record of the namespace domain for the <code>_rwp-resolver</code> entry</p>
+    <li data-md>
+     <p>Cache resolver endpoints with a TTL of at least 300 seconds</p>
+    <li data-md>
+     <p>Return a <code>404</code> response when neither the DID nor a resolver for its namespace can be found</p>
+   </ul>
+   <p><strong>DNS TXT record format for resolver discovery:</strong></p>
+<pre>_rwp-resolver.bern.ch. 300 IN TXT "v=rwp1;endpoint=https://resolver.bern.ch/api/v1"
+</pre>
+   <h3 class="heading settled" data-level="13.4" id="cross-namespace"><span class="secno">13.4. </span><span class="content">12.4 Cross-Namespace Links</span><a class="self-link" href="#cross-namespace"></a></h3>
+   <p>A <a data-link-type="dfn" href="#records" id="ref-for-records④②">Record</a> in namespace <code>bern.ch</code> MAY contain <a data-link-type="dfn" href="#hard-link" id="ref-for-hard-link③">hard links</a> to <a data-link-type="dfn" href="#records" id="ref-for-records④③">Records</a> in other namespaces (e.g. <code>did:rwp:bag.admin.ch:guideline-001</code>).</p>
+   <p>When resolving cross-namespace links, a system MUST:</p>
+   <ol>
+    <li data-md>
+     <p>Extract the namespace component from the linked DID</p>
+    <li data-md>
+     <p>Discover the resolver endpoint via DNS TXT lookup (Section 12.3)</p>
+    <li data-md>
+     <p>Verify the <a data-link-type="dfn" href="#snapshot" id="ref-for-snapshot②⑤">snapshot</a> hash of the linked <a data-link-type="dfn" href="#records" id="ref-for-records④④">Record</a> after retrieval</p>
+    <li data-md>
+     <p>Cache the resolved <a data-link-type="dfn" href="#snapshot" id="ref-for-snapshot②⑥">snapshot</a> locally with the original hash for integrity verification</p>
+   </ol>
+   <h2 class="heading settled" data-level="14" id="deletion-chapter"><span class="secno">14. </span><span class="content">13 Payload Deletion</span><a class="self-link" href="#deletion-chapter"></a></h2>
+   <h3 class="heading settled" data-level="14.1" id="deletion-principles"><span class="secno">14.1. </span><span class="content">13.1 Deletion Principles</span><a class="self-link" href="#deletion-principles"></a></h3>
+   <p>RecordWeb’s immutability and data protection erasure obligations (GDPR, Swiss DSG) are in tension. RWP resolves this tension through a tiered deletion regime.</p>
+   <p>The applicable regime is declared in the <code>deletionRegime</code> field of the <a data-link-type="dfn" href="#records" id="ref-for-records④⑤">Record</a>’s <a data-link-type="dfn" href="#metadata" id="ref-for-metadata③">metadata</a> at the time of creation. Implementations MUST respect this field and MAY enforce it at the infrastructure level.</p>
+   <h3 class="heading settled" data-level="14.2" id="deletion-regimes"><span class="secno">14.2. </span><span class="content">13.2 Deletion Regimes</span><a class="self-link" href="#deletion-regimes"></a></h3>
+   <p>RWP defines three deletion regimes:</p>
+   <table class="data">
+    <thead>
+     <tr>
+      <th>Regime
+      <th>Key
+      <th>Description
+      <th>When applicable
+    <tbody>
+     <tr>
+      <td>Payload deletion
+      <td><code>payload-only</code>
+      <td>The payload is deleted; DID, metadata, and version graph are retained. The Record continues to exist as a provable "empty shell".
+      <td>Default. Where provenance continuity is legally required despite erasure (e.g. audit trails, public registers).
+     <tr>
+      <td>Full deletion
+      <td><code>full-delete</code>
+      <td>The entire Record (including DID, metadata, and graph edges) is deleted.
+      <td>Where no retention obligation exists and the right to erasure is absolute (e.g. erroneously captured personal data with no public interest basis).
+     <tr>
+      <td>Deletion exemption
+      <td><code>exempt</code>
+      <td>No deletion occurs. The statutory retention obligation is documented as metadata.
+      <td>Where a statutory retention obligation overrides the erasure claim (e.g. tax records, notarial acts, public register entries).
+   </table>
+   <h3 class="heading settled" data-level="14.3" id="deletion-record"><span class="secno">14.3. </span><span class="content">13.3 DeletionRecord Protocol</span><a class="self-link" href="#deletion-record"></a></h3>
+   <p>When a <a data-link-type="dfn" href="#payload" id="ref-for-payload⑤">payload</a> deletion is executed, a <code>DeletionRecord</code> MUST be created and finalised before the payload is removed.</p>
+   <p>The <code>DeletionRecord</code> MUST contain:</p>
+<pre class="highlight language-json"><c- p>{</c->
+  <c- f>"deletionRecord"</c-><c- p>:</c-> <c- p>{</c->
+    <c- f>"targetDid"</c-><c- p>:</c-> <c- u>"did:rwp:bern.ch:f47ac10b-58cc-4372-a567-0e02b2c3d479"</c-><c- p>,</c->
+    <c- f>"targetSnapshotHash"</c-><c- p>:</c-> <c- u>"sha256:snapshot-to-be-deleted..."</c-><c- p>,</c->
+    <c- f>"deletionRegime"</c-><c- p>:</c-> <c- u>"payload-only"</c-><c- p>,</c->
+    <c- f>"legalBasis"</c-><c- p>:</c-> <c- u>"GDPR Art. 17 — Right to erasure"</c-><c- p>,</c->
+    <c- f>"requestedBy"</c-><c- p>:</c-> <c- u>"did:rwp:bern.ch:user-max-mustermann"</c-><c- p>,</c->
+    <c- f>"approvedBy"</c-><c- p>:</c-> <c- u>"did:rwp:bern.ch:unit-legal"</c-><c- p>,</c->
+    <c- f>"deletedAt"</c-><c- p>:</c-> <c- u>"2026-06-01T10:00:00Z"</c-><c- p>,</c->
+    <c- f>"retainedFields"</c-><c- p>:</c-> <c- p>[</c-><c- u>"did"</c-><c- p>,</c-> <c- u>"metadata"</c-><c- p>,</c-> <c- u>"versionGraph"</c-><c- p>]</c->
+  <c- p>}</c->
+<c- p>}</c->
+</pre>
+   <p>After the <code>DeletionRecord</code> is finalised:</p>
+   <ol>
+    <li data-md>
+     <p>The <a data-link-type="dfn" href="#payload" id="ref-for-payload⑥">payload</a> bytes are securely overwritten</p>
+    <li data-md>
+     <p>The <code>payloadHash</code> field in the <a data-link-type="dfn" href="#snapshot" id="ref-for-snapshot②⑦">snapshot</a> is replaced with the string <code>"deleted:&lt;DeletionRecord-DID>"</code></p>
+    <li data-md>
+     <p>The DID document’s <code>currentVersion</code> field is updated</p>
+    <li data-md>
+     <p>The DID resolver MUST return HTTP 410 for <code>full-delete</code> regimes</p>
+   </ol>
+   <h3 class="heading settled" data-level="14.4" id="solid-delivery"><span class="secno">14.4. </span><span class="content">13.4 Solid Pod Delivery (optional)</span><a class="self-link" href="#solid-delivery"></a></h3>
+   <p>For <a data-link-type="dfn" href="#records" id="ref-for-records④⑥">Records</a> whose primary subject is an individual citizen, RWP offers an optional delivery extension: delivery of finalised <a data-link-type="dfn" href="#records" id="ref-for-records④⑦">Records</a> into a citizen’s Solid Pod.</p>
+   <p>When a system implements Solid Pod delivery, it MUST:</p>
+   <ul>
+    <li data-md>
+     <p>Obtain explicit, revocable write consent from the citizen via their Pod’s access control mechanism</p>
+    <li data-md>
+     <p>Deliver the complete <a data-link-type="dfn" href="#snapshot" id="ref-for-snapshot②⑧">snapshot</a> (DID, <a data-link-type="dfn" href="#metadata" id="ref-for-metadata④">metadata</a>, <a data-link-type="dfn" href="#payload" id="ref-for-payload⑦">payload</a>) to the Pod</p>
+    <li data-md>
+     <p>Retain the canonical copy in its own RWP system, the Pod copy is an additional output, not a transfer of authority</p>
+    <li data-md>
+     <p>Include a <code>deliveryTarget</code> field in the optional metadata extension block</p>
+   </ul>
+   <p>Typical use cases: driving licences, medical images, residence registration confirmations, diplomas, building permits (delivered to the applicant).</p>
+   <p>The citizen MAY present the Pod-held <a data-link-type="dfn" href="#records" id="ref-for-records④⑧">Record</a> to any third party, who can independently verify its authenticity via the DID and cryptographic hash without querying the issuing authority.</p>
+   <h2 class="heading settled" data-level="15" id="conformance-requirements"><span class="secno">15. </span><span class="content">14 Conformance Requirements</span><a class="self-link" href="#conformance-requirements"></a></h2>
+   <h3 class="heading settled" data-level="15.1" id="conformance-levels"><span class="secno">15.1. </span><span class="content">14.1 Conformance Levels</span><a class="self-link" href="#conformance-levels"></a></h3>
+   <p>RWP defines two conformance levels.</p>
+   <table class="data">
+    <thead>
+     <tr>
+      <th>Level
+      <th>Chapters
+      <th>Description
+    <tbody>
+     <tr>
+      <td><strong>Level 1 — Basic</strong>
+      <td>2, 3, 4, 5, 6, 7, 9
+      <td>Record identity, snapshots, payload, hashing, version graph. Systems fulfilling Level 1 can interoperate with one another.
+     <tr>
+      <td><strong>Level 2 — Full</strong>
+      <td>2–9, 8, 12, 13
+      <td>All Level 1 requirements plus Cases, federation, and payload deletion. Systems fulfilling Level 2 can produce complete, provable Cases.
+   </table>
+   <h3 class="heading settled" data-level="15.2" id="level-1-checklist"><span class="secno">15.2. </span><span class="content">14.2 Level 1 Checklist</span><a class="self-link" href="#level-1-checklist"></a></h3>
+   <p>A system claiming Level 1 conformance MUST implement:</p>
+   <ul>
+    <li data-md>
+     <p>[ ] DID generation per Section 2.2 (<code>did:rwp:&lt;namespace>:&lt;uuid-v4></code>)</p>
+    <li data-md>
+     <p>[ ] DID document per Section 2.3 with all MUST fields</p>
+    <li data-md>
+     <p>[ ] DID resolver per Section 2.4 (HTTP 200/404/410)</p>
+    <li data-md>
+     <p>[ ] Snapshot structure per Section 3.2 with minimum metadata set (Section 3.3)</p>
+    <li data-md>
+     <p>[ ] Snapshot hash calculation per Section 3.4 (SHA-256 + RFC 8785)</p>
+    <li data-md>
+     <p>[ ] Payload validation before finalisation per Section 4.1</p>
+    <li data-md>
+     <p>[ ] SchemaRecord support per Section 5.2</p>
+    <li data-md>
+     <p>[ ] Core Record types per Section 5.3</p>
+    <li data-md>
+     <p>[ ] State model (draft/finalized) per Section 6.1</p>
+    <li data-md>
+     <p>[ ] Finalisation checks per Section 6.3</p>
+    <li data-md>
+     <p>[ ] Version graph as DAG per Section 7.1 (cycle detection MUST)</p>
+    <li data-md>
+     <p>[ ] SHA-256 exclusively per Section 9.1</p>
+    <li data-md>
+     <p>[ ] RFC 8785 canonical JSON per Section 9.2</p>
+   </ul>
+   <h3 class="heading settled" data-level="15.3" id="level-2-checklist"><span class="secno">15.3. </span><span class="content">14.3 Level 2 Checklist</span><a class="self-link" href="#level-2-checklist"></a></h3>
+   <p>A system claiming Level 2 conformance MUST additionally implement:</p>
+   <ul>
+    <li data-md>
+     <p>[ ] CaseRecord per Chapter 8 (trigger, context, process, decision, result)</p>
+    <li data-md>
+     <p>[ ] Hard and soft link distinction per Section 8.4</p>
+    <li data-md>
+     <p>[ ] Merkle root calculation per Section 8.5 and 9.5</p>
+    <li data-md>
+     <p>[ ] Case completeness check per Section 8.6</p>
+    <li data-md>
+     <p>[ ] Federation resolver per Section 12.3 (DNS TXT lookup)</p>
+    <li data-md>
+     <p>[ ] Cross-namespace link resolution per Section 12.4</p>
+    <li data-md>
+     <p>[ ] Deletion regime declaration per Section 13.1</p>
+    <li data-md>
+     <p>[ ] DeletionRecord protocol per Section 13.3</p>
+   </ul>
+   <h2 class="heading settled" data-level="16" id="annex-a"><span class="secno">16. </span><span class="content">Annex A: Normative JSON Schemas</span><a class="self-link" href="#annex-a"></a></h2>
+   <h3 class="heading settled" data-level="16.1" id="schema-snapshot"><span class="secno">16.1. </span><span class="content">A.1 Snapshot Metadata Schema</span><a class="self-link" href="#schema-snapshot"></a></h3>
+<pre class="highlight language-json"><c- p>{</c->
+  <c- f>"$schema"</c-><c- p>:</c-> <c- u>"https://json-schema.org/draft/2020-12/schema"</c-><c- p>,</c->
+  <c- f>"$id"</c-><c- p>:</c-> <c- u>"https://recordweb.github.io/rwp/schemas/snapshot-metadata.json"</c-><c- p>,</c->
+  <c- f>"title"</c-><c- p>:</c-> <c- u>"RWP Snapshot Metadata"</c-><c- p>,</c->
+  <c- f>"type"</c-><c- p>:</c-> <c- u>"object"</c-><c- p>,</c->
+  <c- f>"required"</c-><c- p>:</c-> <c- p>[</c-><c- u>"did"</c-><c- p>,</c-><c- u>"snapshotHash"</c-><c- p>,</c-><c- u>"recordType"</c-><c- p>,</c-><c- u>"schemaVersion"</c-><c- p>,</c-><c- u>"state"</c-><c- p>,</c->
+               <c- u>"created"</c-><c- p>,</c-><c- u>"owner"</c-><c- p>,</c-><c- u>"parents"</c-><c- p>,</c-><c- u>"payloadHash"</c-><c- p>,</c-><c- u>"payloadFormat"</c-><c- p>],</c->
+  <c- f>"properties"</c-><c- p>:</c-> <c- p>{</c->
+    <c- f>"did"</c-><c- p>:</c->             <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^did:rwp:[^:]+:[^:]+$"</c-> <c- p>},</c->
+    <c- f>"snapshotHash"</c-><c- p>:</c->    <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^sha256:[0-9a-f]{64}$"</c-> <c- p>},</c->
+    <c- f>"recordType"</c-><c- p>:</c->      <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^did:rwp:"</c-> <c- p>},</c->
+    <c- f>"schemaVersion"</c-><c- p>:</c->   <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^sha256:[0-9a-f]{64}$"</c-> <c- p>},</c->
+    <c- f>"state"</c-><c- p>:</c->           <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"enum"</c-><c- p>:</c-> <c- p>[</c-><c- u>"draft"</c-><c- p>,</c-><c- u>"finalized"</c-><c- p>]</c-> <c- p>},</c->
+    <c- f>"created"</c-><c- p>:</c->         <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"format"</c-><c- p>:</c-> <c- u>"date-time"</c-> <c- p>},</c->
+    <c- f>"finalized"</c-><c- p>:</c->       <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"format"</c-><c- p>:</c-> <c- u>"date-time"</c-> <c- p>},</c->
+    <c- f>"owner"</c-><c- p>:</c->           <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^did:rwp:"</c-> <c- p>},</c->
+    <c- f>"parents"</c-><c- p>:</c->         <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"array"</c-><c- p>,</c-> <c- f>"items"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c->
+                         <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^sha256:[0-9a-f]{64}$"</c-> <c- p>}</c-> <c- p>},</c->
+    <c- f>"classification"</c-><c- p>:</c->  <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-> <c- p>},</c->
+    <c- f>"retentionPolicy"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^did:rwp:"</c-> <c- p>},</c->
+    <c- f>"tags"</c-><c- p>:</c->            <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"array"</c-><c- p>,</c-> <c- f>"items"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-> <c- p>}</c-> <c- p>},</c->
+    <c- f>"accessPolicy"</c-><c- p>:</c->    <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- p>[</c-><c- u>"object"</c-><c- p>,</c-><c- u>"null"</c-><c- p>]</c-> <c- p>},</c->
+    <c- f>"payloadHash"</c-><c- p>:</c->     <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^sha256:[0-9a-f]{64}$"</c-> <c- p>},</c->
+    <c- f>"payloadFormat"</c-><c- p>:</c->   <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-> <c- p>},</c->
+    <c- f>"signature"</c-><c- p>:</c->       <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-> <c- p>},</c->
+    <c- f>"deletionRegime"</c-><c- p>:</c->  <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c->
+                         <c- f>"enum"</c-><c- p>:</c-> <c- p>[</c-><c- u>"payload-only"</c-><c- p>,</c-><c- u>"full-delete"</c-><c- p>,</c-><c- u>"exempt"</c-><c- p>]</c-> <c- p>}</c->
+  <c- p>}</c->
+<c- p>}</c->
+</pre>
+   <h3 class="heading settled" data-level="16.2" id="schema-case"><span class="secno">16.2. </span><span class="content">A.2 CaseRecord Payload Schema</span><a class="self-link" href="#schema-case"></a></h3>
+<pre class="highlight language-json"><c- p>{</c->
+  <c- f>"$schema"</c-><c- p>:</c-> <c- u>"https://json-schema.org/draft/2020-12/schema"</c-><c- p>,</c->
+  <c- f>"$id"</c-><c- p>:</c-> <c- u>"https://recordweb.github.io/rwp/schemas/case-record.json"</c-><c- p>,</c->
+  <c- f>"title"</c-><c- p>:</c-> <c- u>"RWP CaseRecord Payload"</c-><c- p>,</c->
+  <c- f>"type"</c-><c- p>:</c-> <c- u>"object"</c-><c- p>,</c->
+  <c- f>"required"</c-><c- p>:</c-> <c- p>[</c-><c- u>"caseId"</c-><c- p>,</c-><c- u>"caseType"</c-><c- p>,</c-><c- u>"title"</c-><c- p>,</c-><c- u>"trigger"</c-><c- p>,</c-><c- u>"merkleRoot"</c-><c- p>],</c->
+  <c- f>"properties"</c-><c- p>:</c-> <c- p>{</c->
+    <c- f>"caseId"</c-><c- p>:</c->     <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^did:rwp:"</c-> <c- p>},</c->
+    <c- f>"caseType"</c-><c- p>:</c->   <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^did:rwp:"</c-> <c- p>},</c->
+    <c- f>"title"</c-><c- p>:</c->      <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-> <c- p>},</c->
+    <c- f>"trigger"</c-><c- p>:</c->    <c- p>{</c-> <c- f>"$ref"</c-><c- p>:</c-> <c- u>"#/$defs/hardLink"</c-> <c- p>},</c->
+    <c- f>"context"</c-><c- p>:</c->    <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"array"</c-><c- p>,</c-> <c- f>"items"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"$ref"</c-><c- p>:</c-> <c- u>"#/$defs/link"</c-> <c- p>}</c-> <c- p>},</c->
+    <c- f>"process"</c-><c- p>:</c->    <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"array"</c-><c- p>,</c-> <c- f>"items"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"$ref"</c-><c- p>:</c-> <c- u>"#/$defs/link"</c-> <c- p>}</c-> <c- p>},</c->
+    <c- f>"decision"</c-><c- p>:</c->   <c- p>{</c-> <c- f>"oneOf"</c-><c- p>:</c-> <c- p>[{</c-> <c- f>"$ref"</c-><c- p>:</c-> <c- u>"#/$defs/hardLink"</c-> <c- p>},</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"null"</c-> <c- p>}]</c-> <c- p>},</c->
+    <c- f>"result"</c-><c- p>:</c->     <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"array"</c-><c- p>,</c-> <c- f>"items"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"$ref"</c-><c- p>:</c-> <c- u>"#/$defs/hardLink"</c-> <c- p>}</c-> <c- p>},</c->
+    <c- f>"merkleRoot"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^sha256:[0-9a-f]{64}$"</c-> <c- p>}</c->
+  <c- p>},</c->
+  <c- f>"$defs"</c-><c- p>:</c-> <c- p>{</c->
+    <c- f>"hardLink"</c-><c- p>:</c-> <c- p>{</c->
+      <c- f>"type"</c-><c- p>:</c-> <c- u>"object"</c-><c- p>,</c->
+      <c- f>"required"</c-><c- p>:</c-> <c- p>[</c-><c- u>"type"</c-><c- p>,</c-><c- u>"recordDid"</c-><c- p>,</c-><c- u>"snapshotHash"</c-><c- p>],</c->
+      <c- f>"properties"</c-><c- p>:</c-> <c- p>{</c->
+        <c- f>"type"</c-><c- p>:</c->         <c- p>{</c-> <c- f>"const"</c-><c- p>:</c-> <c- u>"hard"</c-> <c- p>},</c->
+        <c- f>"recordDid"</c-><c- p>:</c->    <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^did:rwp:"</c-> <c- p>},</c->
+        <c- f>"snapshotHash"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^sha256:[0-9a-f]{64}$"</c-> <c- p>},</c->
+        <c- f>"role"</c-><c- p>:</c->         <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-> <c- p>}</c->
+      <c- p>}</c->
+    <c- p>},</c->
+    <c- f>"link"</c-><c- p>:</c-> <c- p>{</c->
+      <c- f>"type"</c-><c- p>:</c-> <c- u>"object"</c-><c- p>,</c->
+      <c- f>"required"</c-><c- p>:</c-> <c- p>[</c-><c- u>"type"</c-><c- p>,</c-><c- u>"recordDid"</c-><c- p>],</c->
+      <c- f>"properties"</c-><c- p>:</c-> <c- p>{</c->
+        <c- f>"type"</c-><c- p>:</c->         <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"enum"</c-><c- p>:</c-> <c- p>[</c-><c- u>"hard"</c-><c- p>,</c-><c- u>"working"</c-><c- p>]</c-> <c- p>},</c->
+        <c- f>"recordDid"</c-><c- p>:</c->    <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^did:rwp:"</c-> <c- p>},</c->
+        <c- f>"snapshotHash"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^sha256:[0-9a-f]{64}$"</c-> <c- p>},</c->
+        <c- f>"role"</c-><c- p>:</c->         <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-> <c- p>}</c->
+      <c- p>}</c->
+    <c- p>}</c->
+  <c- p>}</c->
+<c- p>}</c->
+</pre>
+   <h3 class="heading settled" data-level="16.3" id="schema-deletion"><span class="secno">16.3. </span><span class="content">A.3 DeletionRecord Payload Schema</span><a class="self-link" href="#schema-deletion"></a></h3>
+<pre class="highlight language-json"><c- p>{</c->
+  <c- f>"$schema"</c-><c- p>:</c-> <c- u>"https://json-schema.org/draft/2020-12/schema"</c-><c- p>,</c->
+  <c- f>"$id"</c-><c- p>:</c-> <c- u>"https://recordweb.github.io/rwp/schemas/deletion-record.json"</c-><c- p>,</c->
+  <c- f>"title"</c-><c- p>:</c-> <c- u>"RWP DeletionRecord Payload"</c-><c- p>,</c->
+  <c- f>"type"</c-><c- p>:</c-> <c- u>"object"</c-><c- p>,</c->
+  <c- f>"required"</c-><c- p>:</c-> <c- p>[</c-><c- u>"deletionRecord"</c-><c- p>],</c->
+  <c- f>"properties"</c-><c- p>:</c-> <c- p>{</c->
+    <c- f>"deletionRecord"</c-><c- p>:</c-> <c- p>{</c->
+      <c- f>"type"</c-><c- p>:</c-> <c- u>"object"</c-><c- p>,</c->
+      <c- f>"required"</c-><c- p>:</c-> <c- p>[</c-><c- u>"targetDid"</c-><c- p>,</c-><c- u>"targetSnapshotHash"</c-><c- p>,</c-><c- u>"deletionRegime"</c-><c- p>,</c->
+                   <c- u>"legalBasis"</c-><c- p>,</c-><c- u>"requestedBy"</c-><c- p>,</c-><c- u>"approvedBy"</c-><c- p>,</c-><c- u>"deletedAt"</c-><c- p>],</c->
+      <c- f>"properties"</c-><c- p>:</c-> <c- p>{</c->
+        <c- f>"targetDid"</c-><c- p>:</c->          <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^did:rwp:"</c-> <c- p>},</c->
+        <c- f>"targetSnapshotHash"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c->
+                                <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^sha256:[0-9a-f]{64}$"</c-> <c- p>},</c->
+        <c- f>"deletionRegime"</c-><c- p>:</c->     <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c->
+                                <c- f>"enum"</c-><c- p>:</c-> <c- p>[</c-><c- u>"payload-only"</c-><c- p>,</c-><c- u>"full-delete"</c-><c- p>,</c-><c- u>"exempt"</c-><c- p>]</c-> <c- p>},</c->
+        <c- f>"legalBasis"</c-><c- p>:</c->         <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-> <c- p>},</c->
+        <c- f>"requestedBy"</c-><c- p>:</c->        <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^did:rwp:"</c-> <c- p>},</c->
+        <c- f>"approvedBy"</c-><c- p>:</c->         <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^did:rwp:"</c-> <c- p>},</c->
+        <c- f>"deletedAt"</c-><c- p>:</c->          <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"format"</c-><c- p>:</c-> <c- u>"date-time"</c-> <c- p>},</c->
+        <c- f>"retainedFields"</c-><c- p>:</c->     <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"array"</c-><c- p>,</c->
+                                <c- f>"items"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-> <c- p>}</c-> <c- p>}</c->
+      <c- p>}</c->
+    <c- p>}</c->
+  <c- p>}</c->
+<c- p>}</c->
+</pre>
+   <h2 class="heading settled" data-level="17" id="annex-b"><span class="secno">17. </span><span class="content">Annex B: Reference Implementation Notes (non-normative)</span><a class="self-link" href="#annex-b"></a></h2>
+   <p>This annex is non-normative. It provides guidance for implementers and does not impose additional requirements.</p>
+   <h3 class="heading settled" data-level="17.1" id="impl-tech"><span class="secno">17.1. </span><span class="content">B.1 Technology Choices</span><a class="self-link" href="#impl-tech"></a></h3>
+   <p>The following technology choices are recommended for a first RWP implementation:</p>
+   <table class="data">
+    <thead>
+     <tr>
+      <th>Component
+      <th>Recommended
+      <th>Notes
+    <tbody>
+     <tr>
+      <td>DID method
+      <td><code>did:web</code> or <code>did:key</code> during pilot
+      <td>Full <code>did:rwp</code> method requires resolver deployment
+     <tr>
+      <td>Storage
+      <td>PostgreSQL + object store (S3-compatible)
+      <td>Metadata in relational DB; payloads in object store
+     <tr>
+      <td>Hashing
+      <td>Node.js <code>crypto.createHash('sha256')</code>
+      <td>Standard library; no external dependency
+     <tr>
+      <td>Canonical JSON
+      <td><code>canonicalize</code> npm package
+      <td>Implements RFC 8785
+     <tr>
+      <td>Signatures
+      <td><code>@noble/ed25519</code>
+      <td>Audited Ed25519 implementation
+     <tr>
+      <td>Schema validation
+      <td>AJV (JSON Schema validator)
+      <td>Supports JSON Schema 2020-12
+   </table>
+   <h3 class="heading settled" data-level="17.2" id="impl-pilot"><span class="secno">17.2. </span><span class="content">B.2 Pilot Scope Recommendation</span><a class="self-link" href="#impl-pilot"></a></h3>
+   <p>For a first pilot, the following Level 1 subset is recommended:</p>
+   <ol>
+    <li data-md>
+     <p>Implement DID generation and DID document (Sections 2.2–2.3)</p>
+    <li data-md>
+     <p>Implement snapshot creation with minimum metadata set (Section 3.3)</p>
+    <li data-md>
+     <p>Implement SHA-256 snapshot hash calculation (Section 3.4)</p>
+    <li data-md>
+     <p>Implement draft → finalized state transition with schema validation (Section 6.3)</p>
+    <li data-md>
+     <p>Implement version graph storage (Section 7.1) — without branch detection initially</p>
+   </ol>
+   <p>This covers the critical path: a Record can be created, finalised, and its integrity verified. Cases and federation can be added in a subsequent iteration.</p>
+  </main>
+  <div data-fill-with="conformance">
+   <h2 class="heading no-num no-ref settled" id="w3c-conformance"><span class="content">Conformance</span><a class="self-link" href="#w3c-conformance"></a></h2>
+   <h3 class="heading no-num no-ref settled" id="w3c-conventions"><span class="content">Document conventions</span><a class="self-link" href="#w3c-conventions"></a></h3>
+   <p>Conformance requirements are expressed
+    with a combination of descriptive assertions
+    and RFC 2119 terminology.
+    The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL NOT”, “SHOULD”, “SHOULD NOT”, “RECOMMENDED”, “MAY”, and “OPTIONAL”
+    in the normative parts of this document
+    are to be interpreted as described in RFC 2119.
+    However, for readability,
+    these words do not appear in all uppercase letters in this specification.
+
+    </p>
+   <p>All of the text of this specification is normative
+    except sections explicitly marked as non-normative, examples, and notes. <a data-link-type="biblio" href="#biblio-rfc2119" title="Key words for use in RFCs to Indicate Requirement Levels">[RFC2119]</a>
+
+    </p>
+   <p>Examples in this specification are introduced with the words “for example”
+    or are set apart from the normative text
+    with <code>class="example"</code>,
+    like this:
+
+    </p>
+   <div class="example" id="w3c-example">
+    <a class="self-link" href="#w3c-example"></a>
+        
+    <p>This is an example of an informative example.
+    </p>
+   </div>
+   <p>Informative notes begin with the word “Note”
+    and are set apart from the normative text
+    with <code>class="note"</code>,
+    like this:
+
+    </p>
+   <p class="note" role="note">Note, this is an informative note.</p>
+  </div>
+  <script src="https://www.w3.org/scripts/TR/2021/fixup.js"></script>
+  <h2 class="heading no-num no-ref settled" id="index"><span class="content">Index</span><a class="self-link" href="#index"></a></h2>
+  <h3 class="heading no-num no-ref settled" id="index-defined-here"><span class="content">Terms defined by this specification</span><a class="self-link" href="#index-defined-here"></a></h3>
+  <ul class="index">
+   <li><a href="#case">Case</a><span>, in § 9.1</span>
+   <li><a href="#draft">draft</a><span>, in § 7.1</span>
+   <li><a href="#finalized">finalized</a><span>, in § 7.1</span>
+   <li><a href="#hard-link">hard link</a><span>, in § 9.4</span>
+   <li><a href="#identity">identity</a><span>, in § 3.1</span>
+   <li><a href="#merkle-root">Merkle root</a><span>, in § 9.5</span>
+   <li><a href="#metadata">metadata</a><span>, in § 4.3</span>
+   <li><a href="#payload">payload</a><span>, in § 5.1</span>
+   <li><a href="#records">Records</a><span>, in § 2.1</span>
+   <li><a href="#schemarecord">SchemaRecord</a><span>, in § 6.2</span>
+   <li><a href="#snapshot">snapshot</a><span>, in § 4.1</span>
+   <li><a href="#version-graph">version graph</a><span>, in § 8.1</span>
+  </ul>
+  <h2 class="heading no-num no-ref settled" id="references"><span class="content">References</span><a class="self-link" href="#references"></a></h2>
+  <h3 class="heading no-num no-ref settled" id="normative"><span class="content">Normative References</span><a class="self-link" href="#normative"></a></h3>
+  <dl>
+   <dt id="biblio-rfc2119">[RFC2119]
+   <dd>S. Bradner. <a href="https://www.rfc-editor.org/rfc/rfc2119"><cite>Key words for use in RFCs to Indicate Requirement Levels</cite></a>. 1997. URL: <a href="https://www.rfc-editor.org/rfc/rfc2119">https://www.rfc-editor.org/rfc/rfc2119</a>
+  </dl>
+  <h3 class="heading no-num no-ref settled" id="informative"><span class="content">Non-Normative References</span><a class="self-link" href="#informative"></a></h3>
+  <dl>
+   <dt id="biblio-did-core">[DID-CORE]
+   <dd><a href="https://www.w3.org/TR/did-core/"><cite>Decentralized Identifiers (DIDs) v1.0</cite></a>. URL: <a href="https://www.w3.org/TR/did-core/">https://www.w3.org/TR/did-core/</a>
+   <dt id="biblio-ech-0164">[ECH-0164]
+   <dd><a href="https://www.ech.ch"><cite>eCH-0164 — Information lifecycle in public administration</cite></a>. URL: <a href="https://www.ech.ch">https://www.ech.ch</a>
+   <dt id="biblio-hyperledger">[HYPERLEDGER]
+   <dd><a href="https://www.hyperledger.org/projects/fabric"><cite>Hyperledger Fabric</cite></a>. URL: <a href="https://www.hyperledger.org/projects/fabric">https://www.hyperledger.org/projects/fabric</a>
+   <dt id="biblio-iso14721">[ISO14721]
+   <dd><a href="https://www.iso.org/standard/57284.html"><cite>ISO 14721:2012 — Open Archival Information System (OAIS)</cite></a>. URL: <a href="https://www.iso.org/standard/57284.html">https://www.iso.org/standard/57284.html</a>
+   <dt id="biblio-iso15489">[ISO15489]
+   <dd><a href="https://www.iso.org/standard/62542.html"><cite>ISO 15489-1:2016 — Records management</cite></a>. URL: <a href="https://www.iso.org/standard/62542.html">https://www.iso.org/standard/62542.html</a>
+   <dt id="biblio-json-schema">[JSON-SCHEMA]
+   <dd><a href="https://json-schema.org/draft/2020-12/json-schema-core"><cite>JSON Schema: A Media Type for Describing JSON Documents</cite></a>. 2020. URL: <a href="https://json-schema.org/draft/2020-12/json-schema-core">https://json-schema.org/draft/2020-12/json-schema-core</a>
+   <dt id="biblio-provo">[PROVO]
+   <dd><a href="https://www.w3.org/TR/prov-o/"><cite>PROV-O: The PROV Ontology</cite></a>. URL: <a href="https://www.w3.org/TR/prov-o/">https://www.w3.org/TR/prov-o/</a>
+   <dt id="biblio-rfc8037">[RFC8037]
+   <dd><a href="https://www.rfc-editor.org/rfc/rfc8037"><cite>CFRG Elliptic Curves for JOSE and COSE (Ed25519)</cite></a>. 2017. URL: <a href="https://www.rfc-editor.org/rfc/rfc8037">https://www.rfc-editor.org/rfc/rfc8037</a>
+   <dt id="biblio-rfc8785">[RFC8785]
+   <dd><a href="https://www.rfc-editor.org/rfc/rfc8785"><cite>JSON Canonicalization Scheme (JCS)</cite></a>. 2020. URL: <a href="https://www.rfc-editor.org/rfc/rfc8785">https://www.rfc-editor.org/rfc/rfc8785</a>
+   <dt id="biblio-rwc">[RWC]
+   <dd>Nik Jenzer. <a href="https://recordweb.github.io/rwc/"><cite>RecordWeb Concept (RWC)</cite></a>. CG-DRAFT. URL: <a href="https://recordweb.github.io/rwc/">https://recordweb.github.io/rwc/</a>
+   <dt id="biblio-zenodo-rwp">[ZENODO-RWP]
+   <dd>Nik Jenzer. <a href="https://doi.org/10.5281/zenodo.20475345"><cite>RecordWeb Protocol (RWP) v0.1 — Published baseline</cite></a>. 2026. URL: <a href="https://doi.org/10.5281/zenodo.20475345">https://doi.org/10.5281/zenodo.20475345</a>
+  </dl>
+<script>/* Boilerplate: script-dom-helper */
+"use strict";
+function query(sel) { return document.querySelector(sel); }
+
+function queryAll(sel) { return [...document.querySelectorAll(sel)]; }
+
+function iter(obj) {
+	if(!obj) return [];
+	var it = obj[Symbol.iterator];
+	if(it) return it;
+	return Object.entries(obj);
+}
+
+function mk(tagname, attrs, ...children) {
+	const el = document.createElement(tagname);
+	for(const [k,v] of iter(attrs)) {
+		if(k.slice(0,3) == "_on") {
+			const eventName = k.slice(3);
+			el.addEventListener(eventName, v);
+		} else if(k[0] == "_") {
+			// property, not attribute
+			el[k.slice(1)] = v;
+		} else {
+			if(v === false || v == null) {
+        continue;
+      } else if(v === true) {
+        el.setAttribute(k, "");
+        continue;
+      } else {
+  			el.setAttribute(k, v);
+      }
+		}
+	}
+	append(el, children);
+	return el;
+}
+
+/* Create shortcuts for every known HTML element */
+[
+  "a",
+  "abbr",
+  "acronym",
+  "address",
+  "applet",
+  "area",
+  "article",
+  "aside",
+  "audio",
+  "b",
+  "base",
+  "basefont",
+  "bdo",
+  "big",
+  "blockquote",
+  "body",
+  "br",
+  "button",
+  "canvas",
+  "caption",
+  "center",
+  "cite",
+  "code",
+  "col",
+  "colgroup",
+  "datalist",
+  "dd",
+  "del",
+  "details",
+  "dfn",
+  "dialog",
+  "div",
+  "dl",
+  "dt",
+  "em",
+  "embed",
+  "fieldset",
+  "figcaption",
+  "figure",
+  "font",
+  "footer",
+  "form",
+  "frame",
+  "frameset",
+  "head",
+  "header",
+  "h1",
+  "h2",
+  "h3",
+  "h4",
+  "h5",
+  "h6",
+  "hr",
+  "html",
+  "i",
+  "iframe",
+  "img",
+  "input",
+  "ins",
+  "kbd",
+  "label",
+  "legend",
+  "li",
+  "link",
+  "main",
+  "map",
+  "mark",
+  "meta",
+  "meter",
+  "nav",
+  "nobr",
+  "noscript",
+  "object",
+  "ol",
+  "optgroup",
+  "option",
+  "output",
+  "p",
+  "param",
+  "pre",
+  "progress",
+  "q",
+  "s",
+  "samp",
+  "script",
+  "section",
+  "select",
+  "small",
+  "source",
+  "span",
+  "strike",
+  "strong",
+  "style",
+  "sub",
+  "summary",
+  "sup",
+  "table",
+  "tbody",
+  "td",
+  "template",
+  "textarea",
+  "tfoot",
+  "th",
+  "thead",
+  "time",
+  "title",
+  "tr",
+  "u",
+  "ul",
+  "var",
+  "video",
+  "wbr",
+  "xmp",
+].forEach(tagname=>{
+	mk[tagname] = (...args) => mk(tagname, ...args);
+});
+
+function* nodesFromChildList(children) {
+	for(const child of children.flat(Infinity)) {
+		if(child instanceof Node) {
+			yield child;
+		} else {
+			yield new Text(child);
+		}
+	}
+}
+function append(el, ...children) {
+	for(const child of nodesFromChildList(children)) {
+		if(el instanceof Node) el.appendChild(child);
+		else el.push(child);
+	}
+	return el;
+}
+
+function insertAfter(el, ...children) {
+	for(const child of nodesFromChildList(children)) {
+		el.parentNode.insertBefore(child, el.nextSibling);
+	}
+	return el;
+}
+
+function clearContents(el) {
+	el.innerHTML = "";
+	return el;
+}
+
+function parseHTML(markup) {
+	if(markup.toLowerCase().trim().indexOf('<!doctype') === 0) {
+		const doc = document.implementation.createHTMLDocument("");
+		doc.documentElement.innerHTML = markup;
+		return doc;
+	} else {
+		const el = mk.template({});
+		el.innerHTML = markup;
+		return el.content;
+	}
+}</script>
+<script>/* Boilerplate: script-dfn-panel */
+"use strict";
+{
+let dfnPanelData = {
+"case": {"dfnID":"case","dfnText":"Case","external":false,"refSections":[{"refs":[{"id":"ref-for-case"}],"title":"9.1. 8.1 Case as a Specialised Record Type"},{"refs":[{"id":"ref-for-case\u2460"},{"id":"ref-for-case\u2461"},{"id":"ref-for-case\u2462"}],"title":"9.3. 8.3 Case Elements (normative)"},{"refs":[{"id":"ref-for-case\u2463"},{"id":"ref-for-case\u2464"},{"id":"ref-for-case\u2465"},{"id":"ref-for-case\u2466"}],"title":"9.4. 8.4 Hard and Soft Links"},{"refs":[{"id":"ref-for-case\u2467"},{"id":"ref-for-case\u2468"},{"id":"ref-for-case\u2460\u24ea"}],"title":"9.5. 8.5 Case Merkle Root"},{"refs":[{"id":"ref-for-case\u2460\u2460"}],"title":"9.6. 8.6 Case Completeness Check"},{"refs":[{"id":"ref-for-case\u2460\u2461"}],"title":"10.5. 9.5 Merkle Tree Algorithm"},{"refs":[{"id":"ref-for-case\u2460\u2462"}],"title":"11.1. 10.1 Purpose and Scope"},{"refs":[{"id":"ref-for-case\u2460\u2463"}],"title":"11.3. 10.3 Anchoring Protocol"},{"refs":[{"id":"ref-for-case\u2460\u2464"},{"id":"ref-for-case\u2460\u2465"}],"title":"11.4. 10.4 Anchoring Reference in the Case"}],"url":"#case"},
+"draft": {"dfnID":"draft","dfnText":"draft","external":false,"refSections":[{"refs":[{"id":"ref-for-draft"},{"id":"ref-for-draft\u2460"},{"id":"ref-for-draft\u2461"}],"title":"7.2. 6.2 Linkability"},{"refs":[{"id":"ref-for-draft\u2462"}],"title":"7.4. 6.4 Irreversibility of Finalisation"},{"refs":[{"id":"ref-for-draft\u2463"},{"id":"ref-for-draft\u2464"}],"title":"8.4. 7.4 Branches"},{"refs":[{"id":"ref-for-draft\u2465"}],"title":"9.4. 8.4 Hard and Soft Links"}],"url":"#draft"},
+"finalized": {"dfnID":"finalized","dfnText":"finalized","external":false,"refSections":[{"refs":[{"id":"ref-for-finalized"},{"id":"ref-for-finalized\u2460"}],"title":"7.4. 6.4 Irreversibility of Finalisation"},{"refs":[{"id":"ref-for-finalized\u2461"}],"title":"8.4. 7.4 Branches"},{"refs":[{"id":"ref-for-finalized\u2462"},{"id":"ref-for-finalized\u2463"}],"title":"8.6. 7.6 Cross-Record Merges"},{"refs":[{"id":"ref-for-finalized\u2464"},{"id":"ref-for-finalized\u2465"}],"title":"9.4. 8.4 Hard and Soft Links"}],"url":"#finalized"},
+"hard-link": {"dfnID":"hard-link","dfnText":"hard link","external":false,"refSections":[{"refs":[{"id":"ref-for-hard-link"}],"title":"9.4. 8.4 Hard and Soft Links"},{"refs":[{"id":"ref-for-hard-link\u2460"},{"id":"ref-for-hard-link\u2461"}],"title":"9.5. 8.5 Case Merkle Root"},{"refs":[{"id":"ref-for-hard-link\u2462"}],"title":"13.4. 12.4 Cross-Namespace Links"}],"url":"#hard-link"},
+"identity": {"dfnID":"identity","dfnText":"identity","external":false,"refSections":[{"refs":[{"id":"ref-for-identity"}],"title":"4.1. 3.1 Overview"}],"url":"#identity"},
+"merkle-root": {"dfnID":"merkle-root","dfnText":"Merkle root","external":false,"refSections":[{"refs":[{"id":"ref-for-merkle-root"},{"id":"ref-for-merkle-root\u2460"}],"title":"9.5. 8.5 Case Merkle Root"},{"refs":[{"id":"ref-for-merkle-root\u2461"}],"title":"10.5. 9.5 Merkle Tree Algorithm"},{"refs":[{"id":"ref-for-merkle-root\u2462"}],"title":"11.1. 10.1 Purpose and Scope"}],"url":"#merkle-root"},
+"metadata": {"dfnID":"metadata","dfnText":"metadata","external":false,"refSections":[{"refs":[{"id":"ref-for-metadata"}],"title":"4.1. 3.1 Overview"},{"refs":[{"id":"ref-for-metadata\u2460"}],"title":"6.1. 5.1 Record Type Definition"},{"refs":[{"id":"ref-for-metadata\u2461"}],"title":"12.2. 11.2 Access Policy Block"},{"refs":[{"id":"ref-for-metadata\u2462"}],"title":"14.1. 13.1 Deletion Principles"},{"refs":[{"id":"ref-for-metadata\u2463"}],"title":"14.4. 13.4 Solid Pod Delivery (optional)"}],"url":"#metadata"},
+"payload": {"dfnID":"payload","dfnText":"payload","external":false,"refSections":[{"refs":[{"id":"ref-for-payload"}],"title":"4.1. 3.1 Overview"},{"refs":[{"id":"ref-for-payload\u2460"}],"title":"5.1. 4.1 Payload Definition"},{"refs":[{"id":"ref-for-payload\u2461"}],"title":"5.3. 4.3 Multi-Representation"},{"refs":[{"id":"ref-for-payload\u2462"}],"title":"6.1. 5.1 Record Type Definition"},{"refs":[{"id":"ref-for-payload\u2463"}],"title":"8.3. 7.3 Edges (Parent References)"},{"refs":[{"id":"ref-for-payload\u2464"},{"id":"ref-for-payload\u2465"}],"title":"14.3. 13.3 DeletionRecord Protocol"},{"refs":[{"id":"ref-for-payload\u2466"}],"title":"14.4. 13.4 Solid Pod Delivery (optional)"}],"url":"#payload"},
+"records": {"dfnID":"records","dfnText":"Records","external":false,"refSections":[{"refs":[{"id":"ref-for-records"},{"id":"ref-for-records\u2460"}],"title":"2.2. 1.2 Scope"},{"refs":[{"id":"ref-for-records\u2461"}],"title":"2.3. 1.3 Relationship to Other Standards"},{"refs":[{"id":"ref-for-records\u2462"},{"id":"ref-for-records\u2463"},{"id":"ref-for-records\u2464"},{"id":"ref-for-records\u2465"}],"title":"3.1. 2.1 Requirements for Record Identity"},{"refs":[{"id":"ref-for-records\u2466"},{"id":"ref-for-records\u2467"}],"title":"3.2. 2.2 DID Format"},{"refs":[{"id":"ref-for-records\u2468"},{"id":"ref-for-records\u2460\u24ea"}],"title":"3.3. 2.3 DID Document"},{"refs":[{"id":"ref-for-records\u2460\u2460"}],"title":"3.4. 2.4 DID Resolver Requirements"},{"refs":[{"id":"ref-for-records\u2460\u2461"},{"id":"ref-for-records\u2460\u2462"},{"id":"ref-for-records\u2460\u2463"},{"id":"ref-for-records\u2460\u2464"},{"id":"ref-for-records\u2460\u2465"}],"title":"4.1. 3.1 Overview"},{"refs":[{"id":"ref-for-records\u2460\u2466"}],"title":"4.3. 3.3 Minimum Metadata Set"},{"refs":[{"id":"ref-for-records\u2460\u2467"},{"id":"ref-for-records\u2460\u2468"}],"title":"5.1. 4.1 Payload Definition"},{"refs":[{"id":"ref-for-records\u2461\u24ea"},{"id":"ref-for-records\u2461\u2460"}],"title":"5.5. 4.5 Conversion During Finalisation"},{"refs":[{"id":"ref-for-records\u2461\u2461"},{"id":"ref-for-records\u2461\u2462"}],"title":"6.1. 5.1 Record Type Definition"},{"refs":[{"id":"ref-for-records\u2461\u2463"}],"title":"6.2. 5.2 SchemaRecord"},{"refs":[{"id":"ref-for-records\u2461\u2464"}],"title":"6.4. 5.4 Schema Versioning and Backward Compatibility"},{"refs":[{"id":"ref-for-records\u2461\u2465"}],"title":"7.1. 6.1 State Model"},{"refs":[{"id":"ref-for-records\u2461\u2466"}],"title":"7.2. 6.2 Linkability"},{"refs":[{"id":"ref-for-records\u2461\u2467"}],"title":"7.4. 6.4 Irreversibility of Finalisation"},{"refs":[{"id":"ref-for-records\u2461\u2468"}],"title":"8.1. 7.1 Graph Structure"},{"refs":[{"id":"ref-for-records\u2462\u24ea"},{"id":"ref-for-records\u2462\u2460"}],"title":"8.3. 7.3 Edges (Parent References)"},{"refs":[{"id":"ref-for-records\u2462\u2461"}],"title":"8.4. 7.4 Branches"},{"refs":[{"id":"ref-for-records\u2462\u2462"},{"id":"ref-for-records\u2462\u2463"},{"id":"ref-for-records\u2462\u2464"}],"title":"8.6. 7.6 Cross-Record Merges"},{"refs":[{"id":"ref-for-records\u2462\u2465"},{"id":"ref-for-records\u2462\u2466"},{"id":"ref-for-records\u2462\u2467"}],"title":"9.1. 8.1 Case as a Specialised Record Type"},{"refs":[{"id":"ref-for-records\u2462\u2468"}],"title":"10.3. 9.3 Snapshot Integrity"},{"refs":[{"id":"ref-for-records\u2463\u24ea"}],"title":"11.2. 10.2 Requirements for the Ledger"},{"refs":[{"id":"ref-for-records\u2463\u2460"}],"title":"12.2. 11.2 Access Policy Block"},{"refs":[{"id":"ref-for-records\u2463\u2461"},{"id":"ref-for-records\u2463\u2462"},{"id":"ref-for-records\u2463\u2463"}],"title":"13.4. 12.4 Cross-Namespace Links"},{"refs":[{"id":"ref-for-records\u2463\u2464"}],"title":"14.1. 13.1 Deletion Principles"},{"refs":[{"id":"ref-for-records\u2463\u2465"},{"id":"ref-for-records\u2463\u2466"},{"id":"ref-for-records\u2463\u2467"}],"title":"14.4. 13.4 Solid Pod Delivery (optional)"}],"url":"#records"},
+"schemarecord": {"dfnID":"schemarecord","dfnText":"SchemaRecord","external":false,"refSections":[{"refs":[{"id":"ref-for-schemarecord"}],"title":"6.2. 5.2 SchemaRecord"},{"refs":[{"id":"ref-for-schemarecord\u2460"}],"title":"6.3. 5.3 Core Record Types (normative)"},{"refs":[{"id":"ref-for-schemarecord\u2461"},{"id":"ref-for-schemarecord\u2462"}],"title":"6.4. 5.4 Schema Versioning and Backward Compatibility"},{"refs":[{"id":"ref-for-schemarecord\u2463"}],"title":"7.1. 6.1 State Model"}],"url":"#schemarecord"},
+"snapshot": {"dfnID":"snapshot","dfnText":"snapshot","external":false,"refSections":[{"refs":[{"id":"ref-for-snapshot"},{"id":"ref-for-snapshot\u2460"}],"title":"4.2. 3.2 Snapshot Definition"},{"refs":[{"id":"ref-for-snapshot\u2461"}],"title":"4.3. 3.3 Minimum Metadata Set"},{"refs":[{"id":"ref-for-snapshot\u2462"}],"title":"5.1. 4.1 Payload Definition"},{"refs":[{"id":"ref-for-snapshot\u2463"},{"id":"ref-for-snapshot\u2464"}],"title":"5.3. 4.3 Multi-Representation"},{"refs":[{"id":"ref-for-snapshot\u2465"},{"id":"ref-for-snapshot\u2466"}],"title":"7.3. 6.3 Finalisation Requirements"},{"refs":[{"id":"ref-for-snapshot\u2467"}],"title":"7.4. 6.4 Irreversibility of Finalisation"},{"refs":[{"id":"ref-for-snapshot\u2468"},{"id":"ref-for-snapshot\u2460\u24ea"}],"title":"8.1. 7.1 Graph Structure"},{"refs":[{"id":"ref-for-snapshot\u2460\u2460"}],"title":"8.2. 7.2 Nodes"},{"refs":[{"id":"ref-for-snapshot\u2460\u2461"},{"id":"ref-for-snapshot\u2460\u2462"},{"id":"ref-for-snapshot\u2460\u2463"},{"id":"ref-for-snapshot\u2460\u2464"},{"id":"ref-for-snapshot\u2460\u2465"},{"id":"ref-for-snapshot\u2460\u2466"},{"id":"ref-for-snapshot\u2460\u2467"}],"title":"8.3. 7.3 Edges (Parent References)"},{"refs":[{"id":"ref-for-snapshot\u2460\u2468"}],"title":"8.5. 7.5 Merges"},{"refs":[{"id":"ref-for-snapshot\u2461\u24ea"}],"title":"9.4. 8.4 Hard and Soft Links"},{"refs":[{"id":"ref-for-snapshot\u2461\u2460"},{"id":"ref-for-snapshot\u2461\u2461"},{"id":"ref-for-snapshot\u2461\u2462"},{"id":"ref-for-snapshot\u2461\u2463"}],"title":"10.3. 9.3 Snapshot Integrity"},{"refs":[{"id":"ref-for-snapshot\u2461\u2464"},{"id":"ref-for-snapshot\u2461\u2465"}],"title":"13.4. 12.4 Cross-Namespace Links"},{"refs":[{"id":"ref-for-snapshot\u2461\u2466"}],"title":"14.3. 13.3 DeletionRecord Protocol"},{"refs":[{"id":"ref-for-snapshot\u2461\u2467"}],"title":"14.4. 13.4 Solid Pod Delivery (optional)"}],"url":"#snapshot"},
+"version-graph": {"dfnID":"version-graph","dfnText":"version graph","external":false,"refSections":[{"refs":[{"id":"ref-for-version-graph"}],"title":"8.1. 7.1 Graph Structure"},{"refs":[{"id":"ref-for-version-graph\u2460"}],"title":"8.2. 7.2 Nodes"}],"url":"#version-graph"},
+};
+
+document.addEventListener("DOMContentLoaded", ()=>{
+    genAllDfnPanels();
+
+    document.body.addEventListener("click", (e) => {
+        // If not handled already, just hide all dfn panels.
+        hideAllDfnPanels();
+    });
+});
+
+window.addEventListener("resize", () => {
+    // Pin any visible dfn panel
+    queryAll(".dfn-panel.on, .dfn-panel.activated").forEach(el=>positionDfnPanel(el));
+});
+
+function genAllDfnPanels() {
+    for(const panelData of Object.values(dfnPanelData)) {
+        const dfnID = panelData.dfnID;
+        const dfn = document.getElementById(dfnID);
+        if(!dfn) {
+            console.log(`Can't find dfn#${dfnID}.`, panelData);
+            continue;
+        }
+        dfn.panelData = panelData;
+        insertDfnPopupAction(dfn);
+    }
+}
+
+function genDfnPanel(dfn, { dfnID, url, dfnText, refSections, external }) {
+    const dfnPanel = mk.aside({
+        class: "dfn-panel on",
+        id: `infopanel-for-${dfnID}`,
+        "data-for": dfnID,
+        "aria-labelled-by":`infopaneltitle-for-${dfnID}`,
+        },
+        mk.span({id:`infopaneltitle-for-${dfnID}`, style:"display:none"},
+            `Info about the '${dfnText}' ${external?"external":""} reference.`),
+        mk.a({href:url, class:"dfn-link"}, url),
+        refSections.length == 0 ? [] :
+            mk.b({}, "Referenced in:"),
+            mk.ul({},
+                ...refSections.map(section=>
+                    mk.li({},
+                        ...section.refs.map((ref, refI)=>
+                            [
+                                mk.a({ href: `#${ref.id}` },
+                                    (refI == 0) ? section.title : `(${refI + 1})`
+                                ),
+                                " ",
+                            ]
+                        ),
+                    ),
+                ),
+            ),
+        genLinkingSyntaxes(dfn),
+    );
+
+    dfnPanel.addEventListener('click', (event) => {
+        if (event.target.nodeName == 'A') {
+            scrollToTargetAndHighlight(event);
+            pinDfnPanel(dfnPanel);
+        }
+        event.stopPropagation();
+        refocusOnTarget(event);
+    });
+    dfnPanel.addEventListener('keydown', (event) => {
+        if(event.keyCode == 27) { // Escape key
+            hideDfnPanel({dfnPanel});
+            event.stopPropagation();
+            event.preventDefault();
+        }
+    });
+
+    dfnPanel.dfn = dfn;
+    dfn.dfnPanel = dfnPanel;
+    return dfnPanel;
+}
+
+
+
+function hideAllDfnPanels() {
+    // Delete the currently-active dfn panel.
+    queryAll(".dfn-panel").forEach(dfnPanel=>hideDfnPanel({dfnPanel}));
+}
+
+function showDfnPanel(dfn) {
+    hideAllDfnPanels(); // Only display one at a time.
+
+    dfn.setAttribute("aria-expanded", "true");
+
+    const dfnPanel = genDfnPanel(dfn, dfn.panelData);
+
+    // Give the dfn a unique tabindex, and then
+    // give all the tabbable panel bits successive indexes.
+    let tabIndex = 100;
+    dfn.tabIndex = tabIndex++;
+    const tabbable = dfnPanel.querySelectorAll(":is(a, button)");
+    for (const el of tabbable) {
+        el.tabIndex = tabIndex++;
+    }
+
+    append(document.body, dfnPanel);
+    positionDfnPanel(dfnPanel);
+}
+
+function positionDfnPanel(dfnPanel) {
+    const dfn = dfnPanel.dfn;
+    const dfnPos = getBounds(dfn);
+    dfnPanel.style.top = dfnPos.bottom + "px";
+    dfnPanel.style.left = dfnPos.left + "px";
+
+    const panelPos = dfnPanel.getBoundingClientRect();
+    const panelMargin = 8;
+    const maxRight = document.body.parentNode.clientWidth - panelMargin;
+    if (panelPos.right > maxRight) {
+        const overflowAmount = panelPos.right - maxRight;
+        const newLeft = Math.max(panelMargin, dfnPos.left - overflowAmount);
+        dfnPanel.style.left = newLeft + "px";
+    }
+}
+
+function pinDfnPanel(dfnPanel) {
+    // Switch it to "activated" state, which pins it.
+    dfnPanel.classList.add("activated");
+    dfnPanel.style.position = "fixed";
+    dfnPanel.style.left = null;
+    dfnPanel.style.top = null;
+}
+
+function hideDfnPanel({dfn, dfnPanel}) {
+    if(!dfnPanel) dfnPanel = dfn.dfnPanel;
+    if(!dfn) dfn = dfnPanel.dfn;
+    dfn.dfnPanel = undefined;
+    dfnPanel.dfn = undefined;
+    dfn.setAttribute("aria-expanded", "false");
+    dfn.tabIndex = undefined;
+    dfnPanel.remove()
+}
+
+function toggleDfnPanel(dfn) {
+    if(dfn.dfnPanel) {
+        hideDfnPanel(dfn);
+    } else {
+        showDfnPanel(dfn);
+    }
+}
+
+function insertDfnPopupAction(dfn) {
+    dfn.setAttribute('role', 'button');
+    dfn.setAttribute('aria-expanded', 'false')
+    dfn.tabIndex = 0;
+    dfn.classList.add('has-dfn-panel');
+    dfn.addEventListener('click', (event) => {
+        toggleDfnPanel(dfn);
+        event.stopPropagation();
+    });
+    dfn.addEventListener('keypress', (event) => {
+        const kc = event.keyCode;
+        // 32->Space, 13->Enter
+        if(kc == 32 || kc == 13) {
+            toggleDfnPanel(dfn);
+            event.stopPropagation();
+            event.preventDefault();
+        }
+    });
+}
+
+function refocusOnTarget(event) {
+    const target = event.target;
+    setTimeout(() => {
+        // Refocus on the event.target element.
+        // This is needed after browser scrolls to the destination.
+        target.focus();
+    });
+}
+
+// TODO: shared util
+// Returns the root-level absolute position {left and top} of element.
+function getBounds(el, relativeTo=document.body) {
+    const relativeRect = relativeTo.getBoundingClientRect();
+    const elRect = el.getBoundingClientRect();
+    const top = elRect.top - relativeRect.top;
+    const left = elRect.left - relativeRect.left;
+    return {
+        top,
+        left,
+        bottom: top + elRect.height,
+        right: left + elRect.width,
+    }
+}
+
+function scrollToTargetAndHighlight(event) {
+    let hash = event.target.hash;
+    if (hash) {
+        hash = decodeURIComponent(hash.substring(1));
+        const dest = document.getElementById(hash);
+        if (dest) {
+            dest.classList.add('highlighted');
+            setTimeout(() => dest.classList.remove('highlighted'), 1000);
+        }
+    }
+}
+
+// Functions, divided by link type, that wrap an autolink's
+// contents with the appropriate outer syntax.
+// Alternately, a string naming another type they format
+// the same as.
+function needsFor(type) {
+    switch(type) {
+        case "descriptor":
+        case "value":
+        case "element-attr":
+        case "attr-value":
+        case "element-state":
+        case "method":
+        case "constructor":
+        case "argument":
+        case "attribute":
+        case "const":
+        case "dict-member":
+        case "event":
+        case "enum-value":
+        case "stringifier":
+        case "serializer":
+        case "iterator":
+        case "maplike":
+        case "setlike":
+        case "state":
+        case "mode":
+        case "context":
+        case "facet": return true;
+
+        default: return false;
+    }
+}
+function refusesFor(type) {
+    switch(type) {
+        case "property":
+        case "element":
+        case "interface":
+        case "namespace":
+        case "callback":
+        case "dictionary":
+        case "enum":
+        case "exception":
+        case "typedef":
+        case "http-header":
+        case "permission": return true;
+
+        default: return false;
+    }
+}
+function linkFormatterFromType(type) {
+    switch(type) {
+        case 'scheme':
+        case 'permission':
+        case 'dfn': return (text) => `[=${text}=]`;
+
+        case 'abstract-op': return (text) => `[\$${text}\$]`;
+
+        case 'function':
+        case 'at-rule':
+        case 'selector':
+        case 'value': return (text) => `''${text}''`;
+
+        case 'http-header': return (text) => `[:${text}:]`;
+
+        case 'interface':
+        case 'constructor':
+        case 'method':
+        case 'argument':
+        case 'attribute':
+        case 'callback':
+        case 'dictionary':
+        case 'dict-member':
+        case 'enum':
+        case 'enum-value':
+        case 'exception':
+        case 'const':
+        case 'typedef':
+        case 'stringifier':
+        case 'serializer':
+        case 'iterator':
+        case 'maplike':
+        case 'setlike':
+        case 'extended-attribute':
+        case 'event':
+        case 'idl': return (text) => `{{${text}}}`;
+
+        case 'element-state':
+        case 'element-attr':
+        case 'attr-value':
+        case 'element': return (element) => `<{${element}}>`;
+
+        case 'grammar': return (text) => `${text} (within a <pre class=prod>)`;
+
+        case 'type': return (text)=> `<<${text}>>`;
+
+        case 'descriptor':
+        case 'property': return (text) => `'${text}'`;
+
+        default: return;
+    };
+};
+
+function genLinkingSyntaxes(dfn) {
+    if(dfn.tagName != "DFN") return;
+
+    const type = dfn.getAttribute('data-dfn-type');
+    if(!type) {
+        console.log(`<dfn> doesn't have a data-dfn-type:`, dfn);
+        return [];
+    }
+
+    // Return a function that wraps link text based on the type
+    const linkFormatter = linkFormatterFromType(type);
+    if(!linkFormatter) {
+        console.log(`<dfn> has an unknown data-dfn-type:`, dfn);
+        return [];
+    }
+
+    let ltAlts;
+    if(dfn.hasAttribute('data-lt')) {
+        ltAlts = dfn.getAttribute('data-lt')
+            .split("|")
+            .map(x=>x.trim());
+    } else {
+        ltAlts = [dfn.textContent.trim()];
+    }
+    if(type == "type") {
+        // lt of "<foo>", but "foo" is the interior;
+        // <<foo/bar>> is how you write it with a for,
+        // not <foo/<bar>> or whatever.
+        for(var i = 0; i < ltAlts.length; i++) {
+            const lt = ltAlts[i];
+            const match = /<(.*)>/.exec(lt);
+            if(match) { ltAlts[i] = match[1]; }
+        }
+    }
+
+    let forAlts;
+    if(dfn.hasAttribute('data-dfn-for')) {
+        forAlts = dfn.getAttribute('data-dfn-for')
+            .split(",")
+            .map(x=>x.trim());
+    } else {
+        forAlts = [''];
+    }
+
+    let linkingSyntaxes = [];
+    if(!needsFor(type)) {
+        for(const lt of ltAlts) {
+            linkingSyntaxes.push(linkFormatter(lt));
+        }
+    }
+    if(!refusesFor(type)) {
+        for(const f of forAlts) {
+            linkingSyntaxes.push(linkFormatter(`${f}/${ltAlts[0]}`))
+        }
+    }
+    return [
+        mk.b({}, 'Possible linking syntaxes:'),
+        mk.ul({},
+            ...linkingSyntaxes.map(link => {
+                const copyLink = async () =>
+                    await navigator.clipboard.writeText(link);
+                return mk.li({},
+                    mk.div({ class: 'link-item' },
+                        mk.button({
+                            class: 'copy-icon', title: 'Copy',
+                            type: 'button',
+                            _onclick: copyLink,
+                            tabindex: 0,
+                        }, mk.span({ class: 'icon' }) ),
+                        mk.span({}, link)
+                    )
+                );
+            })
+        )
+    ];
+}
+}
+</script>
+<script>/* Boilerplate: script-ref-hints */
+"use strict";
+{
+let refsData = {
+"#case": {"displayText":"case","export":true,"for_":[],"level":"1","normative":true,"shortname":"rwp","spec":"rwp-1","status":"local","text":"case","type":"dfn","url":"#case"},
+"#draft": {"displayText":"draft","export":true,"for_":[],"level":"1","normative":true,"shortname":"rwp","spec":"rwp-1","status":"local","text":"draft","type":"dfn","url":"#draft"},
+"#finalized": {"displayText":"finalized","export":true,"for_":[],"level":"1","normative":true,"shortname":"rwp","spec":"rwp-1","status":"local","text":"finalized","type":"dfn","url":"#finalized"},
+"#hard-link": {"displayText":"hard link","export":true,"for_":[],"level":"1","normative":true,"shortname":"rwp","spec":"rwp-1","status":"local","text":"hard link","type":"dfn","url":"#hard-link"},
+"#identity": {"displayText":"identity","export":true,"for_":[],"level":"1","normative":true,"shortname":"rwp","spec":"rwp-1","status":"local","text":"identity","type":"dfn","url":"#identity"},
+"#merkle-root": {"displayText":"merkle root","export":true,"for_":[],"level":"1","normative":true,"shortname":"rwp","spec":"rwp-1","status":"local","text":"merkle root","type":"dfn","url":"#merkle-root"},
+"#metadata": {"displayText":"metadata","export":true,"for_":[],"level":"1","normative":true,"shortname":"rwp","spec":"rwp-1","status":"local","text":"metadata","type":"dfn","url":"#metadata"},
+"#payload": {"displayText":"payload","export":true,"for_":[],"level":"1","normative":true,"shortname":"rwp","spec":"rwp-1","status":"local","text":"payload","type":"dfn","url":"#payload"},
+"#records": {"displayText":"records","export":true,"for_":[],"level":"1","normative":true,"shortname":"rwp","spec":"rwp-1","status":"local","text":"records","type":"dfn","url":"#records"},
+"#schemarecord": {"displayText":"schemarecord","export":true,"for_":[],"level":"1","normative":true,"shortname":"rwp","spec":"rwp-1","status":"local","text":"schemarecord","type":"dfn","url":"#schemarecord"},
+"#snapshot": {"displayText":"snapshot","export":true,"for_":[],"level":"1","normative":true,"shortname":"rwp","spec":"rwp-1","status":"local","text":"snapshot","type":"dfn","url":"#snapshot"},
+"#version-graph": {"displayText":"version graph","export":true,"for_":[],"level":"1","normative":true,"shortname":"rwp","spec":"rwp-1","status":"local","text":"version graph","type":"dfn","url":"#version-graph"},
+};
+
+function mkRefHint(link, ref) {
+    const linkText = link.textContent;
+    let dfnTextElements = '';
+    if (ref.displayText.toLowerCase() != linkText.toLowerCase()) {
+        // Give the original term if it's being displayed in a different way.
+        // But allow casing differences, they're insignificant.
+        dfnTextElements =
+            mk.li({},
+                mk.b({}, "Term: "),
+                mk.span({}, ref.displayText)
+            );
+    }
+    const forList = ref.for_;
+    let forListElements;
+    if(forList.length == 0) {
+        forListElements = [];
+    } else if(forList.length == 1) {
+        forListElements = mk.li({},
+            mk.b({}, "For: "),
+            mk.span({}, forList[0]),
+        );
+    } else {
+        forListElements = mk.li({},
+            mk.b({}, "For: "),
+            mk.ul({},
+                ...forList.map(forItem =>
+                    mk.li({},
+                        mk.span({}, forItem)
+                    ),
+                ),
+            ),
+        );
+    }
+    const url = ref.url;
+    const safeUrl = encodeURIComponent(url);
+    const hintPanel = mk.aside({
+        class: "ref-hint",
+        id: `ref-hint-for-${safeUrl}`,
+        "data-for": url,
+        "aria-labelled-by": `ref-hint-for-${safeUrl}`,
+    },
+        mk.ul({},
+            dfnTextElements,
+            mk.li({},
+                mk.b({}, "URL: "),
+                mk.a({ href: url, class: "ref" }, url),
+            ),
+            mk.li({},
+                mk.b({}, "Type: "),
+                mk.span({}, `${ref.type}`),
+            ),
+            mk.li({},
+                mk.b({}, "Spec: "),
+                mk.span({}, `${ref.spec ? ref.spec : ''}`),
+            ),
+            forListElements
+        ),
+    );
+    hintPanel.forLink = link;
+    setupRefHintEventListeners(link, hintPanel);
+    return hintPanel;
+}
+
+function hideAllRefHints() {
+    queryAll(".ref-hint").forEach(el=>hideRefHint(el));
+}
+
+function hideRefHint(refHint) {
+    const link = refHint.forLink;
+    link.setAttribute("aria-expanded", "false");
+    if(refHint.teardownEventListeners) {
+        refHint.teardownEventListeners();
+    }
+    refHint.remove();
+}
+
+function showRefHint(link) {
+    if(link.classList.contains("dfn-link")) return;
+    const url = link.getAttribute("href");
+    const refHintKey = link.getAttribute("data-refhint-key");
+    let key = url;
+    if(refHintKey) {
+        key = refHintKey + "_" + url;
+    }
+    const ref = refsData[key];
+    if(!ref) return;
+
+    hideAllRefHints(); // Only display one at this time.
+
+    const refHint = mkRefHint(link, ref);
+    append(document.body, refHint);
+    link.setAttribute("aria-expanded", "true");
+    positionRefHint(refHint);
+}
+
+function setupRefHintEventListeners(link, refHint) {
+    if (refHint.teardownEventListeners) return;
+    // Add event handlers to hide the refHint after the user moves away
+    // from both the link and refHint, if not hovering either within one second.
+    let timeout = null;
+    const startHidingRefHint = (event) => {
+        if (timeout) {
+            clearTimeout(timeout);
+        }
+        timeout = setTimeout(() => {
+            hideRefHint(refHint);
+        }, 1000);
+    }
+    const resetHidingRefHint = (event) => {
+        if (timeout) clearTimeout(timeout);
+        timeout = null;
+    };
+    link.addEventListener("mouseleave", startHidingRefHint);
+    link.addEventListener("mouseenter", resetHidingRefHint);
+    link.addEventListener("blur", startHidingRefHint);
+    link.addEventListener("focus", resetHidingRefHint);
+    refHint.addEventListener("mouseleave", startHidingRefHint);
+    refHint.addEventListener("mouseenter", resetHidingRefHint);
+    refHint.addEventListener("blur", startHidingRefHint);
+    refHint.addEventListener("focus", resetHidingRefHint);
+
+    refHint.teardownEventListeners = () => {
+        // remove event listeners
+        resetHidingRefHint();
+        link.removeEventListener("mouseleave", startHidingRefHint);
+        link.removeEventListener("mouseenter", resetHidingRefHint);
+        link.removeEventListener("blur", startHidingRefHint);
+        link.removeEventListener("focus", resetHidingRefHint);
+        refHint.removeEventListener("mouseleave", startHidingRefHint);
+        refHint.removeEventListener("mouseenter", resetHidingRefHint);
+        refHint.removeEventListener("blur", startHidingRefHint);
+        refHint.removeEventListener("focus", resetHidingRefHint);
+    };
+}
+
+function positionRefHint(refHint) {
+    const link = refHint.forLink;
+    const linkPos = getBounds(link);
+    refHint.style.top = linkPos.bottom + "px";
+    refHint.style.left = linkPos.left + "px";
+
+    const panelPos = refHint.getBoundingClientRect();
+    const panelMargin = 8;
+    const maxRight = document.body.parentNode.clientWidth - panelMargin;
+    if (panelPos.right > maxRight) {
+        const overflowAmount = panelPos.right - maxRight;
+        const newLeft = Math.max(panelMargin, linkPos.left - overflowAmount);
+        refHint.style.left = newLeft + "px";
+    }
+}
+
+// TODO: shared util
+// Returns the root-level absolute position {left and top} of element.
+function getBounds(el, relativeTo=document.body) {
+    const relativeRect = relativeTo.getBoundingClientRect();
+    const elRect = el.getBoundingClientRect();
+    const top = elRect.top - relativeRect.top;
+    const left = elRect.left - relativeRect.left;
+    return {
+        top,
+        left,
+        bottom: top + elRect.height,
+        right: left + elRect.width,
+    }
+}
+
+function showRefHintListener(e) {
+    // If the target isn't in a link (or is a link),
+    // just ignore it.
+    let link = e.target.closest("a");
+    if(!link) return;
+
+    // If the target is in a ref-hint panel
+    // (aka a link in the already-open one),
+    // also just ignore it.
+    if(link.closest(".ref-hint")) return;
+
+    // Otherwise, show the panel for the link.
+    showRefHint(link);
+}
+
+function hideAllHintsListener(e) {
+    // If the click is inside a ref-hint panel, ignore it.
+    if(e.target.closest(".ref-hint")) return;
+    // Otherwise, close all the current panels.
+    hideAllRefHints();
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    document.body.addEventListener("mousedown", showRefHintListener);
+    document.body.addEventListener("focus", showRefHintListener);
+
+    document.body.addEventListener("click", hideAllHintsListener);
+});
+
+window.addEventListener("resize", () => {
+    // Hide any open ref hint.
+    hideAllRefHints();
+});
+}
+</script>
