@@ -1,0 +1,1383 @@
+<pre class='metadata'>
+Title: RecordWeb Protocol (RWP)
+Shortname: rwp
+Level: 1
+Status: CG-DRAFT
+Group: wicg
+URL: https://recordweb.github.io/rwp/
+Editor: Nik Jenzer, nik@triebwerkstatt.ch
+Abstract:
+    The RecordWeb Protocol (RWP) is the normative technical specification for the creation, identification, versioning, linking, and cryptographic proof of Records in RWP-compliant systems. It defines the requirements a system must fulfil in order to create, manage, link, and prove Records in the sense of the RecordWeb Concept ([[RWC]]). RWP uses RFC 2119 compliance terminology and covers Record identity (DID), snapshot structure, payload validation, version graph (DAG), Case specification, integrity procedures, federation, and payload deletion across 14 chapters and three normative annexes.
+Repository: recordweb/rwp
+Markup Shorthands: markdown yes
+Boilerplate: omit copyright
+Version History: https://github.com/recordweb/rwp/commits/main/index.bs
+Previous Version: https://doi.org/10.5281/zenodo.20475345
+</pre>
+
+<pre class="biblio">
+{
+    "RWC": {
+        "title": "RecordWeb Concept (RWC)",
+        "authors": ["Nik Jenzer"],
+        "href": "https://recordweb.github.io/rwc/",
+        "status": "CG-DRAFT"
+    },
+    "RFC2119": {
+        "title": "Key words for use in RFCs to Indicate Requirement Levels",
+        "authors": ["S. Bradner"],
+        "href": "https://www.rfc-editor.org/rfc/rfc2119",
+        "publisher": "IETF",
+        "date": "1997"
+    },
+    "RFC8785": {
+        "title": "JSON Canonicalization Scheme (JCS)",
+        "href": "https://www.rfc-editor.org/rfc/rfc8785",
+        "publisher": "IETF",
+        "date": "2020"
+    },
+    "RFC8037": {
+        "title": "CFRG Elliptic Curves for JOSE and COSE (Ed25519)",
+        "href": "https://www.rfc-editor.org/rfc/rfc8037",
+        "publisher": "IETF",
+        "date": "2017"
+    },
+    "DID-CORE": {
+        "title": "Decentralized Identifiers (DIDs) v1.0",
+        "href": "https://www.w3.org/TR/did-core/",
+        "publisher": "W3C"
+    },
+    "ISO15489": {
+        "title": "ISO 15489-1:2016 — Records management",
+        "href": "https://www.iso.org/standard/62542.html",
+        "publisher": "ISO"
+    },
+    "ISO14721": {
+        "title": "ISO 14721:2012 — Open Archival Information System (OAIS)",
+        "href": "https://www.iso.org/standard/57284.html",
+        "publisher": "ISO"
+    },
+    "PROVO": {
+        "title": "PROV-O: The PROV Ontology",
+        "href": "https://www.w3.org/TR/prov-o/",
+        "publisher": "W3C"
+    },
+    "ECH-0164": {
+        "title": "eCH-0164 — Information lifecycle in public administration",
+        "href": "https://www.ech.ch",
+        "publisher": "eCH"
+    },
+    "HYPERLEDGER": {
+        "title": "Hyperledger Fabric",
+        "href": "https://www.hyperledger.org/projects/fabric",
+        "publisher": "Linux Foundation"
+    },
+    "JSON-SCHEMA": {
+        "title": "JSON Schema: A Media Type for Describing JSON Documents",
+        "href": "https://json-schema.org/draft/2020-12/json-schema-core",
+        "date": "2020"
+    },
+    "ZENODO-RWP": {
+        "title": "RecordWeb Protocol (RWP) v0.1 — Published baseline",
+        "authors": ["Nik Jenzer"],
+        "href": "https://doi.org/10.5281/zenodo.20475345",
+        "date": "2026"
+    }
+}
+</pre>
+
+<pre class=link-defaults>
+spec:infra; type:dfn; text:record
+</pre>
+
+
+Introduction {#intro}
+=====================
+
+## Status of This Document ## {#status}
+
+This document is a **CG Draft** of the RecordWeb Community Group. It is an Editor's Draft and does not represent a W3C standard or endorsed position.
+
+The published baseline is available at [[ZENODO-RWP]] (Version 0.1, DOI: 10.5281/zenodo.20475345). This working document reflects ongoing development toward the Community Group deliverable.
+
+Feedback is invited via [GitHub Issues](https://github.com/recordweb/rwp/issues).
+
+
+1 Introduction and Scope {#scope}
+==================================
+
+## 1.1 Purpose ## {#purpose}
+
+The RecordWeb Protocol (RWP) defines the technical standards for the creation, identification, versioning, linking, and proof of <dfn>Records</dfn> in an RWP-compliant system.
+
+RWP is the normative counterpart to the RecordWeb Concept ([[RWC]]). The RWC describes the conceptual foundations; RWP translates these into binding technical requirements that MUST be observed for interoperable implementation.
+
+## 1.2 Scope ## {#scope-section}
+
+This document applies to:
+
+- Systems that create, store, or manage [=Records=] in the sense of the [[RWC]]
+- Systems that import [=Records=] from other RWP-compliant systems or access them
+- Implementations claiming interoperability with other RWP-compliant systems
+
+This document does not apply to:
+
+- The internal storage architecture of a compliant system (database, file system, object store)
+- User interfaces and workflows built on top of an RWP-compliant system
+- The content of payloads, insofar as these are not standardised by the schema of the Record type
+
+## 1.3 Relationship to Other Standards ## {#related-standards}
+
+<table class="data">
+  <thead>
+    <tr><th>Standard</th><th>Relationship</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>[[ISO15489]]</td>
+      <td>RWP structurally implements the requirements for authenticity, reliability, integrity, and usability</td>
+    </tr>
+    <tr>
+      <td>[[ISO14721]] (OAIS)</td>
+      <td>RWP is complementary; finalised [=Records=] MAY be migrated to long-term archives according to OAIS principles</td>
+    </tr>
+    <tr>
+      <td>[[DID-CORE]]</td>
+      <td>RWP uses DIDs as the identity mechanism; conformance with W3C DID Core 1.0 is REQUIRED</td>
+    </tr>
+    <tr>
+      <td>[[PROVO]]</td>
+      <td>RWP lineage MAY be serialised as PROV-O; this is non-normative</td>
+    </tr>
+    <tr>
+      <td>[[ECH-0164]]</td>
+      <td>RWP maps the eCH information lifecycle as states; no structural dependency</td>
+    </tr>
+    <tr>
+      <td>[[RWC]] v1.0</td>
+      <td>Conceptual foundation; in the event of conflict, RWP takes precedence</td>
+    </tr>
+  </tbody>
+</table>
+
+## 1.4 Versioning of This Document ## {#doc-versioning}
+
+This document uses semantic versioning (SemVer): `MAJOR.MINOR.PATCH`.
+
+- **MAJOR**: Incompatible changes to existing standards
+- **MINOR**: Backward-compatible extensions
+- **PATCH**: Corrections without substantive change
+
+The current version is **0.0.1** (Draft — not yet approved for production implementations).
+
+
+2 Record Identity (DID) {#identity}
+=====================================
+
+## 2.1 Requirements for Record Identity ## {#identity-requirements}
+
+Every [=Record=] MUST possess a globally unique, permanent <dfn>identity</dfn>.
+
+This identity:
+
+- MUST be independent of the physical storage location of the [=Record=]
+- MUST be independent of the organisation managing the [=Record=]
+- MUST NOT be changed after the [=Record=] has been created
+- MUST remain valid without change even after a system migration
+- MUST be machine-resolvable (a resolver MUST be able to retrieve the DID document from the identity)
+
+## 2.2 DID Format ## {#did-format}
+
+The identity of a [=Record=] MUST be expressed as a Decentralized Identifier (DID) in accordance with [[DID-CORE]].
+
+**Normative format:**
+did:rwp:<namespace>:<unique-id>
+
+
+<table class="data">
+  <thead>
+    <tr><th>Component</th><th>Requirement</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>did</code></td>
+      <td>Literal; immutable</td>
+    </tr>
+    <tr>
+      <td><code>rwp</code></td>
+      <td>DID method for RecordWeb Protocol; immutable</td>
+    </tr>
+    <tr>
+      <td><code>&lt;namespace&gt;</code></td>
+      <td>Identifier of the organisation or system; MUST be uniquely registered. During the transition phase, a namespace MAY be formed on the basis of the DNS domain name of the organisation (e.g. <code>did:rwp:bern.ch:&lt;uuid&gt;</code>).</td>
+    </tr>
+    <tr>
+      <td><code>&lt;unique-id&gt;</code></td>
+      <td>Unique identifier of the [=Record=] within the namespace; MUST be a UUID v4 or a cryptographically equivalent random value</td>
+    </tr>
+  </tbody>
+</table>
+
+**Example:**
+did:rwp:bern.ch:f47ac10b-58cc-4372-a567-0e02b2c3d479
+
+
+
+## 2.3 DID Document ## {#did-document}
+
+For every Record DID, a DID document MUST exist containing the following fields:
+
+```json
+{
+  "@context": "https://www.w3.org/ns/did/v1",
+  "id": "did:rwp:bern.ch:f47ac10b-58cc-4372-a567-0e02b2c3d479",
+  "recordEndpoint": "https://records.bern.ch/api/v1/records/f47ac10b",
+  "created": "2026-05-31T14:00:00Z",
+  "updated": "2026-05-31T14:00:00Z",
+  "currentVersion": "sha256:e3b0c44298fc1c149afb...",
+  "controller": "did:rwp:bern.ch:controller-001",
+  "verificationMethod": [
+    {
+      "id": "did:rwp:bern.ch:f47ac10b#key-1",
+      "type": "Ed25519VerificationKey2020",
+      "controller": "did:rwp:bern.ch:controller-001",
+      "publicKeyMultibase": "z6MkhaXgBZDvotDkL..."
+    }
+  ]
+}
+```
+
+<table class="data">
+  <thead>
+    <tr><th>Field</th><th>Required</th><th>Description</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>@context</code></td><td>MUST</td><td>W3C DID Context URI</td></tr>
+    <tr><td><code>id</code></td><td>MUST</td><td>DID of the [=Record=]; identical to the Record DID</td></tr>
+    <tr><td><code>recordEndpoint</code></td><td>MUST</td><td>URL at which the [=Record=] can be retrieved</td></tr>
+    <tr><td><code>created</code></td><td>MUST</td><td>ISO 8601 timestamp of DID creation</td></tr>
+    <tr><td><code>updated</code></td><td>MUST</td><td>ISO 8601 timestamp of last DID document update</td></tr>
+    <tr><td><code>currentVersion</code></td><td>MUST</td><td>Content hash of the current finalised version (empty for pure draft)</td></tr>
+    <tr><td><code>controller</code></td><td>MUST</td><td>DID of the controlling entity (organisation or person)</td></tr>
+    <tr><td><code>verificationMethod</code></td><td>MUST</td><td>At least one verification method for signature validation</td></tr>
+  </tbody>
+</table>
+
+The DID document MUST be updated when the physical storage location changes (`recordEndpoint`, `updated`, `currentVersion`). All other fields MUST NOT be changed.
+
+## 2.4 DID Resolver Requirements ## {#did-resolver}
+
+An RWP-compliant system MUST provide a DID resolver that:
+
+- Resolves DIDs of the method `rwp` and returns the associated DID document
+- Delivers the DID document as JSON-LD in accordance with [[DID-CORE]]
+- Returns HTTP 200 when the DID is known
+- Returns HTTP 404 when the DID is unknown
+- Returns HTTP 410 when the DID is known but the [=Record=] has been deleted (payload deletion per Chapter 13)
+
+
+3 Record Structure {#structure}
+=================================
+
+## 3.1 Overview ## {#structure-overview}
+
+Every [=Record=] MUST consist of exactly three components:
+
+1. **[=Identity=]** — the DID of the [=Record=] (Chapter 2)
+2. **[=Payload=]** — the content of the [=Record=] (Chapter 4)
+3. **[=Metadata=]** — descriptive dimensions of the [=Record=] (Section 3.3)
+
+Together, these three components form a <dfn>snapshot</dfn> — an immutable, versioned representation of the [=Record=] at a specific point in time.
+
+## 3.2 Snapshot Definition ## {#snapshot-definition}
+
+A [=snapshot=] is the atomic unit of versioning in RecordWeb.
+
+A [=snapshot=] MUST fulfil the following properties:
+
+- It is immutable after its creation
+- It is uniquely identifiable by its content hash
+- It references exactly one version of the payload (or multiple representations per Section 4.3)
+- It references exactly one version of the schema of its Record type
+- It is linked to its predecessor snapshots by directed edges in the version graph
+
+## 3.3 Minimum Metadata Set ## {#metadata-set}
+
+Every [=snapshot=] MUST contain the following <dfn>metadata</dfn> fields:
+
+```json
+{
+  "did": "did:rwp:bern.ch:f47ac10b-58cc-4372-a567-0e02b2c3d479",
+  "snapshotHash": "sha256:e3b0c44298fc1c149afb4c8996fb924...",
+  "recordType": "did:rwp:ech-standards.ch:schema-baubewilligung-antrag",
+  "schemaVersion": "sha256:a665a45920422f9d417e4867efdc4fb8a...",
+  "state": "finalized",
+  "created": "2026-05-31T14:00:00Z",
+  "finalized": "2026-05-31T15:30:00Z",
+  "owner": "did:rwp:bern.ch:user-petra-muster",
+  "parents": ["sha256:previousSnapshotHash..."],
+  "classification": "internal",
+  "retentionPolicy": "did:rwp:bern.ch:retention-bauakten-30y",
+  "tags": ["building-permit", "parcel-451", "2026"],
+  "accessPolicy": null,
+  "payloadHash": "sha256:d2d2d2d2d2...",
+  "payloadFormat": "application/pdf;profile=PDF-A-2b",
+  "signature": "z3FttV7..."
+}
+```
+
+<table class="data">
+  <thead>
+    <tr><th>Field</th><th>Required</th><th>Type</th><th>Description</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>did</code></td><td>MUST</td><td>DID</td><td>Identity of the [=Record=]</td></tr>
+    <tr><td><code>snapshotHash</code></td><td>MUST</td><td>SHA-256</td><td>Hash of this snapshot (incl. payload and metadata)</td></tr>
+    <tr><td><code>recordType</code></td><td>MUST</td><td>DID</td><td>Reference to the SchemaRecord of the type</td></tr>
+    <tr><td><code>schemaVersion</code></td><td>MUST</td><td>SHA-256</td><td>Hash of the schema version against which this snapshot was validated</td></tr>
+    <tr><td><code>state</code></td><td>MUST</td><td>Enum</td><td><code>draft</code> or <code>finalized</code>; additional values permitted per type schema</td></tr>
+    <tr><td><code>created</code></td><td>MUST</td><td>ISO 8601</td><td>Timestamp of snapshot creation</td></tr>
+    <tr><td><code>finalized</code></td><td>MUST (when finalized)</td><td>ISO 8601</td><td>Timestamp of finalisation</td></tr>
+    <tr><td><code>owner</code></td><td>MUST</td><td>DID</td><td>Responsible person or organisational unit</td></tr>
+    <tr><td><code>parents</code></td><td>MUST</td><td>Array&lt;SHA-256&gt;</td><td>Hashes of predecessor snapshots; empty for first snapshot</td></tr>
+    <tr><td><code>classification</code></td><td>SHOULD</td><td>String</td><td>Protection level per the organisation's internal scheme</td></tr>
+    <tr><td><code>retentionPolicy</code></td><td>SHOULD</td><td>DID</td><td>Reference to retention rule</td></tr>
+    <tr><td><code>tags</code></td><td>MAY</td><td>Array&lt;String&gt;</td><td>Free-text markers for search and filtering</td></tr>
+    <tr><td><code>accessPolicy</code></td><td>MAY</td><td>Object|null</td><td>Delegated authorisation model (Chapter 11)</td></tr>
+    <tr><td><code>payloadHash</code></td><td>MUST</td><td>SHA-256</td><td>Hash of the payload</td></tr>
+    <tr><td><code>payloadFormat</code></td><td>MUST</td><td>MIME-Type</td><td>Format of the primary payload incl. profiles</td></tr>
+    <tr><td><code>signature</code></td><td>MUST (when finalized)</td><td>Multibase</td><td>Cryptographic signature of the record owner over the snapshot hash</td></tr>
+  </tbody>
+</table>
+
+## 3.4 Snapshot Hash Calculation ## {#snapshot-hash}
+
+The `snapshotHash` MUST be calculated as follows:
+
+1. Serialise the metadata fields (without `snapshotHash` itself) as canonical JSON ([[RFC8785]])
+2. Concatenate: `canonicalMetadataJSON || payloadBytes`
+3. Calculate SHA-256 over the result
+
+```
+snapshotHash = SHA-256( canonicalize(metadata \ {snapshotHash}) || payloadBytes )
+```
+
+
+A system MUST verify the `snapshotHash` after every finalisation before the snapshot is accepted as valid.
+
+
+4 Payload and Formats {#payload-chapter}
+==========================================
+
+## 4.1 Payload Definition ## {#payload-definition}
+
+The <dfn>payload</dfn> of a [=Record=] is the content the [=Record=] carries, the actual information.
+
+A [=payload=]:
+
+- MUST conform to the schema of the Record type in the referenced schema version
+- MUST be validated against the schema before finalisation
+- MUST NOT be changed after finalisation
+- MUST be uniquely identified in the `payloadHash` of the [=snapshot=]
+
+## 4.2 Permitted Payload Types ## {#payload-types}
+
+RWP distinguishes three payload categories:
+
+<table class="data">
+  <thead>
+    <tr><th>Category</th><th>Description</th><th>Examples</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Structured</td>
+      <td>Machine-readable, schema-validatable data</td>
+      <td>JSON, XML, YAML</td>
+    </tr>
+    <tr>
+      <td>Documentary</td>
+      <td>Human-readable documents with defined structure</td>
+      <td>PDF/A, DOCX, ODT, Markdown</td>
+    </tr>
+    <tr>
+      <td>Binary</td>
+      <td>Non-textual data with descriptive schema</td>
+      <td>TIFF, JPEG 2000, MP4, ZIP</td>
+    </tr>
+  </tbody>
+</table>
+
+## 4.3 Multi-Representation ## {#multi-representation}
+
+A [=snapshot=] MAY carry multiple representations of the same [=payload=]. This is provided in particular for the transition from working format (draft) to long-term format (finalised).
+
+If a [=snapshot=] contains multiple representations, ALL of the following MUST apply:
+
+- All representations MUST depict the same content
+- All representations MUST be individually hashed and referenced in the snapshot
+- One representation MUST be designated as primary (`primary: true`)
+- The `payloadHash` MUST contain the hash of the primary representation
+
+```json
+{
+  "payloadRepresentations": [
+    {
+      "format": "text/markdown",
+      "hash": "sha256:aabbcc...",
+      "primary": false,
+      "role": "source"
+    },
+    {
+      "format": "application/pdf;profile=PDF-A-2b",
+      "hash": "sha256:ddeeff...",
+      "primary": true,
+      "role": "publication"
+    }
+  ]
+}
+```
+
+<table class="data">
+  <thead>
+    <tr><th>Field</th><th>Required</th><th>Description</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>format</code></td><td>MUST</td><td>MIME type incl. profiles</td></tr>
+    <tr><td><code>hash</code></td><td>MUST</td><td>SHA-256 of this representation</td></tr>
+    <tr><td><code>primary</code></td><td>MUST</td><td>Exactly one representation MUST be <code>true</code></td></tr>
+    <tr><td><code>role</code></td><td>SHOULD</td><td>Semantic role: <code>source</code>, <code>publication</code>, <code>preview</code>, <code>archive</code></td></tr>
+  </tbody>
+</table>
+
+## 4.4 Format Requirements per State ## {#format-requirements}
+
+The schema of a Record type MUST define the permitted payload formats for each state. If a schema contains no explicit format requirements, the following defaults apply:
+
+<table class="data">
+  <thead>
+    <tr><th>State</th><th>Permitted formats (default)</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>draft</code></td>
+      <td>All MIME types not explicitly excluded in the schema of the Record type</td>
+    </tr>
+    <tr>
+      <td><code>finalized</code></td>
+      <td>Only formats from the RWP list of archival-grade formats (Annex A, Table A-1)</td>
+    </tr>
+  </tbody>
+</table>
+
+**RWP archival-grade formats (normative):**
+
+<table class="data">
+  <thead>
+    <tr><th>MIME Type</th><th>Format</th><th>Suitability</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>application/pdf;profile=PDF-A-1b</code></td><td>PDF/A-1b</td><td>Documents without embedded multimedia</td></tr>
+    <tr><td><code>application/pdf;profile=PDF-A-2b</code></td><td>PDF/A-2b</td><td>Documents with embedded files</td></tr>
+    <tr><td><code>application/pdf;profile=PDF-A-3b</code></td><td>PDF/A-3b</td><td>Documents with arbitrary attachments</td></tr>
+    <tr><td><code>text/xml</code></td><td>XML (well-formed)</td><td>Structured data</td></tr>
+    <tr><td><code>application/json</code></td><td>JSON</td><td>Structured data (with schema reference)</td></tr>
+    <tr><td><code>image/tiff</code></td><td>TIFF</td><td>Raster images</td></tr>
+    <tr><td><code>image/jp2</code></td><td>JPEG 2000</td><td>Raster images (near-lossless)</td></tr>
+    <tr><td><code>text/plain;charset=UTF-8</code></td><td>Plain Text UTF-8</td><td>Pure text documents</td></tr>
+    <tr><td><code>text/markdown</code></td><td>CommonMark Markdown</td><td>Source format with publication representation</td></tr>
+  </tbody>
+</table>
+
+## 4.5 Conversion During Finalisation ## {#payload-conversion}
+
+When a system transitions a [=Record=] from state `draft` to `finalized`, it MUST:
+
+1. Validate the payload against the finalised format of the schema
+2. If the current payload is not in archival-grade format: convert automatically or request conversion from the operator
+3. Store both formats as multi-representation in the snapshot (SHOULD)
+4. Document the conversion act as metadata (`conversionMethod`, `conversionTimestamp`)
+
+A system MUST NOT finalise a [=Record=] whose payload does not conform to the format defined for `finalized` and for which no archival-grade conversion is possible.
+
+5 Record Types and Schemas {#schemas}
+=======================================
+
+## 5.1 Record Type Definition ## {#record-type}
+
+Every [=Record=] MUST be assigned to a Record type. A Record type:
+
+- defines the schema of the [=payload=]
+- defines the permitted states and their transitions
+- defines the format requirements per state
+- defines mandatory and optional [=metadata=] fields beyond the minimum set
+- is itself a [=Record=] of the type `SchemaRecord`
+
+## 5.2 SchemaRecord ## {#schema-record}
+
+A <dfn>SchemaRecord</dfn> is a specialised Record type that carries the definition of another Record type.
+
+A [=SchemaRecord=] MUST:
+
+- fulfil all requirements for a regular [=Record=] (DID, metadata, version graph)
+- contain a JSON Schema (Draft 2020-12 or later, [[JSON-SCHEMA]]) in the payload
+- contain the field `rwpSchemaVersion` in the payload with the RWP version for which it is valid
+- contain the field `allowedStates` in the payload with the permitted states and their transitions
+- contain the field `payloadFormats` in the payload with the permitted formats per state
+
+**Minimal SchemaRecord payload example:**
+
+```json
+{
+  "rwpSchemaVersion": "0.1",
+  "schemaId": "did:rwp:bern.ch:schema-building-permit-application",
+  "displayName": "Building Permit Application",
+  "allowedStates": ["draft", "finalized"],
+  "stateTransitions": [
+    { "from": "draft", "to": "finalized", "requiresOwnerSignature": true }
+  ],
+  "payloadFormats": {
+    "draft": ["application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+              "text/markdown"],
+    "finalized": ["application/pdf;profile=PDF-A-2b"]
+  },
+  "jsonSchema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "required": ["parcelNumber", "applicant", "constructionProject", "date"],
+    "properties": {
+      "parcelNumber": { "type": "string" },
+      "applicant": { "type": "string" },
+      "constructionProject": { "type": "string" },
+      "date": { "type": "string", "format": "date" }
+    }
+  }
+}
+```
+
+## 5.3 Core Record Types (normative) ## {#core-types}
+
+RWP defines the following core Record types that every compliant system MUST support:
+
+<table class="data">
+  <thead>
+    <tr><th>Type Name</th><th>DID Suffix</th><th>Description</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>SchemaRecord</code></td><td><code>schema-record</code></td><td>Definition of a Record type</td></tr>
+    <tr><td><code>MergeRecord</code></td><td><code>merge-record</code></td><td>Documentation of a merge act</td></tr>
+    <tr><td><code>DeletionRecord</code></td><td><code>deletion-record</code></td><td>Log of a payload deletion (Chapter 13)</td></tr>
+    <tr><td><code>CaseRecord</code></td><td><code>case-record</code></td><td>Case (Chapter 8)</td></tr>
+    <tr><td><code>MigrationRecord</code></td><td><code>migration-record</code></td><td>Log of a system migration</td></tr>
+  </tbody>
+</table>
+
+Additional Record types MAY be defined by organisations or standards bodies. They MUST be published as [=SchemaRecords=] and be resolvable via a DID.
+
+## 5.4 Schema Versioning and Backward Compatibility ## {#schema-versioning}
+
+When a [=SchemaRecord=] is finalised in a new version, the following applies:
+
+- Existing snapshots referencing an earlier schema version REMAIN valid
+- The new schema MUST contain the field `previousSchemaVersion` in the payload with the hash of the predecessor schema
+- Systems MUST keep all schema versions referenced by existing [=Records=] permanently accessible
+- A system MUST NOT retroactively change an existing [=SchemaRecord=], corrections are made as a new version
+
+
+6 States and Transitions {#states}
+=====================================
+
+## 6.1 State Model ## {#state-model}
+
+Every [=Record=] snapshot has exactly one <dfn>state</dfn>. The state describes the validity and linkability status of the snapshot.
+
+**Core states (normative, for all Record types):**
+
+<table class="data">
+  <thead>
+    <tr><th>State</th><th>Linkable</th><th>Immutable</th><th>Description</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code><dfn>draft</dfn></code></td>
+      <td>NO</td>
+	  <td>NO</td>
+      <td>Being processed; content may change</td>
+    </tr>
+    <tr>
+      <td><code><dfn>finalized</dfn></code></td>
+      <td>YES</td>
+	  <td>YES</td>
+      <td>Complete; content cryptographically secured</td>
+    </tr>
+  </tbody>
+</table>
+
+Record types MAY define additional states. These MUST be specified in the [=SchemaRecord=] and MUST be reachable from one of the core states or lead into one.
+
+**Example of an extended state machine for type "contract":**
+
+```
+draft → in-review → finalized
+↓
+rejected (terminal state, not linkable)
+```
+
+
+## 6.2 Linkability ## {#linkability}
+
+A [=Record=] MUST NOT be used as the target of a hard link when its current state is [=draft=].
+
+A system MUST return an error when an attempt is made to set a hard link to a [=draft=] Record.
+
+Exception: Working references (soft links) per Section 8.4 MAY point to [=draft=] Records.
+
+## 6.3 Finalisation Requirements ## {#finalisation-requirements}
+
+A system MUST perform the following checks before finalising a [=snapshot=]:
+
+1. **Schema validation**: Payload conforms to the schema in the version defined for `finalized`
+2. **Format validation**: Payload format conforms to the `payloadFormats.finalized` requirements of the schema
+3. **Mandatory field check**: All MUST metadata fields are present and correctly typed
+4. **Owner signature**: If the schema defines `signaturePolicy: owner`, the record owner MUST have cryptographically signed the snapshot hash. For `signaturePolicy: system`, the signature MAY be generated by an authorised system key. For `signaturePolicy: none`, signature validation is omitted.
+5. **Parent integrity**: All referenced parent hashes are resolvable in the system
+
+If any of these checks fails, the system MUST NOT finalise the [=snapshot=] and MUST return an error with a validation code.
+
+## 6.4 Irreversibility of Finalisation ## {#irreversibility}
+
+A [=finalized=] snapshot MUST NOT be reverted to the state [=draft=].
+
+Corrections to a [=finalized=] [=Record=] are made exclusively by creating a new [=snapshot=] with:
+
+- Reference to the snapshot to be corrected as parent
+- Reasoning field `correctionReason` in the metadata object
+- Complete finalisation process per Section 6.3
+
+
+7 Version Graph (DAG) {#version-graph-chapter}
+================================================
+
+## 7.1 Graph Structure ## {#graph-structure}
+
+The totality of all snapshots of a [=Record=] and their parent-child relationships forms the <dfn>version graph</dfn>.
+
+The [=version graph=] MUST be a **Directed Acyclic Graph (DAG)**:
+
+- **Directed**: Edges point from child to parent (backward in time)
+- **Acyclic**: There MUST be NO cycles — a snapshot MUST NOT be directly or indirectly its own ancestor
+
+A system MUST check upon receipt of a new [=snapshot=] whether adding its parent references would create a cycle. If so, the [=snapshot=] MUST be rejected.
+
+## 7.2 Nodes ## {#graph-nodes}
+
+Every node in the [=version graph=] is a [=snapshot=] per Section 3.2.
+
+<table class="data">
+  <thead>
+    <tr><th>Property</th><th>Requirement</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Unique identity</td><td>SHA-256 of the snapshot (<code>snapshotHash</code>); MUST be unique</td></tr>
+    <tr><td>Immutability</td><td>Finalised nodes MUST NOT be changed</td></tr>
+    <tr><td>Resolvability</td><td>Every node MUST be retrievable in the system via its <code>snapshotHash</code></td></tr>
+  </tbody>
+</table>
+
+## 7.3 Edges (Parent References) ## {#graph-edges}
+
+An edge connects a [=snapshot=] (child) with its predecessor [=snapshot=] (parent).
+
+- A [=snapshot=] MAY have zero, one, or multiple parent references
+- A [=snapshot=] without parents is the **root snapshot** (first snapshot of the [=Record=])
+- A [=snapshot=] with exactly one parent reference is a **linear continuation**
+- A [=snapshot=] with multiple parent references is a **merge snapshot**
+
+Edge requirements:
+
+- Every parent reference MUST be a valid `snapshotHash` of a known [=snapshot=]
+- Edges MUST NOT point to snapshots of other [=Records=]. Cross-Record connections are made via links in the [=payload=] or as Case linkage (Chapter 8)
+
+## 7.4 Branches ## {#graph-branches}
+
+A <dfn>branch</dfn> arises when two or more new [=draft=] snapshots with the same parent reference emerge from a [=finalized=] snapshot.
+
+- Branches are explicitly permitted in RecordWeb and MUST be made visible by the system
+- A system MUST return all active branches (draft snapshots without successors) when a [=Record=] is retrieved
+- Branches MAY exist simultaneously as long as they are in state [=draft=]
+
+## 7.5 Merges ## {#graph-merges}
+
+A merge snapshot is a [=snapshot=] with two or more parent references. It consolidates two branches.
+
+Before a merge snapshot can be finalised, a `MergeRecord` MUST be created:
+
+```json
+{
+  "mergeRecord": {
+    "mergedSnapshots": [
+      "sha256:branch-a-snapshot-hash...",
+      "sha256:branch-b-snapshot-hash..."
+    ],
+    "mergeReason": "Consolidation after coordination between departments",
+    "mergedBy": "did:rwp:bern.ch:user-petra-muster",
+    "mergedAt": "2026-05-31T16:00:00Z",
+    "resultSnapshot": "sha256:merged-snapshot-hash..."
+  }
+}
+```
+
+The `MergeRecord` MUST be finalised before the merge snapshot can be finalised.
+
+## 7.6 Cross-Record Merges ## {#cross-record-merges}
+
+When a new [=Record=] arises from two or more existing [=finalized=] Records (cross-Record merge), the following MUST apply:
+
+- The new [=Record=] MUST have a root snapshot with an empty `parents` array
+- The `MergeRecord` MUST reference the DIDs of the source Records (not their snapshot hashes)
+- The source Records MUST remain in state [=finalized=] and receive a metadata note `contributedTo` with the DID of the new [=Record=]
+
+
+8 Case Specification {#cases-chapter}
+=======================================
+
+## 8.1 Case as a Specialised Record Type ## {#case-type}
+
+A <dfn>Case</dfn> is a [=Record=] of type `CaseRecord`. It is subject to all requirements for regular [=Records=] (Chapters 2–7) and supplements these with Case-specific requirements.
+
+A [=Case=] SHOULD be a standalone storage object, it is a persisted view of a set of linked [=Records=].
+
+## 8.2 Case Schema (normative) ## {#case-schema}
+
+A `CaseRecord` payload MUST contain the following fields:
+
+```json
+{
+  "caseId": "did:rwp:bern.ch:f47ac10b-case-001",
+  "caseType": "did:rwp:bern.ch:schema-building-permit-case",
+  "title": "Building Permit Musterstrasse 12, Parcel 451",
+  "trigger": {
+    "type": "hard",
+    "recordDid": "did:rwp:bern.ch:application-001",
+    "snapshotHash": "sha256:application-finalized-hash..."
+  },
+  "context": [
+    {
+      "type": "hard",
+      "recordDid": "did:rwp:bern.ch:zoning-plan-2024",
+      "snapshotHash": "sha256:zoning-plan-hash...",
+      "role": "Legal basis"
+    }
+  ],
+  "process": [
+    {
+      "type": "hard",
+      "recordDid": "did:rwp:bern.ch:minutes-site-inspection",
+      "snapshotHash": "sha256:minutes-hash...",
+      "role": "Investigation"
+    }
+  ],
+  "decision": null,
+  "result": null,
+  "merkleRoot": "sha256:case-merkle-root..."
+}
+```
+
+## 8.3 Case Elements (normative) ## {#case-elements}
+
+A complete [=Case=] MUST contain all five elements. A [=Case=] MAY be finalised if and only if all five elements are present as hard links.
+
+<table class="data">
+  <thead>
+    <tr><th>Element</th><th>Required for finalisation</th><th>Description</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>trigger</code></td><td>MUST</td>
+      <td>Exactly one Record that triggered the Case; MUST be a hard link</td>
+    </tr>
+    <tr>
+      <td><code>context</code></td><td>SHOULD</td>
+      <td>Information relevant to understanding and processing</td>
+    </tr>
+    <tr>
+      <td><code>process</code></td><td>MAY (empty allowed)</td>
+      <td>Documentation of processing steps</td>
+    </tr>
+    <tr>
+      <td><code>decision</code></td><td>MAY (empty allowed)</td>
+      <td>Record(s) documenting the decision; MUST be a hard link</td>
+    </tr>
+    <tr>
+      <td><code>result</code></td><td>MUST (min. 1)</td>
+      <td>At least one Record documenting the outcome; MUST be a hard link</td>
+    </tr>
+  </tbody>
+</table>
+
+**Exception — ad-hoc Case**: A [=Case=] schema MAY be marked as `adhoc: true`. Ad-hoc Cases have no mandatory fields other than `trigger` and `caseId`. They MUST be marked in the metadata object as `caseVariant: "adhoc"`.
+
+## 8.4 Hard and Soft Links ## {#links}
+
+A <dfn>hard link</dfn> points to a [=finalized=] [=snapshot=] (`snapshotHash` MUST be specified). It is immutable after finalisation of the [=Case=].
+
+A <dfn>soft link</dfn> (working reference) points to a Record DID without a snapshot reference. It MAY point to [=finalized=] or [=draft=] Records. Soft links prevent finalisation of the [=Case=] and MUST be converted to [=hard links=] before [=Case=] finalisation.
+
+A system MUST check during a [=Case=] finalisation attempt whether soft links are still present. If so, the system MUST reject the finalisation and return the open soft links.
+
+## 8.5 Case Merkle Root ## {#merkle-root-calc}
+
+The <dfn>Merkle root</dfn> of a [=Case=] MUST be calculated as follows:
+
+1. Collect all `snapshotHash` values of all [=hard links=] in the [=Case=] (trigger, context, process, decision, result)
+2. Sort alphabetically by SHA-256 value
+3. Calculate the Merkle root over the sorted list (algorithm per Section 9.5)
+
+```
+merkleRoot = MerkleRoot( sort( [snapshotHash_1, snapshotHash_2, ... snapshotHash_n] ) )
+```
+
+
+The [=Merkle root=] MUST be recalculated every time a [=hard link=] is added or removed. A system MUST verify the [=Merkle root=] before finalising the [=Case=].
+
+## 8.6 Case Completeness Check ## {#case-completeness}
+
+A system SHOULD perform a completeness check on a [=Case=] at any time upon request and return:
+
+```json
+{
+  "caseId": "did:rwp:bern.ch:f47ac10b-case-001",
+  "complete": false,
+  "missingElements": ["decision", "result"],
+  "openWorkingReferences": ["did:rwp:bern.ch:expert-opinion-draft-001"],
+  "merkleRootValid": true
+}
+```
+
+
+9 Integrity and Hashing Procedures {#integrity}
+=================================================
+
+## 9.1 Hashing Procedure ## {#hashing}
+
+RWP uses exclusively **SHA-256** as the hashing procedure for:
+
+- Snapshot hashes (`snapshotHash`)
+- Payload hashes (`payloadHash`)
+- Schema version hashes (`schemaVersion`)
+- Parent references (`parents`)
+- Merkle root calculations
+
+A system MUST NOT use any hashing procedure other than SHA-256 for normative integrity proofs.
+
+Note: A future version of RWP MAY permit SHA-3 or other procedures as an alternative if cryptographic weaknesses in SHA-256 become known. Until then, SHA-256 is the only permitted procedure.
+
+## 9.2 Canonical JSON Serialisation ## {#canonical-json}
+
+For all hash calculations over JSON objects, **RFC 8785 (JSON Canonicalization Scheme, JCS)** [[RFC8785]] MUST be used.
+
+Requirements:
+
+- Keys MUST be sorted alphabetically
+- Unicode characters MUST be normalised (NFC)
+- No superfluous whitespace or line breaks
+- Numbers MUST be represented in their canonical form
+
+## 9.3 Snapshot Integrity ## {#snapshot-integrity}
+
+A system MUST check the integrity of a [=snapshot=] on the following events:
+
+- Receipt of a [=snapshot=] from an external system
+- Retrieval of a [=snapshot=] for a linking operation
+- Periodic integrity check
+
+If the integrity check fails, the system MUST:
+
+1. Mark the [=snapshot=] as `compromised`
+2. Mark all dependent [=Records=] as `integrity-warning`
+3. Log the incident in the system log with timestamp and discrepancy
+4. Notify the responsible record owner via the DID (SHOULD)
+
+The system MUST NOT automatically attempt to reconstruct the original content.
+
+## 9.4 Signature Procedure ## {#signature}
+
+If the schema prescribes a signature (`signaturePolicy: owner` or `signaturePolicy: system`), the snapshot hash MUST be cryptographically signed during the finalisation act.
+
+Requirements:
+
+- MUST be Ed25519 (EdDSA, [[RFC8037]]) or P-256 (ECDSA, NIST)
+- The signature MUST be calculated over the canonical `snapshotHash` value (as hex string)
+- The signature MUST be stored in the `signature` field as a multibase-encoded value
+- The key used MUST be published in the DID document of the record owner as a verification method
+
+## 9.5 Merkle Tree Algorithm ## {#merkle-algorithm}
+
+For the calculation of the [=Case=] [=Merkle root=], the following algorithm MUST be used:
+
+```
+function merkleRoot(hashes: SHA256[]) -> SHA256:
+if hashes.length == 0: return SHA256("")
+if hashes.length == 1: return hashes
+
+sorted = sort(hashes) // alphabetically by hex string
+
+while sorted.length > 1:
+nextLevel = ]
+for i in range(0, sorted.length, 2):
+if i + 1 < sorted.length:
+nextLevel.append( SHA256( sorted[i] || sorted[i+1] ) )
+else:
+nextLevel.append( sorted[i] ) // odd element carried over unchanged
+sorted = nextLevel
+
+return sorted
+```
+
+
+10 Optional Ledger Anchoring {#ledger}
+========================================
+
+## 10.1 Purpose and Scope ## {#ledger-purpose}
+
+Ledger anchoring is an **optional extension** of RWP. It enables the external, immutable proof of [=Case=] [=Merkle roots=] on a distributed infrastructure.
+
+A system MUST be fully RWP-compliant without ledger anchoring. Ledger anchoring supplements the internal integrity assurance with an external proof independent of the operating organisation.
+
+## 10.2 Requirements for the Ledger ## {#ledger-requirements}
+
+If a system implements ledger anchoring, the ledger used MUST:
+
+- be permissioned (no public, anonymous blockchain)
+- guarantee immutable entries (append-only)
+- deliver a provable timestamp per entry
+- be operated independently of the organisation that manages the [=Records=]
+- be readable by all authorised verification parties
+
+**Recommended implementation**: Hyperledger Fabric [[HYPERLEDGER]]. Other permissioned distributed ledger technologies MAY be used if they fulfil the above requirements.
+
+## 10.3 Anchoring Protocol ## {#anchoring-protocol}
+
+When a finalised [=Case=] is anchored, the ledger entry MUST contain the following fields:
+
+```json
+{
+  "rwpAnchor": {
+    "version": "0.1",
+    "caseDid": "did:rwp:bern.ch:f47ac10b-case-001",
+    "caseSnapshotHash": "sha256:case-finalized-snapshot-hash...",
+    "merkleRoot": "sha256:case-merkle-root...",
+    "anchoredAt": "2026-05-31T16:00:00Z",
+    "anchoredBy": "did:rwp:bern.ch:controller-001",
+    "ledgerTxId": "abc123..."
+  }
+}
+```
+
+The ledger entry MUST NOT contain any payload content, personal data, or classified information. Only cryptographic hash values and identifiers are permitted.
+
+## 10.4 Anchoring Reference in the Case ## {#anchoring-reference}
+
+When a [=Case=] has been anchored, the [=Case=] snapshot MUST be updated with an `anchorReference` field:
+
+```json
+{
+  "anchorReference": {
+    "ledgerType": "hyperledger-fabric",
+    "ledgerEndpoint": "https://ledger.bern.ch/api/v1",
+    "txId": "abc123...",
+    "anchoredAt": "2026-05-31T16:00:00Z"
+  }
+}
+```
+
+
+11 Access Control (Delegation Framework) {#access-control}
+============================================================
+
+## 11.1 Scope and Principles ## {#access-principles}
+
+RWP deliberately defines no mandatory authorisation model. Data security and information protection are delegated to the implementing systems. This chapter defines an **optional, interoperable delegation framework** that compliant systems MAY implement.
+
+The core principle: access control in RWP is **attribute-based** (ABAC) and **delegatable**. Rights are not assigned to roles in a fixed hierarchy, but expressed as verifiable claims attached to DIDs.
+
+## 11.2 Access Policy Block ## {#access-policy}
+
+A [=Record=] snapshot MAY contain an `accessPolicy` block in the [=metadata=]:
+
+```json
+{
+  "accessPolicy": {
+    "visibility": "restricted",
+    "readAccess": [
+      "did:rwp:bern.ch:unit-legal",
+      "did:rwp:bern.ch:unit-planning"
+    ],
+    "writeAccess": [
+      "did:rwp:bern.ch:user-petra-muster"
+    ],
+    "delegationAllowed": true,
+    "expiresAt": null
+  }
+}
+```
+
+<table class="data">
+  <thead>
+    <tr><th>Field</th><th>Required</th><th>Description</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>visibility</code></td><td>SHOULD</td><td><code>public</code>, <code>restricted</code>, or <code>confidential</code></td></tr>
+    <tr><td><code>readAccess</code></td><td>MAY</td><td>Array of DIDs with read permission</td></tr>
+    <tr><td><code>writeAccess</code></td><td>MAY</td><td>Array of DIDs with write permission (draft state only)</td></tr>
+    <tr><td><code>delegationAllowed</code></td><td>MAY</td><td>Whether listed DIDs may further delegate access</td></tr>
+    <tr><td><code>expiresAt</code></td><td>MAY</td><td>ISO 8601 timestamp after which access policy expires</td></tr>
+  </tbody>
+</table>
+
+## 11.3 Delegation Chain ## {#delegation-chain}
+
+When `delegationAllowed: true`, a listed DID MAY issue a signed delegation token granting access to a third DID. The delegation token MUST:
+
+- be signed by the delegating DID's verification key
+- reference the original Record DID
+- specify the access level being delegated (`read` or `write`)
+- include an expiry timestamp
+
+Implementing systems MAY enforce delegation chains and MUST validate delegation token signatures before granting access.
+
+
+12 Federation {#federation-chapter}
+=====================================
+
+## 12.1 Federation Model ## {#federation-model}
+
+RWP federation is modelled after the DNS architecture: a **decentralised, hierarchical namespace model** without a single point of failure.
+
+Every RWP namespace (the `<namespace>` component of a DID, e.g. `bern.ch`) is operated by the owning organisation. Namespace resolvers are federated: each resolver knows its own namespace and can route resolution requests for unknown namespaces to peer resolvers.
+
+## 12.2 Namespace Registry ## {#namespace-registry}
+
+The authoritative namespace registry is the subject of a future RWP extension. During the transition phase, the following applies:
+
+- A namespace SHOULD be formed on the basis of the DNS domain name of the organisation (e.g. `bern.ch`, `bag.admin.ch`, `usz.ch`)
+- DNS ownership of the domain implies namespace authority, no separate registration required during transition
+- Namespace conflicts are resolved by DNS priority
+
+## 12.3 Resolver Requirements ## {#resolver-requirements}
+
+An RWP federation resolver MUST:
+
+- Accept DID resolution requests of the method `rwp`
+- Resolve DIDs within its own namespace directly
+- For unknown namespaces: query the DNS TXT record of the namespace domain for the `_rwp-resolver` entry
+- Cache resolver endpoints with a TTL of at least 300 seconds
+- Return a `404` response when neither the DID nor a resolver for its namespace can be found
+
+**DNS TXT record format for resolver discovery:**
+
+```
+_rwp-resolver.bern.ch. 300 IN TXT "v=rwp1;endpoint=https://resolver.bern.ch/api/v1"
+```
+
+
+## 12.4 Cross-Namespace Links ## {#cross-namespace}
+
+A [=Record=] in namespace `bern.ch` MAY contain [=hard links=] to [=Records=] in other namespaces (e.g. `did:rwp:bag.admin.ch:guideline-001`).
+
+When resolving cross-namespace links, a system MUST:
+
+1. Extract the namespace component from the linked DID
+2. Discover the resolver endpoint via DNS TXT lookup (Section 12.3)
+3. Verify the [=snapshot=] hash of the linked [=Record=] after retrieval
+4. Cache the resolved [=snapshot=] locally with the original hash for integrity verification
+
+
+13 Payload Deletion {#deletion-chapter}
+=========================================
+
+## 13.1 Deletion Principles ## {#deletion-principles}
+
+RecordWeb's immutability and data protection erasure obligations (GDPR, Swiss DSG) are in tension. RWP resolves this tension through a tiered deletion regime.
+
+The applicable regime is declared in the `deletionRegime` field of the [=Record=]'s [=metadata=] at the time of creation. Implementations MUST respect this field and MAY enforce it at the infrastructure level.
+
+## 13.2 Deletion Regimes ## {#deletion-regimes}
+
+RWP defines three deletion regimes:
+
+<table class="data">
+  <thead>
+    <tr><th>Regime</th><th>Key</th><th>Description</th><th>When applicable</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Payload deletion</td>
+      <td><code>payload-only</code></td>
+      <td>The payload is deleted; DID, metadata, and version graph are retained. The Record continues to exist as a provable "empty shell".</td>
+      <td>Default. Where provenance continuity is legally required despite erasure (e.g. audit trails, public registers).</td>
+    </tr>
+    <tr>
+      <td>Full deletion</td>
+      <td><code>full-delete</code></td>
+      <td>The entire Record (including DID, metadata, and graph edges) is deleted.</td>
+      <td>Where no retention obligation exists and the right to erasure is absolute (e.g. erroneously captured personal data with no public interest basis).</td>
+    </tr>
+    <tr>
+      <td>Deletion exemption</td>
+      <td><code>exempt</code></td>
+      <td>No deletion occurs. The statutory retention obligation is documented as metadata.</td>
+      <td>Where a statutory retention obligation overrides the erasure claim (e.g. tax records, notarial acts, public register entries).</td>
+    </tr>
+  </tbody>
+</table>
+
+## 13.3 DeletionRecord Protocol ## {#deletion-record}
+
+When a [=payload=] deletion is executed, a `DeletionRecord` MUST be created and finalised before the payload is removed.
+
+The `DeletionRecord` MUST contain:
+
+```json
+{
+  "deletionRecord": {
+    "targetDid": "did:rwp:bern.ch:f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "targetSnapshotHash": "sha256:snapshot-to-be-deleted...",
+    "deletionRegime": "payload-only",
+    "legalBasis": "GDPR Art. 17 — Right to erasure",
+    "requestedBy": "did:rwp:bern.ch:user-max-mustermann",
+    "approvedBy": "did:rwp:bern.ch:unit-legal",
+    "deletedAt": "2026-06-01T10:00:00Z",
+    "retainedFields": ["did", "metadata", "versionGraph"]
+  }
+}
+```
+
+After the `DeletionRecord` is finalised:
+
+1. The [=payload=] bytes are securely overwritten
+2. The `payloadHash` field in the [=snapshot=] is replaced with the string `"deleted:<DeletionRecord-DID>"`
+3. The DID document's `currentVersion` field is updated
+4. The DID resolver MUST return HTTP 410 for `full-delete` regimes
+
+## 13.4 Solid Pod Delivery (optional) ## {#solid-delivery}
+
+For [=Records=] whose primary subject is an individual citizen, RWP offers an optional delivery extension: delivery of finalised [=Records=] into a citizen's Solid Pod.
+
+When a system implements Solid Pod delivery, it MUST:
+
+- Obtain explicit, revocable write consent from the citizen via their Pod's access control mechanism
+- Deliver the complete [=snapshot=] (DID, [=metadata=], [=payload=]) to the Pod
+- Retain the canonical copy in its own RWP system, the Pod copy is an additional output, not a transfer of authority
+- Include a `deliveryTarget` field in the optional metadata extension block
+
+Typical use cases: driving licences, medical images, residence registration confirmations, diplomas, building permits (delivered to the applicant).
+
+The citizen MAY present the Pod-held [=Record=] to any third party, who can independently verify its authenticity via the DID and cryptographic hash without querying the issuing authority.
+
+
+14 Conformance Requirements {#conformance-requirements}
+=========================================================
+
+## 14.1 Conformance Levels ## {#conformance-levels}
+
+RWP defines two conformance levels.
+
+<table class="data">
+  <thead>
+    <tr><th>Level</th><th>Chapters</th><th>Description</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Level 1 — Basic</strong></td>
+      <td>2, 3, 4, 5, 6, 7, 9</td>
+      <td>Record identity, snapshots, payload, hashing, version graph. Systems fulfilling Level 1 can interoperate with one another.</td>
+    </tr>
+    <tr>
+      <td><strong>Level 2 — Full</strong></td>
+      <td>2–9, 8, 12, 13</td>
+      <td>All Level 1 requirements plus Cases, federation, and payload deletion. Systems fulfilling Level 2 can produce complete, provable Cases.</td>
+    </tr>
+  </tbody>
+</table>
+
+## 14.2 Level 1 Checklist ## {#level-1-checklist}
+
+A system claiming Level 1 conformance MUST implement:
+
+- [ ] DID generation per Section 2.2 (`did:rwp:<namespace>:<uuid-v4>`)
+- [ ] DID document per Section 2.3 with all MUST fields
+- [ ] DID resolver per Section 2.4 (HTTP 200/404/410)
+- [ ] Snapshot structure per Section 3.2 with minimum metadata set (Section 3.3)
+- [ ] Snapshot hash calculation per Section 3.4 (SHA-256 + RFC 8785)
+- [ ] Payload validation before finalisation per Section 4.1
+- [ ] SchemaRecord support per Section 5.2
+- [ ] Core Record types per Section 5.3
+- [ ] State model (draft/finalized) per Section 6.1
+- [ ] Finalisation checks per Section 6.3
+- [ ] Version graph as DAG per Section 7.1 (cycle detection MUST)
+- [ ] SHA-256 exclusively per Section 9.1
+- [ ] RFC 8785 canonical JSON per Section 9.2
+
+## 14.3 Level 2 Checklist ## {#level-2-checklist}
+
+A system claiming Level 2 conformance MUST additionally implement:
+
+- [ ] CaseRecord per Chapter 8 (trigger, context, process, decision, result)
+- [ ] Hard and soft link distinction per Section 8.4
+- [ ] Merkle root calculation per Section 8.5 and 9.5
+- [ ] Case completeness check per Section 8.6
+- [ ] Federation resolver per Section 12.3 (DNS TXT lookup)
+- [ ] Cross-namespace link resolution per Section 12.4
+- [ ] Deletion regime declaration per Section 13.1
+- [ ] DeletionRecord protocol per Section 13.3
+
+
+Annex A: Normative JSON Schemas {#annex-a}
+==========================================
+
+## A.1 Snapshot Metadata Schema ## {#schema-snapshot}
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://recordweb.github.io/rwp/schemas/snapshot-metadata.json",
+  "title": "RWP Snapshot Metadata",
+  "type": "object",
+  "required": ["did","snapshotHash","recordType","schemaVersion","state",
+               "created","owner","parents","payloadHash","payloadFormat"],
+  "properties": {
+    "did":             { "type": "string", "pattern": "^did:rwp:[^:]+:[^:]+$" },
+    "snapshotHash":    { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "recordType":      { "type": "string", "pattern": "^did:rwp:" },
+    "schemaVersion":   { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "state":           { "type": "string", "enum": ["draft","finalized"] },
+    "created":         { "type": "string", "format": "date-time" },
+    "finalized":       { "type": "string", "format": "date-time" },
+    "owner":           { "type": "string", "pattern": "^did:rwp:" },
+    "parents":         { "type": "array", "items": { "type": "string",
+                         "pattern": "^sha256:[0-9a-f]{64}$" } },
+    "classification":  { "type": "string" },
+    "retentionPolicy": { "type": "string", "pattern": "^did:rwp:" },
+    "tags":            { "type": "array", "items": { "type": "string" } },
+    "accessPolicy":    { "type": ["object","null"] },
+    "payloadHash":     { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "payloadFormat":   { "type": "string" },
+    "signature":       { "type": "string" },
+    "deletionRegime":  { "type": "string",
+                         "enum": ["payload-only","full-delete","exempt"] }
+  }
+}
+```
+
+## A.2 CaseRecord Payload Schema ## {#schema-case}
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://recordweb.github.io/rwp/schemas/case-record.json",
+  "title": "RWP CaseRecord Payload",
+  "type": "object",
+  "required": ["caseId","caseType","title","trigger","merkleRoot"],
+  "properties": {
+    "caseId":     { "type": "string", "pattern": "^did:rwp:" },
+    "caseType":   { "type": "string", "pattern": "^did:rwp:" },
+    "title":      { "type": "string" },
+    "trigger":    { "$ref": "#/$defs/hardLink" },
+    "context":    { "type": "array", "items": { "$ref": "#/$defs/link" } },
+    "process":    { "type": "array", "items": { "$ref": "#/$defs/link" } },
+    "decision":   { "oneOf": [{ "$ref": "#/$defs/hardLink" }, { "type": "null" }] },
+    "result":     { "type": "array", "items": { "$ref": "#/$defs/hardLink" } },
+    "merkleRoot": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+  },
+  "$defs": {
+    "hardLink": {
+      "type": "object",
+      "required": ["type","recordDid","snapshotHash"],
+      "properties": {
+        "type":         { "const": "hard" },
+        "recordDid":    { "type": "string", "pattern": "^did:rwp:" },
+        "snapshotHash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+        "role":         { "type": "string" }
+      }
+    },
+    "link": {
+      "type": "object",
+      "required": ["type","recordDid"],
+      "properties": {
+        "type":         { "type": "string", "enum": ["hard","working"] },
+        "recordDid":    { "type": "string", "pattern": "^did:rwp:" },
+        "snapshotHash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+        "role":         { "type": "string" }
+      }
+    }
+  }
+}
+```
+
+## A.3 DeletionRecord Payload Schema ## {#schema-deletion}
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://recordweb.github.io/rwp/schemas/deletion-record.json",
+  "title": "RWP DeletionRecord Payload",
+  "type": "object",
+  "required": ["deletionRecord"],
+  "properties": {
+    "deletionRecord": {
+      "type": "object",
+      "required": ["targetDid","targetSnapshotHash","deletionRegime",
+                   "legalBasis","requestedBy","approvedBy","deletedAt"],
+      "properties": {
+        "targetDid":          { "type": "string", "pattern": "^did:rwp:" },
+        "targetSnapshotHash": { "type": "string",
+                                "pattern": "^sha256:[0-9a-f]{64}$" },
+        "deletionRegime":     { "type": "string",
+                                "enum": ["payload-only","full-delete","exempt"] },
+        "legalBasis":         { "type": "string" },
+        "requestedBy":        { "type": "string", "pattern": "^did:rwp:" },
+        "approvedBy":         { "type": "string", "pattern": "^did:rwp:" },
+        "deletedAt":          { "type": "string", "format": "date-time" },
+        "retainedFields":     { "type": "array",
+                                "items": { "type": "string" } }
+      }
+    }
+  }
+}
+```
+
+
+Annex B: Reference Implementation Notes (non-normative) {#annex-b}
+====================================================================
+
+This annex is non-normative. It provides guidance for implementers and does not impose additional requirements.
+
+## B.1 Technology Choices ## {#impl-tech}
+
+The following technology choices are recommended for a first RWP implementation:
+
+<table class="data">
+  <thead>
+    <tr><th>Component</th><th>Recommended</th><th>Notes</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>DID method</td><td><code>did:web</code> or <code>did:key</code> during pilot</td><td>Full <code>did:rwp</code> method requires resolver deployment</td></tr>
+    <tr><td>Storage</td><td>PostgreSQL + object store (S3-compatible)</td><td>Metadata in relational DB; payloads in object store</td></tr>
+    <tr><td>Hashing</td><td>Node.js <code>crypto.createHash('sha256')</code></td><td>Standard library; no external dependency</td></tr>
+    <tr><td>Canonical JSON</td><td><code>canonicalize</code> npm package</td><td>Implements RFC 8785</td></tr>
+    <tr><td>Signatures</td><td><code>@noble/ed25519</code></td><td>Audited Ed25519 implementation</td></tr>
+    <tr><td>Schema validation</td><td>AJV (JSON Schema validator)</td><td>Supports JSON Schema 2020-12</td></tr>
+  </tbody>
+</table>
+
+## B.2 Pilot Scope Recommendation ## {#impl-pilot}
+
+For a first pilot, the following Level 1 subset is recommended:
+
+1. Implement DID generation and DID document (Sections 2.2–2.3)
+2. Implement snapshot creation with minimum metadata set (Section 3.3)
+3. Implement SHA-256 snapshot hash calculation (Section 3.4)
+4. Implement draft → finalized state transition with schema validation (Section 6.3)
+5. Implement version graph storage (Section 7.1) — without branch detection initially
+
+This covers the critical path: a Record can be created, finalised, and its integrity verified. Cases and federation can be added in a subsequent iteration.
