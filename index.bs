@@ -90,11 +90,15 @@ Previous Version: https://doi.org/10.5281/zenodo.20475345
 spec:infra; type:dfn; text:record
 </pre>
 
+<pre class=ignored-specs>
+soft link
+</pre>
+
 
 Introduction {#intro}
 =====================
 
-## Status of This Document ## {#status}
+## Status of This Document ## {#doc-status}
 
 This document is a **CG Draft** of the RecordWeb Community Group. It is an Editor's Draft and does not represent a W3C standard or endorsed position.
 
@@ -171,7 +175,7 @@ This document uses semantic versioning (SemVer): `MAJOR.MINOR.PATCH`.
 The current version is **0.0.1** (Draft — not yet approved for production implementations).
 
 
-2 Record Identity (DID) {#identity}
+2 Record Identity (DID) {#record-identity}
 =====================================
 
 ## 2.1 Requirements for Record Identity ## {#identity-requirements}
@@ -191,7 +195,7 @@ This identity:
 The identity of a [=Record=] MUST be expressed as a Decentralized Identifier (DID) in accordance with [[DID-CORE]].
 
 **Normative format:**
-did:rwp:<namespace>:<unique-id>
+`did:rwp:{namespace}:{unique-id}`
 
 
 <table class="data">
@@ -588,7 +592,7 @@ When a [=SchemaRecord=] is finalised in a new version, the following applies:
 
 ## 6.1 State Model ## {#state-model}
 
-Every [=Record=] snapshot has exactly one <dfn>state</dfn>. The state describes the validity and linkability status of the snapshot.
+Every [=Record=] snapshot has exactly one **state*. The state describes the validity and linkability status of the snapshot.
 
 **Core states (normative, for all Record types):**
 
@@ -600,13 +604,13 @@ Every [=Record=] snapshot has exactly one <dfn>state</dfn>. The state describes 
     <tr>
       <td><code><dfn>draft</dfn></code></td>
       <td>NO</td>
-	  <td>NO</td>
+      <td>NO</td>
       <td>Being processed; content may change</td>
     </tr>
     <tr>
       <td><code><dfn>finalized</dfn></code></td>
       <td>YES</td>
-	  <td>YES</td>
+      <td>YES</td>
       <td>Complete; content cryptographically secured</td>
     </tr>
   </tbody>
@@ -699,7 +703,7 @@ Edge requirements:
 
 ## 7.4 Branches ## {#graph-branches}
 
-A <dfn>branch</dfn> arises when two or more new [=draft=] snapshots with the same parent reference emerge from a [=finalized=] snapshot.
+A **branch** arises when two or more new [=draft=] snapshots with the same parent reference emerge from a [=finalized=] snapshot.
 
 - Branches are explicitly permitted in RecordWeb and MUST be made visible by the system
 - A system MUST return all active branches (draft snapshots without successors) when a [=Record=] is retrieved
