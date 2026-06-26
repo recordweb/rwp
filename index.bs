@@ -90,10 +90,6 @@ Previous Version: https://doi.org/10.5281/zenodo.20475345
 spec:infra; type:dfn; text:record
 </pre>
 
-<pre class=ignored-specs>
-soft link
-</pre>
-
 
 Introduction {#intro}
 =====================
@@ -824,7 +820,7 @@ A complete [=Case=] MUST contain all five elements. A [=Case=] MAY be finalised 
 
 A <dfn>hard link</dfn> points to a [=finalized=] [=snapshot=] (`snapshotHash` MUST be specified). It is immutable after finalisation of the [=Case=].
 
-A <dfn>soft link</dfn> (working reference) points to a Record DID without a snapshot reference. It MAY point to [=finalized=] or [=draft=] Records. Soft links prevent finalisation of the [=Case=] and MUST be converted to [=hard links=] before [=Case=] finalisation.
+A **soft link** (working reference) points to a Record DID without a snapshot reference. It MAY point to [=finalized=] or [=draft=] Records. Soft links prevent finalisation of the [=Case=] and MUST be converted to [=hard links=] before [=Case=] finalisation.
 
 A system MUST check during a [=Case=] finalisation attempt whether soft links are still present. If so, the system MUST reject the finalisation and return the open soft links.
 
@@ -1367,7 +1363,7 @@ The following technology choices are recommended for a first RWP implementation:
   <tbody>
     <tr><td>DID method</td><td><code>did:web</code> or <code>did:key</code> during pilot</td><td>Full <code>did:rwp</code> method requires resolver deployment</td></tr>
     <tr><td>Storage</td><td>PostgreSQL + object store (S3-compatible)</td><td>Metadata in relational DB; payloads in object store</td></tr>
-    <tr><td>Hashing</td><td>Node.js <code>crypto.createHash('sha256')</code></td><td>Standard library; no external dependency</td></tr>
+    <tr><td>Hashing</td><td>Node.js <code>crypto.createHash(&#39;sha256&#39;)</code></td><td>Standard library; no external dependency</td></tr>
     <tr><td>Canonical JSON</td><td><code>canonicalize</code> npm package</td><td>Implements RFC 8785</td></tr>
     <tr><td>Signatures</td><td><code>@noble/ed25519</code></td><td>Audited Ed25519 implementation</td></tr>
     <tr><td>Schema validation</td><td>AJV (JSON Schema validator)</td><td>Supports JSON Schema 2020-12</td></tr>
