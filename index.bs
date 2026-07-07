@@ -7,7 +7,7 @@ Group: wicg
 URL: https://recordweb.github.io/rwp/
 Editor: Nik Jenzer, nik@triebwerkstatt.ch
 Abstract:
-    This is the input for the proposed Community Group: The RecordWeb Protocol (RWP) is the normative technical specification for the creation, identification, versioning, linking, and cryptographic proof of Records in RWP-compliant systems. It defines the requirements a system must fulfil in order to create, manage, link, and prove Records in the sense of the RecordWeb Concept ([[RWC]]). RWP uses RFC 2119 compliance terminology and covers Record identity (DID), snapshot structure, payload validation, version graph (DAG), Case specification, integrity procedures, federation, and payload deletion across 14 chapters and three normative annexes.
+    This is the input for the proposed Community Group. The RecordWeb Protocol (RWP) is the normative technical specification for the creation, identification, versioning, linking, and cryptographic proof of Records in RWP-compliant systems. It defines the requirements a system must fulfil in order to create, manage, link, and prove Records in the sense of the RecordWeb Concept ([[RWC]]). RWP uses RFC 2119 compliance terminology and covers Record identity (DID), snapshot structure, payload validation, version graph (DAG), Case specification, integrity procedures, federation, and payload deletion across 14 chapters and three normative annexes.
 Repository: recordweb/rwp
 Markup Shorthands: markdown yes
 Boilerplate: omit copyright
