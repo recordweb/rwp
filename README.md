@@ -1,6 +1,6 @@
 # RecordWeb Protocol (RWP)
 
-**Status:** CG Draft — Editor's Draft  
+**Status:** CG Input - Editor's Draft  
 **Version:** 0.0.1  
 **Published baseline:** [DOI 10.5281/zenodo.20475345](https://doi.org/10.5281/zenodo.20475345)  
 **Editor's Draft:** https://recordweb.github.io/rwp/  
@@ -21,13 +21,6 @@ RWP is the normative counterpart to the [RecordWeb Concept (RWC)](https://record
 3. All versions form a **Directed Acyclic Graph (DAG)** that structurally anchors the complete history.
 4. The **Case Merkle root** aggregates all linked Records into a single, provable fingerprint.
 
-## Conformance Levels
-
-| Level | Chapters | Description |
-|---|---|---|
-| **Level 1** — Basic | 2, 3, 4, 5, 6, 7, 9 | Record identity, snapshots, payload, hashing, version graph |
-| **Level 2** — Full | + 8, 12, 13 | Cases, federation, payload deletion |
-
 ## Repository Structure
 index.bs ← Bikeshed source (edit this)
 index.html ← Auto-generated (do not edit)
@@ -38,12 +31,7 @@ build.yml ← Auto-build on push
 
 ## License
 
-© 2026 Nik Jenzer
-
-Licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
-You are free to share and adapt this material with attribution.
-
-This specification serves as **prior art**, preventing third parties from patenting RWP's core technical concepts without acknowledgment.
+Current draft: published under [W3C Software and Document License] for discussion. Future CG specification: will follow W3C Community Group report licensing and CLA requirements.
 
 ## Related
 
