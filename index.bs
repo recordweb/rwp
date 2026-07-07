@@ -2,7 +2,7 @@
 Title: RecordWeb Protocol (RWP)
 Shortname: rwp
 Level: 1
-Status: CG-DRAFT
+Status: CG-INPUT
 Group: wicg
 URL: https://recordweb.github.io/rwp/
 Editor: Nik Jenzer, nik@triebwerkstatt.ch
