@@ -1,12 +1,14 @@
 <!doctype html><html lang="en">
  <head>
   <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-  <title>RecordWeb Protocol (RWP)</title>
   <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+  <title>RecordWeb Protocol (RWP)</title>
+  <meta content="CG-DRAFT" name="w3c-status">
   <link href="https://www.w3.org/StyleSheets/TR/2021/cg-draft" rel="stylesheet">
   <meta content="Bikeshed version d113b2e81, updated Tue Jun 9 14:57:55 2026 -0700" name="generator">
   <link href="https://recordweb.github.io/rwp/" rel="canonical">
-  <meta content="134acae800e828c652d03a3839e15b63556031a8" name="revision">
+  <link href="https://www.w3.org/2008/site/images/favicon.ico" rel="icon">
+  <meta content="cef35ae47ce6c9046e181b32c5d183dda96258c9" name="revision">
   <meta content="dark light" name="color-scheme">
   <link href="https://www.w3.org/StyleSheets/TR/2021/dark.css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css">
 <style>/* Boilerplate: style-autolinks */
@@ -718,23 +720,30 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
 </style>
  <body class="h-entry">
   <div class="head">
+   <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/">
+    <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C" width="72">
+</a>
+</p>
    <h1 class="no-ref p-name" id="title">RecordWeb Protocol (RWP)</h1>
    <p id="w3c-state"><a href="https://www.w3.org/standards/types/#CG-DRAFT">Draft Community Group Report</a>,
-    <time class="dt-updated" datetime="2026-07-07">7 July 2026</time></p>
-   <div data-fill-with="spec-metadata">
-    <dl>
-     <dt>This version:
-     <dd><a class="u-url" href="https://recordweb.github.io/rwp/">https://recordweb.github.io/rwp/</a>
-     <dt>Previous Versions:
-     <dd><a href="https://doi.org/10.5281/zenodo.20475345" rel="prev">https://doi.org/10.5281/zenodo.20475345</a>
-     <dt>Version History:
-     <dd><a href="https://github.com/recordweb/rwp/commits/main/index.bs">https://github.com/recordweb/rwp/commits/main/index.bs</a>
-     <dt>Issue Tracking:
-     <dd><a href="https://github.com/recordweb/rwp/issues/">GitHub</a>
-     <dt class="editor">Editor:
-     <dd class="editor h-card p-author vcard"><a class="email fn p-name u-email" href="mailto:nik@triebwerkstatt.ch">Nik Jenzer</a>
-    </dl>
-   </div>
+    <time class="dt-updated" datetime="2026-07-17">17 July 2026</time></p>
+   <details open>
+    <summary>More details about this document</summary>
+    <div data-fill-with="spec-metadata">
+     <dl>
+      <dt>This version:
+      <dd><a class="u-url" href="https://recordweb.github.io/rwp/">https://recordweb.github.io/rwp/</a>
+      <dt>Previous Versions:
+      <dd><a href="https://doi.org/10.5281/zenodo.20475345" rel="prev">https://doi.org/10.5281/zenodo.20475345</a>
+      <dt>Version History:
+      <dd><a href="https://github.com/recordweb/rwp/commits/main/index.bs">https://github.com/recordweb/rwp/commits/main/index.bs</a>
+      <dt>Issue Tracking:
+      <dd><a href="https://github.com/recordweb/rwp/issues/">GitHub</a>
+      <dt class="editor">Editor:
+      <dd class="editor h-card p-author vcard"><a class="email fn p-name u-email" href="mailto:nik@triebwerkstatt.ch">Nik Jenzer</a>
+     </dl>
+    </div>
+   </details>
    <div data-fill-with="warning"></div>
    <hr title="Separator for header">
   </div>
@@ -742,20 +751,8 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <h2 class="heading no-num no-ref no-toc settled" id="abstract"><span class="content">Abstract</span></h2>
    <p>This is the input for the proposed Community Group. The RecordWeb Protocol (RWP) is the normative technical specification for the creation, identification, versioning, linking, and cryptographic proof of Records in RWP-compliant systems. It defines the requirements a system must fulfil in order to create, manage, link, and prove Records in the sense of the RecordWeb Concept (<a data-link-type="biblio" href="#biblio-rwc" title="RecordWeb Concept (RWC)">[RWC]</a>). RWP uses RFC 2119 compliance terminology and covers Record identity (DID), snapshot structure, payload validation, version graph (DAG), Case specification, integrity procedures, federation, and payload deletion across 14 chapters and three normative annexes.</p>
   </div>
-  <div data-fill-with="at-risk"></div>
-  <h2 class="heading no-num no-ref no-toc settled" id="status"><span class="content">Status of this document</span></h2>
+  <h2 class="heading no-num no-ref no-toc settled" id="sotd"><span class="content">Status of this document</span></h2>
   <div data-fill-with="status">
-   <p>
-  This specification was published by the <a href="https://www.w3.org/community/wicg/">Web Platform Incubator Community Group</a>.
-  It is not a W3C Standard nor is it on the W3C Standards Track.
-
-  Please note that under the
-  <a href="https://www.w3.org/community/about/agreements/cla/">W3C Community Contributor License Agreement (CLA)</a>
-  there is a limited opt-out and other conditions apply.
-
-  Learn more about
-  <a href="http://www.w3.org/community/">W3C Community and Business Groups</a>.
-</p>
    <p></p>
   </div>
   <div data-fill-with="at-risk"></div>
