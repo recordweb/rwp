@@ -108,9 +108,9 @@ Feedback is invited via [GitHub Issues](https://github.com/recordweb/rwp/issues)
 
 ## 1.1 Purpose ## {#purpose}
 
-The RecordWeb Protocol (RWP) defines the technical standards for the creation, identification, versioning, linking, and proof of <dfn>Records</dfn> in an RWP-compliant system.
+The RecordWeb Protocol (RWP) is the normative technical specification for the creation, identification, versioning, linking, and cryptographic proof of <dfn>Records</dfn> in RWP-compliant systems.
 
-RWP is the normative counterpart to the RecordWeb Concept ([[RWC]]). The RWC describes the conceptual foundations; RWP translates these into binding technical requirements that MUST be observed for interoperable implementation.
+The RecordWeb Concept ([[RWC]]) is an informative conceptual document. This specification defines the normative terminology and requirements for RWP conformance.
 
 ## 1.2 Scope ## {#scope-section}
 
@@ -135,7 +135,7 @@ This document does not apply to:
   <tbody>
     <tr>
       <td>[[ISO15489]]</td>
-      <td>RWP structurally implements the requirements for authenticity, reliability, integrity, and usability</td>
+      <td>RWP structurally implements the requirements for authenticity, reliability, integrity, and usability. The term [=Record=] is used in accordance with ISO 15489-1:2016, clause 3.14.</td>
     </tr>
     <tr>
       <td>[[ISO14721]] (OAIS)</td>
@@ -147,7 +147,7 @@ This document does not apply to:
     </tr>
     <tr>
       <td>[[PROVO]]</td>
-      <td>RWP lineage MAY be serialised as PROV-O; this is non-normative</td>
+      <td>RWP lineage MAY be serialised as PROV-O. PROV-O serialisation is not required for RWP conformance.</td>
     </tr>
     <tr>
       <td>[[ECH-0164]]</td>
