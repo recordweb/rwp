@@ -8,7 +8,7 @@
   <meta content="Bikeshed version d113b2e81, updated Tue Jun 9 14:57:55 2026 -0700" name="generator">
   <link href="https://recordweb.github.io/rwp/" rel="canonical">
   <link href="https://www.w3.org/2008/site/images/favicon.ico" rel="icon">
-  <meta content="cef35ae47ce6c9046e181b32c5d183dda96258c9" name="revision">
+  <meta content="ddee323ace864e2cb89cc79d2e97a1b478f5cde4" name="revision">
   <meta content="dark light" name="color-scheme">
   <link href="https://www.w3.org/StyleSheets/TR/2021/dark.css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css">
 <style>/* Boilerplate: style-autolinks */
@@ -726,7 +726,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
 </p>
    <h1 class="no-ref p-name" id="title">RecordWeb Protocol (RWP)</h1>
    <p id="w3c-state"><a href="https://www.w3.org/standards/types/#CG-DRAFT">Draft Community Group Report</a>,
-    <time class="dt-updated" datetime="2026-07-17">17 July 2026</time></p>
+    <time class="dt-updated" datetime="2026-07-30">30 July 2026</time></p>
    <details open>
     <summary>More details about this document</summary>
     <div data-fill-with="spec-metadata">
@@ -919,8 +919,8 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <p>Feedback is invited via <a href="https://github.com/recordweb/rwp/issues">GitHub Issues</a>.</p>
    <h2 class="heading settled" data-level="2" id="scope"><span class="secno">2. </span><span class="content">1 Introduction and Scope</span><a class="self-link" href="#scope"></a></h2>
    <h3 class="heading settled" data-level="2.1" id="purpose"><span class="secno">2.1. </span><span class="content">1.1 Purpose</span><a class="self-link" href="#purpose"></a></h3>
-   <p>The RecordWeb Protocol (RWP) defines the technical standards for the creation, identification, versioning, linking, and proof of <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="records">Records</dfn> in an RWP-compliant system.</p>
-   <p>RWP is the normative counterpart to the RecordWeb Concept (<a data-link-type="biblio" href="#biblio-rwc" title="RecordWeb Concept (RWC)">[RWC]</a>). The RWC describes the conceptual foundations; RWP translates these into binding technical requirements that MUST be observed for interoperable implementation.</p>
+   <p>The RecordWeb Protocol (RWP) is the normative technical specification for the creation, identification, versioning, linking, and cryptographic proof of <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="records">Records</dfn> in RWP-compliant systems.</p>
+   <p>The RecordWeb Concept (<a data-link-type="biblio" href="#biblio-rwc" title="RecordWeb Concept (RWC)">[RWC]</a>) is an informative conceptual document. This specification defines the normative terminology and requirements for RWP conformance.</p>
    <h3 class="heading settled" data-level="2.2" id="scope-section"><span class="secno">2.2. </span><span class="content">1.2 Scope</span><a class="self-link" href="#scope-section"></a></h3>
    <p>This document applies to:</p>
    <ul>
@@ -949,16 +949,16 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <tbody>
      <tr>
       <td><a data-link-type="biblio" href="#biblio-iso15489" title="ISO 15489-1:2016 — Records management">[ISO15489]</a>
-      <td>RWP structurally implements the requirements for authenticity, reliability, integrity, and usability
+      <td>RWP structurally implements the requirements for authenticity, reliability, integrity, and usability. The term <a data-link-type="dfn" href="#records" id="ref-for-records②">Record</a> is used in accordance with ISO 15489-1:2016, clause 3.14.
      <tr>
       <td><a data-link-type="biblio" href="#biblio-iso14721" title="ISO 14721:2012 — Open Archival Information System (OAIS)">[ISO14721]</a> (OAIS)
-      <td>RWP is complementary; finalised <a data-link-type="dfn" href="#records" id="ref-for-records②">Records</a> MAY be migrated to long-term archives according to OAIS principles
+      <td>RWP is complementary; finalised <a data-link-type="dfn" href="#records" id="ref-for-records③">Records</a> MAY be migrated to long-term archives according to OAIS principles
      <tr>
       <td><a data-link-type="biblio" href="#biblio-did-core" title="Decentralized Identifiers (DIDs) v1.0">[DID-CORE]</a>
       <td>RWP uses DIDs as the identity mechanism; conformance with W3C DID Core 1.0 is REQUIRED
      <tr>
       <td><a data-link-type="biblio" href="#biblio-provo" title="PROV-O: The PROV Ontology">[PROVO]</a>
-      <td>RWP lineage MAY be serialised as PROV-O; this is non-normative
+      <td>RWP lineage MAY be serialised as PROV-O. PROV-O serialisation is not required for RWP conformance.
      <tr>
       <td><a data-link-type="biblio" href="#biblio-ech-0164" title="eCH-0164 — Information lifecycle in public administration">[ECH-0164]</a>
       <td>RWP maps the eCH information lifecycle as states; no structural dependency
@@ -979,22 +979,22 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <p>The current version is <strong>0.0.1</strong> (Draft — not yet approved for production implementations).</p>
    <h2 class="heading settled" data-level="3" id="record-identity"><span class="secno">3. </span><span class="content">2 Record Identity (DID)</span><a class="self-link" href="#record-identity"></a></h2>
    <h3 class="heading settled" data-level="3.1" id="identity-requirements"><span class="secno">3.1. </span><span class="content">2.1 Requirements for Record Identity</span><a class="self-link" href="#identity-requirements"></a></h3>
-   <p>Every <a data-link-type="dfn" href="#records" id="ref-for-records③">Record</a> MUST possess a globally unique, permanent <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="identity">identity</dfn>.</p>
+   <p>Every <a data-link-type="dfn" href="#records" id="ref-for-records④">Record</a> MUST possess a globally unique, permanent <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="identity">identity</dfn>.</p>
    <p>This identity:</p>
    <ul>
     <li data-md>
-     <p>MUST be independent of the physical storage location of the <a data-link-type="dfn" href="#records" id="ref-for-records④">Record</a></p>
+     <p>MUST be independent of the physical storage location of the <a data-link-type="dfn" href="#records" id="ref-for-records⑤">Record</a></p>
     <li data-md>
-     <p>MUST be independent of the organisation managing the <a data-link-type="dfn" href="#records" id="ref-for-records⑤">Record</a></p>
+     <p>MUST be independent of the organisation managing the <a data-link-type="dfn" href="#records" id="ref-for-records⑥">Record</a></p>
     <li data-md>
-     <p>MUST NOT be changed after the <a data-link-type="dfn" href="#records" id="ref-for-records⑥">Record</a> has been created</p>
+     <p>MUST NOT be changed after the <a data-link-type="dfn" href="#records" id="ref-for-records⑦">Record</a> has been created</p>
     <li data-md>
      <p>MUST remain valid without change even after a system migration</p>
     <li data-md>
      <p>MUST be machine-resolvable (a resolver MUST be able to retrieve the DID document from the identity)</p>
    </ul>
    <h3 class="heading settled" data-level="3.2" id="did-format"><span class="secno">3.2. </span><span class="content">2.2 DID Format</span><a class="self-link" href="#did-format"></a></h3>
-   <p>The identity of a <a data-link-type="dfn" href="#records" id="ref-for-records⑦">Record</a> MUST be expressed as a Decentralized Identifier (DID) in accordance with <a data-link-type="biblio" href="#biblio-did-core" title="Decentralized Identifiers (DIDs) v1.0">[DID-CORE]</a>.</p>
+   <p>The identity of a <a data-link-type="dfn" href="#records" id="ref-for-records⑧">Record</a> MUST be expressed as a Decentralized Identifier (DID) in accordance with <a data-link-type="biblio" href="#biblio-did-core" title="Decentralized Identifiers (DIDs) v1.0">[DID-CORE]</a>.</p>
    <p><strong>Normative format:</strong>
 <code>did:rwp:{namespace}:{unique-id}</code></p>
    <table class="data">
@@ -1014,7 +1014,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
       <td>Identifier of the organisation or system; MUST be uniquely registered. During the transition phase, a namespace MAY be formed on the basis of the DNS domain name of the organisation (e.g. <code>did:rwp:bern.ch:&lt;uuid></code>).
      <tr>
       <td><code>&lt;unique-id></code>
-      <td>Unique identifier of the <a data-link-type="dfn" href="#records" id="ref-for-records⑧">Record</a> within the namespace; MUST be a UUID v4 or a cryptographically equivalent random value
+      <td>Unique identifier of the <a data-link-type="dfn" href="#records" id="ref-for-records⑨">Record</a> within the namespace; MUST be a UUID v4 or a cryptographically equivalent random value
    </table>
    <p><strong>Example:</strong>
 did:rwp:bern.ch:f47ac10b-58cc-4372-a567-0e02b2c3d479</p>
@@ -1052,11 +1052,11 @@ did:rwp:bern.ch:f47ac10b-58cc-4372-a567-0e02b2c3d479</p>
      <tr>
       <td><code>id</code>
       <td>MUST
-      <td>DID of the <a data-link-type="dfn" href="#records" id="ref-for-records⑨">Record</a>; identical to the Record DID
+      <td>DID of the <a data-link-type="dfn" href="#records" id="ref-for-records①⓪">Record</a>; identical to the Record DID
      <tr>
       <td><code>recordEndpoint</code>
       <td>MUST
-      <td>URL at which the <a data-link-type="dfn" href="#records" id="ref-for-records①⓪">Record</a> can be retrieved
+      <td>URL at which the <a data-link-type="dfn" href="#records" id="ref-for-records①①">Record</a> can be retrieved
      <tr>
       <td><code>created</code>
       <td>MUST
@@ -1091,20 +1091,20 @@ did:rwp:bern.ch:f47ac10b-58cc-4372-a567-0e02b2c3d479</p>
     <li data-md>
      <p>Returns HTTP 404 when the DID is unknown</p>
     <li data-md>
-     <p>Returns HTTP 410 when the DID is known but the <a data-link-type="dfn" href="#records" id="ref-for-records①①">Record</a> has been deleted (payload deletion per Chapter 13)</p>
+     <p>Returns HTTP 410 when the DID is known but the <a data-link-type="dfn" href="#records" id="ref-for-records①②">Record</a> has been deleted (payload deletion per Chapter 13)</p>
    </ul>
    <h2 class="heading settled" data-level="4" id="structure"><span class="secno">4. </span><span class="content">3 Record Structure</span><a class="self-link" href="#structure"></a></h2>
    <h3 class="heading settled" data-level="4.1" id="structure-overview"><span class="secno">4.1. </span><span class="content">3.1 Overview</span><a class="self-link" href="#structure-overview"></a></h3>
-   <p>Every <a data-link-type="dfn" href="#records" id="ref-for-records①②">Record</a> MUST consist of exactly three components:</p>
+   <p>Every <a data-link-type="dfn" href="#records" id="ref-for-records①③">Record</a> MUST consist of exactly three components:</p>
    <ol>
     <li data-md>
-     <p>**<a data-link-type="dfn" href="#identity" id="ref-for-identity">Identity</a>** — the DID of the <a data-link-type="dfn" href="#records" id="ref-for-records①③">Record</a> (Chapter 2)</p>
+     <p>**<a data-link-type="dfn" href="#identity" id="ref-for-identity">Identity</a>** — the DID of the <a data-link-type="dfn" href="#records" id="ref-for-records①④">Record</a> (Chapter 2)</p>
     <li data-md>
-     <p>**<a data-link-type="dfn" href="#payload" id="ref-for-payload">Payload</a>** — the content of the <a data-link-type="dfn" href="#records" id="ref-for-records①④">Record</a> (Chapter 4)</p>
+     <p>**<a data-link-type="dfn" href="#payload" id="ref-for-payload">Payload</a>** — the content of the <a data-link-type="dfn" href="#records" id="ref-for-records①⑤">Record</a> (Chapter 4)</p>
     <li data-md>
-     <p>**<a data-link-type="dfn" href="#metadata" id="ref-for-metadata">Metadata</a>** — descriptive dimensions of the <a data-link-type="dfn" href="#records" id="ref-for-records①⑤">Record</a> (Section 3.3)</p>
+     <p>**<a data-link-type="dfn" href="#metadata" id="ref-for-metadata">Metadata</a>** — descriptive dimensions of the <a data-link-type="dfn" href="#records" id="ref-for-records①⑥">Record</a> (Section 3.3)</p>
    </ol>
-   <p>Together, these three components form a <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="snapshot">snapshot</dfn> — an immutable, versioned representation of the <a data-link-type="dfn" href="#records" id="ref-for-records①⑥">Record</a> at a specific point in time.</p>
+   <p>Together, these three components form a <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="snapshot">snapshot</dfn> — an immutable, versioned representation of the <a data-link-type="dfn" href="#records" id="ref-for-records①⑦">Record</a> at a specific point in time.</p>
    <h3 class="heading settled" data-level="4.2" id="snapshot-definition"><span class="secno">4.2. </span><span class="content">3.2 Snapshot Definition</span><a class="self-link" href="#snapshot-definition"></a></h3>
    <p>A <a data-link-type="dfn" href="#snapshot" id="ref-for-snapshot">snapshot</a> is the atomic unit of versioning in RecordWeb.</p>
    <p>A <a data-link-type="dfn" href="#snapshot" id="ref-for-snapshot①">snapshot</a> MUST fulfil the following properties:</p>
@@ -1153,7 +1153,7 @@ did:rwp:bern.ch:f47ac10b-58cc-4372-a567-0e02b2c3d479</p>
       <td><code>did</code>
       <td>MUST
       <td>DID
-      <td>Identity of the <a data-link-type="dfn" href="#records" id="ref-for-records①⑦">Record</a>
+      <td>Identity of the <a data-link-type="dfn" href="#records" id="ref-for-records①⑧">Record</a>
      <tr>
       <td><code>snapshotHash</code>
       <td>MUST
@@ -1245,7 +1245,7 @@ did:rwp:bern.ch:f47ac10b-58cc-4372-a567-0e02b2c3d479</p>
    <p>A system MUST verify the <code>snapshotHash</code> after every finalisation before the snapshot is accepted as valid.</p>
    <h2 class="heading settled" data-level="5" id="payload-chapter"><span class="secno">5. </span><span class="content">4 Payload and Formats</span><a class="self-link" href="#payload-chapter"></a></h2>
    <h3 class="heading settled" data-level="5.1" id="payload-definition"><span class="secno">5.1. </span><span class="content">4.1 Payload Definition</span><a class="self-link" href="#payload-definition"></a></h3>
-   <p>The <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="payload">payload</dfn> of a <a data-link-type="dfn" href="#records" id="ref-for-records①⑧">Record</a> is the content the <a data-link-type="dfn" href="#records" id="ref-for-records①⑨">Record</a> carries, the actual information.</p>
+   <p>The <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="payload">payload</dfn> of a <a data-link-type="dfn" href="#records" id="ref-for-records①⑨">Record</a> is the content the <a data-link-type="dfn" href="#records" id="ref-for-records②⓪">Record</a> carries, the actual information.</p>
    <p>A <a data-link-type="dfn" href="#payload" id="ref-for-payload①">payload</a>:</p>
    <ul>
     <li data-md>
@@ -1394,7 +1394,7 @@ did:rwp:bern.ch:f47ac10b-58cc-4372-a567-0e02b2c3d479</p>
       <td>Source format with publication representation
    </table>
    <h3 class="heading settled" data-level="5.5" id="payload-conversion"><span class="secno">5.5. </span><span class="content">4.5 Conversion During Finalisation</span><a class="self-link" href="#payload-conversion"></a></h3>
-   <p>When a system transitions a <a data-link-type="dfn" href="#records" id="ref-for-records②⓪">Record</a> from state <code>draft</code> to <code>finalized</code>, it MUST:</p>
+   <p>When a system transitions a <a data-link-type="dfn" href="#records" id="ref-for-records②①">Record</a> from state <code>draft</code> to <code>finalized</code>, it MUST:</p>
    <ol>
     <li data-md>
      <p>Validate the payload against the finalised format of the schema</p>
@@ -1405,10 +1405,10 @@ did:rwp:bern.ch:f47ac10b-58cc-4372-a567-0e02b2c3d479</p>
     <li data-md>
      <p>Document the conversion act as metadata (<code>conversionMethod</code>, <code>conversionTimestamp</code>)</p>
    </ol>
-   <p>A system MUST NOT finalise a <a data-link-type="dfn" href="#records" id="ref-for-records②①">Record</a> whose payload does not conform to the format defined for <code>finalized</code> and for which no archival-grade conversion is possible.</p>
+   <p>A system MUST NOT finalise a <a data-link-type="dfn" href="#records" id="ref-for-records②②">Record</a> whose payload does not conform to the format defined for <code>finalized</code> and for which no archival-grade conversion is possible.</p>
    <h2 class="heading settled" data-level="6" id="schemas"><span class="secno">6. </span><span class="content">5 Record Types and Schemas</span><a class="self-link" href="#schemas"></a></h2>
    <h3 class="heading settled" data-level="6.1" id="record-type"><span class="secno">6.1. </span><span class="content">5.1 Record Type Definition</span><a class="self-link" href="#record-type"></a></h3>
-   <p>Every <a data-link-type="dfn" href="#records" id="ref-for-records②②">Record</a> MUST be assigned to a Record type. A Record type:</p>
+   <p>Every <a data-link-type="dfn" href="#records" id="ref-for-records②③">Record</a> MUST be assigned to a Record type. A Record type:</p>
    <ul>
     <li data-md>
      <p>defines the schema of the <a data-link-type="dfn" href="#payload" id="ref-for-payload③">payload</a></p>
@@ -1419,14 +1419,14 @@ did:rwp:bern.ch:f47ac10b-58cc-4372-a567-0e02b2c3d479</p>
     <li data-md>
      <p>defines mandatory and optional <a data-link-type="dfn" href="#metadata" id="ref-for-metadata①">metadata</a> fields beyond the minimum set</p>
     <li data-md>
-     <p>is itself a <a data-link-type="dfn" href="#records" id="ref-for-records②③">Record</a> of the type <code>SchemaRecord</code></p>
+     <p>is itself a <a data-link-type="dfn" href="#records" id="ref-for-records②④">Record</a> of the type <code>SchemaRecord</code></p>
    </ul>
    <h3 class="heading settled" data-level="6.2" id="schema-record"><span class="secno">6.2. </span><span class="content">5.2 SchemaRecord</span><a class="self-link" href="#schema-record"></a></h3>
    <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="schemarecord">SchemaRecord</dfn> is a specialised Record type that carries the definition of another Record type.</p>
    <p>A <a data-link-type="dfn" href="#schemarecord" id="ref-for-schemarecord">SchemaRecord</a> MUST:</p>
    <ul>
     <li data-md>
-     <p>fulfil all requirements for a regular <a data-link-type="dfn" href="#records" id="ref-for-records②④">Record</a> (DID, metadata, version graph)</p>
+     <p>fulfil all requirements for a regular <a data-link-type="dfn" href="#records" id="ref-for-records②⑤">Record</a> (DID, metadata, version graph)</p>
     <li data-md>
      <p>contain a JSON Schema (Draft 2020-12 or later, <a data-link-type="biblio" href="#biblio-json-schema" title="JSON Schema: A Media Type for Describing JSON Documents">[JSON-SCHEMA]</a>) in the payload</p>
     <li data-md>
@@ -1502,13 +1502,13 @@ did:rwp:bern.ch:f47ac10b-58cc-4372-a567-0e02b2c3d479</p>
     <li data-md>
      <p>The new schema MUST contain the field <code>previousSchemaVersion</code> in the payload with the hash of the predecessor schema</p>
     <li data-md>
-     <p>Systems MUST keep all schema versions referenced by existing <a data-link-type="dfn" href="#records" id="ref-for-records②⑤">Records</a> permanently accessible</p>
+     <p>Systems MUST keep all schema versions referenced by existing <a data-link-type="dfn" href="#records" id="ref-for-records②⑥">Records</a> permanently accessible</p>
     <li data-md>
      <p>A system MUST NOT retroactively change an existing <a data-link-type="dfn" href="#schemarecord" id="ref-for-schemarecord③">SchemaRecord</a>, corrections are made as a new version</p>
    </ul>
    <h2 class="heading settled" data-level="7" id="states"><span class="secno">7. </span><span class="content">6 States and Transitions</span><a class="self-link" href="#states"></a></h2>
    <h3 class="heading settled" data-level="7.1" id="state-model"><span class="secno">7.1. </span><span class="content">6.1 State Model</span><a class="self-link" href="#state-model"></a></h3>
-   <p>Every <a data-link-type="dfn" href="#records" id="ref-for-records②⑥">Record</a> snapshot has exactly one *<em>state</em>. The state describes the validity and linkability status of the snapshot.</p>
+   <p>Every <a data-link-type="dfn" href="#records" id="ref-for-records②⑦">Record</a> snapshot has exactly one *<em>state</em>. The state describes the validity and linkability status of the snapshot.</p>
    <p><strong>Core states (normative, for all Record types):</strong></p>
    <table class="data">
     <thead>
@@ -1536,7 +1536,7 @@ did:rwp:bern.ch:f47ac10b-58cc-4372-a567-0e02b2c3d479</p>
 rejected (terminal state, not linkable)
 </pre>
    <h3 class="heading settled" data-level="7.2" id="linkability"><span class="secno">7.2. </span><span class="content">6.2 Linkability</span><a class="self-link" href="#linkability"></a></h3>
-   <p>A <a data-link-type="dfn" href="#records" id="ref-for-records②⑦">Record</a> MUST NOT be used as the target of a hard link when its current state is <a data-link-type="dfn" href="#draft" id="ref-for-draft">draft</a>.</p>
+   <p>A <a data-link-type="dfn" href="#records" id="ref-for-records②⑧">Record</a> MUST NOT be used as the target of a hard link when its current state is <a data-link-type="dfn" href="#draft" id="ref-for-draft">draft</a>.</p>
    <p>A system MUST return an error when an attempt is made to set a hard link to a <a data-link-type="dfn" href="#draft" id="ref-for-draft①">draft</a> Record.</p>
    <p>Exception: Working references (soft links) per Section 8.4 MAY point to <a data-link-type="dfn" href="#draft" id="ref-for-draft②">draft</a> Records.</p>
    <h3 class="heading settled" data-level="7.3" id="finalisation-requirements"><span class="secno">7.3. </span><span class="content">6.3 Finalisation Requirements</span><a class="self-link" href="#finalisation-requirements"></a></h3>
@@ -1556,7 +1556,7 @@ rejected (terminal state, not linkable)
    <p>If any of these checks fails, the system MUST NOT finalise the <a data-link-type="dfn" href="#snapshot" id="ref-for-snapshot⑦">snapshot</a> and MUST return an error with a validation code.</p>
    <h3 class="heading settled" data-level="7.4" id="irreversibility"><span class="secno">7.4. </span><span class="content">6.4 Irreversibility of Finalisation</span><a class="self-link" href="#irreversibility"></a></h3>
    <p>A <a data-link-type="dfn" href="#finalized" id="ref-for-finalized">finalized</a> snapshot MUST NOT be reverted to the state <a data-link-type="dfn" href="#draft" id="ref-for-draft③">draft</a>.</p>
-   <p>Corrections to a <a data-link-type="dfn" href="#finalized" id="ref-for-finalized①">finalized</a> <a data-link-type="dfn" href="#records" id="ref-for-records②⑧">Record</a> are made exclusively by creating a new <a data-link-type="dfn" href="#snapshot" id="ref-for-snapshot⑧">snapshot</a> with:</p>
+   <p>Corrections to a <a data-link-type="dfn" href="#finalized" id="ref-for-finalized①">finalized</a> <a data-link-type="dfn" href="#records" id="ref-for-records②⑨">Record</a> are made exclusively by creating a new <a data-link-type="dfn" href="#snapshot" id="ref-for-snapshot⑧">snapshot</a> with:</p>
    <ul>
     <li data-md>
      <p>Reference to the snapshot to be corrected as parent</p>
@@ -1567,7 +1567,7 @@ rejected (terminal state, not linkable)
    </ul>
    <h2 class="heading settled" data-level="8" id="version-graph-chapter"><span class="secno">8. </span><span class="content">7 Version Graph (DAG)</span><a class="self-link" href="#version-graph-chapter"></a></h2>
    <h3 class="heading settled" data-level="8.1" id="graph-structure"><span class="secno">8.1. </span><span class="content">7.1 Graph Structure</span><a class="self-link" href="#graph-structure"></a></h3>
-   <p>The totality of all snapshots of a <a data-link-type="dfn" href="#records" id="ref-for-records②⑨">Record</a> and their parent-child relationships forms the <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="version-graph">version graph</dfn>.</p>
+   <p>The totality of all snapshots of a <a data-link-type="dfn" href="#records" id="ref-for-records③⓪">Record</a> and their parent-child relationships forms the <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="version-graph">version graph</dfn>.</p>
    <p>The <a data-link-type="dfn" href="#version-graph" id="ref-for-version-graph">version graph</a> MUST be a <strong>Directed Acyclic Graph (DAG)</strong>:</p>
    <ul>
     <li data-md>
@@ -1600,7 +1600,7 @@ rejected (terminal state, not linkable)
     <li data-md>
      <p>A <a data-link-type="dfn" href="#snapshot" id="ref-for-snapshot①④">snapshot</a> MAY have zero, one, or multiple parent references</p>
     <li data-md>
-     <p>A <a data-link-type="dfn" href="#snapshot" id="ref-for-snapshot①⑤">snapshot</a> without parents is the <strong>root snapshot</strong> (first snapshot of the <a data-link-type="dfn" href="#records" id="ref-for-records③⓪">Record</a>)</p>
+     <p>A <a data-link-type="dfn" href="#snapshot" id="ref-for-snapshot①⑤">snapshot</a> without parents is the <strong>root snapshot</strong> (first snapshot of the <a data-link-type="dfn" href="#records" id="ref-for-records③①">Record</a>)</p>
     <li data-md>
      <p>A <a data-link-type="dfn" href="#snapshot" id="ref-for-snapshot①⑥">snapshot</a> with exactly one parent reference is a <strong>linear continuation</strong></p>
     <li data-md>
@@ -1611,7 +1611,7 @@ rejected (terminal state, not linkable)
     <li data-md>
      <p>Every parent reference MUST be a valid <code>snapshotHash</code> of a known <a data-link-type="dfn" href="#snapshot" id="ref-for-snapshot①⑧">snapshot</a></p>
     <li data-md>
-     <p>Edges MUST NOT point to snapshots of other <a data-link-type="dfn" href="#records" id="ref-for-records③①">Records</a>. Cross-Record connections are made via links in the <a data-link-type="dfn" href="#payload" id="ref-for-payload④">payload</a> or as Case linkage (Chapter 8)</p>
+     <p>Edges MUST NOT point to snapshots of other <a data-link-type="dfn" href="#records" id="ref-for-records③②">Records</a>. Cross-Record connections are made via links in the <a data-link-type="dfn" href="#payload" id="ref-for-payload④">payload</a> or as Case linkage (Chapter 8)</p>
    </ul>
    <h3 class="heading settled" data-level="8.4" id="graph-branches"><span class="secno">8.4. </span><span class="content">7.4 Branches</span><a class="self-link" href="#graph-branches"></a></h3>
    <p>A <strong>branch</strong> arises when two or more new <a data-link-type="dfn" href="#draft" id="ref-for-draft④">draft</a> snapshots with the same parent reference emerge from a <a data-link-type="dfn" href="#finalized" id="ref-for-finalized②">finalized</a> snapshot.</p>
@@ -1619,7 +1619,7 @@ rejected (terminal state, not linkable)
     <li data-md>
      <p>Branches are explicitly permitted in RecordWeb and MUST be made visible by the system</p>
     <li data-md>
-     <p>A system MUST return all active branches (draft snapshots without successors) when a <a data-link-type="dfn" href="#records" id="ref-for-records③②">Record</a> is retrieved</p>
+     <p>A system MUST return all active branches (draft snapshots without successors) when a <a data-link-type="dfn" href="#records" id="ref-for-records③③">Record</a> is retrieved</p>
     <li data-md>
      <p>Branches MAY exist simultaneously as long as they are in state <a data-link-type="dfn" href="#draft" id="ref-for-draft⑤">draft</a></p>
    </ul>
@@ -1641,19 +1641,19 @@ rejected (terminal state, not linkable)
 </pre>
    <p>The <code>MergeRecord</code> MUST be finalised before the merge snapshot can be finalised.</p>
    <h3 class="heading settled" data-level="8.6" id="cross-record-merges"><span class="secno">8.6. </span><span class="content">7.6 Cross-Record Merges</span><a class="self-link" href="#cross-record-merges"></a></h3>
-   <p>When a new <a data-link-type="dfn" href="#records" id="ref-for-records③③">Record</a> arises from two or more existing <a data-link-type="dfn" href="#finalized" id="ref-for-finalized③">finalized</a> Records (cross-Record merge), the following MUST apply:</p>
+   <p>When a new <a data-link-type="dfn" href="#records" id="ref-for-records③④">Record</a> arises from two or more existing <a data-link-type="dfn" href="#finalized" id="ref-for-finalized③">finalized</a> Records (cross-Record merge), the following MUST apply:</p>
    <ul>
     <li data-md>
-     <p>The new <a data-link-type="dfn" href="#records" id="ref-for-records③④">Record</a> MUST have a root snapshot with an empty <code>parents</code> array</p>
+     <p>The new <a data-link-type="dfn" href="#records" id="ref-for-records③⑤">Record</a> MUST have a root snapshot with an empty <code>parents</code> array</p>
     <li data-md>
      <p>The <code>MergeRecord</code> MUST reference the DIDs of the source Records (not their snapshot hashes)</p>
     <li data-md>
-     <p>The source Records MUST remain in state <a data-link-type="dfn" href="#finalized" id="ref-for-finalized④">finalized</a> and receive a metadata note <code>contributedTo</code> with the DID of the new <a data-link-type="dfn" href="#records" id="ref-for-records③⑤">Record</a></p>
+     <p>The source Records MUST remain in state <a data-link-type="dfn" href="#finalized" id="ref-for-finalized④">finalized</a> and receive a metadata note <code>contributedTo</code> with the DID of the new <a data-link-type="dfn" href="#records" id="ref-for-records③⑥">Record</a></p>
    </ul>
    <h2 class="heading settled" data-level="9" id="cases-chapter"><span class="secno">9. </span><span class="content">8 Case Specification</span><a class="self-link" href="#cases-chapter"></a></h2>
    <h3 class="heading settled" data-level="9.1" id="case-type"><span class="secno">9.1. </span><span class="content">8.1 Case as a Specialised Record Type</span><a class="self-link" href="#case-type"></a></h3>
-   <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="case">Case</dfn> is a <a data-link-type="dfn" href="#records" id="ref-for-records③⑥">Record</a> of type <code>CaseRecord</code>. It is subject to all requirements for regular <a data-link-type="dfn" href="#records" id="ref-for-records③⑦">Records</a> (Chapters 2–7) and supplements these with Case-specific requirements.</p>
-   <p>A <a data-link-type="dfn" href="#case" id="ref-for-case">Case</a> SHOULD be a standalone storage object, it is a persisted view of a set of linked <a data-link-type="dfn" href="#records" id="ref-for-records③⑧">Records</a>.</p>
+   <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="case">Case</dfn> is a <a data-link-type="dfn" href="#records" id="ref-for-records③⑦">Record</a> of type <code>CaseRecord</code>. It is subject to all requirements for regular <a data-link-type="dfn" href="#records" id="ref-for-records③⑧">Records</a> (Chapters 2–7) and supplements these with Case-specific requirements.</p>
+   <p>A <a data-link-type="dfn" href="#case" id="ref-for-case">Case</a> SHOULD be a standalone storage object, it is a persisted view of a set of linked <a data-link-type="dfn" href="#records" id="ref-for-records③⑨">Records</a>.</p>
    <h3 class="heading settled" data-level="9.2" id="case-schema"><span class="secno">9.2. </span><span class="content">8.2 Case Schema (normative)</span><a class="self-link" href="#case-schema"></a></h3>
    <p>A <code>CaseRecord</code> payload MUST contain the following fields:</p>
 <pre class="highlight language-json"><c- p>{</c->
@@ -1789,7 +1789,7 @@ rejected (terminal state, not linkable)
     <li data-md>
      <p>Mark the <a data-link-type="dfn" href="#snapshot" id="ref-for-snapshot②④">snapshot</a> as <code>compromised</code></p>
     <li data-md>
-     <p>Mark all dependent <a data-link-type="dfn" href="#records" id="ref-for-records③⑨">Records</a> as <code>integrity-warning</code></p>
+     <p>Mark all dependent <a data-link-type="dfn" href="#records" id="ref-for-records④⓪">Records</a> as <code>integrity-warning</code></p>
     <li data-md>
      <p>Log the incident in the system log with timestamp and discrepancy</p>
     <li data-md>
@@ -1842,7 +1842,7 @@ return sorted
     <li data-md>
      <p>deliver a provable timestamp per entry</p>
     <li data-md>
-     <p>be operated independently of the organisation that manages the <a data-link-type="dfn" href="#records" id="ref-for-records④⓪">Records</a></p>
+     <p>be operated independently of the organisation that manages the <a data-link-type="dfn" href="#records" id="ref-for-records④①">Records</a></p>
     <li data-md>
      <p>be readable by all authorised verification parties</p>
    </ul>
@@ -1878,7 +1878,7 @@ return sorted
    <p>RWP deliberately defines no mandatory authorisation model. Data security and information protection are delegated to the implementing systems. This chapter defines an <strong>optional, interoperable delegation framework</strong> that compliant systems MAY implement.</p>
    <p>The core principle: access control in RWP is <strong>attribute-based</strong> (ABAC) and <strong>delegatable</strong>. Rights are not assigned to roles in a fixed hierarchy, but expressed as verifiable claims attached to DIDs.</p>
    <h3 class="heading settled" data-level="12.2" id="access-policy"><span class="secno">12.2. </span><span class="content">11.2 Access Policy Block</span><a class="self-link" href="#access-policy"></a></h3>
-   <p>A <a data-link-type="dfn" href="#records" id="ref-for-records④①">Record</a> snapshot MAY contain an <code>accessPolicy</code> block in the <a data-link-type="dfn" href="#metadata" id="ref-for-metadata②">metadata</a>:</p>
+   <p>A <a data-link-type="dfn" href="#records" id="ref-for-records④②">Record</a> snapshot MAY contain an <code>accessPolicy</code> block in the <a data-link-type="dfn" href="#metadata" id="ref-for-metadata②">metadata</a>:</p>
 <pre class="highlight language-json"><c- p>{</c->
   <c- f>"accessPolicy"</c-><c- p>:</c-> <c- p>{</c->
     <c- f>"visibility"</c-><c- p>:</c-> <c- u>"restricted"</c-><c- p>,</c->
@@ -1967,7 +1967,7 @@ return sorted
 <pre>_rwp-resolver.bern.ch. 300 IN TXT "v=rwp1;endpoint=https://resolver.bern.ch/api/v1"
 </pre>
    <h3 class="heading settled" data-level="13.4" id="cross-namespace"><span class="secno">13.4. </span><span class="content">12.4 Cross-Namespace Links</span><a class="self-link" href="#cross-namespace"></a></h3>
-   <p>A <a data-link-type="dfn" href="#records" id="ref-for-records④②">Record</a> in namespace <code>bern.ch</code> MAY contain <a data-link-type="dfn" href="#hard-link" id="ref-for-hard-link③">hard links</a> to <a data-link-type="dfn" href="#records" id="ref-for-records④③">Records</a> in other namespaces (e.g. <code>did:rwp:bag.admin.ch:guideline-001</code>).</p>
+   <p>A <a data-link-type="dfn" href="#records" id="ref-for-records④③">Record</a> in namespace <code>bern.ch</code> MAY contain <a data-link-type="dfn" href="#hard-link" id="ref-for-hard-link③">hard links</a> to <a data-link-type="dfn" href="#records" id="ref-for-records④④">Records</a> in other namespaces (e.g. <code>did:rwp:bag.admin.ch:guideline-001</code>).</p>
    <p>When resolving cross-namespace links, a system MUST:</p>
    <ol>
     <li data-md>
@@ -1975,14 +1975,14 @@ return sorted
     <li data-md>
      <p>Discover the resolver endpoint via DNS TXT lookup (Section 12.3)</p>
     <li data-md>
-     <p>Verify the <a data-link-type="dfn" href="#snapshot" id="ref-for-snapshot②⑤">snapshot</a> hash of the linked <a data-link-type="dfn" href="#records" id="ref-for-records④④">Record</a> after retrieval</p>
+     <p>Verify the <a data-link-type="dfn" href="#snapshot" id="ref-for-snapshot②⑤">snapshot</a> hash of the linked <a data-link-type="dfn" href="#records" id="ref-for-records④⑤">Record</a> after retrieval</p>
     <li data-md>
      <p>Cache the resolved <a data-link-type="dfn" href="#snapshot" id="ref-for-snapshot②⑥">snapshot</a> locally with the original hash for integrity verification</p>
    </ol>
    <h2 class="heading settled" data-level="14" id="deletion-chapter"><span class="secno">14. </span><span class="content">13 Payload Deletion</span><a class="self-link" href="#deletion-chapter"></a></h2>
    <h3 class="heading settled" data-level="14.1" id="deletion-principles"><span class="secno">14.1. </span><span class="content">13.1 Deletion Principles</span><a class="self-link" href="#deletion-principles"></a></h3>
    <p>RecordWeb’s immutability and data protection erasure obligations (GDPR, Swiss DSG) are in tension. RWP resolves this tension through a tiered deletion regime.</p>
-   <p>The applicable regime is declared in the <code>deletionRegime</code> field of the <a data-link-type="dfn" href="#records" id="ref-for-records④⑤">Record</a>’s <a data-link-type="dfn" href="#metadata" id="ref-for-metadata③">metadata</a> at the time of creation. Implementations MUST respect this field and MAY enforce it at the infrastructure level.</p>
+   <p>The applicable regime is declared in the <code>deletionRegime</code> field of the <a data-link-type="dfn" href="#records" id="ref-for-records④⑥">Record</a>’s <a data-link-type="dfn" href="#metadata" id="ref-for-metadata③">metadata</a> at the time of creation. Implementations MUST respect this field and MAY enforce it at the infrastructure level.</p>
    <h3 class="heading settled" data-level="14.2" id="deletion-regimes"><span class="secno">14.2. </span><span class="content">13.2 Deletion Regimes</span><a class="self-link" href="#deletion-regimes"></a></h3>
    <p>RWP defines three deletion regimes:</p>
    <table class="data">
@@ -2037,7 +2037,7 @@ return sorted
      <p>The DID resolver MUST return HTTP 410 for <code>full-delete</code> regimes</p>
    </ol>
    <h3 class="heading settled" data-level="14.4" id="solid-delivery"><span class="secno">14.4. </span><span class="content">13.4 Solid Pod Delivery (optional)</span><a class="self-link" href="#solid-delivery"></a></h3>
-   <p>For <a data-link-type="dfn" href="#records" id="ref-for-records④⑥">Records</a> whose primary subject is an individual citizen, RWP offers an optional delivery extension: delivery of finalised <a data-link-type="dfn" href="#records" id="ref-for-records④⑦">Records</a> into a citizen’s Solid Pod.</p>
+   <p>For <a data-link-type="dfn" href="#records" id="ref-for-records④⑦">Records</a> whose primary subject is an individual citizen, RWP offers an optional delivery extension: delivery of finalised <a data-link-type="dfn" href="#records" id="ref-for-records④⑧">Records</a> into a citizen’s Solid Pod.</p>
    <p>When a system implements Solid Pod delivery, it MUST:</p>
    <ul>
     <li data-md>
@@ -2050,7 +2050,7 @@ return sorted
      <p>Include a <code>deliveryTarget</code> field in the optional metadata extension block</p>
    </ul>
    <p>Typical use cases: driving licences, medical images, residence registration confirmations, diplomas, building permits (delivered to the applicant).</p>
-   <p>The citizen MAY present the Pod-held <a data-link-type="dfn" href="#records" id="ref-for-records④⑧">Record</a> to any third party, who can independently verify its authenticity via the DID and cryptographic hash without querying the issuing authority.</p>
+   <p>The citizen MAY present the Pod-held <a data-link-type="dfn" href="#records" id="ref-for-records④⑨">Record</a> to any third party, who can independently verify its authenticity via the DID and cryptographic hash without querying the issuing authority.</p>
    <h2 class="heading settled" data-level="15" id="conformance-requirements"><span class="secno">15. </span><span class="content">14 Conformance Requirements</span><a class="self-link" href="#conformance-requirements"></a></h2>
    <h3 class="heading settled" data-level="15.1" id="conformance-levels"><span class="secno">15.1. </span><span class="content">14.1 Conformance Levels</span><a class="self-link" href="#conformance-levels"></a></h3>
    <p>RWP defines two conformance levels.</p>
@@ -2568,7 +2568,7 @@ let dfnPanelData = {
 "merkle-root": {"dfnID":"merkle-root","dfnText":"Merkle root","external":false,"refSections":[{"refs":[{"id":"ref-for-merkle-root"},{"id":"ref-for-merkle-root\u2460"}],"title":"9.5. 8.5 Case Merkle Root"},{"refs":[{"id":"ref-for-merkle-root\u2461"}],"title":"10.5. 9.5 Merkle Tree Algorithm"},{"refs":[{"id":"ref-for-merkle-root\u2462"}],"title":"11.1. 10.1 Purpose and Scope"}],"url":"#merkle-root"},
 "metadata": {"dfnID":"metadata","dfnText":"metadata","external":false,"refSections":[{"refs":[{"id":"ref-for-metadata"}],"title":"4.1. 3.1 Overview"},{"refs":[{"id":"ref-for-metadata\u2460"}],"title":"6.1. 5.1 Record Type Definition"},{"refs":[{"id":"ref-for-metadata\u2461"}],"title":"12.2. 11.2 Access Policy Block"},{"refs":[{"id":"ref-for-metadata\u2462"}],"title":"14.1. 13.1 Deletion Principles"},{"refs":[{"id":"ref-for-metadata\u2463"}],"title":"14.4. 13.4 Solid Pod Delivery (optional)"}],"url":"#metadata"},
 "payload": {"dfnID":"payload","dfnText":"payload","external":false,"refSections":[{"refs":[{"id":"ref-for-payload"}],"title":"4.1. 3.1 Overview"},{"refs":[{"id":"ref-for-payload\u2460"}],"title":"5.1. 4.1 Payload Definition"},{"refs":[{"id":"ref-for-payload\u2461"}],"title":"5.3. 4.3 Multi-Representation"},{"refs":[{"id":"ref-for-payload\u2462"}],"title":"6.1. 5.1 Record Type Definition"},{"refs":[{"id":"ref-for-payload\u2463"}],"title":"8.3. 7.3 Edges (Parent References)"},{"refs":[{"id":"ref-for-payload\u2464"},{"id":"ref-for-payload\u2465"}],"title":"14.3. 13.3 DeletionRecord Protocol"},{"refs":[{"id":"ref-for-payload\u2466"}],"title":"14.4. 13.4 Solid Pod Delivery (optional)"}],"url":"#payload"},
-"records": {"dfnID":"records","dfnText":"Records","external":false,"refSections":[{"refs":[{"id":"ref-for-records"},{"id":"ref-for-records\u2460"}],"title":"2.2. 1.2 Scope"},{"refs":[{"id":"ref-for-records\u2461"}],"title":"2.3. 1.3 Relationship to Other Standards"},{"refs":[{"id":"ref-for-records\u2462"},{"id":"ref-for-records\u2463"},{"id":"ref-for-records\u2464"},{"id":"ref-for-records\u2465"}],"title":"3.1. 2.1 Requirements for Record Identity"},{"refs":[{"id":"ref-for-records\u2466"},{"id":"ref-for-records\u2467"}],"title":"3.2. 2.2 DID Format"},{"refs":[{"id":"ref-for-records\u2468"},{"id":"ref-for-records\u2460\u24ea"}],"title":"3.3. 2.3 DID Document"},{"refs":[{"id":"ref-for-records\u2460\u2460"}],"title":"3.4. 2.4 DID Resolver Requirements"},{"refs":[{"id":"ref-for-records\u2460\u2461"},{"id":"ref-for-records\u2460\u2462"},{"id":"ref-for-records\u2460\u2463"},{"id":"ref-for-records\u2460\u2464"},{"id":"ref-for-records\u2460\u2465"}],"title":"4.1. 3.1 Overview"},{"refs":[{"id":"ref-for-records\u2460\u2466"}],"title":"4.3. 3.3 Minimum Metadata Set"},{"refs":[{"id":"ref-for-records\u2460\u2467"},{"id":"ref-for-records\u2460\u2468"}],"title":"5.1. 4.1 Payload Definition"},{"refs":[{"id":"ref-for-records\u2461\u24ea"},{"id":"ref-for-records\u2461\u2460"}],"title":"5.5. 4.5 Conversion During Finalisation"},{"refs":[{"id":"ref-for-records\u2461\u2461"},{"id":"ref-for-records\u2461\u2462"}],"title":"6.1. 5.1 Record Type Definition"},{"refs":[{"id":"ref-for-records\u2461\u2463"}],"title":"6.2. 5.2 SchemaRecord"},{"refs":[{"id":"ref-for-records\u2461\u2464"}],"title":"6.4. 5.4 Schema Versioning and Backward Compatibility"},{"refs":[{"id":"ref-for-records\u2461\u2465"}],"title":"7.1. 6.1 State Model"},{"refs":[{"id":"ref-for-records\u2461\u2466"}],"title":"7.2. 6.2 Linkability"},{"refs":[{"id":"ref-for-records\u2461\u2467"}],"title":"7.4. 6.4 Irreversibility of Finalisation"},{"refs":[{"id":"ref-for-records\u2461\u2468"}],"title":"8.1. 7.1 Graph Structure"},{"refs":[{"id":"ref-for-records\u2462\u24ea"},{"id":"ref-for-records\u2462\u2460"}],"title":"8.3. 7.3 Edges (Parent References)"},{"refs":[{"id":"ref-for-records\u2462\u2461"}],"title":"8.4. 7.4 Branches"},{"refs":[{"id":"ref-for-records\u2462\u2462"},{"id":"ref-for-records\u2462\u2463"},{"id":"ref-for-records\u2462\u2464"}],"title":"8.6. 7.6 Cross-Record Merges"},{"refs":[{"id":"ref-for-records\u2462\u2465"},{"id":"ref-for-records\u2462\u2466"},{"id":"ref-for-records\u2462\u2467"}],"title":"9.1. 8.1 Case as a Specialised Record Type"},{"refs":[{"id":"ref-for-records\u2462\u2468"}],"title":"10.3. 9.3 Snapshot Integrity"},{"refs":[{"id":"ref-for-records\u2463\u24ea"}],"title":"11.2. 10.2 Requirements for the Ledger"},{"refs":[{"id":"ref-for-records\u2463\u2460"}],"title":"12.2. 11.2 Access Policy Block"},{"refs":[{"id":"ref-for-records\u2463\u2461"},{"id":"ref-for-records\u2463\u2462"},{"id":"ref-for-records\u2463\u2463"}],"title":"13.4. 12.4 Cross-Namespace Links"},{"refs":[{"id":"ref-for-records\u2463\u2464"}],"title":"14.1. 13.1 Deletion Principles"},{"refs":[{"id":"ref-for-records\u2463\u2465"},{"id":"ref-for-records\u2463\u2466"},{"id":"ref-for-records\u2463\u2467"}],"title":"14.4. 13.4 Solid Pod Delivery (optional)"}],"url":"#records"},
+"records": {"dfnID":"records","dfnText":"Records","external":false,"refSections":[{"refs":[{"id":"ref-for-records"},{"id":"ref-for-records\u2460"}],"title":"2.2. 1.2 Scope"},{"refs":[{"id":"ref-for-records\u2461"},{"id":"ref-for-records\u2462"}],"title":"2.3. 1.3 Relationship to Other Standards"},{"refs":[{"id":"ref-for-records\u2463"},{"id":"ref-for-records\u2464"},{"id":"ref-for-records\u2465"},{"id":"ref-for-records\u2466"}],"title":"3.1. 2.1 Requirements for Record Identity"},{"refs":[{"id":"ref-for-records\u2467"},{"id":"ref-for-records\u2468"}],"title":"3.2. 2.2 DID Format"},{"refs":[{"id":"ref-for-records\u2460\u24ea"},{"id":"ref-for-records\u2460\u2460"}],"title":"3.3. 2.3 DID Document"},{"refs":[{"id":"ref-for-records\u2460\u2461"}],"title":"3.4. 2.4 DID Resolver Requirements"},{"refs":[{"id":"ref-for-records\u2460\u2462"},{"id":"ref-for-records\u2460\u2463"},{"id":"ref-for-records\u2460\u2464"},{"id":"ref-for-records\u2460\u2465"},{"id":"ref-for-records\u2460\u2466"}],"title":"4.1. 3.1 Overview"},{"refs":[{"id":"ref-for-records\u2460\u2467"}],"title":"4.3. 3.3 Minimum Metadata Set"},{"refs":[{"id":"ref-for-records\u2460\u2468"},{"id":"ref-for-records\u2461\u24ea"}],"title":"5.1. 4.1 Payload Definition"},{"refs":[{"id":"ref-for-records\u2461\u2460"},{"id":"ref-for-records\u2461\u2461"}],"title":"5.5. 4.5 Conversion During Finalisation"},{"refs":[{"id":"ref-for-records\u2461\u2462"},{"id":"ref-for-records\u2461\u2463"}],"title":"6.1. 5.1 Record Type Definition"},{"refs":[{"id":"ref-for-records\u2461\u2464"}],"title":"6.2. 5.2 SchemaRecord"},{"refs":[{"id":"ref-for-records\u2461\u2465"}],"title":"6.4. 5.4 Schema Versioning and Backward Compatibility"},{"refs":[{"id":"ref-for-records\u2461\u2466"}],"title":"7.1. 6.1 State Model"},{"refs":[{"id":"ref-for-records\u2461\u2467"}],"title":"7.2. 6.2 Linkability"},{"refs":[{"id":"ref-for-records\u2461\u2468"}],"title":"7.4. 6.4 Irreversibility of Finalisation"},{"refs":[{"id":"ref-for-records\u2462\u24ea"}],"title":"8.1. 7.1 Graph Structure"},{"refs":[{"id":"ref-for-records\u2462\u2460"},{"id":"ref-for-records\u2462\u2461"}],"title":"8.3. 7.3 Edges (Parent References)"},{"refs":[{"id":"ref-for-records\u2462\u2462"}],"title":"8.4. 7.4 Branches"},{"refs":[{"id":"ref-for-records\u2462\u2463"},{"id":"ref-for-records\u2462\u2464"},{"id":"ref-for-records\u2462\u2465"}],"title":"8.6. 7.6 Cross-Record Merges"},{"refs":[{"id":"ref-for-records\u2462\u2466"},{"id":"ref-for-records\u2462\u2467"},{"id":"ref-for-records\u2462\u2468"}],"title":"9.1. 8.1 Case as a Specialised Record Type"},{"refs":[{"id":"ref-for-records\u2463\u24ea"}],"title":"10.3. 9.3 Snapshot Integrity"},{"refs":[{"id":"ref-for-records\u2463\u2460"}],"title":"11.2. 10.2 Requirements for the Ledger"},{"refs":[{"id":"ref-for-records\u2463\u2461"}],"title":"12.2. 11.2 Access Policy Block"},{"refs":[{"id":"ref-for-records\u2463\u2462"},{"id":"ref-for-records\u2463\u2463"},{"id":"ref-for-records\u2463\u2464"}],"title":"13.4. 12.4 Cross-Namespace Links"},{"refs":[{"id":"ref-for-records\u2463\u2465"}],"title":"14.1. 13.1 Deletion Principles"},{"refs":[{"id":"ref-for-records\u2463\u2466"},{"id":"ref-for-records\u2463\u2467"},{"id":"ref-for-records\u2463\u2468"}],"title":"14.4. 13.4 Solid Pod Delivery (optional)"}],"url":"#records"},
 "schemarecord": {"dfnID":"schemarecord","dfnText":"SchemaRecord","external":false,"refSections":[{"refs":[{"id":"ref-for-schemarecord"}],"title":"6.2. 5.2 SchemaRecord"},{"refs":[{"id":"ref-for-schemarecord\u2460"}],"title":"6.3. 5.3 Core Record Types (normative)"},{"refs":[{"id":"ref-for-schemarecord\u2461"},{"id":"ref-for-schemarecord\u2462"}],"title":"6.4. 5.4 Schema Versioning and Backward Compatibility"},{"refs":[{"id":"ref-for-schemarecord\u2463"}],"title":"7.1. 6.1 State Model"}],"url":"#schemarecord"},
 "snapshot": {"dfnID":"snapshot","dfnText":"snapshot","external":false,"refSections":[{"refs":[{"id":"ref-for-snapshot"},{"id":"ref-for-snapshot\u2460"}],"title":"4.2. 3.2 Snapshot Definition"},{"refs":[{"id":"ref-for-snapshot\u2461"}],"title":"4.3. 3.3 Minimum Metadata Set"},{"refs":[{"id":"ref-for-snapshot\u2462"}],"title":"5.1. 4.1 Payload Definition"},{"refs":[{"id":"ref-for-snapshot\u2463"},{"id":"ref-for-snapshot\u2464"}],"title":"5.3. 4.3 Multi-Representation"},{"refs":[{"id":"ref-for-snapshot\u2465"},{"id":"ref-for-snapshot\u2466"}],"title":"7.3. 6.3 Finalisation Requirements"},{"refs":[{"id":"ref-for-snapshot\u2467"}],"title":"7.4. 6.4 Irreversibility of Finalisation"},{"refs":[{"id":"ref-for-snapshot\u2468"},{"id":"ref-for-snapshot\u2460\u24ea"}],"title":"8.1. 7.1 Graph Structure"},{"refs":[{"id":"ref-for-snapshot\u2460\u2460"}],"title":"8.2. 7.2 Nodes"},{"refs":[{"id":"ref-for-snapshot\u2460\u2461"},{"id":"ref-for-snapshot\u2460\u2462"},{"id":"ref-for-snapshot\u2460\u2463"},{"id":"ref-for-snapshot\u2460\u2464"},{"id":"ref-for-snapshot\u2460\u2465"},{"id":"ref-for-snapshot\u2460\u2466"},{"id":"ref-for-snapshot\u2460\u2467"}],"title":"8.3. 7.3 Edges (Parent References)"},{"refs":[{"id":"ref-for-snapshot\u2460\u2468"}],"title":"8.5. 7.5 Merges"},{"refs":[{"id":"ref-for-snapshot\u2461\u24ea"}],"title":"9.4. 8.4 Hard and Soft Links"},{"refs":[{"id":"ref-for-snapshot\u2461\u2460"},{"id":"ref-for-snapshot\u2461\u2461"},{"id":"ref-for-snapshot\u2461\u2462"},{"id":"ref-for-snapshot\u2461\u2463"}],"title":"10.3. 9.3 Snapshot Integrity"},{"refs":[{"id":"ref-for-snapshot\u2461\u2464"},{"id":"ref-for-snapshot\u2461\u2465"}],"title":"13.4. 12.4 Cross-Namespace Links"},{"refs":[{"id":"ref-for-snapshot\u2461\u2466"}],"title":"14.3. 13.3 DeletionRecord Protocol"},{"refs":[{"id":"ref-for-snapshot\u2461\u2467"}],"title":"14.4. 13.4 Solid Pod Delivery (optional)"}],"url":"#snapshot"},
 "version-graph": {"dfnID":"version-graph","dfnText":"version graph","external":false,"refSections":[{"refs":[{"id":"ref-for-version-graph"}],"title":"8.1. 7.1 Graph Structure"},{"refs":[{"id":"ref-for-version-graph\u2460"}],"title":"8.2. 7.2 Nodes"}],"url":"#version-graph"},
