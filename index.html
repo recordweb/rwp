@@ -8,7 +8,7 @@
   <meta content="Bikeshed version d113b2e81, updated Tue Jun 9 14:57:55 2026 -0700" name="generator">
   <link href="https://recordweb.github.io/rwp/" rel="canonical">
   <link href="https://www.w3.org/2008/site/images/favicon.ico" rel="icon">
-  <meta content="52eddd4c6aa64d0b889b5bd052a1165054d0dfd2" name="revision">
+  <meta content="902767c69de1786e324d882f618a573fcf9b2b1e" name="revision">
   <meta content="dark light" name="color-scheme">
   <link href="https://www.w3.org/StyleSheets/TR/2021/dark.css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css">
 <style>/* Boilerplate: style-autolinks */
@@ -726,7 +726,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
 </p>
    <h1 class="no-ref p-name" id="title">RecordWeb Protocol (RWP)</h1>
    <p id="w3c-state"><a href="https://www.w3.org/standards/types/#CG-DRAFT">Draft Community Group Report</a>,
-    <time class="dt-updated" datetime="2026-07-30">30 July 2026</time></p>
+    <time class="dt-updated" datetime="2026-08-04">4 August 2026</time></p>
    <details open>
     <summary>More details about this document</summary>
     <div data-fill-with="spec-metadata">
@@ -745,6 +745,8 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     </div>
    </details>
    <div data-fill-with="warning"></div>
+   <p class="copyright" data-fill-with="copyright"><a href="https://www.w3.org/policies/#copyright">Copyright</a> © 2026 <a href="https://www.w3.org/">World Wide Web Consortium</a>. <abbr title="World Wide Web Consortium">W3C</abbr><sup>®</sup> <a href="https://www.w3.org/policies/#Legal_Disclaimer">liability</a>, <a href="https://www.w3.org/policies/#W3C_Trademarks">trademark</a> and <a href="https://www.w3.org/copyright/software-license/" rel="license" title="W3C Software and Document License">permissive document license</a> rules apply.
+</p>
    <hr title="Separator for header">
   </div>
   <div class="p-summary" data-fill-with="abstract">
@@ -912,10 +914,13 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    </ol>
   </nav>
   <main>
+   <div class="copyright">
+    <p>Copyright © 2026 the Contributors to the RecordWeb Protocol (RWP) v0.0.2, published by the <a href="https://www.w3.org/community/recordweb/">RecordWeb Community Group</a> under the <a href="https://www.w3.org/community/about/process/cla/">W3C Community Contributor License Agreement (CLA)</a>. A human-readable <a href="https://www.w3.org/community/about/process/cla-deed/">summary</a> is available.</p>
+   </div>
    <h2 class="heading settled" data-level="1" id="intro"><span class="secno">1. </span><span class="content">Introduction</span><a class="self-link" href="#intro"></a></h2>
    <h3 class="heading settled" data-level="1.1" id="doc-status"><span class="secno">1.1. </span><span class="content">Status of This Document</span><a class="self-link" href="#doc-status"></a></h3>
-   <p>This document is a <strong>CG Draft</strong> of the RecordWeb Community Group. It is an Editor’s Draft and does not represent a W3C standard or endorsed position.</p>
-   <p>The published baseline is available at <a data-link-type="biblio" href="#biblio-zenodo-rwp" title="RecordWeb Protocol (RWP) v0.1 — Published baseline">[ZENODO-RWP]</a> (Version 0.1, DOI: 10.5281/zenodo.20475345). This working document reflects ongoing development toward the Community Group deliverable.</p>
+   <p>This document is a <strong>CG Draft</strong> of the RecordWeb Community Group. It is an Editor’s Draft maintained in the group’s repository and does not represent a W3C standard or endorsed position.</p>
+   <p>The published baseline is available at <a data-link-type="biblio" href="#biblio-zenodo-rwp" title="RecordWeb Protocol (RWP) v0.1 — Published baseline">[ZENODO-RWP]</a> (DOI: 10.5281/zenodo.20475345). This working document reflects ongoing development toward the Community Group deliverable.</p>
    <p>Feedback is invited via <a href="https://github.com/recordweb/rwp/issues">GitHub Issues</a>.</p>
    <h2 class="heading settled" data-level="2" id="scope"><span class="secno">2. </span><span class="content">Introduction and Scope</span><a class="self-link" href="#scope"></a></h2>
    <h3 class="heading settled" data-level="2.1" id="purpose"><span class="secno">2.1. </span><span class="content">Purpose</span><a class="self-link" href="#purpose"></a></h3>
@@ -960,7 +965,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
       <td><a data-link-type="biblio" href="#biblio-provo" title="PROV-O: The PROV Ontology">[PROVO]</a>
       <td>RWP lineage MAY be serialised as PROV-O. PROV-O serialisation is not required for RWP conformance.
      <tr>
-      <td><a data-link-type="biblio" href="#biblio-ech-0164" title="eCH-0164 — Information lifecycle in public administration">[ECH-0164]</a>
+      <td><a data-link-type="biblio" href="#biblio-ech-0164" title="eCH-0164 Information lifecycle in public administration (V1.1, in preparation)">[ECH-0164]</a>
       <td>RWP maps the eCH information lifecycle as states; no structural dependency
      <tr>
       <td><a data-link-type="biblio" href="#biblio-rwc" title="RecordWeb Concept (RWC)">[RWC]</a> v1.0
@@ -976,7 +981,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li data-md>
      <p><strong>PATCH</strong>: Corrections without substantive change</p>
    </ul>
-   <p>The current version is <strong>0.0.1</strong> (Draft — not yet approved for production implementations).</p>
+   <p>The current version is <strong>0.0.2</strong> (Draft — not yet approved for production implementations).</p>
    <h2 class="heading settled" data-level="3" id="record-identity"><span class="secno">3. </span><span class="content">Record Identity (DID)</span><a class="self-link" href="#record-identity"></a></h2>
    <h3 class="heading settled" data-level="3.1" id="identity-requirements"><span class="secno">3.1. </span><span class="content">Requirements for Record Identity</span><a class="self-link" href="#identity-requirements"></a></h3>
    <p>Every <a data-link-type="dfn" href="#records" id="ref-for-records④">Record</a> MUST possess a globally unique, permanent <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="identity">identity</dfn>.</p>
@@ -1813,12 +1818,12 @@ rejected (terminal state, not linkable)
    <p>For the calculation of the <a data-link-type="dfn" href="#case" id="ref-for-case①②">Case</a> <a data-link-type="dfn" href="#merkle-root" id="ref-for-merkle-root②">Merkle root</a>, the following algorithm MUST be used:</p>
 <pre>function merkleRoot(hashes: SHA256[]) -> SHA256:
 if hashes.length == 0: return SHA256("")
-if hashes.length == 1: return hashes
+if hashes.length == 1: return hashes [0]
 
 sorted = sort(hashes) // alphabetically by hex string
 
 while sorted.length > 1:
-nextLevel = ]
+nextLevel = []
 for i in range(0, sorted.length, 2):
 if i + 1 &lt; sorted.length:
 nextLevel.append( SHA256( sorted[i] || sorted[i+1] ) )
@@ -1826,7 +1831,7 @@ else:
 nextLevel.append( sorted[i] ) // odd element carried over unchanged
 sorted = nextLevel
 
-return sorted
+return sorted[0]
 </pre>
    <h2 class="heading settled" data-level="11" id="ledger"><span class="secno">11. </span><span class="content">Optional Ledger Anchoring</span><a class="self-link" href="#ledger"></a></h2>
    <h3 class="heading settled" data-level="11.1" id="ledger-purpose"><span class="secno">11.1. </span><span class="content">Purpose and Scope</span><a class="self-link" href="#ledger-purpose"></a></h3>
@@ -2067,7 +2072,7 @@ return sorted
       <td>Record identity, snapshots, payload, hashing, version graph. Systems fulfilling Level 1 can interoperate with one another.
      <tr>
       <td><strong>Level 2 — Full</strong>
-      <td>2–9, 8, 12, 13
+      <td>2–9, 12, 13
       <td>All Level 1 requirements plus Cases, federation, and payload deletion. Systems fulfilling Level 2 can produce complete, provable Cases.
    </table>
    <h3 class="heading settled" data-level="15.2" id="level-1-checklist"><span class="secno">15.2. </span><span class="content">Level 1 Checklist</span><a class="self-link" href="#level-1-checklist"></a></h3>
@@ -2340,7 +2345,7 @@ return sorted
    <dt id="biblio-did-core">[DID-CORE]
    <dd><a href="https://www.w3.org/TR/did-core/"><cite>Decentralized Identifiers (DIDs) v1.0</cite></a>. URL: <a href="https://www.w3.org/TR/did-core/">https://www.w3.org/TR/did-core/</a>
    <dt id="biblio-ech-0164">[ECH-0164]
-   <dd><a href="https://www.ech.ch"><cite>eCH-0164 — Information lifecycle in public administration</cite></a>. URL: <a href="https://www.ech.ch">https://www.ech.ch</a>
+   <dd><a href="https://www.ech.ch/de/ech/ech-standards/ech-0164"><cite>eCH-0164 Information lifecycle in public administration (V1.1, in preparation)</cite></a>. Draft. URL: <a href="https://www.ech.ch/de/ech/ech-standards/ech-0164">https://www.ech.ch/de/ech/ech-standards/ech-0164</a>
    <dt id="biblio-hyperledger">[HYPERLEDGER]
    <dd><a href="https://www.hyperledger.org/projects/fabric"><cite>Hyperledger Fabric</cite></a>. URL: <a href="https://www.hyperledger.org/projects/fabric">https://www.hyperledger.org/projects/fabric</a>
    <dt id="biblio-iso14721">[ISO14721]
