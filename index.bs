@@ -10,10 +10,14 @@ Abstract:
     This is the input for the proposed Community Group. The RecordWeb Protocol (RWP) is the normative technical specification for the creation, identification, versioning, linking, and cryptographic proof of Records in RWP-compliant systems. It defines the requirements a system must fulfil in order to create, manage, link, and prove Records in the sense of the RecordWeb Concept ([[RWC]]). RWP uses RFC 2119 compliance terminology and covers Record identity (DID), snapshot structure, payload validation, version graph (DAG), Case specification, integrity procedures, federation, and payload deletion across 14 chapters and three normative annexes.
 Repository: recordweb/rwp
 Markup Shorthands: markdown yes
-Boilerplate: omit copyright
+Version: 0.0.2
 Version History: https://github.com/recordweb/rwp/commits/main/index.bs
 Previous Version: https://doi.org/10.5281/zenodo.20475345
 </pre>
+
+<div class="copyright">
+<p>Copyright © 2026 the Contributors to the RecordWeb Protocol (RWP) v0.0.2, published by the <a href="https://www.w3.org/community/recordweb/">RecordWeb Community Group</a> under the <a href="https://www.w3.org/community/about/process/cla/">W3C Community Contributor License Agreement (CLA)</a>. A human-readable <a href="https://www.w3.org/community/about/process/cla-deed/">summary</a> is available.</p>
+</div>
 
 <pre class="biblio">
 {
@@ -63,9 +67,10 @@ Previous Version: https://doi.org/10.5281/zenodo.20475345
         "publisher": "W3C"
     },
     "ECH-0164": {
-        "title": "eCH-0164 — Information lifecycle in public administration",
-        "href": "https://www.ech.ch",
-        "publisher": "eCH"
+      "title": "eCH-0164 Information lifecycle in public administration (V1.1, in preparation)",
+      "href": "https://www.ech.ch/de/ech/ech-standards/ech-0164",
+      "publisher": "eCH",
+      "status": "Draft"
     },
     "HYPERLEDGER": {
         "title": "Hyperledger Fabric",
@@ -96,9 +101,9 @@ Introduction {#intro}
 
 ## Status of This Document ## {#doc-status}
 
-This document is a **CG Draft** of the RecordWeb Community Group. It is an Editor's Draft and does not represent a W3C standard or endorsed position.
+This document is a **CG Draft** of the RecordWeb Community Group. It is an Editor's Draft maintained in the group's repository and does not represent a W3C standard or endorsed position.
 
-The published baseline is available at [[ZENODO-RWP]] (Version 0.1, DOI: 10.5281/zenodo.20475345). This working document reflects ongoing development toward the Community Group deliverable.
+The published baseline is available at [[ZENODO-RWP]] (DOI: 10.5281/zenodo.20475345). This working document reflects ongoing development toward the Community Group deliverable.
 
 Feedback is invited via [GitHub Issues](https://github.com/recordweb/rwp/issues).
 
@@ -168,7 +173,7 @@ This document uses semantic versioning (SemVer): `MAJOR.MINOR.PATCH`.
 - **MINOR**: Backward-compatible extensions
 - **PATCH**: Corrections without substantive change
 
-The current version is **0.0.1** (Draft — not yet approved for production implementations).
+The current version is **0.0.2** (Draft — not yet approved for production implementations).
 
 
 Record Identity (DID) {#record-identity}
@@ -917,12 +922,12 @@ For the calculation of the [=Case=] [=Merkle root=], the following algorithm MUS
 ```
 function merkleRoot(hashes: SHA256[]) -> SHA256:
 if hashes.length == 0: return SHA256("")
-if hashes.length == 1: return hashes
+if hashes.length == 1: return hashes [0]
 
 sorted = sort(hashes) // alphabetically by hex string
 
 while sorted.length > 1:
-nextLevel = ]
+nextLevel = []
 for i in range(0, sorted.length, 2):
 if i + 1 < sorted.length:
 nextLevel.append( SHA256( sorted[i] || sorted[i+1] ) )
@@ -930,7 +935,7 @@ else:
 nextLevel.append( sorted[i] ) // odd element carried over unchanged
 sorted = nextLevel
 
-return sorted
+return sorted[0]
 ```
 
 
@@ -1194,7 +1199,7 @@ RWP defines two conformance levels.
     </tr>
     <tr>
       <td><strong>Level 2 — Full</strong></td>
-      <td>2–9, 8, 12, 13</td>
+      <td>2–9, 12, 13</td>
       <td>All Level 1 requirements plus Cases, federation, and payload deletion. Systems fulfilling Level 2 can produce complete, provable Cases.</td>
     </tr>
   </tbody>
