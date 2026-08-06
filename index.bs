@@ -20,73 +20,51 @@ Previous Version: https://doi.org/10.5281/zenodo.20475345
 
 <pre class="biblio">
 {
-    "RWC": {
-        "title": "RecordWeb Concept (RWC)",
-        "authors": ["Nik Jenzer"],
-        "href": "https://recordweb.github.io/rwc/",
-        "status": "CG-DRAFT"
-    },
-    "RFC2119": {
-        "title": "Key words for use in RFCs to Indicate Requirement Levels",
-        "authors": ["S. Bradner"],
-        "href": "https://www.rfc-editor.org/rfc/rfc2119",
-        "publisher": "IETF",
-        "date": "1997"
-    },
-    "RFC8785": {
-        "title": "JSON Canonicalization Scheme (JCS)",
-        "href": "https://www.rfc-editor.org/rfc/rfc8785",
-        "publisher": "IETF",
-        "date": "2020"
-    },
-    "RFC8037": {
-        "title": "CFRG Elliptic Curves for JOSE and COSE (Ed25519)",
-        "href": "https://www.rfc-editor.org/rfc/rfc8037",
-        "publisher": "IETF",
-        "date": "2017"
-    },
-    "DID-CORE": {
-        "title": "Decentralized Identifiers (DIDs) v1.0",
-        "href": "https://www.w3.org/TR/did-core/",
-        "publisher": "W3C"
-    },
-    "ISO15489": {
-        "title": "ISO 15489-1:2016 — Records management",
-        "href": "https://www.iso.org/standard/62542.html",
-        "publisher": "ISO"
-    },
-    "ISO14721": {
-        "title": "ISO 14721:2012 — Open Archival Information System (OAIS)",
-        "href": "https://www.iso.org/standard/57284.html",
-        "publisher": "ISO"
-    },
-    "PROVO": {
-        "title": "PROV-O: The PROV Ontology",
-        "href": "https://www.w3.org/TR/prov-o/",
-        "publisher": "W3C"
-    },
-    "ECH-0164": {
-      "title": "eCH-0164 Information lifecycle in public administration (V1.1, in preparation)",
-      "href": "https://www.ech.ch/de/ech/ech-standards/ech-0164",
-      "publisher": "eCH",
-      "status": "Draft"
-    },
-    "HYPERLEDGER": {
-        "title": "Hyperledger Fabric",
-        "href": "https://www.hyperledger.org/projects/fabric",
-        "publisher": "Linux Foundation"
-    },
-    "JSON-SCHEMA": {
-        "title": "JSON Schema: A Media Type for Describing JSON Documents",
-        "href": "https://json-schema.org/draft/2020-12/json-schema-core",
-        "date": "2020"
-    },
-    "ZENODO-RWP": {
-        "title": "RecordWeb Protocol (RWP) v0.1 — Published baseline",
-        "authors": ["Nik Jenzer"],
-        "href": "https://doi.org/10.5281/zenodo.20475345",
-        "date": "2026"
-    }
+  "DID-CORE": {
+      "title": "Decentralized Identifiers (DIDs) v1.0",
+      "href": "https://www.w3.org/TR/did-core/",
+      "publisher": "W3C"
+  },
+  "HYPERLEDGER": {
+      "title": "Hyperledger Fabric",
+      "href": "https://www.hyperledger.org/projects/fabric",
+      "publisher": "Linux Foundation"
+  },
+  "JSON-SCHEMA": {
+      "title": "JSON Schema: A Media Type for Describing JSON Documents",
+      "href": "https://json-schema.org/draft/2020-12/json-schema-core",
+      "date": "2020"
+  },
+  "PROVO": {
+      "title": "PROV-O: The PROV Ontology",
+      "href": "https://www.w3.org/TR/prov-o/",
+      "publisher": "W3C"
+  },
+  "RFC2119": {
+      "title": "Key words for use in RFCs to Indicate Requirement Levels",
+      "authors": ["S. Bradner"],
+      "href": "https://www.rfc-editor.org/rfc/rfc2119",
+      "publisher": "IETF",
+      "date": "1997"
+  },
+  "RFC8037": {
+      "title": "CFRG Elliptic Curves for JOSE and COSE (Ed25519)",
+      "href": "https://www.rfc-editor.org/rfc/rfc8037",
+      "publisher": "IETF",
+      "date": "2017"
+  },
+  "RFC8785": {
+      "title": "JSON Canonicalization Scheme (JCS)",
+      "href": "https://www.rfc-editor.org/rfc/rfc8785",
+      "publisher": "IETF",
+      "date": "2020"
+  },
+  "RWC": {
+      "title": "RecordWeb Concept (RWC)",
+      "authors": ["RecordWeb CG"],
+      "href": "https://recordweb.github.io/rwc/",
+      "status": "CG-DRAFT"
+  }
 }
 </pre>
 
@@ -138,28 +116,12 @@ This document does not apply to:
   </thead>
   <tbody>
     <tr>
-      <td>[[ISO15489]]</td>
-      <td>RWP structurally implements the requirements for authenticity, reliability, integrity, and usability. The term [=Record=] is used in accordance with ISO 15489-1:2016, clause 3.14.</td>
-    </tr>
-    <tr>
-      <td>[[ISO14721]] (OAIS)</td>
-      <td>RWP is complementary; finalised [=Records=] MAY be migrated to long-term archives according to OAIS principles</td>
-    </tr>
-    <tr>
       <td>[[DID-CORE]]</td>
       <td>RWP uses DIDs as the identity mechanism; conformance with W3C DID Core 1.0 is REQUIRED</td>
     </tr>
     <tr>
       <td>[[PROVO]]</td>
       <td>RWP lineage MAY be serialised as PROV-O. PROV-O serialisation is not required for RWP conformance.</td>
-    </tr>
-    <tr>
-      <td>[[ECH-0164]]</td>
-      <td>RWP maps the eCH information lifecycle as states; no structural dependency</td>
-    </tr>
-    <tr>
-      <td>[[RWC]] v1.0</td>
-      <td>Conceptual foundation; in the event of conflict, RWP takes precedence</td>
     </tr>
   </tbody>
 </table>

@@ -6,6 +6,17 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [0.0.3] – 2026-08-06
+
+Editorial: required standards and references
+
+This version refines the way RWP lists and references external standards, in order to distinguish clearly between technical dependencies and conceptual/contextual frameworks:
+
+- Narrowed Section 2.3 (“Required standards”) to include only those standards that are technically required for RWP conformance (e.g. DID Core, JSON Canonicalization Scheme, Ed25519, JSON Schema). Conceptual and contextual standards such as ISO 15489, ISO 14721 (OAIS), and national frameworks (e.g. eCH-0164) are no longer listed as “required”.
+- Cleaned up the RWP bibliography.
+
+These changes simplify the dependency landscape for implementers: RWP now lists only its true technical requirements, while keeping conceptual relationships to archival and records management standards in the descriptive sections and in RWC.
+
 ## [0.0.2] – 2026-08-04
 
 Editorial alignment between RWC and RWP:
