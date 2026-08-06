@@ -73,18 +73,6 @@ spec:infra; type:dfn; text:record
 </pre>
 
 
-Introduction {#intro}
-=====================
-
-## Status of This Document ## {#doc-status}
-
-This document is a **CG Draft** of the RecordWeb Community Group. It is an Editor's Draft maintained in the group's repository and does not represent a W3C standard or endorsed position.
-
-The published baseline is available at [[ZENODO-RWP]] (DOI: 10.5281/zenodo.20475345). This working document reflects ongoing development toward the Community Group deliverable.
-
-Feedback is invited via [GitHub Issues](https://github.com/recordweb/rwp/issues).
-
-
 Introduction and Scope {#scope}
 ==================================
 
