@@ -57,7 +57,7 @@ Previous Version: https://doi.org/10.5281/zenodo.20475345
     "href": "https://www.rfc-editor.org/rfc/rfc3987",
     "publisher": "IETF",
     "date": "2005"
-  }
+  },
   "RFC8037": {
       "title": "CFRG Elliptic Curves for JOSE and COSE (Ed25519)",
       "href": "https://www.rfc-editor.org/rfc/rfc8037",
@@ -142,7 +142,7 @@ This document uses semantic versioning (SemVer): `MAJOR.MINOR.PATCH`.
 The current version is **0.0.2** (Draft — not yet approved for production implementations).
 
 
-The Record {#record}
+The Record {#chapter-record}
 =====================================
 
 ## Definition {#record-definition}
@@ -218,7 +218,7 @@ A <dfn>DeletionRecord</dfn> is a [=SystemRecord=].
 
 A <dfn>MigrationRecord</dfn> is a [=SystemRecord=].
 
-A <dfn>ConformanceRecord</dfn> is a [=SystemRecord=].
+A [=ConformanceRecord=] is a [=SystemRecord=].
 
 
 Record Identity (DID) {#record-identity}
