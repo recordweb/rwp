@@ -15,7 +15,7 @@ Previous Version: https://doi.org/10.5281/zenodo.20475345
 </pre>
 
 <div class="copyright">
-<p>Copyright © 2026 the Contributors to the RecordWeb Protocol (RWP) v0.0.3, published by the <a href="https://www.w3.org/community/recordweb/">RecordWeb Community Group</a> under the <a href="https://www.w3.org/community/about/process/cla/">W3C Community Contributor License Agreement (CLA)</a>. A human-readable <a href="https://www.w3.org/community/about/process/cla-deed/">summary</a> is available.</p>
+<p>Copyright © 2026 the Contributors to the RecordWeb Protocol (RWP) v0.0.4, published by the <a href="https://www.w3.org/community/recordweb/">RecordWeb Community Group</a> under the <a href="https://www.w3.org/community/about/process/cla/">W3C Community Contributor License Agreement (CLA)</a>. A human-readable <a href="https://www.w3.org/community/about/process/cla-deed/">summary</a> is available.</p>
 </div>
 
 <pre class="biblio">
@@ -29,6 +29,11 @@ Previous Version: https://doi.org/10.5281/zenodo.20475345
       "title": "Hyperledger Fabric",
       "href": "https://www.hyperledger.org/projects/fabric",
       "publisher": "Linux Foundation"
+  },
+  "ISO 15489-1:2016": {
+      "title": "Information and documentation — Records management, Part 1: Concepts and principles",
+      "href": "https://www.iso.org/standard/62542.html",
+      "date": "2016"
   },
   "JSON-SCHEMA": {
       "title": "JSON Schema: A Media Type for Describing JSON Documents",
@@ -47,6 +52,12 @@ Previous Version: https://doi.org/10.5281/zenodo.20475345
       "publisher": "IETF",
       "date": "1997"
   },
+  "RFC3987": {
+    "title": "Internationalized Resource Identifiers (IRIs)",
+    "href": "https://www.rfc-editor.org/rfc/rfc3987",
+    "publisher": "IETF",
+    "date": "2005"
+  }
   "RFC8037": {
       "title": "CFRG Elliptic Curves for JOSE and COSE (Ed25519)",
       "href": "https://www.rfc-editor.org/rfc/rfc8037",
@@ -58,6 +69,12 @@ Previous Version: https://doi.org/10.5281/zenodo.20475345
       "href": "https://www.rfc-editor.org/rfc/rfc8785",
       "publisher": "IETF",
       "date": "2020"
+  },
+  "RICO": {
+    "title": "Records in Contexts Ontology (RiC-O)",
+    "href": "https://www.ica.org/standards/RiC/RiC-O_1-0-2.html",
+    "publisher": "International Council on Archives",
+    "date": "2024-09-04"
   },
   "RWC": {
       "title": "RecordWeb Concept (RWC)",
@@ -78,7 +95,7 @@ Introduction and Scope {#scope}
 
 ## Purpose ## {#purpose}
 
-The RecordWeb Protocol (RWP) is the normative technical specification for the creation, identification, versioning, linking, and cryptographic proof of <dfn>Records</dfn> in RWP-compliant systems.
+The RecordWeb Protocol (RWP) is the normative technical specification for the creation, identification, versioning, linking, and cryptographic proof of [=Records=] in RWP-compliant systems.
 
 The RecordWeb Concept ([[RWC]]) is an informative conceptual document. This specification defines the normative terminology and requirements for RWP conformance.
 
@@ -123,6 +140,85 @@ This document uses semantic versioning (SemVer): `MAJOR.MINOR.PATCH`.
 - **PATCH**: Corrections without substantive change
 
 The current version is **0.0.2** (Draft — not yet approved for production implementations).
+
+
+The Record {#record}
+=====================================
+
+## Definition {#record-definition}
+
+For the purposes of this specification, <dfn>Record</dfn> has the meaning defined in [[!ISO 15489-1:2016]], clause 3.14. A Record MUST have the identity, structure, payload, type, schema, state, version and integrity evidence required by this specification.
+
+For semantic interoperability, a Record is a specialization of 'prov:Entity'. The term Record remains the primary term of this specification. The term 'prov:Entity' is used only for a [[!PROVO]]-compatible semantic representation.
+
+```text
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rw:   <https://w3id.org/recordweb/ontology#> .
+
+rw:Record
+  rdfs:subClassOf prov:Entity .
+
+rw:InformationRecord
+  rdfs:subClassOf rw:Record .
+
+rw:RelationRecord
+  rdfs:subClassOf rw:Record .
+
+rw:SystemRecord
+  rdfs:subClassOf rw:Record .
+
+rw:CaseRecord
+  rdfs:subClassOf rw:RelationRecord .
+
+rw:AssertionRecord
+  rdfs:subClassOf rw:RelationRecord .
+
+rw:SchemaRecord
+  rdfs:subClassOf rw:SystemRecord .
+
+rw:MergeRecord
+  rdfs:subClassOf rw:SystemRecord .
+
+rw:DeletionRecord
+  rdfs:subClassOf rw:SystemRecord .
+
+rw:MigrationRecord
+  rdfs:subClassOf rw:SystemRecord .
+
+rw:ConformanceRecord
+  rdfs:subClassOf rw:SystemRecord .
+```
+
+## Record taxonomy {#record-taxonomy}
+
+Every [=Record=] has one primary conceptual purpose. For the purposes of this specification, a Record is classified as an [=InformationRecord=], a [=RelationRecord=], or a [=SystemRecord=], as described in [[RWC]].
+
+Any concrete Record Type is defined by a SchemaRecord in accordance with [Record Type Definition](#record-type).
+
+The taxonomy is normative for the interpretation of this specification. It MUST NOT be interpreted as a mandatory implementation inheritance hierarchy, a mandatory JSON type hierarchy, or a replacement for concrete Record Types and their SchemaRecords.
+
+An <dfn>InformationRecord</dfn> is a Record whose primary purpose is to carry semantically autonomous institutional or domain information.
+
+Every InformationRecord MUST conform to a concrete Record Type.  This specification does not provide a list of InformationRecord Types.
+
+A <dfn>RelationRecord</dfn> is a Record whose primary purpose is to establish, preserve, and make provable a meaningful relationship between Records.
+
+A <dfn>SystemRecord</dfn> is a Record whose primary purpose is to define, document, or prove a RecordWeb system rule, operation, or capability.
+
+A [=CaseRecord=] is a [=RelationRecord=]. It represents a persisted, governed view of linked Records. A CaseRecord MUST NOT be a container and MUST NOT contain the payload of the Records to which it relates. The protocol representation and validation requirements for CaseRecords are defined in [CaseRecord Specification](#caserecord-specification).
+
+An [=AssertionRecord=] is a [=RelationRecord=]. It represents an attributable assertion that a subject resource stands in a specified relationship to an object resource. The protocol representation and validation requirements for
+AssertionRecords are defined in [AssertionRecord Specification](#assertionrecord-specification).
+
+A [=SchemaRecord=] is a [=SystemRecord=]. It defines a concrete Record Type and its associated schema and validation requirements.
+
+A <dfn>MergeRecord</dfn> is a [=SystemRecord=].
+
+A <dfn>DeletionRecord</dfn> is a [=SystemRecord=].
+
+A <dfn>MigrationRecord</dfn> is a [=SystemRecord=].
+
+A <dfn>ConformanceRecord</dfn> is a [=SystemRecord=].
 
 
 Record Identity (DID) {#record-identity}
@@ -221,14 +317,17 @@ The DID document MUST be updated when the physical storage location changes (`re
 
 ## DID Resolver Requirements ## {#did-resolver}
 
-An RWP-compliant system MUST provide a DID resolver that:
+An implementation claiming the `resolver` role MUST provide a DID resolver that:
 
 - Resolves DIDs of the method `rwp` and returns the associated DID document
 - Delivers the DID document as JSON-LD in accordance with [[DID-CORE]]
 - Returns HTTP 200 when the DID is known
 - Returns HTTP 404 when the DID is unknown
-- Returns HTTP 410 when the DID is known but the [=Record=] has been deleted (payload deletion per Chapter 13)
+- Returns HTTP 410 when the DID is known but the [=Record=] has been deleted (payload deletion per [Payload Deletion](#deletion-chapter))
 
+An implementation claiming another RWP profile or role MAY rely on a resolver operated by another conformant implementation. It is not required to operate a DID resolver itself unless it claims the `resolver` role.
+
+A producer or custodian that creates or manages RWP Records MUST ensure that the associated Record DIDs remain resolvable in accordance with this specification.
 
 Record Structure {#structure}
 =================================
@@ -237,9 +336,9 @@ Record Structure {#structure}
 
 Every [=Record=] MUST consist of exactly three components:
 
-1. **[=Identity=]** — the DID of the [=Record=] (Chapter 2)
-2. **[=Payload=]** — the content of the [=Record=] (Chapter 4)
-3. **[=Metadata=]** — descriptive dimensions of the [=Record=] (Section 3.3)
+1. **[=Identity=]** — the DID of the [=Record=] ([Record Identity (DID)](#record-identity))
+2. **[=Payload=]** — the content of the [=Record=] ([Payload and Formats](#payload-chapter))
+3. **[=Metadata=]** — descriptive dimensions of the [=Record=] ([Minimum Metadata Set](#metadata-set))
 
 Together, these three components form a <dfn>snapshot</dfn> — an immutable, versioned representation of the [=Record=] at a specific point in time.
 
@@ -251,7 +350,7 @@ A [=snapshot=] MUST fulfil the following properties:
 
 - It is immutable after its creation
 - It is uniquely identifiable by its content hash
-- It references exactly one version of the payload (or multiple representations per Section 4.3)
+- It references exactly one version of the payload (or multiple representations per [Multi-Representation](#multi-representation))
 - It references exactly one version of the schema of its Record type
 - It is linked to its predecessor snapshots by directed edges in the version graph
 
@@ -297,7 +396,7 @@ Every [=snapshot=] MUST contain the following <dfn>metadata</dfn> fields:
     <tr><td><code>classification</code></td><td>SHOULD</td><td>String</td><td>Protection level per the organisation's internal scheme</td></tr>
     <tr><td><code>retentionPolicy</code></td><td>SHOULD</td><td>DID</td><td>Reference to retention rule</td></tr>
     <tr><td><code>tags</code></td><td>MAY</td><td>Array&lt;String&gt;</td><td>Free-text markers for search and filtering</td></tr>
-    <tr><td><code>accessPolicy</code></td><td>MAY</td><td>Object|null</td><td>Delegated authorisation model (Chapter 11)</td></tr>
+    <tr><td><code>accessPolicy</code></td><td>MAY</td><td>Object|null</td><td>Delegated authorisation model ([Access Control Delegation Framework](#access-control))</td></tr>
     <tr><td><code>payloadHash</code></td><td>MUST</td><td>SHA-256</td><td>Hash of the payload</td></tr>
     <tr><td><code>payloadFormat</code></td><td>MUST</td><td>MIME-Type</td><td>Format of the primary payload incl. profiles</td></tr>
     <tr><td><code>signature</code></td><td>MUST (when finalized)</td><td>Multibase</td><td>Cryptographic signature of the record owner over the snapshot hash</td></tr>
@@ -418,7 +517,7 @@ The schema of a Record type MUST define the permitted payload formats for each s
     </tr>
     <tr>
       <td><code>finalized</code></td>
-      <td>Only formats from the RWP list of archival-grade formats (Annex A, Table A-1)</td>
+      <td>Only formats listed under [RWP archival-grade formats](#format-requirements)</td>
     </tr>
   </tbody>
 </table>
@@ -508,22 +607,21 @@ A [=SchemaRecord=] MUST:
 }
 ```
 
-## Core Record Types (normative) ## {#core-types}
+## Core Record Types ## {#core-types}
 
-RWP defines the following core Record types that every compliant system MUST support:
+RWP defines the following core Record types (with DID Suffix):
 
-<table class="data">
-  <thead>
-    <tr><th>Type Name</th><th>DID Suffix</th><th>Description</th></tr>
-  </thead>
-  <tbody>
-    <tr><td><code>SchemaRecord</code></td><td><code>schema-record</code></td><td>Definition of a Record type</td></tr>
-    <tr><td><code>MergeRecord</code></td><td><code>merge-record</code></td><td>Documentation of a merge act</td></tr>
-    <tr><td><code>DeletionRecord</code></td><td><code>deletion-record</code></td><td>Log of a payload deletion (Chapter 13)</td></tr>
-    <tr><td><code>CaseRecord</code></td><td><code>case-record</code></td><td>Case (Chapter 8)</td></tr>
-    <tr><td><code>MigrationRecord</code></td><td><code>migration-record</code></td><td>Log of a system migration</td></tr>
-  </tbody>
-</table>
+- `SchemaRecord` (schema-record)
+- `CaseRecord` (case-record)
+- `AssertionRecord` (assertion-record)
+- `MergeRecord` (merge-record)
+- `DeletionRecord` (deletion-record)
+- `MigrationRecord` (migration-record)
+- `ConformanceRecord` (conformance-record)
+
+The conformance requirements for these Record types are profile-, role-, and capability-specific. An implementation MUST support a core Record type only where this specification requires that support for a claimed profile, role, or exercised capability.
+
+The capability-bound requirements are defined in [Capability-bound requirements](#capability-bound-requirements).
 
 Additional Record types MAY be defined by organisations or standards bodies. They MUST be published as [=SchemaRecords=] and be resolvable via a DID.
 
@@ -542,7 +640,7 @@ States and Transitions {#states}
 
 ## State Model ## {#state-model}
 
-Every [=Record=] snapshot has exactly one **state*. The state describes the validity and linkability status of the snapshot.
+Every [=Record=] snapshot has exactly one **state**. The state describes the validity and linkability status of the snapshot.
 
 **Core states (normative, for all Record types):**
 
@@ -601,11 +699,18 @@ If any of these checks fails, the system MUST NOT finalise the [=snapshot=] and 
 
 A [=finalized=] snapshot MUST NOT be reverted to the state [=draft=].
 
-Corrections to a [=finalized=] [=Record=] are made exclusively by creating a new [=snapshot=] with:
+Corrections, revisions, replacements, and other continuations of the same Record MUST be represented as a new [=snapshot=] of that Record.
 
-- Reference to the snapshot to be corrected as parent
-- Reasoning field `correctionReason` in the metadata object
-- Complete finalisation process per Section 6.3
+Such a snapshot MUST:
+
+- retain the DID of the Record;
+- reference the superseded or revised snapshot in its `parents` field;
+- include a `correctionReason` or equivalent schema-defined rationale where applicable; and
+- complete the normal finalisation process defined in [=finalisation-requirements=].
+
+An implementation MUST NOT represent a correction, revision, replacement, or continuation of the same Record as a new Record that is related to the earlier Record only through an AssertionRecord or another cross-Record relationship.
+
+A new Record MAY be created where a new semantically autonomous information object arises. Such a Record MAY document derivation, source, or other relationships to an earlier Record through an AssertionRecord. It MUST NOT thereby be treated as a continuation in the version graph of that earlier Record.
 
 
 Version Graph (DAG) {#version-graph-chapter}
@@ -649,7 +754,7 @@ An edge connects a [=snapshot=] (child) with its predecessor [=snapshot=] (paren
 Edge requirements:
 
 - Every parent reference MUST be a valid `snapshotHash` of a known [=snapshot=]
-- Edges MUST NOT point to snapshots of other [=Records=]. Cross-Record connections are made via links in the [=payload=] or as Case linkage (Chapter 8)
+- Edges MUST NOT point to snapshots of other [=Records=]. Cross-Record connections are made via links in the [=payload=] or as Case linkage ([CaseRecord Specification](#caserecord-specification))
 
 ## Branches ## {#graph-branches}
 
@@ -691,14 +796,16 @@ When a new [=Record=] arises from two or more existing [=finalized=] Records (cr
 - The source Records MUST remain in state [=finalized=] and receive a metadata note `contributedTo` with the DID of the new [=Record=]
 
 
-Case Specification {#cases-chapter}
+CaseRecord Specification {#caserecord-specification}
 =======================================
 
-## Case as a Specialised Record Type ## {#case-type}
+## Case as a specialised Record Type {#case-type}
 
-A <dfn>Case</dfn> is a [=Record=] of type `CaseRecord`. It is subject to all requirements for regular [=Records=] (Chapters 2–7) and supplements these with Case-specific requirements.
+A <dfn>CaseRecord</dfn> is a [=RelationRecord=] and a concrete [Record type](#record-type). It is subject to all requirements that apply to [=Records=] and supplements them with the Case-specific requirements defined in this section.
 
-A [=Case=] SHOULD be a standalone storage object, it is a persisted view of a set of linked [=Records=].
+A CaseRecord is a persisted, governed view of linked Records. It is itself a Record with its own identity, state, version history, schema association, metadata, and integrity evidence.
+
+A CaseRecord MUST NOT be interpreted as a container into which Records are placed. A Record linked by a CaseRecord remains an independent Record and is not embedded in the CaseRecord payload.
 
 ## Case Schema (normative) ## {#case-schema}
 
@@ -706,7 +813,7 @@ A `CaseRecord` payload MUST contain the following fields:
 
 ```json
 {
-  "caseId": "did:rwp:bern.ch:f47ac10b-case-001",
+  "recordDid": "did:rwp:bern.ch:f47ac10b-case-001",
   "caseType": "did:rwp:bern.ch:schema-building-permit-case",
   "title": "Building Permit Musterstrasse 12, Parcel 451",
   "trigger": {
@@ -720,6 +827,12 @@ A `CaseRecord` payload MUST contain the following fields:
       "recordDid": "did:rwp:bern.ch:zoning-plan-2024",
       "snapshotHash": "sha256:zoning-plan-hash...",
       "role": "Legal basis"
+    },
+    {
+      "type": "hard",
+      "recordDid": "did:rwp:bern.ch:case-planning-approval-001",
+      "snapshotHash": "sha256:planning-approval-case-hash...",
+      "role": "Related administrative proceeding"
     }
   ],
   "process": [
@@ -738,7 +851,9 @@ A `CaseRecord` payload MUST contain the following fields:
 
 ## Case Elements (normative) ## {#case-elements}
 
-A complete [=Case=] MUST contain all five elements. A [=Case=] MAY be finalised if and only if all five elements are present as hard links.
+A complete [=CaseRecord=] MUST contain all five Case elements. An element that permits an empty value is considered present when it is represented in the CaseRecord payload, even if its value is an empty array or `null`, as applicable. A Record MAY fulfil multiple elements.
+
+Unless a CaseRecord schema defines more specific constraints, every Case element MAY link to any Record type, including another CaseRecord.
 
 <table class="data">
   <thead>
@@ -768,44 +883,276 @@ A complete [=Case=] MUST contain all five elements. A [=Case=] MAY be finalised 
   </tbody>
 </table>
 
-**Exception — ad-hoc Case**: A [=Case=] schema MAY be marked as `adhoc: true`. Ad-hoc Cases have no mandatory fields other than `trigger` and `caseId`. They MUST be marked in the metadata object as `caseVariant: "adhoc"`.
+**Exception — ad-hoc Case**: A [=CaseRecord=] schema MAY be marked as `adhoc: true`. Ad-hoc Cases have no mandatory fields other than `trigger` and `recordDid`. They MUST be marked in the metadata object as `caseVariant: "adhoc"`.
 
-## Hard and Soft Links ## {#links}
+## Hard and Soft Links {#links}
 
-A <dfn>hard link</dfn> points to a [=finalized=] [=snapshot=] (`snapshotHash` MUST be specified). It is immutable after finalisation of the [=Case=].
+A Case link MAY target any [=Record=], including an [=InformationRecord=], a [=RelationRecord=] (including another [=CaseRecord=]), or a [=SystemRecord=].
 
-A **soft link** (working reference) points to a Record DID without a snapshot reference. It MAY point to [=finalized=] or [=draft=] Records. Soft links prevent finalisation of the [=Case=] and MUST be converted to [=hard links=] before [=Case=] finalisation.
+A <dfn>hard link</dfn> points to one identified [=finalized=] [=snapshot=] of a target Record. A hard link MUST contain the target `recordDid` and `snapshotHash`.
 
-A system MUST check during a [=Case=] finalisation attempt whether soft links are still present. If so, the system MUST reject the finalisation and return the open soft links.
+A hard link is immutable after finalisation of the referencing [=CaseRecord=].
+
+A <dfn>soft link</dfn> is a working reference that points to a target `recordDid` without identifying a target snapshot. A soft link MAY point to a [=draft=] or [=finalized=] Record.
+
+A CaseRecord containing one or more soft links MUST NOT be finalised. Every soft link MUST be converted to a hard link before finalisation of the CaseRecord.
+
+A system MUST check during a CaseRecord finalisation attempt whether soft links are present. If soft links are present, the system MUST reject the finalisation and return the unresolved soft links.
+
+## CaseRecord-to-CaseRecord Links {#case-to-case-links}
+
+A [=CaseRecord=] MAY link to another CaseRecord through a [=soft link=] or a [=hard link=].
+
+A hard link to a CaseRecord MUST identify a [=finalized=] snapshot of the target CaseRecord through its `recordDid` and `snapshotHash`.
+
+During finalisation of a referencing CaseRecord, the system MUST resolve and validate every target CaseRecord snapshot referenced through a hard link, subject to the applicable federation and offline-validation rules.
+
+The `snapshotHash` of a hard-linked target CaseRecord MUST be included in the [=Merkle root=] of the referencing CaseRecord.
+
+A soft link MAY refer to a draft or finalised CaseRecord during work. A soft link to a CaseRecord MUST be converted to a hard link before finalisation of the referencing CaseRecord.
+
+A link from CaseRecord A to CaseRecord B references only the identified snapshot of CaseRecord B.
+
+A CaseRecord-to-CaseRecord link MUST NOT include, copy, inherit, or otherwise treat Records linked by CaseRecord B as direct members of CaseRecord A.
+
+The referenced CaseRecord B snapshot and its Merkle root provide evidence of the Records directly linked by CaseRecord B at the time that snapshot was finalised. A Record is a direct member of CaseRecord A only if CaseRecord A links to that Record explicitly.
 
 ## Case Merkle Root ## {#merkle-root-calc}
 
-The <dfn>Merkle root</dfn> of a [=Case=] MUST be calculated as follows:
+The <dfn>Merkle root</dfn> of a [=CaseRecord=] MUST be calculated as follows:
 
-1. Collect all `snapshotHash` values of all [=hard links=] in the [=Case=] (trigger, context, process, decision, result)
-2. Sort alphabetically by SHA-256 value
-3. Calculate the Merkle root over the sorted list (algorithm per Section 9.5)
+1. Collect the `snapshotHash` value of every [=hard link=] in the [=CaseRecord=], including every hard link to another [=CaseRecord=].
+2. Sort the collected `snapshotHash` values lexicographically by their canonical serialised value.
+3. Calculate the Merkle root over the sorted list using the [Merkle Tree Algorithm](#merkle-algorithm).
 
 ```
 merkleRoot = MerkleRoot( sort( [snapshotHash_1, snapshotHash_2, ... snapshotHash_n] ) )
 ```
 
+The [=Merkle root=] of a CaseRecord MUST include the hash of each directly hard-linked target snapshot. It MUST NOT recursively include the individual hard-link hashes or linked Record snapshots contained in a referenced CaseRecord.
 
-The [=Merkle root=] MUST be recalculated every time a [=hard link=] is added or removed. A system MUST verify the [=Merkle root=] before finalising the [=Case=].
+The [=Merkle root=] MUST be recalculated every time a [=hard link=] is added or removed. A system MUST verify the [=Merkle root=] before finalising the [=CaseRecord=].
 
 ## Case Completeness Check ## {#case-completeness}
 
-A system SHOULD perform a completeness check on a [=Case=] at any time upon request and return:
+A system SHOULD perform a completeness check on a [=CaseRecord=] at any time upon request and return:
 
 ```json
 {
-  "caseId": "did:rwp:bern.ch:f47ac10b-case-001",
+  "recordDid": "did:rwp:bern.ch:f47ac10b-case-001",
   "complete": false,
   "missingElements": ["decision", "result"],
   "openWorkingReferences": ["did:rwp:bern.ch:expert-opinion-draft-001"],
   "merkleRootValid": true
 }
 ```
+
+
+AssertionRecord Specification {#assertionrecord-specification}
+=======================================
+
+## Purpose and scope {#assertionrecord-purpose}
+
+An <dfn>AssertionRecord</dfn> is a [=RelationRecord=] that preserves an attributable assertion that a subject resource stands in a specified relationship to an object resource.
+
+An AssertionRecord is itself a [=Record=]. It has its own identity, state, version history, schema association, metadata and integrity evidence. It does not modify, finalise, merge, delete, or otherwise change either the subject or the object to which it refers.
+
+An AssertionRecord MAY refer to Records in the same namespace or in another namespace. Referencing a Record in another namespace MUST NOT imply acceptance, storage, reciprocity, modification, or any other obligation for the custodian of the referenced Record.
+
+## Assertion model {#assertionrecord-model}
+
+An AssertionRecord expresses one directed relationship:
+
+```text
+subject -- predicate --> object
+```
+
+The `subject` identifies the resource from which the relationship is asserted. The `predicate` identifies the semantics of the relationship. The `object` identifies the resource to which the relationship is asserted.
+
+The subject and object MUST be resource reference objects containing an `id` field.
+
+The `id` field MUST identify the referenced resource. It MAY contain an RWP DID, another DID, or an absolute IRI, subject to the constraints of the applicable predicate declaration.
+
+A resource reference identifying an RWP Record MAY additionally contain a `snapshotHash` field.
+
+Where `snapshotHash` is present:
+
+- `id` MUST be the DID of an RWP Record;
+- `snapshotHash` MUST identify a snapshot of that Record;
+- the AssertionRecord refers to that specific immutable snapshot; and
+- a validating implementation MUST verify that the resolved snapshot belongs to the identified Record where the snapshot is resolvable.
+
+Where `snapshotHash` is absent, the AssertionRecord refers to the identified Record or other resource independently of a specific version.
+
+An AssertionRecord MUST NOT be interpreted as modifying the subject or object. It preserves only the assertion made by its asserting Agent.
+
+## Relationship predicate {#assertionrecord-predicate}
+
+An AssertionRecord MUST contain a `predicate` field.
+
+The value of `predicate` MUST be an absolute IRI conforming to [[!RFC3987]]. The predicate IRI MUST identify a relationship term permitted by the [Relationship Vocabulary](#relationship-vocabulary).
+
+The meaning of an asserted relationship MUST NOT be carried solely by unconstrained natural-language text. A human-readable predicate label MAY be provided as optional, localised presentation metadata. Such a label MUST NOT replace the `predicate` IRI and MUST NOT be used as the sole basis for semantic interpretation or validation.
+
+The applicable predicate declaration MUST define the predicate's semantics, direction, permitted subject kinds, permitted object kinds, version, and validation requirements.
+
+## Assertion payload {#assertionrecord-payload}
+
+The payload of an AssertionRecord MUST contain `subject`, `predicate`, `object`, `assertedBy`, and `assertedAt`.
+
+The value of `assertedBy` MUST identify the Agent responsible for the assertion. The applicable SchemaRecord MUST define the relationship between `assertedBy`, the Record owner, and the verification method used to finalise the AssertionRecord.
+
+```json
+{
+  "subject": {
+    "id": "did:rwp:record-A",
+    "snapshotHash": "sha256:..."
+  },
+  "predicate": "https://www.w3.org/ns/prov#wasDerivedFrom",
+  "object": {
+    "id": "did:rwp:record-B"
+  },
+  "assertedBy": "did:rwp:agent-...",
+  "assertedAt": "2026-08-13T11:00:00Z"
+}
+```
+
+The `subject` and `object` values MUST be identifiers that can be interpreted according to the applicable predicate and SchemaRecord.
+
+## Validation {#assertionrecord-validation}
+
+An AssertionRecord MUST be validated against its SchemaRecord before it is finalised.
+
+Validation MUST verify at least that:
+
+1. the `predicate` value is an absolute IRI;
+2. `subject`, `predicate`, and `object` are present;
+3. the subject and object satisfy the constraints declared for the predicate;
+4. the asserting Agent and time of assertion are available; and
+5. the AssertionRecord satisfies the normal Record integrity and finalisation requirements.
+
+Where the target namespace exposes an LDN inbox, the asserting party MAY notify the target custodian that a new AssertionRecord refers to one of its Records. Such a notification is informational only. It MUST NOT create an obligation to store, mirror, accept or reciprocate the relationship.
+
+An AssertionRecord MAY valid as an assertion even where a referenced external resource cannot be resolved, provided that the assertion identifies that resource unambiguously and the applicable SchemaRecord permits unresolved references. A failure to resolve a referenced resource MUST NOT be interpreted as a modification of, or rejection by, that resource's custodian.
+
+
+Relationship Vocabulary {#relationship-vocabulary}
+===================================================
+
+## Scope and conformance {#relationship-vocabulary-scope}
+
+This section defines the controlled relationship vocabulary used by [=AssertionRecord|AssertionRecords=].
+
+A conforming AssertionRecord MUST use a predicate IRI that is either:
+
+1. an applicable PROV-O predicate defined by this specification; or
+2. a predicate explicitly permitted by the SchemaRecord that defines the concrete AssertionRecord type.
+
+A Conformance Profile MAY require an implementation to create, validate, retain, or consume AssertionRecords using specified predicate vocabularies. A Conformance Profile MUST NOT itself define, broaden, reverse, or otherwise alter the semantics of a relationship predicate.
+
+For provenance and version-lineage relationships, the applicable PROV-O predicate MUST be used where PROV-O expresses the intended semantics.
+
+An AssertionRecord MUST NOT use a predicate whose semantics, direction, permitted subject and object kinds, version, and validation requirements are not declared by this specification or by an applicable conformance profile.
+
+The use of an IRI alone does not make a relationship predicate conformant.
+
+## Provenance and version-lineage predicates {#provenance-and-version-lineage-predicates}
+
+For provenance and version-lineage relationships, an AssertionRecord MUST use an applicable [[!PROVO]] predicate where a PROV-O predicate expresses the intended relationship semantics.
+
+The following PROV-O predicates are part of the RWP core relationship vocabulary:
+
+- `prov:wasAttributedTo`
+- `prov:wasGeneratedBy`
+- `prov:wasDerivedFrom`
+- `prov:wasRevisionOf`
+- `prov:actedOnBehalfOf`
+
+An AssertionRecord using a PROV-O predicate MUST satisfy the semantic domain and range constraints of that predicate.
+
+### Relationship to the RWP version graph {#assertionrecord-version-graph}
+
+The RWP version graph is the authoritative representation of version succession between snapshots of the same Record.
+
+A conforming implementation MUST determine RWP snapshot ancestry, direct parentage, branches, and merge relationships exclusively from the `parents` field and the rules defined in [=version-graph=].
+
+An AssertionRecord using `prov:wasRevisionOf`, `prov:wasDerivedFrom`, or another provenance predicate MUST NOT create, alter, replace, or repair a version-graph edge.
+
+Where an AssertionRecord documents a relationship between snapshots of the same Record, it MAY provide additional attributable documentary evidence. It MUST NOT be used to infer a parent relationship that is absent from the version graph.
+
+If an AssertionRecord and the version graph make incompatible statements about version succession, a conforming implementation MUST treat the version graph as authoritative for all RWP versioning, ancestry, finalisation, merge, and integrity decisions.
+
+An AssertionRecord that conflicts with the version graph remains an attributable assertion. Its conflict with the version graph MUST NOT alter the integrity or history of either referenced Record.
+
+In particular:
+
+- `prov:wasDerivedFrom` and `prov:wasRevisionOf` relate an Entity to an Entity;
+- `prov:wasGeneratedBy` relates an Entity to an Activity;
+- `prov:wasAttributedTo` relates an Entity to an Agent; and
+- `prov:actedOnBehalfOf` relates an Agent to an Agent.
+
+A Record is an Entity for the purposes of this section. A Record MUST NOT be used as the subject or object of a PROV-O predicate where the predicate's declared semantics require an Agent or an Activity.
+
+## Contextual relationships {#contextual-relationships}
+
+Institutional, functional, legal, subject-matter, and archival-context relationships are not necessarily provenance relationships. Such relationships MUST NOT be represented using a PROV-O predicate unless the PROV-O predicate expresses their intended semantics.
+
+A contextual relationship predicate MAY be used only where it is explicitly permitted by the SchemaRecord that defines the concrete AssertionRecord type.
+
+The applicable SchemaRecord MUST identify the permitted predicate IRIs, their applicable vocabulary versions, and the validation constraints that apply to them.
+
+A conformance profile that permits a contextual relationship predicate MUST declare the predicate's semantics, direction, permitted subject and object kinds, version, and validation requirements.
+
+A profile MAY declare a contextual relationship predicate defined by [=RICO=]. Where it does so, the profile MUST identify the exact RiC-O predicate IRI and the applicable RiC-O version. The profile MUST NOT redefine, broaden, or contradict the semantics of the declared RiC-O predicate.
+
+## RiC-O contextual predicates {#rico-contextual-predicates}
+
+[=RICO=] predicates MAY be used as `predicate` values in AssertionRecords only where they are explicitly permitted by an applicable conformance profile.
+
+The use of a RiC-O predicate does not require an implementation to store, exchange, or process Records as RDF or JSON-LD. In an AssertionRecord, the RiC-O IRI identifies the semantics of the asserted relationship.
+
+A conformance profile that permits a RiC-O predicate MUST declare:
+
+1. the exact predicate IRI;
+2. the RiC-O version to which the declaration applies;
+3. the semantics and direction of the predicate, with reference to the applicable RiC-O definition;
+4. the permitted subject kinds;
+5. the permitted object kinds;
+6. any additional RWP validation requirements; and
+7. the profile version in which the predicate is declared.
+
+A profile MUST NOT permit a RiC-O predicate where an applicable PROV-O predicate expresses the intended provenance or version-lineage semantics.
+
+A profile MAY impose constraints narrower than those of the declared RiC-O predicate. A profile MUST NOT broaden, reverse, or otherwise contradict the semantics or direction of the declared RiC-O predicate.
+
+## Schema predicate extensions {#schema-predicate-extensions}
+
+A conformance SchemaRecord MAY define additional relationship predicates or permit the use of specifically identified external relationship predicates.
+
+For each additional or externally permitted predicate, the SchemaRecord MUST declare:
+
+1. an absolute predicate IRI;
+2. a stable, versioned definition of its semantics;
+3. the relationship direction;
+4. the permitted subject kinds;
+5. the permitted object kinds;
+6. the required or permitted assertion metadata;
+7. the validation requirements; and
+8. the SchemaRecord version in which the predicate is declared.
+
+For an externally defined predicate, the SchemaRecord MUST additionally identify the external vocabulary and its applicable version.
+
+A SchemaRecord MUST NOT define or permit a predicate whose semantics duplicate an applicable PROV-O predicate. In that case, the applicable PROV-O predicate MUST be used.
+
+A SchemaRecord MAY constrain the use of an external predicate more narrowly than the defining vocabulary permits. A SchemaRecord MUST NOT broaden, reverse, or contradict the semantics or direction defined by that vocabulary.
+
+## Predicate declarations {#predicate-declarations}
+
+A predicate declaration MUST be versioned and resolvable through its IRI or through the applicable conformance profile.
+
+The declaration MUST provide a human-readable definition. It SHOULD provide machine-readable representations where available, including RDF, JSON-LD, SHACL, JSON Schema, or equivalent validation artefacts.
+
+A localised display label MAY accompany a predicate declaration. A display label is presentation metadata and MUST NOT replace the predicate IRI as the semantic identifier.
 
 
 Integrity and Hashing Procedures {#integrity}
@@ -866,7 +1213,7 @@ Requirements:
 
 ## Merkle Tree Algorithm ## {#merkle-algorithm}
 
-For the calculation of the [=Case=] [=Merkle root=], the following algorithm MUST be used:
+For the calculation of the [=CaseRecord=] [=Merkle root=], the following algorithm MUST be used:
 
 ```
 function merkleRoot(hashes: SHA256[]) -> SHA256:
@@ -893,7 +1240,7 @@ Optional Ledger Anchoring {#ledger}
 
 ## Purpose and Scope ## {#ledger-purpose}
 
-Ledger anchoring is an **optional extension** of RWP. It enables the external, immutable proof of [=Case=] [=Merkle roots=] on a distributed infrastructure.
+Ledger anchoring is an **optional extension** of RWP. It enables the external, immutable proof of [=CaseRecord=] [=Merkle roots=] on a distributed infrastructure.
 
 A system MUST be fully RWP-compliant without ledger anchoring. Ledger anchoring supplements the internal integrity assurance with an external proof independent of the operating organisation.
 
@@ -911,7 +1258,7 @@ If a system implements ledger anchoring, the ledger used MUST:
 
 ## Anchoring Protocol ## {#anchoring-protocol}
 
-When a finalised [=Case=] is anchored, the ledger entry MUST contain the following fields:
+When a finalised [=CaseRecord=] is anchored, the ledger entry MUST contain the following fields:
 
 ```json
 {
@@ -931,7 +1278,7 @@ The ledger entry MUST NOT contain any payload content, personal data, or classif
 
 ## Anchoring Reference in the Case ## {#anchoring-reference}
 
-When a [=Case=] has been anchored, the [=Case=] snapshot MUST be updated with an `anchorReference` field:
+When a [=CaseRecord=] has been anchored, the [=CaseRecord=] snapshot MUST be updated with an `anchorReference` field:
 
 ```json
 {
@@ -1041,7 +1388,7 @@ A [=Record=] in namespace `bern.ch` MAY contain [=hard links=] to [=Records=] in
 When resolving cross-namespace links, a system MUST:
 
 1. Extract the namespace component from the linked DID
-2. Discover the resolver endpoint via DNS TXT lookup (Section 12.3)
+2. Discover the resolver endpoint via DNS TXT lookup ([Resolver Requirements](#resolver-requirements))
 3. Verify the [=snapshot=] hash of the linked [=Record=] after retrieval
 4. Cache the resolved [=snapshot=] locally with the original hash for integrity verification
 
@@ -1129,61 +1476,418 @@ Typical use cases: driving licences, medical images, residence registration conf
 The citizen MAY present the Pod-held [=Record=] to any third party, who can independently verify its authenticity via the DID and cryptographic hash without querying the issuing authority.
 
 
-Conformance Requirements {#conformance-requirements}
-=========================================================
+Conformance and Implementation Claims {#conformance}
+=====================================================
 
-## Conformance Levels ## {#conformance-levels}
+## Scope of conformance {#conformance-scope}
 
-RWP defines two conformance levels.
+Conformance in RWP applies to an identifiable software implementation or software component.
+
+A conformance claim MUST identify:
+
+- the implementation;
+- the implementation version;
+- the RWP version;
+- the claimed profile or profiles, if applicable;
+- the claimed role or roles;
+- the assessment method; and
+- the applicable evidence or evidence reference.
+
+A conformance claim applies only to the Records, Record types, operations, and responsibilities covered by the claimed profiles and roles. It MUST NOT be interpreted as a claim that an entire product, organisation, deployment, or source system fulfils all RWP requirements.
+
+An implementation MAY claim multiple profiles and roles.
+
+An implementation claiming an RWP Record profile MUST claim at least one role.
+
+An implementation claiming only the `resolver` role MAY make a role-only claim without claiming an RWP Record profile.
+
+## Conformance terminology {#conformance-terminology}
+
+### Record validation {#record-validation}
+
+Record validation determines whether a specific Record or snapshot satisfies the applicable structural, semantic, and cryptographic requirements.
+
+Depending on the applicable profile and Record type, validation MAY include:
+
+- DID and DID-document resolution;
+- schema resolution and schema validation;
+- metadata validation;
+- payload and snapshot hash verification;
+- signature verification;
+- version-graph integrity;
+- state and finalisation rules;
+- Case-link and Merkle-root validation; and
+- AssertionRecord predicate and resource validation.
+
+A Record validation result applies only to the tested Record or snapshot. A successful validation result MUST NOT be interpreted as an implementation assessment, attestation, or certification.
+
+### Implementation assessment {#implementation-assessment}
+
+Implementation assessment determines whether a named implementation version fulfils all requirements of one or more claimed RWP profiles and roles.
+
+An implementation assessment MUST include positive and negative test cases relevant to every claimed profile and role.
+
+An assessment MAY use an official RecordWeb test suite, an independently developed test suite, or another documented assessment method.
+
+The result of an implementation assessment MAY be documented in a ConformanceRecord.
+
+### Attestation {#conformance-attestation}
+
+An attestation is a signed statement by an identifiable attester about an implementation assessment.
+
+An attestation MAY be self-attested or independently assessed.
+
+A ConformanceRecord is the RWP SystemRecord used to preserve such an attestation.
+
+### Certification {#conformance-certification}
+
+Certification is an institutional process outside the base RWP protocol.
+
+A certification scheme MAY use ConformanceRecords, test suites, and assessment reports as evidence. RWP does not define or require an accreditation authority, certification mark, liability regime, or certification revocation procedure.
+
+The presence of a ConformanceRecord MUST NOT by itself be interpreted as certification.
+
+## Profiles {#conformance-profiles}
+
+### RWP Information Record Conformant {#information-record-profile}
+
+An implementation claiming `RWP Information Record Conformant` MUST satisfy the applicable RWP requirements for InformationRecords according to its claimed roles.
+
+A producer claiming this profile MUST be able to create and finalise InformationRecords with the required identity, schema association, metadata, payload validation, integrity evidence, and version graph.
+
+A custodian claiming this profile MUST retain and make retrievable the InformationRecord snapshots for which it acts as custodian.
+
+A consumer claiming this profile MUST retrieve and validate InformationRecords in accordance with [=record-validation=].
+
+### RWP Case Record Conformant {#case-record-profile}
+
+An implementation claiming `RWP Case Record Conformant` MUST satisfy the applicable RWP requirements for CaseRecords according to its claimed roles.
+
+A producer claiming this profile MUST create and finalise CaseRecords in accordance with [=caserecord-specification=].
+
+A Case implementation MAY reference InformationRecords or other Records managed by another RWP implementation. It is not required to create, store, or own those linked Records.
+
+A CaseRecord producer or consumer MUST apply the applicable hard-link, soft-link, target-validation, and Merkle-root requirements.
+
+### RWP Assertion Record Conformant {#assertion-record-profile}
+
+An implementation claiming `RWP Assertion Record Conformant` MUST satisfy the applicable RWP requirements for AssertionRecords according to its claimed roles.
+
+A producer claiming this profile MUST create AssertionRecords with a valid SchemaRecord, a permitted predicate IRI, valid subject and object references, an asserting Agent, a time of assertion, and the required Record integrity evidence.
+
+A consumer claiming this profile MUST validate AssertionRecords in accordance with [=assertionrecord-validation=] and [=relationship-vocabulary-scope=].
+
+A custodian claiming this profile MUST retain and make retrievable the AssertionRecord snapshots for which it acts as custodian.
+
+### RWP Relation Record Conformant {#relation-record-profile}
+
+An implementation MAY claim `RWP Relation Record Conformant` only if it also claims both `RWP Case Record Conformant` and `RWP Assertion Record Conformant`.
+
+`RWP Relation Record Conformant` introduces no requirements beyond the combined requirements of those two profiles.
+
+### RWP Source Integration Conformant {#source-integration-profile}
+
+An implementation claiming `RWP Source Integration Conformant` MUST provide a source-provenance statement for every source object that it exposes to, captures for, or transfers into an RWP context.
+
+The source integration profile is independent of RWP Record production. A source-adapter MAY claim this profile without creating an RWP DID, Record, or snapshot.
+
+If a source-adapter creates and finalises an RWP InformationRecord, it MUST additionally satisfy the applicable requirements of `RWP Information Record Conformant`.
+
+A source-provenance statement MUST contain:
+
+```json
+{
+  "sourceSystem": "https://jira.example.org",
+  "sourceId": "PROJ-1234",
+  "sourceObjectType": "jira:Issue",
+  "capturedAt": "2026-08-13T00:00:00Z",
+  "capturedBy": "did:rwp:example.org:source-adapter-001",
+  "sourceIntegrity": "platform-versioned"
+}
+```
+
+The following fields are required:
+
+- `sourceSystem`;
+- `sourceId`;
+- `sourceObjectType`;
+- `capturedAt`;
+- `capturedBy`; and
+- `sourceIntegrity`.
+
+The combination of `sourceSystem` and `sourceId` MUST identify the source object unambiguously within the source system.
+
+A source-provenance statement MAY additionally contain `sourceUrl`, `sourceVersion`, `sourceRevision`, `sourceETag`, `sourceModifiedAt`, `exportPayload`, `exportPayloadHash`, and `exportFormat`.
+
+The `sourceIntegrity` value MUST be one of:
+
+- `none`: no independently usable source version or integrity signal is available;
+- `platform-versioned`: the source system exposes a stable version, revision, ETag, or comparable platform-managed state indicator;
+- `source-signed`: the source system exposes a verifiable source signature or equivalent cryptographic origin signal; or
+- `externally-hashed`: the capture component has produced a hash over a defined export representation.
+
+A source-integrity value describes guarantees available about the source object before or at capture. It MUST NOT be interpreted as a statement about the integrity of a subsequently created RWP Record.
+
+## Implementation roles {#conformance-roles}
+
+RWP defines the following implementation roles:
 
 <table class="data">
   <thead>
-    <tr><th>Level</th><th>Chapters</th><th>Description</th></tr>
+    <tr><th>Role</th><th>Responsibility</th></tr>
   </thead>
   <tbody>
     <tr>
-      <td><strong>Level 1 — Basic</strong></td>
-      <td>2, 3, 4, 5, 6, 7, 9</td>
-      <td>Record identity, snapshots, payload, hashing, version graph. Systems fulfilling Level 1 can interoperate with one another.</td>
+      <td><code>producer</code></td>
+      <td>Creates a new Record or a new snapshot, including its finalisation where applicable.</td>
     </tr>
     <tr>
-      <td><strong>Level 2 — Full</strong></td>
-      <td>2–9, 12, 13</td>
-      <td>All Level 1 requirements plus Cases, federation, and payload deletion. Systems fulfilling Level 2 can produce complete, provable Cases.</td>
+      <td><code>custodian</code></td>
+      <td>Retains, manages, and makes Records or snapshots retrievable.</td>
+    </tr>
+    <tr>
+      <td><code>consumer</code></td>
+      <td>Retrieves and validates Records created or managed by another implementation.</td>
+    </tr>
+    <tr>
+      <td><code>resolver</code></td>
+      <td>Resolves <code>did:rwp</code> identifiers and returns the associated DID documents.</td>
+    </tr>
+    <tr>
+      <td><code>source-adapter</code></td>
+      <td>Obtains, normalises, and exposes source-provenance information from a non-RWP source system.</td>
+    </tr>
+    <tr>
+      <td><code>attester</code></td>
+      <td>Creates and finalises a ConformanceRecord concerning an implementation assessment.</td>
     </tr>
   </tbody>
 </table>
 
-## Level 1 Checklist ## {#level-1-checklist}
+A role describes a responsibility. It does not imply that an implementation fulfils requirements outside its claimed profiles, roles, or exercised capabilities.
 
-A system claiming Level 1 conformance MUST implement:
+## Capability-bound requirements {#capability-bound-requirements}
 
-- [ ] DID generation per Section 2.2 (`did:rwp:<namespace>:<uuid-v4>`)
-- [ ] DID document per Section 2.3 with all MUST fields
-- [ ] DID resolver per Section 2.4 (HTTP 200/404/410)
-- [ ] Snapshot structure per Section 3.2 with minimum metadata set (Section 3.3)
-- [ ] Snapshot hash calculation per Section 3.4 (SHA-256 + RFC 8785)
-- [ ] Payload validation before finalisation per Section 4.1
-- [ ] SchemaRecord support per Section 5.2
-- [ ] Core Record types per Section 5.3
-- [ ] State model (draft/finalized) per Section 6.1
-- [ ] Finalisation checks per Section 6.3
-- [ ] Version graph as DAG per Section 7.1 (cycle detection MUST)
-- [ ] SHA-256 exclusively per Section 9.1
-- [ ] RFC 8785 canonical JSON per Section 9.2
+Support for a SystemRecord capability MUST be required only where an implementation claims or exercises that capability.
 
-## Level 2 Checklist ## {#level-2-checklist}
+<table class="data">
+  <thead>
+    <tr>
+      <th>Capability</th>
+      <th>Information Record</th>
+      <th>Case Record</th>
+      <th>Assertion Record</th>
+      <th>Source Integration</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Create a Record DID</td>
+      <td>MUST for a producer</td>
+      <td>MUST for a producer</td>
+      <td>MUST for a producer</td>
+      <td>Not required</td>
+    </tr>
+    <tr>
+      <td>Bind a created Record to a SchemaRecord</td>
+      <td>MUST for a producer</td>
+      <td>MUST for a producer</td>
+      <td>MUST for a producer</td>
+      <td>Not required</td>
+    </tr>
+    <tr>
+      <td>Create and validate immutable snapshots</td>
+      <td>MUST for a producer and consumer</td>
+      <td>MUST for a producer and consumer</td>
+      <td>MUST for a producer and consumer</td>
+      <td>Not required</td>
+    </tr>
+    <tr>
+      <td>Retain and retrieve snapshots</td>
+      <td>MUST for a custodian</td>
+      <td>MUST for a custodian</td>
+      <td>MUST for a custodian</td>
+      <td>Not required</td>
+    </tr>
+    <tr>
+      <td>Maintain a version graph</td>
+      <td>MUST for Records it creates or custodises</td>
+      <td>MUST for CaseRecords it creates or custodises</td>
+      <td>MUST for AssertionRecords it creates or custodises</td>
+      <td>Not required</td>
+    </tr>
+    <tr>
+      <td>Create and validate Case links</td>
+      <td>Not required</td>
+      <td>MUST for a producer and consumer</td>
+      <td>Not required</td>
+      <td>Not required</td>
+    </tr>
+    <tr>
+      <td>Create and validate Assertions</td>
+      <td>Not required</td>
+      <td>Not required</td>
+      <td>MUST for a producer and consumer</td>
+      <td>Not required</td>
+    </tr>
+    <tr>
+      <td>Validate external hard-link targets</td>
+      <td>Not required</td>
+      <td>MUST when finalising or validating a CaseRecord</td>
+      <td>MUST when finalising or validating an AssertionRecord</td>
+      <td>Not required</td>
+    </tr>
+    <tr>
+      <td>Provide source provenance</td>
+      <td>MAY</td>
+      <td>MAY</td>
+      <td>MAY</td>
+      <td>MUST</td>
+    </tr>
+    <tr>
+      <td>Support SchemaRecord</td>
+      <td>MUST where Records are created or validated against a schema</td>
+      <td>MUST where CaseRecords are created or validated against a schema</td>
+      <td>MUST where AssertionRecords are created or validated against a schema</td>
+      <td>Not required</td>
+    </tr>
+    <tr>
+      <td>Support CaseRecord</td>
+      <td>Not required</td>
+      <td>MUST</td>
+      <td>Not required</td>
+      <td>Not required</td>
+    </tr>
+    <tr>
+      <td>Support AssertionRecord</td>
+      <td>MUST only when creating, validating, or consuming AssertionRecords</td>
+      <td>MUST only when creating, validating, or consuming AssertionRecords</td>
+      <td>MUST</td>
+      <td>Not required</td>
+    </tr>
+    <tr>
+      <td>Support MergeRecord</td>
+      <td>MUST only when creating a merge snapshot</td>
+      <td>MUST only when creating a merge snapshot</td>
+      <td>MUST only when creating a merge snapshot</td>
+      <td>Not required</td>
+    </tr>
+    <tr>
+      <td>Support DeletionRecord</td>
+      <td>MUST only when executing payload deletion</td>
+      <td>MUST only when executing payload deletion</td>
+      <td>MUST only when executing payload deletion</td>
+      <td>Not required</td>
+    </tr>
+    <tr>
+      <td>Support MigrationRecord</td>
+      <td>MUST only when performing a documented migration</td>
+      <td>MUST only when performing a documented migration</td>
+      <td>MUST only when performing a documented migration</td>
+      <td>Not required</td>
+    </tr>
+    <tr>
+      <td>Support ConformanceRecord</td>
+      <td>MUST only for an attester</td>
+      <td>MUST only for an attester</td>
+      <td>MUST only for an attester</td>
+      <td>MUST only for an attester</td>
+    </tr>
+  </tbody>
+</table>
 
-A system claiming Level 2 conformance MUST additionally implement:
+A resolver claiming the `resolver` role MUST satisfy the DID resolution requirements defined in [=did-resolver=] and, where applicable, [=resolver-requirements=].
 
-- [ ] CaseRecord per Chapter 8 (trigger, context, process, decision, result)
-- [ ] Hard and soft link distinction per Section 8.4
-- [ ] Merkle root calculation per Section 8.5 and 9.5
-- [ ] Case completeness check per Section 8.6
-- [ ] Federation resolver per Section 12.3 (DNS TXT lookup)
-- [ ] Cross-namespace link resolution per Section 12.4
-- [ ] Deletion regime declaration per Section 13.1
-- [ ] DeletionRecord protocol per Section 13.3
+An implementation MUST NOT claim support for a profile or role unless it fulfils all requirements applicable to that claim.
+
+## ConformanceRecord {#conformance-record}
+
+A <dfn>ConformanceRecord</dfn> is a SystemRecord that preserves an attestation concerning an identifiable implementation version.
+
+A ConformanceRecord MUST satisfy all normal Record requirements, including DID, schema association, snapshot integrity, finalisation, and the applicable signature requirements.
+
+The owner of a finalised ConformanceRecord MUST be the attester identified in its payload.
+
+The SchemaRecord for a ConformanceRecord MUST require at least the following payload structure:
+
+```json
+{
+  "subject": {
+    "implementationDid": "did:rwp:example.org:implementation-001",
+    "productName": "Example Product",
+    "productVersion": "1.2.3"
+  },
+  "rwpVersion": "0.0.3",
+  "claims": [
+    {
+      "profiles": [
+        "RWP Information Record Conformant"
+      ],
+      "roles": [
+        "producer",
+        "custodian",
+        "consumer"
+      ]
+    }
+  ],
+  "assessment": {
+    "method": "self-attested",
+    "testSuite": "did:rwp:recordweb.org:test-suite:0.0.3",
+    "tool": "Example Validator",
+    "toolVersion": "1.0.0",
+    "testedAt": "2026-08-13T00:00:00Z"
+  },
+  "attester": "did:rwp:example.org:implementation-001",
+  "issuedAt": "2026-08-13T00:00:00Z",
+  "expiresAt": null,
+  "evidence": [
+    {
+      "type": "test-report",
+      "url": "https://example.org/conformance/report.json",
+      "hash": "sha256:..."
+    }
+  ],
+  "supersedes": []
+}
+```
+
+The ConformanceRecord payload MUST contain:
+
+- `subject.implementationDid`;
+- `subject.productName`;
+- `subject.productVersion`;
+- `rwpVersion`;
+- at least one entry in `claims`;
+- `assessment.method`;
+- `attester`;
+- `issuedAt`; and
+- `evidence`.
+
+Every claim entry MUST contain at least one role. A claim entry containing a profile MUST identify only profiles defined by this specification or by a versioned extension specification.
+
+The value of `assessment.method` MUST be one of:
+
+- `self-attested`;
+- `independently-assessed`; or
+- `certified`.
+
+The value `certified` is reserved for use by an external certification regime. Its use MUST NOT imply that RecordWeb operates, endorses, or recognises that regime.
+
+Each evidence entry MUST identify its type and MUST include either a resolvable `url`, a cryptographic `hash`, or both.
+
+A ConformanceRecord MAY include `expiresAt`.
+
+A newer ConformanceRecord MAY supersede an earlier ConformanceRecord. Supersession MUST NOT alter, invalidate, or remove the earlier attestation. A superseding ConformanceRecord MUST identify every superseded ConformanceRecord by DID.
+
+## Conformance claims and evidence {#conformance-claims}
+
+An implementation MAY publish a ConformanceRecord.
+
+An implementation claiming a profile or role SHOULD make its current ConformanceRecord or equivalent signed conformance statement discoverable.
+
+A verifier or procuring organisation MUST evaluate a conformance claim according to its own trust policy, including the identity of the attester, the assessment method, the evidence, the implementation version, and the applicable RWP version.
+
+A verifier MUST NOT treat self-attestation, independent assessment, and certification as equivalent assurance levels.
 
 
 Annex A: Normative JSON Schemas {#annex-a}
@@ -1231,9 +1935,9 @@ Annex A: Normative JSON Schemas {#annex-a}
   "$id": "https://recordweb.github.io/rwp/schemas/case-record.json",
   "title": "RWP CaseRecord Payload",
   "type": "object",
-  "required": ["caseId","caseType","title","trigger","merkleRoot"],
+  "required": ["recordDid","caseType","title","trigger","merkleRoot"],
   "properties": {
-    "caseId":     { "type": "string", "pattern": "^did:rwp:" },
+    "recordDid":  { "type": "string", "pattern": "^did:rwp:" },
     "caseType":   { "type": "string", "pattern": "^did:rwp:" },
     "title":      { "type": "string" },
     "trigger":    { "$ref": "#/$defs/hardLink" },
@@ -1328,10 +2032,10 @@ The following technology choices are recommended for a first RWP implementation:
 
 For a first pilot, the following Level 1 subset is recommended:
 
-1. Implement DID generation and DID document (Sections 2.2–2.3)
-2. Implement snapshot creation with minimum metadata set (Section 3.3)
-3. Implement SHA-256 snapshot hash calculation (Section 3.4)
-4. Implement draft → finalized state transition with schema validation (Section 6.3)
-5. Implement version graph storage (Section 7.1) — without branch detection initially
+1. Implement DID generation and the [DID Format](#did-format) and [DID Document](#did-document) requirements
+2. Implement snapshot creation with the [Minimum Metadata Set](#metadata-set)
+3. Implement [Snapshot Hash Calculation](#snapshot-hash)
+4. Implement the `draft` → `finalized` state transition with [Finalisation Requirements](#finalisation-requirements)
+5. Implement [Graph Structure](#graph-structure) without branch detection initially
 
 This covers the critical path: a Record can be created, finalised, and its integrity verified. Cases and federation can be added in a subsequent iteration.
