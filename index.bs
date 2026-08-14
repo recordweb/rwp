@@ -30,7 +30,7 @@ Previous Version: https://doi.org/10.5281/zenodo.20475345
       "href": "https://www.hyperledger.org/projects/fabric",
       "publisher": "Linux Foundation"
   },
-  "ISO 15489-1:2016": {
+  "ISO15489": {
       "title": "Information and documentation — Records management, Part 1: Concepts and principles",
       "href": "https://www.iso.org/standard/62542.html",
       "date": "2016"
@@ -147,7 +147,7 @@ The Record {#chapter-record}
 
 ## Definition {#record-definition}
 
-For the purposes of this specification, <dfn>Record</dfn> has the meaning defined in [[!ISO 15489-1:2016]], clause 3.14. A Record MUST have the identity, structure, payload, type, schema, state, version and integrity evidence required by this specification.
+For the purposes of this specification, <dfn>Record</dfn> has the meaning defined in [[ISO15489]], clause 3.14. A Record MUST have the identity, structure, payload, type, schema, state, version and integrity evidence required by this specification.
 
 For semantic interoperability, a Record is a specialization of 'prov:Entity'. The term Record remains the primary term of this specification. The term 'prov:Entity' is used only for a [[!PROVO]]-compatible semantic representation.
 
@@ -212,11 +212,11 @@ AssertionRecords are defined in [AssertionRecord Specification](#assertionrecord
 
 A [=SchemaRecord=] is a [=SystemRecord=]. It defines a concrete Record Type and its associated schema and validation requirements.
 
-A <dfn>MergeRecord</dfn> is a [=SystemRecord=].
+A MergeRecord is a [=SystemRecord=].
 
-A <dfn>DeletionRecord</dfn> is a [=SystemRecord=].
+A DeletionRecord is a [=SystemRecord=].
 
-A <dfn>MigrationRecord</dfn> is a [=SystemRecord=].
+A MigrationRecord is a [=SystemRecord=].
 
 A [=ConformanceRecord=] is a [=SystemRecord=].
 
@@ -706,7 +706,7 @@ Such a snapshot MUST:
 - retain the DID of the Record;
 - reference the superseded or revised snapshot in its `parents` field;
 - include a `correctionReason` or equivalent schema-defined rationale where applicable; and
-- complete the normal finalisation process defined in [=finalisation-requirements=].
+- complete the normal finalisation process defined in [Finalisation Requirements](#finalisation-requirements).
 
 An implementation MUST NOT represent a correction, revision, replacement, or continuation of the same Record as a new Record that is related to the earlier Record only through an AssertionRecord or another cross-Record relationship.
 
@@ -1074,7 +1074,7 @@ An AssertionRecord using a PROV-O predicate MUST satisfy the semantic domain and
 
 The RWP version graph is the authoritative representation of version succession between snapshots of the same Record.
 
-A conforming implementation MUST determine RWP snapshot ancestry, direct parentage, branches, and merge relationships exclusively from the `parents` field and the rules defined in [=version-graph=].
+A conforming implementation MUST determine RWP snapshot ancestry, direct parentage, branches, and merge relationships exclusively from the `parents` field and the rules defined in [Version Graph](#version-graph-chapter).
 
 An AssertionRecord using `prov:wasRevisionOf`, `prov:wasDerivedFrom`, or another provenance predicate MUST NOT create, alter, replace, or repair a version-graph edge.
 
@@ -1103,11 +1103,11 @@ The applicable SchemaRecord MUST identify the permitted predicate IRIs, their ap
 
 A conformance profile that permits a contextual relationship predicate MUST declare the predicate's semantics, direction, permitted subject and object kinds, version, and validation requirements.
 
-A profile MAY declare a contextual relationship predicate defined by [=RICO=]. Where it does so, the profile MUST identify the exact RiC-O predicate IRI and the applicable RiC-O version. The profile MUST NOT redefine, broaden, or contradict the semantics of the declared RiC-O predicate.
+A profile MAY declare a contextual relationship predicate defined by [[RICO]]. Where it does so, the profile MUST identify the exact RiC-O predicate IRI and the applicable RiC-O version. The profile MUST NOT redefine, broaden, or contradict the semantics of the declared RiC-O predicate.
 
 ## RiC-O contextual predicates {#rico-contextual-predicates}
 
-[=RICO=] predicates MAY be used as `predicate` values in AssertionRecords only where they are explicitly permitted by an applicable conformance profile.
+[[RICO]] predicates MAY be used as `predicate` values in AssertionRecords only where they are explicitly permitted by an applicable conformance profile.
 
 The use of a RiC-O predicate does not require an implementation to store, exchange, or process Records as RDF or JSON-LD. In an AssertionRecord, the RiC-O IRI identifies the semantics of the asserted relationship.
 
@@ -1557,13 +1557,13 @@ A producer claiming this profile MUST be able to create and finalise Information
 
 A custodian claiming this profile MUST retain and make retrievable the InformationRecord snapshots for which it acts as custodian.
 
-A consumer claiming this profile MUST retrieve and validate InformationRecords in accordance with [=record-validation=].
+A consumer claiming this profile MUST retrieve and validate InformationRecords in accordance with [Record validation](#record-validation).
 
 ### RWP Case Record Conformant {#case-record-profile}
 
 An implementation claiming `RWP Case Record Conformant` MUST satisfy the applicable RWP requirements for CaseRecords according to its claimed roles.
 
-A producer claiming this profile MUST create and finalise CaseRecords in accordance with [=caserecord-specification=].
+A producer claiming this profile MUST create and finalise CaseRecords in accordance with [CaseRecord Specification](#caserecord-specification).
 
 A Case implementation MAY reference InformationRecords or other Records managed by another RWP implementation. It is not required to create, store, or own those linked Records.
 
@@ -1575,7 +1575,7 @@ An implementation claiming `RWP Assertion Record Conformant` MUST satisfy the ap
 
 A producer claiming this profile MUST create AssertionRecords with a valid SchemaRecord, a permitted predicate IRI, valid subject and object references, an asserting Agent, a time of assertion, and the required Record integrity evidence.
 
-A consumer claiming this profile MUST validate AssertionRecords in accordance with [=assertionrecord-validation=] and [=relationship-vocabulary-scope=].
+A consumer claiming this profile MUST validate AssertionRecords in accordance with [AssertionRecord validation](#assertionrecord-validation) and [Relationship Vocabulary scope](#relationship-vocabulary-scope).
 
 A custodian claiming this profile MUST retain and make retrievable the AssertionRecord snapshots for which it acts as custodian.
 
@@ -1796,7 +1796,8 @@ Support for a SystemRecord capability MUST be required only where an implementat
   </tbody>
 </table>
 
-A resolver claiming the `resolver` role MUST satisfy the DID resolution requirements defined in [=did-resolver=] and, where applicable, [=resolver-requirements=].
+A resolver claiming the `resolver` role MUST satisfy the DID resolution requirements defined in [DID Resolver Requirements](#did-resolver) and, where applicable, [Resolver Requirements](#resolver-requirements)
+.
 
 An implementation MUST NOT claim support for a profile or role unless it fulfils all requirements applicable to that claim.
 
