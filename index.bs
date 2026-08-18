@@ -677,11 +677,11 @@ rejected (terminal state, not linkable)
 
 ## Linkability ## {#linkability}
 
-A [=Record=] MUST NOT be used as the target of a hard link when its current state is [=draft=].
+A [=Record=] MUST be in the [=finalized=] state to be used as the target of a hard link.
 
-A system MUST return an error when an attempt is made to set a hard link to a [=draft=] Record.
+A system MUST return an error when an attempt is made to set a hard link to a Record that is not in the [=finalized=] state.
 
-Exception: Working references (soft links) per Section 8.4 MAY point to [=draft=] Records.
+Exception: Working references (soft links) per [[#working-references]] MAY point to Records in any state, including [=draft=] Records.
 
 ## Finalisation Requirements ## {#finalisation-requirements}
 
