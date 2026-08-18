@@ -139,8 +139,6 @@ This document uses semantic versioning (SemVer): `MAJOR.MINOR.PATCH`.
 - **MINOR**: Backward-compatible extensions
 - **PATCH**: Corrections without substantive change
 
-The current version is **0.0.2** (Draft — not yet approved for production implementations).
-
 
 The Record {#chapter-record}
 =====================================
@@ -681,7 +679,7 @@ A [=Record=] MUST be in the [=finalized=] state to be used as the target of a ha
 
 A system MUST return an error when an attempt is made to set a hard link to a Record that is not in the [=finalized=] state.
 
-Exception: Working references (soft links) per working-references MAY point to Records in any state, including [=draft=] Records.
+Exception: Soft links per [Hard and Soft Links](#links) MAY point to Records in any state, including [=draft=] Records.
 
 ## Finalisation Requirements ## {#finalisation-requirements}
 
@@ -851,7 +849,9 @@ A `CaseRecord` payload MUST contain the following fields:
 
 ## Case Elements (normative) ## {#case-elements}
 
-A complete [=CaseRecord=] MUST contain all five Case elements. An element that permits an empty value is considered present when it is represented in the CaseRecord payload, even if its value is an empty array or `null`, as applicable. A Record MAY fulfil multiple elements.
+Before a [=CaseRecord=] is finalised, its payload MUST contain all five Case element fields: `trigger`, `context`, `process`, `decision`, and `result`. The finalisation constraints for each element are defined in the following table. An element that permits an empty value is considered present when it is represented in the CaseRecord payload, even if its value is an empty array or `null`, as applicable. A Record MAY fulfil multiple elements.
+
+A draft CaseRecord MAY omit one or more Case element fields. Before finalisation, the system MUST validate and, where necessary, require completion of the Case element fields in accordance with this section.
 
 Unless a CaseRecord schema defines more specific constraints, every Case element MAY link to any Record type, including another CaseRecord.
 
@@ -1278,7 +1278,7 @@ The ledger entry MUST NOT contain any payload content, personal data, or classif
 
 ## Anchoring Reference in the Case ## {#anchoring-reference}
 
-When a [=CaseRecord=] has been anchored, the [=CaseRecord=] snapshot MUST be updated with an `anchorReference` field:
+When a [=CaseRecord=] has been anchored, the anchored CaseRecord snapshot MUST NOT be modified. The system MAY create a new CaseRecord snapshot that references the anchored predecessor through `parents` and contains an `anchorReference` field. The `caseSnapshotHash` in the ledger entry MUST always identify the immutable snapshot that was actually anchored.
 
 ```json
 {
@@ -1476,30 +1476,30 @@ Typical use cases: driving licences, medical images, residence registration conf
 The citizen MAY present the Pod-held [=Record=] to any third party, who can independently verify its authenticity via the DID and cryptographic hash without querying the issuing authority.
 
 
-Conformance and Implementation Claims {#conformance}
+Conformance and Implementation Claims {#chapter-conformance}
 =====================================================
 
 ## Scope of conformance {#conformance-scope}
 
 Conformance in RWP applies to an identifiable software implementation or software component.
 
-A conformance claim MUST identify:
+A <dfn>conformance</dfn> claim MUST identify:
 
-- the implementation;
-- the implementation version;
-- the RWP version;
-- the claimed profile or profiles, if applicable;
-- the claimed role or roles;
-- the assessment method; and
-- the applicable evidence or evidence reference.
+1. the implementation;
+2. the implementation version;
+3. the RWP version;
+4. the claimed profile or profiles, if applicable;
+5. the claimed role or roles;
+6. the assessment method; and
+7. the applicable evidence or evidence reference.
 
 A conformance claim applies only to the Records, Record types, operations, and responsibilities covered by the claimed profiles and roles. It MUST NOT be interpreted as a claim that an entire product, organisation, deployment, or source system fulfils all RWP requirements.
 
 An implementation MAY claim multiple profiles and roles.
 
-An implementation claiming an RWP Record profile MUST claim at least one role.
+An implementation claiming any conformance profile MUST claim at least one role, except that an implementation claiming only the `resolver` role MAY make a role-only claim as specified below.
 
-An implementation claiming only the `resolver` role MAY make a role-only claim without claiming an RWP Record profile.
+An implementation claiming the `resolver` role MAY make a role-only claim without claiming an RWP Record profile. A role-only resolver claim MUST identify the `resolver` role and MUST NOT include an RWP Record profile unless the implementation also claims the roles required for that profile.
 
 ## Conformance terminology {#conformance-terminology}
 
@@ -1591,6 +1591,8 @@ An implementation claiming `RWP Source Integration Conformant` MUST provide a so
 
 The source integration profile is independent of RWP Record production. A source-adapter MAY claim this profile without creating an RWP DID, Record, or snapshot.
 
+For every source object within its claimed scope, a conforming source-adapter MUST make the corresponding source-provenance statement available to the receiving RWP implementation or include it in the exported representation. The statement MAY be represented as JSON. Where the source-adapter retains the statement after transfer, it MUST make the statement retrievable by the combination of `sourceSystem` and `sourceId`.
+
 If a source-adapter creates and finalises an RWP InformationRecord, it MUST additionally satisfy the applicable requirements of `RWP Information Record Conformant`.
 
 A source-provenance statement MUST contain:
@@ -1632,37 +1634,12 @@ A source-integrity value describes guarantees available about the source object 
 
 RWP defines the following implementation roles:
 
-<table class="data">
-  <thead>
-    <tr><th>Role</th><th>Responsibility</th></tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code>producer</code></td>
-      <td>Creates a new Record or a new snapshot, including its finalisation where applicable.</td>
-    </tr>
-    <tr>
-      <td><code>custodian</code></td>
-      <td>Retains, manages, and makes Records or snapshots retrievable.</td>
-    </tr>
-    <tr>
-      <td><code>consumer</code></td>
-      <td>Retrieves and validates Records created or managed by another implementation.</td>
-    </tr>
-    <tr>
-      <td><code>resolver</code></td>
-      <td>Resolves <code>did:rwp</code> identifiers and returns the associated DID documents.</td>
-    </tr>
-    <tr>
-      <td><code>source-adapter</code></td>
-      <td>Obtains, normalises, and exposes source-provenance information from a non-RWP source system.</td>
-    </tr>
-    <tr>
-      <td><code>attester</code></td>
-      <td>Creates and finalises a ConformanceRecord concerning an implementation assessment.</td>
-    </tr>
-  </tbody>
-</table>
+1. A <dfn>producer</dfn> creates a new Record or a new snapshot, including its finalisation where applicable. A producer MUST fulfil all requirements applicable to the profile, Record type, and operation it performs when creating, modifying, or finalising a Record representation.
+2. A <dfn>custodian</dfn> retains, manages, and makes Records or snapshots retrievable. For each Record representation within its claimed scope, a custodian MUST preserve the information required to verify its applicable RWP integrity and versioning requirements. A custodian is not required to create a new Record or snapshot solely by claiming the custodian role.
+3. A <dfn>consumer</dfn> retrieves and validates Records created or managed by another implementation. A consumer MUST validate all requirements applicable to its claimed profile and to the Record type being consumed. A consumer MUST NOT represent a Record as conformant when required validation fails.
+4. A <dfn>resolver</dfn> resolves <code>did:rwp</code> identifiers and returns the associated DID documents according to the applicable RWP DID-document requirements.
+5. A <dfn>source-adapter</dfn> obtains, normalises, and exposes source-provenance information from a non-RWP source system. A source-adapter MUST NOT represent a source-integrity statement as an RWP Record-integrity statement unless it has also created and validated the corresponding RWP Record representation.
+6. An <dfn>attester</dfn> creates and finalises a ConformanceRecord concerning an implementation assessment.
 
 A role describes a responsibility. It does not imply that an implementation fulfils requirements outside its claimed profiles, roles, or exercised capabilities.
 
@@ -1696,10 +1673,10 @@ Support for a SystemRecord capability MUST be required only where an implementat
       <td>Not required</td>
     </tr>
     <tr>
-      <td>Create and validate immutable snapshots</td>
-      <td>MUST for a producer and consumer</td>
-      <td>MUST for a producer and consumer</td>
-      <td>MUST for a producer and consumer</td>
+      <td>Create immutable snapshots; retrieve and validate snapshots</td>
+      <td>A producer MUST create immutable snapshots. A consumer MUST retrieve and validate snapshots in accordance with [Record validation](#record-validation).</td>
+      <td>A producer MUST create immutable snapshots. A consumer MUST retrieve and validate snapshots in accordance with [Record validation](#record-validation).</td>
+      <td>A producer MUST create immutable snapshots. A consumer MUST retrieve and validate snapshots in accordance with [Record  validation](#record-validation).</td>
       <td>Not required</td>
     </tr>
     <tr>
@@ -1731,10 +1708,10 @@ Support for a SystemRecord capability MUST be required only where an implementat
       <td>Not required</td>
     </tr>
     <tr>
-      <td>Validate external hard-link targets</td>
+      <td>Validate external references</td>
       <td>Not required</td>
-      <td>MUST when finalising or validating a CaseRecord</td>
-      <td>MUST when finalising or validating an AssertionRecord</td>
+      <td>MUST when finalising or validating a CaseRecord. The implementation MUST resolve each hard-link target and verify that the identified snapshot belongs to the identified Record, subject to the applicable federation and offline-validation rules.</td>
+      <td>Where an AssertionRecord resource reference contains <code>snapshotHash</code> and the target snapshot is resolvable, MUST verify that the snapshot belongs to the identified Record. An unresolved external resource MUST be handled in accordance with the applicable AssertionRecord SchemaRecord.</td>
       <td>Not required</td>
     </tr>
     <tr>
@@ -1796,8 +1773,7 @@ Support for a SystemRecord capability MUST be required only where an implementat
   </tbody>
 </table>
 
-A resolver claiming the `resolver` role MUST satisfy the DID resolution requirements defined in [DID Resolver Requirements](#did-resolver) and, where applicable, [Resolver Requirements](#resolver-requirements)
-.
+A resolver claiming the `resolver` role MUST satisfy the DID resolution requirements defined in [DID Resolver Requirements](#did-resolver) and, where applicable, [Resolver Requirements](#resolver-requirements).
 
 An implementation MUST NOT claim support for a profile or role unless it fulfils all requirements applicable to that claim.
 
@@ -1833,6 +1809,7 @@ The SchemaRecord for a ConformanceRecord MUST require at least the following pay
   ],
   "assessment": {
     "method": "self-attested",
+    "assurance": "self-attested",
     "testSuite": "did:rwp:recordweb.org:test-suite:0.0.3",
     "tool": "Example Validator",
     "toolVersion": "1.0.0",
@@ -1864,9 +1841,14 @@ The ConformanceRecord payload MUST contain:
 - `issuedAt`; and
 - `evidence`.
 
-Every claim entry MUST contain at least one role. A claim entry containing a profile MUST identify only profiles defined by this specification or by a versioned extension specification.
+Every claim entry MUST contain at least one role. A claim entry containing `RWP Source Integration Conformant` MUST contain the `source-adapter` role. A claim entry containing a profile MUST identify only profiles defined by this specification or by a versioned extension specification.
 
 The value of `assessment.method` MUST be one of:
+
+- `self-attested`; or
+- `independently-assessed`.
+
+A ConformanceRecord MAY contain an `assurance` field. If present, its value MUST be one of:
 
 - `self-attested`;
 - `independently-assessed`; or
@@ -1874,7 +1856,7 @@ The value of `assessment.method` MUST be one of:
 
 The value `certified` is reserved for use by an external certification regime. Its use MUST NOT imply that RecordWeb operates, endorses, or recognises that regime.
 
-Each evidence entry MUST identify its type and MUST include either a resolvable `url`, a cryptographic `hash`, or both.
+Each evidence entry MUST identify its type. Each evidence entry that refers to externally retrievable evidence MUST include a resolvable `url` and a cryptographic `hash` of the referenced evidence bytes. An evidence entry without a `url` MUST include a cryptographic `hash` and sufficient embedded or separately identified content for an independent verifier to obtain the hashed evidence.
 
 A ConformanceRecord MAY include `expiresAt`.
 
@@ -1889,6 +1871,13 @@ An implementation claiming a profile or role SHOULD make its current Conformance
 A verifier or procuring organisation MUST evaluate a conformance claim according to its own trust policy, including the identity of the attester, the assessment method, the evidence, the implementation version, and the applicable RWP version.
 
 A verifier MUST NOT treat self-attestation, independent assessment, and certification as equivalent assurance levels.
+
+## Conformance Attestation {#chapter-conformance-attestation}
+
+A <dfn>conformance attestation</dfn> is an inspectable statement about a claimed conformance scope and its assessment. A [=ConformanceRecord=] is the RWP SystemRecord used to express a durable, machine-readable conformance attestation.
+
+Until an implementation publishes a [=ConformanceRecord=], it MAY make its attestation available by another inspectable means. Such an attestation MUST still identify all information required by this section.
+
 
 
 Annex A: Normative JSON Schemas {#annex-a}
@@ -1930,13 +1919,15 @@ Annex A: Normative JSON Schemas {#annex-a}
 
 ## A.2 CaseRecord Payload Schema ## {#schema-case}
 
+This schema defines structural validation only. State-dependent finalisation requirements, including the required presence of all five Case element fields, the prohibition of soft links and the minimum cardinality of `result`, are defined in [Case Elements](#case-elements) and [Hard and Soft Links](#links).
+
 ```json
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://recordweb.github.io/rwp/schemas/case-record.json",
   "title": "RWP CaseRecord Payload",
   "type": "object",
-  "required": ["recordDid","caseType","title","trigger","merkleRoot"],
+  "required": ["recordDid","caseType","title","trigger","context","process","decision","result","merkleRoot"],
   "properties": {
     "recordDid":  { "type": "string", "pattern": "^did:rwp:" },
     "caseType":   { "type": "string", "pattern": "^did:rwp:" },
@@ -1945,7 +1936,7 @@ Annex A: Normative JSON Schemas {#annex-a}
     "context":    { "type": "array", "items": { "$ref": "#/$defs/link" } },
     "process":    { "type": "array", "items": { "$ref": "#/$defs/link" } },
     "decision":   { "oneOf": [{ "$ref": "#/$defs/hardLink" }, { "type": "null" }] },
-    "result":     { "type": "array", "items": { "$ref": "#/$defs/hardLink" } },
+    "result":     { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/hardLink" } },
     "merkleRoot": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
   },
   "$defs": {
@@ -1963,7 +1954,7 @@ Annex A: Normative JSON Schemas {#annex-a}
       "type": "object",
       "required": ["type","recordDid"],
       "properties": {
-        "type":         { "type": "string", "enum": ["hard","working"] },
+        "type":         { "type": "string", "enum": ["hard","soft"] },
         "recordDid":    { "type": "string", "pattern": "^did:rwp:" },
         "snapshotHash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
         "role":         { "type": "string" }
