@@ -8,7 +8,7 @@
   <meta content="Bikeshed version d113b2e81, updated Tue Jun 9 14:57:55 2026 -0700" name="generator">
   <link href="https://recordweb.github.io/rwp/" rel="canonical">
   <link href="https://www.w3.org/2008/site/images/favicon.ico" rel="icon">
-  <meta content="e7bd8c163aca06310d54dca8e1fea0c96b256e82" name="revision">
+  <meta content="e25c336073ab754c6653168ac695e32ea8e65ed0" name="revision">
   <meta content="dark light" name="color-scheme">
   <link href="https://www.w3.org/StyleSheets/TR/2021/dark.css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css">
 <style>/* Boilerplate: style-autolinks */
@@ -726,7 +726,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
 </p>
    <h1 class="no-ref p-name" id="title">RecordWeb Protocol (RWP)</h1>
    <p id="w3c-state"><a href="https://www.w3.org/standards/types/#CG-DRAFT">Draft Community Group Report</a>,
-    <time class="dt-updated" datetime="2026-08-15">15 August 2026</time></p>
+    <time class="dt-updated" datetime="2026-08-18">18 August 2026</time></p>
    <details open>
     <summary>More details about this document</summary>
     <div data-fill-with="spec-metadata">
@@ -1616,9 +1616,9 @@ did:rwp:bern.ch:f47ac10b-58cc-4372-a567-0e02b2c3d479</p>
 rejected (terminal state, not linkable)
 </pre>
    <h3 class="heading settled" data-level="7.2" id="linkability"><span class="secno">7.2. </span><span class="content">Linkability</span><a class="self-link" href="#linkability"></a></h3>
-   <p>A <a data-link-type="dfn" href="#record" id="ref-for-record②⑧">Record</a> MUST NOT be used as the target of a hard link when its current state is <a data-link-type="dfn" href="#draft" id="ref-for-draft">draft</a>.</p>
-   <p>A system MUST return an error when an attempt is made to set a hard link to a <a data-link-type="dfn" href="#draft" id="ref-for-draft①">draft</a> Record.</p>
-   <p>Exception: Working references (soft links) per Section 8.4 MAY point to <a data-link-type="dfn" href="#draft" id="ref-for-draft②">draft</a> Records.</p>
+   <p>A <a data-link-type="dfn" href="#record" id="ref-for-record②⑧">Record</a> MUST be in the <a data-link-type="dfn" href="#finalized" id="ref-for-finalized">finalized</a> state to be used as the target of a hard link.</p>
+   <p>A system MUST return an error when an attempt is made to set a hard link to a Record that is not in the <a data-link-type="dfn" href="#finalized" id="ref-for-finalized①">finalized</a> state.</p>
+   <p>Exception: Working references (soft links) per working-references MAY point to Records in any state, including <a data-link-type="dfn" href="#draft" id="ref-for-draft">draft</a> Records.</p>
    <h3 class="heading settled" data-level="7.3" id="finalisation-requirements"><span class="secno">7.3. </span><span class="content">Finalisation Requirements</span><a class="self-link" href="#finalisation-requirements"></a></h3>
    <p>A system MUST perform the following checks before finalising a <a data-link-type="dfn" href="#snapshot" id="ref-for-snapshot⑥">snapshot</a>:</p>
    <ol>
@@ -1635,7 +1635,7 @@ rejected (terminal state, not linkable)
    </ol>
    <p>If any of these checks fails, the system MUST NOT finalise the <a data-link-type="dfn" href="#snapshot" id="ref-for-snapshot⑦">snapshot</a> and MUST return an error with a validation code.</p>
    <h3 class="heading settled" data-level="7.4" id="irreversibility"><span class="secno">7.4. </span><span class="content">Irreversibility of Finalisation</span><a class="self-link" href="#irreversibility"></a></h3>
-   <p>A <a data-link-type="dfn" href="#finalized" id="ref-for-finalized">finalized</a> snapshot MUST NOT be reverted to the state <a data-link-type="dfn" href="#draft" id="ref-for-draft③">draft</a>.</p>
+   <p>A <a data-link-type="dfn" href="#finalized" id="ref-for-finalized②">finalized</a> snapshot MUST NOT be reverted to the state <a data-link-type="dfn" href="#draft" id="ref-for-draft①">draft</a>.</p>
    <p>Corrections, revisions, replacements, and other continuations of the same Record MUST be represented as a new <a data-link-type="dfn" href="#snapshot" id="ref-for-snapshot⑧">snapshot</a> of that Record.</p>
    <p>Such a snapshot MUST:</p>
    <ul>
@@ -1699,14 +1699,14 @@ rejected (terminal state, not linkable)
      <p>Edges MUST NOT point to snapshots of other <a data-link-type="dfn" href="#record" id="ref-for-record③①">Records</a>. Cross-Record connections are made via links in the <a data-link-type="dfn" href="#payload" id="ref-for-payload④">payload</a> or as Case linkage (<a href="#caserecord-specification">CaseRecord Specification</a>)</p>
    </ul>
    <h3 class="heading settled" data-level="8.4" id="graph-branches"><span class="secno">8.4. </span><span class="content">Branches</span><a class="self-link" href="#graph-branches"></a></h3>
-   <p>A <strong>branch</strong> arises when two or more new <a data-link-type="dfn" href="#draft" id="ref-for-draft④">draft</a> snapshots with the same parent reference emerge from a <a data-link-type="dfn" href="#finalized" id="ref-for-finalized①">finalized</a> snapshot.</p>
+   <p>A <strong>branch</strong> arises when two or more new <a data-link-type="dfn" href="#draft" id="ref-for-draft②">draft</a> snapshots with the same parent reference emerge from a <a data-link-type="dfn" href="#finalized" id="ref-for-finalized③">finalized</a> snapshot.</p>
    <ul>
     <li data-md>
      <p>Branches are explicitly permitted in RecordWeb and MUST be made visible by the system</p>
     <li data-md>
      <p>A system MUST return all active branches (draft snapshots without successors) when a <a data-link-type="dfn" href="#record" id="ref-for-record③②">Record</a> is retrieved</p>
     <li data-md>
-     <p>Branches MAY exist simultaneously as long as they are in state <a data-link-type="dfn" href="#draft" id="ref-for-draft⑤">draft</a></p>
+     <p>Branches MAY exist simultaneously as long as they are in state <a data-link-type="dfn" href="#draft" id="ref-for-draft③">draft</a></p>
    </ul>
    <h3 class="heading settled" data-level="8.5" id="graph-merges"><span class="secno">8.5. </span><span class="content">Merges</span><a class="self-link" href="#graph-merges"></a></h3>
    <p>A merge snapshot is a <a data-link-type="dfn" href="#snapshot" id="ref-for-snapshot①⑨">snapshot</a> with two or more parent references. It consolidates two branches.</p>
@@ -1726,14 +1726,14 @@ rejected (terminal state, not linkable)
 </pre>
    <p>The <code>MergeRecord</code> MUST be finalised before the merge snapshot can be finalised.</p>
    <h3 class="heading settled" data-level="8.6" id="cross-record-merges"><span class="secno">8.6. </span><span class="content">Cross-Record Merges</span><a class="self-link" href="#cross-record-merges"></a></h3>
-   <p>When a new <a data-link-type="dfn" href="#record" id="ref-for-record③③">Record</a> arises from two or more existing <a data-link-type="dfn" href="#finalized" id="ref-for-finalized②">finalized</a> Records (cross-Record merge), the following MUST apply:</p>
+   <p>When a new <a data-link-type="dfn" href="#record" id="ref-for-record③③">Record</a> arises from two or more existing <a data-link-type="dfn" href="#finalized" id="ref-for-finalized④">finalized</a> Records (cross-Record merge), the following MUST apply:</p>
    <ul>
     <li data-md>
      <p>The new <a data-link-type="dfn" href="#record" id="ref-for-record③④">Record</a> MUST have a root snapshot with an empty <code>parents</code> array</p>
     <li data-md>
      <p>The <code>MergeRecord</code> MUST reference the DIDs of the source Records (not their snapshot hashes)</p>
     <li data-md>
-     <p>The source Records MUST remain in state <a data-link-type="dfn" href="#finalized" id="ref-for-finalized③">finalized</a> and receive a metadata note <code>contributedTo</code> with the DID of the new <a data-link-type="dfn" href="#record" id="ref-for-record③⑤">Record</a></p>
+     <p>The source Records MUST remain in state <a data-link-type="dfn" href="#finalized" id="ref-for-finalized⑤">finalized</a> and receive a metadata note <code>contributedTo</code> with the DID of the new <a data-link-type="dfn" href="#record" id="ref-for-record③⑤">Record</a></p>
    </ul>
    <h2 class="heading settled" data-level="9" id="caserecord-specification"><span class="secno">9. </span><span class="content">CaseRecord Specification</span><a class="self-link" href="#caserecord-specification"></a></h2>
    <h3 class="heading settled" data-level="9.1" id="case-type"><span class="secno">9.1. </span><span class="content">Case as a specialised Record Type {#case-type}</span><a class="self-link" href="#case-type"></a></h3>
@@ -1812,14 +1812,14 @@ rejected (terminal state, not linkable)
    <p><strong>Exception — ad-hoc Case</strong>: A <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord②">CaseRecord</a> schema MAY be marked as <code>adhoc: true</code>. Ad-hoc Cases have no mandatory fields other than <code>trigger</code> and <code>recordDid</code>. They MUST be marked in the metadata object as <code>caseVariant: "adhoc"</code>.</p>
    <h3 class="heading settled" data-level="9.4" id="links"><span class="secno">9.4. </span><span class="content">Hard and Soft Links {#links}</span><a class="self-link" href="#links"></a></h3>
    <p>A Case link MAY target any <a data-link-type="dfn" href="#record" id="ref-for-record③⑦">Record</a>, including an <a data-link-type="dfn" href="#informationrecord" id="ref-for-informationrecord①">InformationRecord</a>, a <a data-link-type="dfn" href="#relationrecord" id="ref-for-relationrecord④">RelationRecord</a> (including another <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord③">CaseRecord</a>), or a <a data-link-type="dfn" href="#systemrecord" id="ref-for-systemrecord⑥">SystemRecord</a>.</p>
-   <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="hard-link">hard link</dfn> points to one identified <a data-link-type="dfn" href="#finalized" id="ref-for-finalized④">finalized</a> <a data-link-type="dfn" href="#snapshot" id="ref-for-snapshot②⓪">snapshot</a> of a target Record. A hard link MUST contain the target <code>recordDid</code> and <code>snapshotHash</code>.</p>
+   <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="hard-link">hard link</dfn> points to one identified <a data-link-type="dfn" href="#finalized" id="ref-for-finalized⑥">finalized</a> <a data-link-type="dfn" href="#snapshot" id="ref-for-snapshot②⓪">snapshot</a> of a target Record. A hard link MUST contain the target <code>recordDid</code> and <code>snapshotHash</code>.</p>
    <p>A hard link is immutable after finalisation of the referencing <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord④">CaseRecord</a>.</p>
-   <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="soft-link">soft link</dfn> is a working reference that points to a target <code>recordDid</code> without identifying a target snapshot. A soft link MAY point to a <a data-link-type="dfn" href="#draft" id="ref-for-draft⑥">draft</a> or <a data-link-type="dfn" href="#finalized" id="ref-for-finalized⑤">finalized</a> Record.</p>
+   <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="soft-link">soft link</dfn> is a working reference that points to a target <code>recordDid</code> without identifying a target snapshot. A soft link MAY point to a <a data-link-type="dfn" href="#draft" id="ref-for-draft④">draft</a> or <a data-link-type="dfn" href="#finalized" id="ref-for-finalized⑦">finalized</a> Record.</p>
    <p>A CaseRecord containing one or more soft links MUST NOT be finalised. Every soft link MUST be converted to a hard link before finalisation of the CaseRecord.</p>
    <p>A system MUST check during a CaseRecord finalisation attempt whether soft links are present. If soft links are present, the system MUST reject the finalisation and return the unresolved soft links.</p>
    <h3 class="heading settled" data-level="9.5" id="case-to-case-links"><span class="secno">9.5. </span><span class="content">CaseRecord-to-CaseRecord Links {#case-to-case-links}</span><a class="self-link" href="#case-to-case-links"></a></h3>
    <p>A <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord⑤">CaseRecord</a> MAY link to another CaseRecord through a <a data-link-type="dfn" href="#soft-link" id="ref-for-soft-link">soft link</a> or a <a data-link-type="dfn" href="#hard-link" id="ref-for-hard-link">hard link</a>.</p>
-   <p>A hard link to a CaseRecord MUST identify a <a data-link-type="dfn" href="#finalized" id="ref-for-finalized⑥">finalized</a> snapshot of the target CaseRecord through its <code>recordDid</code> and <code>snapshotHash</code>.</p>
+   <p>A hard link to a CaseRecord MUST identify a <a data-link-type="dfn" href="#finalized" id="ref-for-finalized⑧">finalized</a> snapshot of the target CaseRecord through its <code>recordDid</code> and <code>snapshotHash</code>.</p>
    <p>During finalisation of a referencing CaseRecord, the system MUST resolve and validate every target CaseRecord snapshot referenced through a hard link, subject to the applicable federation and offline-validation rules.</p>
    <p>The <code>snapshotHash</code> of a hard-linked target CaseRecord MUST be included in the <a data-link-type="dfn" href="#merkle-root" id="ref-for-merkle-root">Merkle root</a> of the referencing CaseRecord.</p>
    <p>A soft link MAY refer to a draft or finalised CaseRecord during work. A soft link to a CaseRecord MUST be converted to a hard link before finalisation of the referencing CaseRecord.</p>
@@ -3121,8 +3121,8 @@ let dfnPanelData = {
 "assertionrecord": {"dfnID":"assertionrecord","dfnText":"AssertionRecord","external":false,"refSections":[{"refs":[{"id":"ref-for-assertionrecord"}],"title":"2.2. Record taxonomy {#record-taxonomy}"},{"refs":[{"id":"ref-for-assertionrecord\u2460"}],"title":"11.1. Scope and conformance {#relationship-vocabulary-scope}"}],"url":"#assertionrecord"},
 "caserecord": {"dfnID":"caserecord","dfnText":"CaseRecord","external":false,"refSections":[{"refs":[{"id":"ref-for-caserecord"}],"title":"2.2. Record taxonomy {#record-taxonomy}"},{"refs":[{"id":"ref-for-caserecord\u2460"},{"id":"ref-for-caserecord\u2461"}],"title":"9.3. Case Elements (normative)"},{"refs":[{"id":"ref-for-caserecord\u2462"},{"id":"ref-for-caserecord\u2463"}],"title":"9.4. Hard and Soft Links {#links}"},{"refs":[{"id":"ref-for-caserecord\u2464"}],"title":"9.5. CaseRecord-to-CaseRecord Links {#case-to-case-links}"},{"refs":[{"id":"ref-for-caserecord\u2465"},{"id":"ref-for-caserecord\u2466"},{"id":"ref-for-caserecord\u2467"},{"id":"ref-for-caserecord\u2468"}],"title":"9.6. Case Merkle Root"},{"refs":[{"id":"ref-for-caserecord\u2460\u24ea"}],"title":"9.7. Case Completeness Check"},{"refs":[{"id":"ref-for-caserecord\u2460\u2460"}],"title":"12.5. Merkle Tree Algorithm"},{"refs":[{"id":"ref-for-caserecord\u2460\u2461"}],"title":"13.1. Purpose and Scope"},{"refs":[{"id":"ref-for-caserecord\u2460\u2462"}],"title":"13.3. Anchoring Protocol"},{"refs":[{"id":"ref-for-caserecord\u2460\u2463"},{"id":"ref-for-caserecord\u2460\u2464"}],"title":"13.4. Anchoring Reference in the Case"}],"url":"#caserecord"},
 "conformancerecord": {"dfnID":"conformancerecord","dfnText":"ConformanceRecord","external":false,"refSections":[{"refs":[{"id":"ref-for-conformancerecord"}],"title":"2.2. Record taxonomy {#record-taxonomy}"}],"url":"#conformancerecord"},
-"draft": {"dfnID":"draft","dfnText":"draft","external":false,"refSections":[{"refs":[{"id":"ref-for-draft"},{"id":"ref-for-draft\u2460"},{"id":"ref-for-draft\u2461"}],"title":"7.2. Linkability"},{"refs":[{"id":"ref-for-draft\u2462"}],"title":"7.4. Irreversibility of Finalisation"},{"refs":[{"id":"ref-for-draft\u2463"},{"id":"ref-for-draft\u2464"}],"title":"8.4. Branches"},{"refs":[{"id":"ref-for-draft\u2465"}],"title":"9.4. Hard and Soft Links {#links}"}],"url":"#draft"},
-"finalized": {"dfnID":"finalized","dfnText":"finalized","external":false,"refSections":[{"refs":[{"id":"ref-for-finalized"}],"title":"7.4. Irreversibility of Finalisation"},{"refs":[{"id":"ref-for-finalized\u2460"}],"title":"8.4. Branches"},{"refs":[{"id":"ref-for-finalized\u2461"},{"id":"ref-for-finalized\u2462"}],"title":"8.6. Cross-Record Merges"},{"refs":[{"id":"ref-for-finalized\u2463"},{"id":"ref-for-finalized\u2464"}],"title":"9.4. Hard and Soft Links {#links}"},{"refs":[{"id":"ref-for-finalized\u2465"}],"title":"9.5. CaseRecord-to-CaseRecord Links {#case-to-case-links}"}],"url":"#finalized"},
+"draft": {"dfnID":"draft","dfnText":"draft","external":false,"refSections":[{"refs":[{"id":"ref-for-draft"}],"title":"7.2. Linkability"},{"refs":[{"id":"ref-for-draft\u2460"}],"title":"7.4. Irreversibility of Finalisation"},{"refs":[{"id":"ref-for-draft\u2461"},{"id":"ref-for-draft\u2462"}],"title":"8.4. Branches"},{"refs":[{"id":"ref-for-draft\u2463"}],"title":"9.4. Hard and Soft Links {#links}"}],"url":"#draft"},
+"finalized": {"dfnID":"finalized","dfnText":"finalized","external":false,"refSections":[{"refs":[{"id":"ref-for-finalized"},{"id":"ref-for-finalized\u2460"}],"title":"7.2. Linkability"},{"refs":[{"id":"ref-for-finalized\u2461"}],"title":"7.4. Irreversibility of Finalisation"},{"refs":[{"id":"ref-for-finalized\u2462"}],"title":"8.4. Branches"},{"refs":[{"id":"ref-for-finalized\u2463"},{"id":"ref-for-finalized\u2464"}],"title":"8.6. Cross-Record Merges"},{"refs":[{"id":"ref-for-finalized\u2465"},{"id":"ref-for-finalized\u2466"}],"title":"9.4. Hard and Soft Links {#links}"},{"refs":[{"id":"ref-for-finalized\u2467"}],"title":"9.5. CaseRecord-to-CaseRecord Links {#case-to-case-links}"}],"url":"#finalized"},
 "hard-link": {"dfnID":"hard-link","dfnText":"hard link","external":false,"refSections":[{"refs":[{"id":"ref-for-hard-link"}],"title":"9.5. CaseRecord-to-CaseRecord Links {#case-to-case-links}"},{"refs":[{"id":"ref-for-hard-link\u2460"},{"id":"ref-for-hard-link\u2461"}],"title":"9.6. Case Merkle Root"},{"refs":[{"id":"ref-for-hard-link\u2462"}],"title":"15.4. Cross-Namespace Links"}],"url":"#hard-link"},
 "identity": {"dfnID":"identity","dfnText":"identity","external":false,"refSections":[{"refs":[{"id":"ref-for-identity"}],"title":"4.1. Overview"}],"url":"#identity"},
 "informationrecord": {"dfnID":"informationrecord","dfnText":"InformationRecord","external":false,"refSections":[{"refs":[{"id":"ref-for-informationrecord"}],"title":"2.2. Record taxonomy {#record-taxonomy}"},{"refs":[{"id":"ref-for-informationrecord\u2460"}],"title":"9.4. Hard and Soft Links {#links}"}],"url":"#informationrecord"},
