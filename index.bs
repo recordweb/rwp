@@ -917,21 +917,39 @@ A CaseRecord-to-CaseRecord link MUST NOT include, copy, inherit, or otherwise tr
 
 The referenced CaseRecord B snapshot and its Merkle root provide evidence of the Records directly linked by CaseRecord B at the time that snapshot was finalised. A Record is a direct member of CaseRecord A only if CaseRecord A links to that Record explicitly.
 
-## Case Merkle Root ## {#merkle-root-calc}
+## Case Merkle Root ## {#chapter-merkle-root-calc}
 
-The <dfn>Merkle root</dfn> of a [=CaseRecord=] MUST be calculated as follows:
+The <dfn>Merkle root</dfn> of a [=CaseRecord=] provides a cryptographically verifiable representation of the set of snapshots directly hard-linked by that [=CaseRecord=].
 
-1. Collect the `snapshotHash` value of every [=hard link=] in the [=CaseRecord=], including every hard link to another [=CaseRecord=].
-2. Sort the collected `snapshotHash` values lexicographically by their canonical serialised value.
-3. Calculate the Merkle root over the sorted list using the [Merkle Tree Algorithm](#merkle-algorithm).
+For the purposes of this section, a `snapshotHash` and a `merkleRoot` MUST be represented in the canonical textual form `sha256:` followed by the lowercase hexadecimal encoding of exactly 32 octets.
 
-```
-merkleRoot = MerkleRoot( sort( [snapshotHash_1, snapshotHash_2, ... snapshotHash_n] ) )
-```
+The Merkle root of a [=CaseRecord=] MUST be calculated as follows:
 
-The [=Merkle root=] of a CaseRecord MUST include the hash of each directly hard-linked target snapshot. It MUST NOT recursively include the individual hard-link hashes or linked Record snapshots contained in a referenced CaseRecord.
+1. An implementation MUST collect the `snapshotHash` value of every hard link in the [=CaseRecord=], including every hard link to another [=CaseRecord=].
+2. For each collected `snapshotHash`, the implementation MUST remove the `sha256:` prefix and decode the remaining hexadecimal value into its 32-octet SHA-256 digest value.
+3. The implementation MUST sort the decoded digest values in ascending lexicographic order over unsigned octets.
+4. For each sorted digest value `d`, the implementation MUST calculate a leaf node value as follows:
 
-The [=Merkle root=] MUST be recalculated every time a [=hard link=] is added or removed. A system MUST verify the [=Merkle root=] before finalising the [=CaseRecord=].
+   <pre class="formula">
+   leaf = SHA-256(0x00 || d)
+   </pre>
+
+5. The implementation MUST construct successive tree levels by pairing adjacent node values from left to right. For each pair consisting of a left node value `l` and a right node value `r`, the implementation MUST calculate the parent node value as follows:
+
+   <pre class="formula">
+   parent = SHA-256(0x01 || l || r)
+   </pre>
+
+6. If a tree level contains an odd number of node values, the implementation MUST duplicate the final node value and use it as both the left and right input of the final pair at that level.
+7. The sole node value remaining after the construction of all tree levels is the Merkle root. The implementation MUST serialise this value as `sha256:` followed by its lowercase hexadecimal encoding.
+
+In this section, `||` denotes byte concatenation. The values `0x00` and `0x01` are single-octet domain-separation tags. They MUST be included exactly as specified. The `0x00` tag distinguishes leaf-node inputs from all internal-node inputs. The `0x01` tag distinguishes internal-node inputs from leaf-node inputs.
+
+A [=CaseRecord=] with no hard links MUST NOT be finalised. This specification therefore defines no Merkle root for an empty set of hard links.
+
+The Merkle root of a [=CaseRecord=] MUST include the hash of each directly hard-linked target snapshot. It MUST NOT recursively include the individual hard-link hashes or linked Record snapshots contained in a referenced [=CaseRecord=].
+
+The Merkle root MUST be recalculated every time a hard link is added or removed. A system MUST verify the Merkle root before finalising the [=CaseRecord=].
 
 ## Case Completeness Check ## {#case-completeness}
 

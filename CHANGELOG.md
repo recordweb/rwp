@@ -15,6 +15,7 @@ Implemented CfC 2 outcomes. See
 - [RWP#13](https://github.com/recordweb/rwp/issues/13)
 - [RWP#14](https://github.com/recordweb/rwp/issues/14)
 - [RWP#15](https://github.com/recordweb/rwp/issues/15)
+- [RWP#19](https://github.com/recordweb/rwp/issues/19)
 - Editorial: References in bikeshed-syntax
 
 ## [0.0.4] – 2026-08-14
