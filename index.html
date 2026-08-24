@@ -5,10 +5,10 @@
   <title>RecordWeb Protocol (RWP)</title>
   <meta content="CG-DRAFT" name="w3c-status">
   <link href="https://www.w3.org/StyleSheets/TR/2021/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version d113b2e81, updated Tue Jun 9 14:57:55 2026 -0700" name="generator">
+  <meta content="Bikeshed version ac92c2f0d, updated Fri Aug 21 16:01:29 2026 -0700" name="generator">
   <link href="https://recordweb.github.io/rwp/" rel="canonical">
   <link href="https://www.w3.org/2008/site/images/favicon.ico" rel="icon">
-  <meta content="e25c336073ab754c6653168ac695e32ea8e65ed0" name="revision">
+  <meta content="72a6a71e33e2fc72fc7a88e93fb65c24af0f0c0b" name="revision">
   <meta content="dark light" name="color-scheme">
   <link href="https://www.w3.org/StyleSheets/TR/2021/dark.css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css">
 <style>/* Boilerplate: style-autolinks */
@@ -726,7 +726,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
 </p>
    <h1 class="no-ref p-name" id="title">RecordWeb Protocol (RWP)</h1>
    <p id="w3c-state"><a href="https://www.w3.org/standards/types/#CG-DRAFT">Draft Community Group Report</a>,
-    <time class="dt-updated" datetime="2026-08-18">18 August 2026</time></p>
+    <time class="dt-updated" datetime="2026-08-24">24 August 2026</time></p>
    <details open>
     <summary>More details about this document</summary>
     <div data-fill-with="spec-metadata">
@@ -834,7 +834,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
       <li><a href="#case-elements"><span class="secno">9.3</span> <span class="content">Case Elements (normative)</span></a>
       <li><a href="#links"><span class="secno">9.4</span> <span class="content">Hard and Soft Links {#links}</span></a>
       <li><a href="#case-to-case-links"><span class="secno">9.5</span> <span class="content">CaseRecord-to-CaseRecord Links {#case-to-case-links}</span></a>
-      <li><a href="#merkle-root-calc"><span class="secno">9.6</span> <span class="content">Case Merkle Root</span></a>
+      <li><a href="#chapter-merkle-root-calc"><span class="secno">9.6</span> <span class="content">Case Merkle Root</span></a>
       <li><a href="#case-completeness"><span class="secno">9.7</span> <span class="content">Case Completeness Check</span></a>
      </ol>
     <li>
@@ -901,43 +901,50 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
       <li><a href="#solid-delivery"><span class="secno">16.4</span> <span class="content">Solid Pod Delivery (optional)</span></a>
      </ol>
     <li>
-     <a href="#conformance"><span class="secno">17</span> <span class="content">Conformance and Implementation Claims</span></a>
+     <a href="#chapter-privacy-security"><span class="secno">17</span> <span class="content">Privacy and Security Considerations</span></a>
      <ol class="toc">
-      <li><a href="#conformance-scope"><span class="secno">17.1</span> <span class="content">Scope of conformance {#conformance-scope}</span></a>
-      <li>
-       <a href="#conformance-terminology"><span class="secno">17.2</span> <span class="content">Conformance terminology {#conformance-terminology}</span></a>
-       <ol class="toc">
-        <li><a href="#record-validation"><span class="secno">17.2.1</span> <span class="content">Record validation {#record-validation}</span></a>
-        <li><a href="#implementation-assessment"><span class="secno">17.2.2</span> <span class="content">Implementation assessment {#implementation-assessment}</span></a>
-        <li><a href="#conformance-attestation"><span class="secno">17.2.3</span> <span class="content">Attestation {#conformance-attestation}</span></a>
-        <li><a href="#conformance-certification"><span class="secno">17.2.4</span> <span class="content">Certification {#conformance-certification}</span></a>
-       </ol>
-      <li>
-       <a href="#conformance-profiles"><span class="secno">17.3</span> <span class="content">Profiles {#conformance-profiles}</span></a>
-       <ol class="toc">
-        <li><a href="#information-record-profile"><span class="secno">17.3.1</span> <span class="content">RWP Information Record Conformant {#information-record-profile}</span></a>
-        <li><a href="#case-record-profile"><span class="secno">17.3.2</span> <span class="content">RWP Case Record Conformant {#case-record-profile}</span></a>
-        <li><a href="#assertion-record-profile"><span class="secno">17.3.3</span> <span class="content">RWP Assertion Record Conformant {#assertion-record-profile}</span></a>
-        <li><a href="#relation-record-profile"><span class="secno">17.3.4</span> <span class="content">RWP Relation Record Conformant {#relation-record-profile}</span></a>
-        <li><a href="#source-integration-profile"><span class="secno">17.3.5</span> <span class="content">RWP Source Integration Conformant {#source-integration-profile}</span></a>
-       </ol>
-      <li><a href="#conformance-roles"><span class="secno">17.4</span> <span class="content">Implementation roles {#conformance-roles}</span></a>
-      <li><a href="#capability-bound-requirements"><span class="secno">17.5</span> <span class="content">Capability-bound requirements {#capability-bound-requirements}</span></a>
-      <li><a href="#conformance-record"><span class="secno">17.6</span> <span class="content">ConformanceRecord {#conformance-record}</span></a>
-      <li><a href="#conformance-claims"><span class="secno">17.7</span> <span class="content">Conformance claims and evidence {#conformance-claims}</span></a>
+      <li><a href="#chapter-privacy-considerations"><span class="secno">17.1</span> <span class="content">Privacy</span></a>
+      <li><a href="#chapter-security-considerations"><span class="secno">17.2</span> <span class="content">Security</span></a>
      </ol>
     <li>
-     <a href="#annex-a"><span class="secno">18</span> <span class="content">Annex A: Normative JSON Schemas</span></a>
+     <a href="#chapter-conformance"><span class="secno">18</span> <span class="content">Conformance and Implementation Claims</span></a>
      <ol class="toc">
-      <li><a href="#schema-snapshot"><span class="secno">18.1</span> <span class="content">A.1 Snapshot Metadata Schema</span></a>
-      <li><a href="#schema-case"><span class="secno">18.2</span> <span class="content">A.2 CaseRecord Payload Schema</span></a>
-      <li><a href="#schema-deletion"><span class="secno">18.3</span> <span class="content">A.3 DeletionRecord Payload Schema</span></a>
+      <li><a href="#conformance-scope"><span class="secno">18.1</span> <span class="content">Scope of conformance {#conformance-scope}</span></a>
+      <li>
+       <a href="#conformance-terminology"><span class="secno">18.2</span> <span class="content">Conformance terminology {#conformance-terminology}</span></a>
+       <ol class="toc">
+        <li><a href="#record-validation"><span class="secno">18.2.1</span> <span class="content">Record validation {#record-validation}</span></a>
+        <li><a href="#implementation-assessment"><span class="secno">18.2.2</span> <span class="content">Implementation assessment {#implementation-assessment}</span></a>
+        <li><a href="#conformance-attestation"><span class="secno">18.2.3</span> <span class="content">Attestation {#conformance-attestation}</span></a>
+        <li><a href="#conformance-certification"><span class="secno">18.2.4</span> <span class="content">Certification {#conformance-certification}</span></a>
+       </ol>
+      <li>
+       <a href="#conformance-profiles"><span class="secno">18.3</span> <span class="content">Profiles {#conformance-profiles}</span></a>
+       <ol class="toc">
+        <li><a href="#information-record-profile"><span class="secno">18.3.1</span> <span class="content">RWP Information Record Conformant {#information-record-profile}</span></a>
+        <li><a href="#case-record-profile"><span class="secno">18.3.2</span> <span class="content">RWP Case Record Conformant {#case-record-profile}</span></a>
+        <li><a href="#assertion-record-profile"><span class="secno">18.3.3</span> <span class="content">RWP Assertion Record Conformant {#assertion-record-profile}</span></a>
+        <li><a href="#relation-record-profile"><span class="secno">18.3.4</span> <span class="content">RWP Relation Record Conformant {#relation-record-profile}</span></a>
+        <li><a href="#source-integration-profile"><span class="secno">18.3.5</span> <span class="content">RWP Source Integration Conformant {#source-integration-profile}</span></a>
+       </ol>
+      <li><a href="#conformance-roles"><span class="secno">18.4</span> <span class="content">Implementation roles {#conformance-roles}</span></a>
+      <li><a href="#capability-bound-requirements"><span class="secno">18.5</span> <span class="content">Capability-bound requirements {#capability-bound-requirements}</span></a>
+      <li><a href="#conformance-record"><span class="secno">18.6</span> <span class="content">ConformanceRecord {#conformance-record}</span></a>
+      <li><a href="#conformance-claims"><span class="secno">18.7</span> <span class="content">Conformance claims and evidence {#conformance-claims}</span></a>
+      <li><a href="#chapter-conformance-attestation"><span class="secno">18.8</span> <span class="content">Conformance Attestation {#chapter-conformance-attestation}</span></a>
      </ol>
     <li>
-     <a href="#annex-b"><span class="secno">19</span> <span class="content">Annex B: Reference Implementation Notes (non-normative)</span></a>
+     <a href="#annex-a"><span class="secno">19</span> <span class="content">Annex A: Normative JSON Schemas</span></a>
      <ol class="toc">
-      <li><a href="#impl-tech"><span class="secno">19.1</span> <span class="content">B.1 Technology Choices</span></a>
-      <li><a href="#impl-pilot"><span class="secno">19.2</span> <span class="content">B.2 Pilot Scope Recommendation</span></a>
+      <li><a href="#schema-snapshot"><span class="secno">19.1</span> <span class="content">A.1 Snapshot Metadata Schema</span></a>
+      <li><a href="#schema-case"><span class="secno">19.2</span> <span class="content">A.2 CaseRecord Payload Schema</span></a>
+      <li><a href="#schema-deletion"><span class="secno">19.3</span> <span class="content">A.3 DeletionRecord Payload Schema</span></a>
+     </ol>
+    <li>
+     <a href="#annex-b"><span class="secno">20</span> <span class="content">Annex B: Reference Implementation Notes (non-normative)</span></a>
+     <ol class="toc">
+      <li><a href="#impl-tech"><span class="secno">20.1</span> <span class="content">B.1 Technology Choices</span></a>
+      <li><a href="#impl-pilot"><span class="secno">20.2</span> <span class="content">B.2 Pilot Scope Recommendation</span></a>
      </ol>
     <li>
      <a href="#w3c-conformance"><span class="secno"></span> <span class="content">Conformance</span></a>
@@ -959,7 +966,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   </nav>
   <main>
    <div class="copyright">
-    <p>Copyright © 2026 the Contributors to the RecordWeb Protocol (RWP) v0.0.4, published by the <a href="https://www.w3.org/community/recordweb/">RecordWeb Community Group</a> under the <a href="https://www.w3.org/community/about/process/cla/">W3C Community Contributor License Agreement (CLA)</a>. A human-readable <a href="https://www.w3.org/community/about/process/cla-deed/">summary</a> is available.</p>
+    <p>Copyright © 2026 the Contributors to the RecordWeb Protocol (RWP) v0.0.5, published by the <a href="https://www.w3.org/community/recordweb/">RecordWeb Community Group</a> under the <a href="https://www.w3.org/community/about/process/cla/">W3C Community Contributor License Agreement (CLA)</a>. A human-readable <a href="https://www.w3.org/community/about/process/cla-deed/">summary</a> is available.</p>
    </div>
    <h2 class="heading settled" data-level="1" id="scope"><span class="secno">1. </span><span class="content">Introduction and Scope</span><a class="self-link" href="#scope"></a></h2>
    <h3 class="heading settled" data-level="1.1" id="purpose"><span class="secno">1.1. </span><span class="content">Purpose</span><a class="self-link" href="#purpose"></a></h3>
@@ -1008,7 +1015,6 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li data-md>
      <p><strong>PATCH</strong>: Corrections without substantive change</p>
    </ul>
-   <p>The current version is <strong>0.0.2</strong> (Draft — not yet approved for production implementations).</p>
    <h2 class="heading settled" data-level="2" id="chapter-record"><span class="secno">2. </span><span class="content">The Record</span><a class="self-link" href="#chapter-record"></a></h2>
    <h3 class="heading settled" data-level="2.1" id="record-definition"><span class="secno">2.1. </span><span class="content">Definition {#record-definition}</span><a class="self-link" href="#record-definition"></a></h3>
    <p>For the purposes of this specification, <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="record">Record</dfn> has the meaning defined in <a data-link-type="biblio" href="#biblio-iso15489" title="Information and documentation — Records management, Part 1: Concepts and principles">[ISO15489]</a>, clause 3.14. A Record MUST have the identity, structure, payload, type, schema, state, version and integrity evidence required by this specification.</p>
@@ -1618,7 +1624,7 @@ rejected (terminal state, not linkable)
    <h3 class="heading settled" data-level="7.2" id="linkability"><span class="secno">7.2. </span><span class="content">Linkability</span><a class="self-link" href="#linkability"></a></h3>
    <p>A <a data-link-type="dfn" href="#record" id="ref-for-record②⑧">Record</a> MUST be in the <a data-link-type="dfn" href="#finalized" id="ref-for-finalized">finalized</a> state to be used as the target of a hard link.</p>
    <p>A system MUST return an error when an attempt is made to set a hard link to a Record that is not in the <a data-link-type="dfn" href="#finalized" id="ref-for-finalized①">finalized</a> state.</p>
-   <p>Exception: Working references (soft links) per working-references MAY point to Records in any state, including <a data-link-type="dfn" href="#draft" id="ref-for-draft">draft</a> Records.</p>
+   <p>Exception: Soft links per <a href="#links">Hard and Soft Links</a> MAY point to Records in any state, including <a data-link-type="dfn" href="#draft" id="ref-for-draft">draft</a> Records.</p>
    <h3 class="heading settled" data-level="7.3" id="finalisation-requirements"><span class="secno">7.3. </span><span class="content">Finalisation Requirements</span><a class="self-link" href="#finalisation-requirements"></a></h3>
    <p>A system MUST perform the following checks before finalising a <a data-link-type="dfn" href="#snapshot" id="ref-for-snapshot⑥">snapshot</a>:</p>
    <ol>
@@ -1779,7 +1785,8 @@ rejected (terminal state, not linkable)
 <c- p>}</c->
 </pre>
    <h3 class="heading settled" data-level="9.3" id="case-elements"><span class="secno">9.3. </span><span class="content">Case Elements (normative)</span><a class="self-link" href="#case-elements"></a></h3>
-   <p>A complete <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①">CaseRecord</a> MUST contain all five Case elements. An element that permits an empty value is considered present when it is represented in the CaseRecord payload, even if its value is an empty array or <code>null</code>, as applicable. A Record MAY fulfil multiple elements.</p>
+   <p>Before a <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①">CaseRecord</a> is finalised, its payload MUST contain all five Case element fields: <code>trigger</code>, <code>context</code>, <code>process</code>, <code>decision</code>, and <code>result</code>. The finalisation constraints for each element are defined in the following table. An element that permits an empty value is considered present when it is represented in the CaseRecord payload, even if its value is an empty array or <code>null</code>, as applicable. A Record MAY fulfil multiple elements.</p>
+   <p>A draft CaseRecord MAY omit one or more Case element fields. Before finalisation, the system MUST validate and, where necessary, require completion of the Case element fields in accordance with this section.</p>
    <p>Unless a CaseRecord schema defines more specific constraints, every Case element MAY link to any Record type, including another CaseRecord.</p>
    <table class="data">
     <thead>
@@ -1826,22 +1833,40 @@ rejected (terminal state, not linkable)
    <p>A link from CaseRecord A to CaseRecord B references only the identified snapshot of CaseRecord B.</p>
    <p>A CaseRecord-to-CaseRecord link MUST NOT include, copy, inherit, or otherwise treat Records linked by CaseRecord B as direct members of CaseRecord A.</p>
    <p>The referenced CaseRecord B snapshot and its Merkle root provide evidence of the Records directly linked by CaseRecord B at the time that snapshot was finalised. A Record is a direct member of CaseRecord A only if CaseRecord A links to that Record explicitly.</p>
-   <h3 class="heading settled" data-level="9.6" id="merkle-root-calc"><span class="secno">9.6. </span><span class="content">Case Merkle Root</span><a class="self-link" href="#merkle-root-calc"></a></h3>
-   <p>The <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="merkle-root">Merkle root</dfn> of a <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord⑥">CaseRecord</a> MUST be calculated as follows:</p>
+   <h3 class="heading settled" data-level="9.6" id="chapter-merkle-root-calc"><span class="secno">9.6. </span><span class="content">Case Merkle Root</span><a class="self-link" href="#chapter-merkle-root-calc"></a></h3>
+   <p>The <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="merkle-root">Merkle root</dfn> of a <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord⑥">CaseRecord</a> provides a cryptographically verifiable representation of the set of snapshots directly hard-linked by that <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord⑦">CaseRecord</a>.</p>
+   <p>For the purposes of this section, a <code>snapshotHash</code> and a <code>merkleRoot</code> MUST be represented in the canonical textual form <code>sha256:</code> followed by the lowercase hexadecimal encoding of exactly 32 octets.</p>
+   <p>The Merkle root of a <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord⑧">CaseRecord</a> MUST be calculated as follows:</p>
    <ol>
     <li data-md>
-     <p>Collect the <code>snapshotHash</code> value of every <a data-link-type="dfn" href="#hard-link" id="ref-for-hard-link①">hard link</a> in the <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord⑦">CaseRecord</a>, including every hard link to another <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord⑧">CaseRecord</a>.</p>
+     <p>An implementation MUST collect the <code>snapshotHash</code> value of every hard link in the <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord⑨">CaseRecord</a>, including every hard link to another <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①⓪">CaseRecord</a>.</p>
     <li data-md>
-     <p>Sort the collected <code>snapshotHash</code> values lexicographically by their canonical serialised value.</p>
+     <p>For each collected <code>snapshotHash</code>, the implementation MUST remove the <code>sha256:</code> prefix and decode the remaining hexadecimal value into its 32-octet SHA-256 digest value.</p>
     <li data-md>
-     <p>Calculate the Merkle root over the sorted list using the <a href="#merkle-algorithm">Merkle Tree Algorithm</a>.</p>
+     <p>The implementation MUST sort the decoded digest values in ascending lexicographic order over unsigned octets.</p>
+    <li data-md>
+     <p>For each sorted digest value <code>d</code>, the implementation MUST calculate a leaf node value as follows:</p>
    </ol>
-<pre>merkleRoot = MerkleRoot( sort( [snapshotHash_1, snapshotHash_2, ... snapshotHash_n] ) )
+<pre class="formula">leaf = SHA-256(0x00 || d)
 </pre>
-   <p>The <a data-link-type="dfn" href="#merkle-root" id="ref-for-merkle-root①">Merkle root</a> of a CaseRecord MUST include the hash of each directly hard-linked target snapshot. It MUST NOT recursively include the individual hard-link hashes or linked Record snapshots contained in a referenced CaseRecord.</p>
-   <p>The <a data-link-type="dfn" href="#merkle-root" id="ref-for-merkle-root②">Merkle root</a> MUST be recalculated every time a <a data-link-type="dfn" href="#hard-link" id="ref-for-hard-link②">hard link</a> is added or removed. A system MUST verify the <a data-link-type="dfn" href="#merkle-root" id="ref-for-merkle-root③">Merkle root</a> before finalising the <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord⑨">CaseRecord</a>.</p>
+   <ol start="5">
+    <li data-md>
+     <p>The implementation MUST construct successive tree levels by pairing adjacent node values from left to right. For each pair consisting of a left node value <code>l</code> and a right node value <code>r</code>, the implementation MUST calculate the parent node value as follows:</p>
+   </ol>
+<pre class="formula">parent = SHA-256(0x01 || l || r)
+</pre>
+   <ol start="6">
+    <li data-md>
+     <p>If a tree level contains an odd number of node values, the implementation MUST duplicate the final node value and use it as both the left and right input of the final pair at that level.</p>
+    <li data-md>
+     <p>The sole node value remaining after the construction of all tree levels is the Merkle root. The implementation MUST serialise this value as <code>sha256:</code> followed by its lowercase hexadecimal encoding.</p>
+   </ol>
+   <p>In this section, <code>||</code> denotes byte concatenation. The values <code>0x00</code> and <code>0x01</code> are single-octet domain-separation tags. They MUST be included exactly as specified. The <code>0x00</code> tag distinguishes leaf-node inputs from all internal-node inputs. The <code>0x01</code> tag distinguishes internal-node inputs from leaf-node inputs.</p>
+   <p>A <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①①">CaseRecord</a> with no hard links MUST NOT be finalised. This specification therefore defines no Merkle root for an empty set of hard links.</p>
+   <p>The Merkle root of a <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①②">CaseRecord</a> MUST include the hash of each directly hard-linked target snapshot. It MUST NOT recursively include the individual hard-link hashes or linked Record snapshots contained in a referenced <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①③">CaseRecord</a>.</p>
+   <p>The Merkle root MUST be recalculated every time a hard link is added or removed. A system MUST verify the Merkle root before finalising the <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①④">CaseRecord</a>.</p>
    <h3 class="heading settled" data-level="9.7" id="case-completeness"><span class="secno">9.7. </span><span class="content">Case Completeness Check</span><a class="self-link" href="#case-completeness"></a></h3>
-   <p>A system SHOULD perform a completeness check on a <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①⓪">CaseRecord</a> at any time upon request and return:</p>
+   <p>A system SHOULD perform a completeness check on a <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①⑤">CaseRecord</a> at any time upon request and return:</p>
 <pre class="highlight language-json"><c- p>{</c->
   <c- f>"recordDid"</c-><c- p>:</c-> <c- u>"did:rwp:bern.ch:f47ac10b-case-001"</c-><c- p>,</c->
   <c- f>"complete"</c-><c- p>:</c-> <c- kc>false</c-><c- p>,</c->
@@ -2086,7 +2111,7 @@ rejected (terminal state, not linkable)
      <p>The key used MUST be published in the DID document of the record owner as a verification method</p>
    </ul>
    <h3 class="heading settled" data-level="12.5" id="merkle-algorithm"><span class="secno">12.5. </span><span class="content">Merkle Tree Algorithm</span><a class="self-link" href="#merkle-algorithm"></a></h3>
-   <p>For the calculation of the <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①①">CaseRecord</a> <a data-link-type="dfn" href="#merkle-root" id="ref-for-merkle-root④">Merkle root</a>, the following algorithm MUST be used:</p>
+   <p>For the calculation of the <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①⑥">CaseRecord</a> <a data-link-type="dfn" href="#merkle-root" id="ref-for-merkle-root①">Merkle root</a>, the following algorithm MUST be used:</p>
 <pre>function merkleRoot(hashes: SHA256[]) -> SHA256:
 if hashes.length == 0: return SHA256("")
 if hashes.length == 1: return hashes [0]
@@ -2106,7 +2131,7 @@ return sorted[0]
 </pre>
    <h2 class="heading settled" data-level="13" id="ledger"><span class="secno">13. </span><span class="content">Optional Ledger Anchoring</span><a class="self-link" href="#ledger"></a></h2>
    <h3 class="heading settled" data-level="13.1" id="ledger-purpose"><span class="secno">13.1. </span><span class="content">Purpose and Scope</span><a class="self-link" href="#ledger-purpose"></a></h3>
-   <p>Ledger anchoring is an <strong>optional extension</strong> of RWP. It enables the external, immutable proof of <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①②">CaseRecord</a> <a data-link-type="dfn" href="#merkle-root" id="ref-for-merkle-root⑤">Merkle roots</a> on a distributed infrastructure.</p>
+   <p>Ledger anchoring is an <strong>optional extension</strong> of RWP. It enables the external, immutable proof of <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①⑦">CaseRecord</a> <a data-link-type="dfn" href="#merkle-root" id="ref-for-merkle-root②">Merkle roots</a> on a distributed infrastructure.</p>
    <p>A system MUST be fully RWP-compliant without ledger anchoring. Ledger anchoring supplements the internal integrity assurance with an external proof independent of the operating organisation.</p>
    <h3 class="heading settled" data-level="13.2" id="ledger-requirements"><span class="secno">13.2. </span><span class="content">Requirements for the Ledger</span><a class="self-link" href="#ledger-requirements"></a></h3>
    <p>If a system implements ledger anchoring, the ledger used MUST:</p>
@@ -2124,7 +2149,7 @@ return sorted[0]
    </ul>
    <p><strong>Recommended implementation</strong>: Hyperledger Fabric <a data-link-type="biblio" href="#biblio-hyperledger" title="Hyperledger Fabric">[HYPERLEDGER]</a>. Other permissioned distributed ledger technologies MAY be used if they fulfil the above requirements.</p>
    <h3 class="heading settled" data-level="13.3" id="anchoring-protocol"><span class="secno">13.3. </span><span class="content">Anchoring Protocol</span><a class="self-link" href="#anchoring-protocol"></a></h3>
-   <p>When a finalised <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①③">CaseRecord</a> is anchored, the ledger entry MUST contain the following fields:</p>
+   <p>When a finalised <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①⑧">CaseRecord</a> is anchored, the ledger entry MUST contain the following fields:</p>
 <pre class="highlight language-json"><c- p>{</c->
   <c- f>"rwpAnchor"</c-><c- p>:</c-> <c- p>{</c->
     <c- f>"version"</c-><c- p>:</c-> <c- u>"0.1"</c-><c- p>,</c->
@@ -2139,7 +2164,7 @@ return sorted[0]
 </pre>
    <p>The ledger entry MUST NOT contain any payload content, personal data, or classified information. Only cryptographic hash values and identifiers are permitted.</p>
    <h3 class="heading settled" data-level="13.4" id="anchoring-reference"><span class="secno">13.4. </span><span class="content">Anchoring Reference in the Case</span><a class="self-link" href="#anchoring-reference"></a></h3>
-   <p>When a <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①④">CaseRecord</a> has been anchored, the <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①⑤">CaseRecord</a> snapshot MUST be updated with an <code>anchorReference</code> field:</p>
+   <p>When a <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①⑨">CaseRecord</a> has been anchored, the anchored CaseRecord snapshot MUST NOT be modified. The system MAY create a new CaseRecord snapshot that references the anchored predecessor through <code>parents</code> and contains an <code>anchorReference</code> field. The <code>caseSnapshotHash</code> in the ledger entry MUST always identify the immutable snapshot that was actually anchored.</p>
 <pre class="highlight language-json"><c- p>{</c->
   <c- f>"anchorReference"</c-><c- p>:</c-> <c- p>{</c->
     <c- f>"ledgerType"</c-><c- p>:</c-> <c- u>"hyperledger-fabric"</c-><c- p>,</c->
@@ -2243,7 +2268,7 @@ return sorted[0]
 <pre>_rwp-resolver.bern.ch. 300 IN TXT "v=rwp1;endpoint=https://resolver.bern.ch/api/v1"
 </pre>
    <h3 class="heading settled" data-level="15.4" id="cross-namespace"><span class="secno">15.4. </span><span class="content">Cross-Namespace Links</span><a class="self-link" href="#cross-namespace"></a></h3>
-   <p>A <a data-link-type="dfn" href="#record" id="ref-for-record④②">Record</a> in namespace <code>bern.ch</code> MAY contain <a data-link-type="dfn" href="#hard-link" id="ref-for-hard-link③">hard links</a> to <a data-link-type="dfn" href="#record" id="ref-for-record④③">Records</a> in other namespaces (e.g. <code>did:rwp:bag.admin.ch:guideline-001</code>).</p>
+   <p>A <a data-link-type="dfn" href="#record" id="ref-for-record④②">Record</a> in namespace <code>bern.ch</code> MAY contain <a data-link-type="dfn" href="#hard-link" id="ref-for-hard-link①">hard links</a> to <a data-link-type="dfn" href="#record" id="ref-for-record④③">Records</a> in other namespaces (e.g. <code>did:rwp:bag.admin.ch:guideline-001</code>).</p>
    <p>When resolving cross-namespace links, a system MUST:</p>
    <ol>
     <li data-md>
@@ -2327,11 +2352,34 @@ return sorted[0]
    </ul>
    <p>Typical use cases: driving licences, medical images, residence registration confirmations, diplomas, building permits (delivered to the applicant).</p>
    <p>The citizen MAY present the Pod-held <a data-link-type="dfn" href="#record" id="ref-for-record④⑧">Record</a> to any third party, who can independently verify its authenticity via the DID and cryptographic hash without querying the issuing authority.</p>
-   <h2 class="heading settled" data-level="17" id="conformance"><span class="secno">17. </span><span class="content">Conformance and Implementation Claims</span><a class="self-link" href="#conformance"></a></h2>
-   <h3 class="heading settled" data-level="17.1" id="conformance-scope"><span class="secno">17.1. </span><span class="content">Scope of conformance {#conformance-scope}</span><a class="self-link" href="#conformance-scope"></a></h3>
+   <h2 class="heading settled" data-level="17" id="chapter-privacy-security"><span class="secno">17. </span><span class="content">Privacy and Security Considerations</span><a class="self-link" href="#chapter-privacy-security"></a></h2>
+   <p>RWP defines integrity, provenance, and interoperability requirements for
+Records. It does not define a general authorisation, confidentiality, key
+management, transport-security, retention, or data-protection regime.
+Implementations MUST apply the legal, organisational, and technical safeguards
+applicable to their deployment.</p>
+   <h3 class="heading settled" data-level="17.1" id="chapter-privacy-considerations"><span class="secno">17.1. </span><span class="content">Privacy</span><a class="self-link" href="#chapter-privacy-considerations"></a></h3>
+   <p>A <code>did:rwp</code> identifier MUST NOT contain personal data or other information
+whose disclosure is restricted by the applicable rules.</p>
+   <p>The <code>payload-only</code> deletion regime removes payload bytes but retains the DID,
+metadata, and version graph. An implementation MUST NOT represent a
+<code>payload-only</code> deletion as full deletion of the Record.</p>
+   <h3 class="heading settled" data-level="17.2" id="chapter-security-considerations"><span class="secno">17.2. </span><span class="content">Security</span><a class="self-link" href="#chapter-security-considerations"></a></h3>
+   <p>The integrity and signature procedures defined in
+<a href="#integrity">Integrity and Hashing Procedures</a> provide evidence of the
+integrity of a snapshot and, where applicable, of the verification method used
+to sign it. They do not by themselves establish confidentiality, authorisation,
+or the substantive correctness of a Record.</p>
+   <p>A notification or other externally received signal that refers to an RWP Record
+or snapshot is non-authoritative. Before creating, finalising, modifying,
+deleting, linking to, or otherwise acting on the referenced Record or snapshot,
+an implementation MUST independently resolve and validate it according to the
+applicable requirements of this specification.</p>
+   <h2 class="heading settled" data-level="18" id="chapter-conformance"><span class="secno">18. </span><span class="content">Conformance and Implementation Claims</span><a class="self-link" href="#chapter-conformance"></a></h2>
+   <h3 class="heading settled" data-level="18.1" id="conformance-scope"><span class="secno">18.1. </span><span class="content">Scope of conformance {#conformance-scope}</span><a class="self-link" href="#conformance-scope"></a></h3>
    <p>Conformance in RWP applies to an identifiable software implementation or software component.</p>
-   <p>A conformance claim MUST identify:</p>
-   <ul>
+   <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="conformance">conformance</dfn> claim MUST identify:</p>
+   <ol>
     <li data-md>
      <p>the implementation;</p>
     <li data-md>
@@ -2346,13 +2394,13 @@ return sorted[0]
      <p>the assessment method; and</p>
     <li data-md>
      <p>the applicable evidence or evidence reference.</p>
-   </ul>
+   </ol>
    <p>A conformance claim applies only to the Records, Record types, operations, and responsibilities covered by the claimed profiles and roles. It MUST NOT be interpreted as a claim that an entire product, organisation, deployment, or source system fulfils all RWP requirements.</p>
    <p>An implementation MAY claim multiple profiles and roles.</p>
-   <p>An implementation claiming an RWP Record profile MUST claim at least one role.</p>
-   <p>An implementation claiming only the <code>resolver</code> role MAY make a role-only claim without claiming an RWP Record profile.</p>
-   <h3 class="heading settled" data-level="17.2" id="conformance-terminology"><span class="secno">17.2. </span><span class="content">Conformance terminology {#conformance-terminology}</span><a class="self-link" href="#conformance-terminology"></a></h3>
-   <h4 class="heading settled" data-level="17.2.1" id="record-validation"><span class="secno">17.2.1. </span><span class="content">Record validation {#record-validation}</span><a class="self-link" href="#record-validation"></a></h4>
+   <p>An implementation claiming any conformance profile MUST claim at least one role, except that an implementation claiming only the <code>resolver</code> role MAY make a role-only claim as specified below.</p>
+   <p>An implementation claiming the <code>resolver</code> role MAY make a role-only claim without claiming an RWP Record profile. A role-only resolver claim MUST identify the <code>resolver</code> role and MUST NOT include an RWP Record profile unless the implementation also claims the roles required for that profile.</p>
+   <h3 class="heading settled" data-level="18.2" id="conformance-terminology"><span class="secno">18.2. </span><span class="content">Conformance terminology {#conformance-terminology}</span><a class="self-link" href="#conformance-terminology"></a></h3>
+   <h4 class="heading settled" data-level="18.2.1" id="record-validation"><span class="secno">18.2.1. </span><span class="content">Record validation {#record-validation}</span><a class="self-link" href="#record-validation"></a></h4>
    <p>Record validation determines whether a specific Record or snapshot satisfies the applicable structural, semantic, and cryptographic requirements.</p>
    <p>Depending on the applicable profile and Record type, validation MAY include:</p>
    <ul>
@@ -2376,41 +2424,42 @@ return sorted[0]
      <p>AssertionRecord predicate and resource validation.</p>
    </ul>
    <p>A Record validation result applies only to the tested Record or snapshot. A successful validation result MUST NOT be interpreted as an implementation assessment, attestation, or certification.</p>
-   <h4 class="heading settled" data-level="17.2.2" id="implementation-assessment"><span class="secno">17.2.2. </span><span class="content">Implementation assessment {#implementation-assessment}</span><a class="self-link" href="#implementation-assessment"></a></h4>
+   <h4 class="heading settled" data-level="18.2.2" id="implementation-assessment"><span class="secno">18.2.2. </span><span class="content">Implementation assessment {#implementation-assessment}</span><a class="self-link" href="#implementation-assessment"></a></h4>
    <p>Implementation assessment determines whether a named implementation version fulfils all requirements of one or more claimed RWP profiles and roles.</p>
    <p>An implementation assessment MUST include positive and negative test cases relevant to every claimed profile and role.</p>
    <p>An assessment MAY use an official RecordWeb test suite, an independently developed test suite, or another documented assessment method.</p>
    <p>The result of an implementation assessment MAY be documented in a ConformanceRecord.</p>
-   <h4 class="heading settled" data-level="17.2.3" id="conformance-attestation"><span class="secno">17.2.3. </span><span class="content">Attestation {#conformance-attestation}</span><a class="self-link" href="#conformance-attestation"></a></h4>
+   <h4 class="heading settled" data-level="18.2.3" id="conformance-attestation"><span class="secno">18.2.3. </span><span class="content">Attestation {#conformance-attestation}</span><a class="self-link" href="#conformance-attestation"></a></h4>
    <p>An attestation is a signed statement by an identifiable attester about an implementation assessment.</p>
    <p>An attestation MAY be self-attested or independently assessed.</p>
    <p>A ConformanceRecord is the RWP SystemRecord used to preserve such an attestation.</p>
-   <h4 class="heading settled" data-level="17.2.4" id="conformance-certification"><span class="secno">17.2.4. </span><span class="content">Certification {#conformance-certification}</span><a class="self-link" href="#conformance-certification"></a></h4>
+   <h4 class="heading settled" data-level="18.2.4" id="conformance-certification"><span class="secno">18.2.4. </span><span class="content">Certification {#conformance-certification}</span><a class="self-link" href="#conformance-certification"></a></h4>
    <p>Certification is an institutional process outside the base RWP protocol.</p>
    <p>A certification scheme MAY use ConformanceRecords, test suites, and assessment reports as evidence. RWP does not define or require an accreditation authority, certification mark, liability regime, or certification revocation procedure.</p>
    <p>The presence of a ConformanceRecord MUST NOT by itself be interpreted as certification.</p>
-   <h3 class="heading settled" data-level="17.3" id="conformance-profiles"><span class="secno">17.3. </span><span class="content">Profiles {#conformance-profiles}</span><a class="self-link" href="#conformance-profiles"></a></h3>
-   <h4 class="heading settled" data-level="17.3.1" id="information-record-profile"><span class="secno">17.3.1. </span><span class="content">RWP Information Record Conformant {#information-record-profile}</span><a class="self-link" href="#information-record-profile"></a></h4>
+   <h3 class="heading settled" data-level="18.3" id="conformance-profiles"><span class="secno">18.3. </span><span class="content">Profiles {#conformance-profiles}</span><a class="self-link" href="#conformance-profiles"></a></h3>
+   <h4 class="heading settled" data-level="18.3.1" id="information-record-profile"><span class="secno">18.3.1. </span><span class="content">RWP Information Record Conformant {#information-record-profile}</span><a class="self-link" href="#information-record-profile"></a></h4>
    <p>An implementation claiming <code>RWP Information Record Conformant</code> MUST satisfy the applicable RWP requirements for InformationRecords according to its claimed roles.</p>
    <p>A producer claiming this profile MUST be able to create and finalise InformationRecords with the required identity, schema association, metadata, payload validation, integrity evidence, and version graph.</p>
    <p>A custodian claiming this profile MUST retain and make retrievable the InformationRecord snapshots for which it acts as custodian.</p>
    <p>A consumer claiming this profile MUST retrieve and validate InformationRecords in accordance with <a href="#record-validation">Record validation</a>.</p>
-   <h4 class="heading settled" data-level="17.3.2" id="case-record-profile"><span class="secno">17.3.2. </span><span class="content">RWP Case Record Conformant {#case-record-profile}</span><a class="self-link" href="#case-record-profile"></a></h4>
+   <h4 class="heading settled" data-level="18.3.2" id="case-record-profile"><span class="secno">18.3.2. </span><span class="content">RWP Case Record Conformant {#case-record-profile}</span><a class="self-link" href="#case-record-profile"></a></h4>
    <p>An implementation claiming <code>RWP Case Record Conformant</code> MUST satisfy the applicable RWP requirements for CaseRecords according to its claimed roles.</p>
    <p>A producer claiming this profile MUST create and finalise CaseRecords in accordance with <a href="#caserecord-specification">CaseRecord Specification</a>.</p>
    <p>A Case implementation MAY reference InformationRecords or other Records managed by another RWP implementation. It is not required to create, store, or own those linked Records.</p>
    <p>A CaseRecord producer or consumer MUST apply the applicable hard-link, soft-link, target-validation, and Merkle-root requirements.</p>
-   <h4 class="heading settled" data-level="17.3.3" id="assertion-record-profile"><span class="secno">17.3.3. </span><span class="content">RWP Assertion Record Conformant {#assertion-record-profile}</span><a class="self-link" href="#assertion-record-profile"></a></h4>
+   <h4 class="heading settled" data-level="18.3.3" id="assertion-record-profile"><span class="secno">18.3.3. </span><span class="content">RWP Assertion Record Conformant {#assertion-record-profile}</span><a class="self-link" href="#assertion-record-profile"></a></h4>
    <p>An implementation claiming <code>RWP Assertion Record Conformant</code> MUST satisfy the applicable RWP requirements for AssertionRecords according to its claimed roles.</p>
    <p>A producer claiming this profile MUST create AssertionRecords with a valid SchemaRecord, a permitted predicate IRI, valid subject and object references, an asserting Agent, a time of assertion, and the required Record integrity evidence.</p>
    <p>A consumer claiming this profile MUST validate AssertionRecords in accordance with <a href="#assertionrecord-validation">AssertionRecord validation</a> and <a href="#relationship-vocabulary-scope">Relationship Vocabulary scope</a>.</p>
    <p>A custodian claiming this profile MUST retain and make retrievable the AssertionRecord snapshots for which it acts as custodian.</p>
-   <h4 class="heading settled" data-level="17.3.4" id="relation-record-profile"><span class="secno">17.3.4. </span><span class="content">RWP Relation Record Conformant {#relation-record-profile}</span><a class="self-link" href="#relation-record-profile"></a></h4>
+   <h4 class="heading settled" data-level="18.3.4" id="relation-record-profile"><span class="secno">18.3.4. </span><span class="content">RWP Relation Record Conformant {#relation-record-profile}</span><a class="self-link" href="#relation-record-profile"></a></h4>
    <p>An implementation MAY claim <code>RWP Relation Record Conformant</code> only if it also claims both <code>RWP Case Record Conformant</code> and <code>RWP Assertion Record Conformant</code>.</p>
    <p><code>RWP Relation Record Conformant</code> introduces no requirements beyond the combined requirements of those two profiles.</p>
-   <h4 class="heading settled" data-level="17.3.5" id="source-integration-profile"><span class="secno">17.3.5. </span><span class="content">RWP Source Integration Conformant {#source-integration-profile}</span><a class="self-link" href="#source-integration-profile"></a></h4>
+   <h4 class="heading settled" data-level="18.3.5" id="source-integration-profile"><span class="secno">18.3.5. </span><span class="content">RWP Source Integration Conformant {#source-integration-profile}</span><a class="self-link" href="#source-integration-profile"></a></h4>
    <p>An implementation claiming <code>RWP Source Integration Conformant</code> MUST provide a source-provenance statement for every source object that it exposes to, captures for, or transfers into an RWP context.</p>
    <p>The source integration profile is independent of RWP Record production. A source-adapter MAY claim this profile without creating an RWP DID, Record, or snapshot.</p>
+   <p>For every source object within its claimed scope, a conforming source-adapter MUST make the corresponding source-provenance statement available to the receiving RWP implementation or include it in the exported representation. The statement MAY be represented as JSON. Where the source-adapter retains the statement after transfer, it MUST make the statement retrievable by the combination of <code>sourceSystem</code> and <code>sourceId</code>.</p>
    <p>If a source-adapter creates and finalises an RWP InformationRecord, it MUST additionally satisfy the applicable requirements of <code>RWP Information Record Conformant</code>.</p>
    <p>A source-provenance statement MUST contain:</p>
 <pre class="highlight language-json"><c- p>{</c->
@@ -2451,35 +2500,24 @@ return sorted[0]
      <p><code>externally-hashed</code>: the capture component has produced a hash over a defined export representation.</p>
    </ul>
    <p>A source-integrity value describes guarantees available about the source object before or at capture. It MUST NOT be interpreted as a statement about the integrity of a subsequently created RWP Record.</p>
-   <h3 class="heading settled" data-level="17.4" id="conformance-roles"><span class="secno">17.4. </span><span class="content">Implementation roles {#conformance-roles}</span><a class="self-link" href="#conformance-roles"></a></h3>
+   <h3 class="heading settled" data-level="18.4" id="conformance-roles"><span class="secno">18.4. </span><span class="content">Implementation roles {#conformance-roles}</span><a class="self-link" href="#conformance-roles"></a></h3>
    <p>RWP defines the following implementation roles:</p>
-   <table class="data">
-    <thead>
-     <tr>
-      <th>Role
-      <th>Responsibility
-    <tbody>
-     <tr>
-      <td><code>producer</code>
-      <td>Creates a new Record or a new snapshot, including its finalisation where applicable.
-     <tr>
-      <td><code>custodian</code>
-      <td>Retains, manages, and makes Records or snapshots retrievable.
-     <tr>
-      <td><code>consumer</code>
-      <td>Retrieves and validates Records created or managed by another implementation.
-     <tr>
-      <td><code>resolver</code>
-      <td>Resolves <code>did:rwp</code> identifiers and returns the associated DID documents.
-     <tr>
-      <td><code>source-adapter</code>
-      <td>Obtains, normalises, and exposes source-provenance information from a non-RWP source system.
-     <tr>
-      <td><code>attester</code>
-      <td>Creates and finalises a ConformanceRecord concerning an implementation assessment.
-   </table>
+   <ol>
+    <li data-md>
+     <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="producer">producer</dfn> creates a new Record or a new snapshot, including its finalisation where applicable. A producer MUST fulfil all requirements applicable to the profile, Record type, and operation it performs when creating, modifying, or finalising a Record representation.</p>
+    <li data-md>
+     <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="custodian">custodian</dfn> retains, manages, and makes Records or snapshots retrievable. For each Record representation within its claimed scope, a custodian MUST preserve the information required to verify its applicable RWP integrity and versioning requirements. A custodian is not required to create a new Record or snapshot solely by claiming the custodian role.</p>
+    <li data-md>
+     <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="consumer">consumer</dfn> retrieves and validates Records created or managed by another implementation. A consumer MUST validate all requirements applicable to its claimed profile and to the Record type being consumed. A consumer MUST NOT represent a Record as conformant when required validation fails.</p>
+    <li data-md>
+     <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="resolver">resolver</dfn> resolves <code>did:rwp</code> identifiers and returns the associated DID documents according to the applicable RWP DID-document requirements.</p>
+    <li data-md>
+     <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="source-adapter">source-adapter</dfn> obtains, normalises, and exposes source-provenance information from a non-RWP source system. A source-adapter MUST NOT represent a source-integrity statement as an RWP Record-integrity statement unless it has also created and validated the corresponding RWP Record representation.</p>
+    <li data-md>
+     <p>An <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="attester">attester</dfn> creates and finalises a ConformanceRecord concerning an implementation assessment.</p>
+   </ol>
    <p>A role describes a responsibility. It does not imply that an implementation fulfils requirements outside its claimed profiles, roles, or exercised capabilities.</p>
-   <h3 class="heading settled" data-level="17.5" id="capability-bound-requirements"><span class="secno">17.5. </span><span class="content">Capability-bound requirements {#capability-bound-requirements}</span><a class="self-link" href="#capability-bound-requirements"></a></h3>
+   <h3 class="heading settled" data-level="18.5" id="capability-bound-requirements"><span class="secno">18.5. </span><span class="content">Capability-bound requirements {#capability-bound-requirements}</span><a class="self-link" href="#capability-bound-requirements"></a></h3>
    <p>Support for a SystemRecord capability MUST be required only where an implementation claims or exercises that capability.</p>
    <table class="data">
     <thead>
@@ -2503,10 +2541,10 @@ return sorted[0]
       <td>MUST for a producer
       <td>Not required
      <tr>
-      <td>Create and validate immutable snapshots
-      <td>MUST for a producer and consumer
-      <td>MUST for a producer and consumer
-      <td>MUST for a producer and consumer
+      <td>Create immutable snapshots; retrieve and validate snapshots
+      <td>A producer MUST create immutable snapshots. A consumer MUST retrieve and validate snapshots in accordance with <a href="#record-validation">Record validation</a>.
+      <td>A producer MUST create immutable snapshots. A consumer MUST retrieve and validate snapshots in accordance with <a href="#record-validation">Record validation</a>.
+      <td>A producer MUST create immutable snapshots. A consumer MUST retrieve and validate snapshots in accordance with <a href="#record-validation">Record  validation</a>.
       <td>Not required
      <tr>
       <td>Retain and retrieve snapshots
@@ -2533,10 +2571,10 @@ return sorted[0]
       <td>MUST for a producer and consumer
       <td>Not required
      <tr>
-      <td>Validate external hard-link targets
+      <td>Validate external references
       <td>Not required
-      <td>MUST when finalising or validating a CaseRecord
-      <td>MUST when finalising or validating an AssertionRecord
+      <td>MUST when finalising or validating a CaseRecord. The implementation MUST resolve each hard-link target and verify that the identified snapshot belongs to the identified Record, subject to the applicable federation and offline-validation rules.
+      <td>Where an AssertionRecord resource reference contains <code>snapshotHash</code> and the target snapshot is resolvable, MUST verify that the snapshot belongs to the identified Record. An unresolved external resource MUST be handled in accordance with the applicable AssertionRecord SchemaRecord.
       <td>Not required
      <tr>
       <td>Provide source provenance
@@ -2587,10 +2625,9 @@ return sorted[0]
       <td>MUST only for an attester
       <td>MUST only for an attester
    </table>
-   <p>A resolver claiming the <code>resolver</code> role MUST satisfy the DID resolution requirements defined in <a href="#did-resolver">DID Resolver Requirements</a> and, where applicable, <a href="#resolver-requirements">Resolver Requirements</a>
-.</p>
+   <p>A resolver claiming the <code>resolver</code> role MUST satisfy the DID resolution requirements defined in <a href="#did-resolver">DID Resolver Requirements</a> and, where applicable, <a href="#resolver-requirements">Resolver Requirements</a>.</p>
    <p>An implementation MUST NOT claim support for a profile or role unless it fulfils all requirements applicable to that claim.</p>
-   <h3 class="heading settled" data-level="17.6" id="conformance-record"><span class="secno">17.6. </span><span class="content">ConformanceRecord {#conformance-record}</span><a class="self-link" href="#conformance-record"></a></h3>
+   <h3 class="heading settled" data-level="18.6" id="conformance-record"><span class="secno">18.6. </span><span class="content">ConformanceRecord {#conformance-record}</span><a class="self-link" href="#conformance-record"></a></h3>
    <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="conformancerecord">ConformanceRecord</dfn> is a SystemRecord that preserves an attestation concerning an identifiable implementation version.</p>
    <p>A ConformanceRecord MUST satisfy all normal Record requirements, including DID, schema association, snapshot integrity, finalisation, and the applicable signature requirements.</p>
    <p>The owner of a finalised ConformanceRecord MUST be the attester identified in its payload.</p>
@@ -2616,6 +2653,7 @@ return sorted[0]
   <c- p>],</c->
   <c- f>"assessment"</c-><c- p>:</c-> <c- p>{</c->
     <c- f>"method"</c-><c- p>:</c-> <c- u>"self-attested"</c-><c- p>,</c->
+    <c- f>"assurance"</c-><c- p>:</c-> <c- u>"self-attested"</c-><c- p>,</c->
     <c- f>"testSuite"</c-><c- p>:</c-> <c- u>"did:rwp:recordweb.org:test-suite:0.0.3"</c-><c- p>,</c->
     <c- f>"tool"</c-><c- p>:</c-> <c- u>"Example Validator"</c-><c- p>,</c->
     <c- f>"toolVersion"</c-><c- p>:</c-> <c- u>"1.0.0"</c-><c- p>,</c->
@@ -2655,8 +2693,15 @@ return sorted[0]
     <li data-md>
      <p><code>evidence</code>.</p>
    </ul>
-   <p>Every claim entry MUST contain at least one role. A claim entry containing a profile MUST identify only profiles defined by this specification or by a versioned extension specification.</p>
+   <p>Every claim entry MUST contain at least one role. A claim entry containing <code>RWP Source Integration Conformant</code> MUST contain the <code>source-adapter</code> role. A claim entry containing a profile MUST identify only profiles defined by this specification or by a versioned extension specification.</p>
    <p>The value of <code>assessment.method</code> MUST be one of:</p>
+   <ul>
+    <li data-md>
+     <p><code>self-attested</code>; or</p>
+    <li data-md>
+     <p><code>independently-assessed</code>.</p>
+   </ul>
+   <p>A ConformanceRecord MAY contain an <code>assurance</code> field. If present, its value MUST be one of:</p>
    <ul>
     <li data-md>
      <p><code>self-attested</code>;</p>
@@ -2666,16 +2711,19 @@ return sorted[0]
      <p><code>certified</code>.</p>
    </ul>
    <p>The value <code>certified</code> is reserved for use by an external certification regime. Its use MUST NOT imply that RecordWeb operates, endorses, or recognises that regime.</p>
-   <p>Each evidence entry MUST identify its type and MUST include either a resolvable <code>url</code>, a cryptographic <code>hash</code>, or both.</p>
+   <p>Each evidence entry MUST identify its type. Each evidence entry that refers to externally retrievable evidence MUST include a resolvable <code>url</code> and a cryptographic <code>hash</code> of the referenced evidence bytes. An evidence entry without a <code>url</code> MUST include a cryptographic <code>hash</code> and sufficient embedded or separately identified content for an independent verifier to obtain the hashed evidence.</p>
    <p>A ConformanceRecord MAY include <code>expiresAt</code>.</p>
    <p>A newer ConformanceRecord MAY supersede an earlier ConformanceRecord. Supersession MUST NOT alter, invalidate, or remove the earlier attestation. A superseding ConformanceRecord MUST identify every superseded ConformanceRecord by DID.</p>
-   <h3 class="heading settled" data-level="17.7" id="conformance-claims"><span class="secno">17.7. </span><span class="content">Conformance claims and evidence {#conformance-claims}</span><a class="self-link" href="#conformance-claims"></a></h3>
+   <h3 class="heading settled" data-level="18.7" id="conformance-claims"><span class="secno">18.7. </span><span class="content">Conformance claims and evidence {#conformance-claims}</span><a class="self-link" href="#conformance-claims"></a></h3>
    <p>An implementation MAY publish a ConformanceRecord.</p>
    <p>An implementation claiming a profile or role SHOULD make its current ConformanceRecord or equivalent signed conformance statement discoverable.</p>
    <p>A verifier or procuring organisation MUST evaluate a conformance claim according to its own trust policy, including the identity of the attester, the assessment method, the evidence, the implementation version, and the applicable RWP version.</p>
    <p>A verifier MUST NOT treat self-attestation, independent assessment, and certification as equivalent assurance levels.</p>
-   <h2 class="heading settled" data-level="18" id="annex-a"><span class="secno">18. </span><span class="content">Annex A: Normative JSON Schemas</span><a class="self-link" href="#annex-a"></a></h2>
-   <h3 class="heading settled" data-level="18.1" id="schema-snapshot"><span class="secno">18.1. </span><span class="content">A.1 Snapshot Metadata Schema</span><a class="self-link" href="#schema-snapshot"></a></h3>
+   <h3 class="heading settled" data-level="18.8" id="chapter-conformance-attestation"><span class="secno">18.8. </span><span class="content">Conformance Attestation {#chapter-conformance-attestation}</span><a class="self-link" href="#chapter-conformance-attestation"></a></h3>
+   <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="conformance-attestation①">conformance attestation</dfn> is an inspectable statement about a claimed conformance scope and its assessment. A <a data-link-type="dfn" href="#conformancerecord" id="ref-for-conformancerecord①">ConformanceRecord</a> is the RWP SystemRecord used to express a durable, machine-readable conformance attestation.</p>
+   <p>Until an implementation publishes a <a data-link-type="dfn" href="#conformancerecord" id="ref-for-conformancerecord②">ConformanceRecord</a>, it MAY make its attestation available by another inspectable means. Such an attestation MUST still identify all information required by this section.</p>
+   <h2 class="heading settled" data-level="19" id="annex-a"><span class="secno">19. </span><span class="content">Annex A: Normative JSON Schemas</span><a class="self-link" href="#annex-a"></a></h2>
+   <h3 class="heading settled" data-level="19.1" id="schema-snapshot"><span class="secno">19.1. </span><span class="content">A.1 Snapshot Metadata Schema</span><a class="self-link" href="#schema-snapshot"></a></h3>
 <pre class="highlight language-json"><c- p>{</c->
   <c- f>"$schema"</c-><c- p>:</c-> <c- u>"https://json-schema.org/draft/2020-12/schema"</c-><c- p>,</c->
   <c- f>"$id"</c-><c- p>:</c-> <c- u>"https://recordweb.github.io/rwp/schemas/snapshot-metadata.json"</c-><c- p>,</c->
@@ -2706,13 +2754,14 @@ return sorted[0]
   <c- p>}</c->
 <c- p>}</c->
 </pre>
-   <h3 class="heading settled" data-level="18.2" id="schema-case"><span class="secno">18.2. </span><span class="content">A.2 CaseRecord Payload Schema</span><a class="self-link" href="#schema-case"></a></h3>
+   <h3 class="heading settled" data-level="19.2" id="schema-case"><span class="secno">19.2. </span><span class="content">A.2 CaseRecord Payload Schema</span><a class="self-link" href="#schema-case"></a></h3>
+   <p>This schema defines structural validation only. State-dependent finalisation requirements, including the required presence of all five Case element fields, the prohibition of soft links and the minimum cardinality of <code>result</code>, are defined in <a href="#case-elements">Case Elements</a> and <a href="#links">Hard and Soft Links</a>.</p>
 <pre class="highlight language-json"><c- p>{</c->
   <c- f>"$schema"</c-><c- p>:</c-> <c- u>"https://json-schema.org/draft/2020-12/schema"</c-><c- p>,</c->
   <c- f>"$id"</c-><c- p>:</c-> <c- u>"https://recordweb.github.io/rwp/schemas/case-record.json"</c-><c- p>,</c->
   <c- f>"title"</c-><c- p>:</c-> <c- u>"RWP CaseRecord Payload"</c-><c- p>,</c->
   <c- f>"type"</c-><c- p>:</c-> <c- u>"object"</c-><c- p>,</c->
-  <c- f>"required"</c-><c- p>:</c-> <c- p>[</c-><c- u>"recordDid"</c-><c- p>,</c-><c- u>"caseType"</c-><c- p>,</c-><c- u>"title"</c-><c- p>,</c-><c- u>"trigger"</c-><c- p>,</c-><c- u>"merkleRoot"</c-><c- p>],</c->
+  <c- f>"required"</c-><c- p>:</c-> <c- p>[</c-><c- u>"recordDid"</c-><c- p>,</c-><c- u>"caseType"</c-><c- p>,</c-><c- u>"title"</c-><c- p>,</c-><c- u>"trigger"</c-><c- p>,</c-><c- u>"context"</c-><c- p>,</c-><c- u>"process"</c-><c- p>,</c-><c- u>"decision"</c-><c- p>,</c-><c- u>"result"</c-><c- p>,</c-><c- u>"merkleRoot"</c-><c- p>],</c->
   <c- f>"properties"</c-><c- p>:</c-> <c- p>{</c->
     <c- f>"recordDid"</c-><c- p>:</c->  <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^did:rwp:"</c-> <c- p>},</c->
     <c- f>"caseType"</c-><c- p>:</c->   <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^did:rwp:"</c-> <c- p>},</c->
@@ -2721,7 +2770,7 @@ return sorted[0]
     <c- f>"context"</c-><c- p>:</c->    <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"array"</c-><c- p>,</c-> <c- f>"items"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"$ref"</c-><c- p>:</c-> <c- u>"#/$defs/link"</c-> <c- p>}</c-> <c- p>},</c->
     <c- f>"process"</c-><c- p>:</c->    <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"array"</c-><c- p>,</c-> <c- f>"items"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"$ref"</c-><c- p>:</c-> <c- u>"#/$defs/link"</c-> <c- p>}</c-> <c- p>},</c->
     <c- f>"decision"</c-><c- p>:</c->   <c- p>{</c-> <c- f>"oneOf"</c-><c- p>:</c-> <c- p>[{</c-> <c- f>"$ref"</c-><c- p>:</c-> <c- u>"#/$defs/hardLink"</c-> <c- p>},</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"null"</c-> <c- p>}]</c-> <c- p>},</c->
-    <c- f>"result"</c-><c- p>:</c->     <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"array"</c-><c- p>,</c-> <c- f>"items"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"$ref"</c-><c- p>:</c-> <c- u>"#/$defs/hardLink"</c-> <c- p>}</c-> <c- p>},</c->
+    <c- f>"result"</c-><c- p>:</c->     <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"array"</c-><c- p>,</c-> <c- f>"minItems"</c-><c- p>:</c-> <c- mi>1</c-><c- p>,</c-> <c- f>"items"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"$ref"</c-><c- p>:</c-> <c- u>"#/$defs/hardLink"</c-> <c- p>}</c-> <c- p>},</c->
     <c- f>"merkleRoot"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^sha256:[0-9a-f]{64}$"</c-> <c- p>}</c->
   <c- p>},</c->
   <c- f>"$defs"</c-><c- p>:</c-> <c- p>{</c->
@@ -2739,7 +2788,7 @@ return sorted[0]
       <c- f>"type"</c-><c- p>:</c-> <c- u>"object"</c-><c- p>,</c->
       <c- f>"required"</c-><c- p>:</c-> <c- p>[</c-><c- u>"type"</c-><c- p>,</c-><c- u>"recordDid"</c-><c- p>],</c->
       <c- f>"properties"</c-><c- p>:</c-> <c- p>{</c->
-        <c- f>"type"</c-><c- p>:</c->         <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"enum"</c-><c- p>:</c-> <c- p>[</c-><c- u>"hard"</c-><c- p>,</c-><c- u>"working"</c-><c- p>]</c-> <c- p>},</c->
+        <c- f>"type"</c-><c- p>:</c->         <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"enum"</c-><c- p>:</c-> <c- p>[</c-><c- u>"hard"</c-><c- p>,</c-><c- u>"soft"</c-><c- p>]</c-> <c- p>},</c->
         <c- f>"recordDid"</c-><c- p>:</c->    <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^did:rwp:"</c-> <c- p>},</c->
         <c- f>"snapshotHash"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^sha256:[0-9a-f]{64}$"</c-> <c- p>},</c->
         <c- f>"role"</c-><c- p>:</c->         <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-> <c- p>}</c->
@@ -2748,7 +2797,7 @@ return sorted[0]
   <c- p>}</c->
 <c- p>}</c->
 </pre>
-   <h3 class="heading settled" data-level="18.3" id="schema-deletion"><span class="secno">18.3. </span><span class="content">A.3 DeletionRecord Payload Schema</span><a class="self-link" href="#schema-deletion"></a></h3>
+   <h3 class="heading settled" data-level="19.3" id="schema-deletion"><span class="secno">19.3. </span><span class="content">A.3 DeletionRecord Payload Schema</span><a class="self-link" href="#schema-deletion"></a></h3>
 <pre class="highlight language-json"><c- p>{</c->
   <c- f>"$schema"</c-><c- p>:</c-> <c- u>"https://json-schema.org/draft/2020-12/schema"</c-><c- p>,</c->
   <c- f>"$id"</c-><c- p>:</c-> <c- u>"https://recordweb.github.io/rwp/schemas/deletion-record.json"</c-><c- p>,</c->
@@ -2777,9 +2826,9 @@ return sorted[0]
   <c- p>}</c->
 <c- p>}</c->
 </pre>
-   <h2 class="heading settled" data-level="19" id="annex-b"><span class="secno">19. </span><span class="content">Annex B: Reference Implementation Notes (non-normative)</span><a class="self-link" href="#annex-b"></a></h2>
+   <h2 class="heading settled" data-level="20" id="annex-b"><span class="secno">20. </span><span class="content">Annex B: Reference Implementation Notes (non-normative)</span><a class="self-link" href="#annex-b"></a></h2>
    <p>This annex is non-normative. It provides guidance for implementers and does not impose additional requirements.</p>
-   <h3 class="heading settled" data-level="19.1" id="impl-tech"><span class="secno">19.1. </span><span class="content">B.1 Technology Choices</span><a class="self-link" href="#impl-tech"></a></h3>
+   <h3 class="heading settled" data-level="20.1" id="impl-tech"><span class="secno">20.1. </span><span class="content">B.1 Technology Choices</span><a class="self-link" href="#impl-tech"></a></h3>
    <p>The following technology choices are recommended for a first RWP implementation:</p>
    <table class="data">
     <thead>
@@ -2813,7 +2862,7 @@ return sorted[0]
       <td>AJV (JSON Schema validator)
       <td>Supports JSON Schema 2020-12
    </table>
-   <h3 class="heading settled" data-level="19.2" id="impl-pilot"><span class="secno">19.2. </span><span class="content">B.2 Pilot Scope Recommendation</span><a class="self-link" href="#impl-pilot"></a></h3>
+   <h3 class="heading settled" data-level="20.2" id="impl-pilot"><span class="secno">20.2. </span><span class="content">B.2 Pilot Scope Recommendation</span><a class="self-link" href="#impl-pilot"></a></h3>
    <p>For a first pilot, the following Level 1 subset is recommended:</p>
    <ol>
     <li data-md>
@@ -2871,8 +2920,13 @@ return sorted[0]
   <h3 class="heading no-num no-ref settled" id="index-defined-here"><span class="content">Terms defined by this specification</span><a class="self-link" href="#index-defined-here"></a></h3>
   <ul class="index">
    <li><a href="#assertionrecord">AssertionRecord</a><span>, in § 10.1</span>
+   <li><a href="#attester">attester</a><span>, in § 18.4</span>
    <li><a href="#caserecord">CaseRecord</a><span>, in § 9.1</span>
-   <li><a href="#conformancerecord">ConformanceRecord</a><span>, in § 17.6</span>
+   <li><a href="#conformance">conformance</a><span>, in § 18.1</span>
+   <li><a href="#conformance-attestation①">conformance attestation</a><span>, in § 18.8</span>
+   <li><a href="#conformancerecord">ConformanceRecord</a><span>, in § 18.6</span>
+   <li><a href="#consumer">consumer</a><span>, in § 18.4</span>
+   <li><a href="#custodian">custodian</a><span>, in § 18.4</span>
    <li><a href="#draft">draft</a><span>, in § 7.1</span>
    <li><a href="#finalized">finalized</a><span>, in § 7.1</span>
    <li><a href="#hard-link">hard link</a><span>, in § 9.4</span>
@@ -2881,11 +2935,14 @@ return sorted[0]
    <li><a href="#merkle-root">Merkle root</a><span>, in § 9.6</span>
    <li><a href="#metadata">metadata</a><span>, in § 4.3</span>
    <li><a href="#payload">payload</a><span>, in § 5.1</span>
+   <li><a href="#producer">producer</a><span>, in § 18.4</span>
    <li><a href="#record">Record</a><span>, in § 2.1</span>
    <li><a href="#relationrecord">RelationRecord</a><span>, in § 2.2</span>
+   <li><a href="#resolver">resolver</a><span>, in § 18.4</span>
    <li><a href="#schemarecord">SchemaRecord</a><span>, in § 6.2</span>
    <li><a href="#snapshot">snapshot</a><span>, in § 4.1</span>
    <li><a href="#soft-link">soft link</a><span>, in § 9.4</span>
+   <li><a href="#source-adapter">source-adapter</a><span>, in § 18.4</span>
    <li><a href="#systemrecord">SystemRecord</a><span>, in § 2.2</span>
    <li><a href="#version-graph">version graph</a><span>, in § 8.1</span>
   </ul>
@@ -3119,21 +3176,29 @@ function parseHTML(markup) {
 {
 let dfnPanelData = {
 "assertionrecord": {"dfnID":"assertionrecord","dfnText":"AssertionRecord","external":false,"refSections":[{"refs":[{"id":"ref-for-assertionrecord"}],"title":"2.2. Record taxonomy {#record-taxonomy}"},{"refs":[{"id":"ref-for-assertionrecord\u2460"}],"title":"11.1. Scope and conformance {#relationship-vocabulary-scope}"}],"url":"#assertionrecord"},
-"caserecord": {"dfnID":"caserecord","dfnText":"CaseRecord","external":false,"refSections":[{"refs":[{"id":"ref-for-caserecord"}],"title":"2.2. Record taxonomy {#record-taxonomy}"},{"refs":[{"id":"ref-for-caserecord\u2460"},{"id":"ref-for-caserecord\u2461"}],"title":"9.3. Case Elements (normative)"},{"refs":[{"id":"ref-for-caserecord\u2462"},{"id":"ref-for-caserecord\u2463"}],"title":"9.4. Hard and Soft Links {#links}"},{"refs":[{"id":"ref-for-caserecord\u2464"}],"title":"9.5. CaseRecord-to-CaseRecord Links {#case-to-case-links}"},{"refs":[{"id":"ref-for-caserecord\u2465"},{"id":"ref-for-caserecord\u2466"},{"id":"ref-for-caserecord\u2467"},{"id":"ref-for-caserecord\u2468"}],"title":"9.6. Case Merkle Root"},{"refs":[{"id":"ref-for-caserecord\u2460\u24ea"}],"title":"9.7. Case Completeness Check"},{"refs":[{"id":"ref-for-caserecord\u2460\u2460"}],"title":"12.5. Merkle Tree Algorithm"},{"refs":[{"id":"ref-for-caserecord\u2460\u2461"}],"title":"13.1. Purpose and Scope"},{"refs":[{"id":"ref-for-caserecord\u2460\u2462"}],"title":"13.3. Anchoring Protocol"},{"refs":[{"id":"ref-for-caserecord\u2460\u2463"},{"id":"ref-for-caserecord\u2460\u2464"}],"title":"13.4. Anchoring Reference in the Case"}],"url":"#caserecord"},
-"conformancerecord": {"dfnID":"conformancerecord","dfnText":"ConformanceRecord","external":false,"refSections":[{"refs":[{"id":"ref-for-conformancerecord"}],"title":"2.2. Record taxonomy {#record-taxonomy}"}],"url":"#conformancerecord"},
+"attester": {"dfnID":"attester","dfnText":"attester","external":false,"refSections":[],"url":"#attester"},
+"caserecord": {"dfnID":"caserecord","dfnText":"CaseRecord","external":false,"refSections":[{"refs":[{"id":"ref-for-caserecord"}],"title":"2.2. Record taxonomy {#record-taxonomy}"},{"refs":[{"id":"ref-for-caserecord\u2460"},{"id":"ref-for-caserecord\u2461"}],"title":"9.3. Case Elements (normative)"},{"refs":[{"id":"ref-for-caserecord\u2462"},{"id":"ref-for-caserecord\u2463"}],"title":"9.4. Hard and Soft Links {#links}"},{"refs":[{"id":"ref-for-caserecord\u2464"}],"title":"9.5. CaseRecord-to-CaseRecord Links {#case-to-case-links}"},{"refs":[{"id":"ref-for-caserecord\u2465"},{"id":"ref-for-caserecord\u2466"},{"id":"ref-for-caserecord\u2467"},{"id":"ref-for-caserecord\u2468"},{"id":"ref-for-caserecord\u2460\u24ea"},{"id":"ref-for-caserecord\u2460\u2460"},{"id":"ref-for-caserecord\u2460\u2461"},{"id":"ref-for-caserecord\u2460\u2462"},{"id":"ref-for-caserecord\u2460\u2463"}],"title":"9.6. Case Merkle Root"},{"refs":[{"id":"ref-for-caserecord\u2460\u2464"}],"title":"9.7. Case Completeness Check"},{"refs":[{"id":"ref-for-caserecord\u2460\u2465"}],"title":"12.5. Merkle Tree Algorithm"},{"refs":[{"id":"ref-for-caserecord\u2460\u2466"}],"title":"13.1. Purpose and Scope"},{"refs":[{"id":"ref-for-caserecord\u2460\u2467"}],"title":"13.3. Anchoring Protocol"},{"refs":[{"id":"ref-for-caserecord\u2460\u2468"}],"title":"13.4. Anchoring Reference in the Case"}],"url":"#caserecord"},
+"conformance": {"dfnID":"conformance","dfnText":"conformance","external":false,"refSections":[],"url":"#conformance"},
+"conformance-attestation①": {"dfnID":"conformance-attestation\u2460","dfnText":"conformance attestation","external":false,"refSections":[],"url":"#conformance-attestation\u2460"},
+"conformancerecord": {"dfnID":"conformancerecord","dfnText":"ConformanceRecord","external":false,"refSections":[{"refs":[{"id":"ref-for-conformancerecord"}],"title":"2.2. Record taxonomy {#record-taxonomy}"},{"refs":[{"id":"ref-for-conformancerecord\u2460"},{"id":"ref-for-conformancerecord\u2461"}],"title":"18.8. Conformance Attestation {#chapter-conformance-attestation}"}],"url":"#conformancerecord"},
+"consumer": {"dfnID":"consumer","dfnText":"consumer","external":false,"refSections":[],"url":"#consumer"},
+"custodian": {"dfnID":"custodian","dfnText":"custodian","external":false,"refSections":[],"url":"#custodian"},
 "draft": {"dfnID":"draft","dfnText":"draft","external":false,"refSections":[{"refs":[{"id":"ref-for-draft"}],"title":"7.2. Linkability"},{"refs":[{"id":"ref-for-draft\u2460"}],"title":"7.4. Irreversibility of Finalisation"},{"refs":[{"id":"ref-for-draft\u2461"},{"id":"ref-for-draft\u2462"}],"title":"8.4. Branches"},{"refs":[{"id":"ref-for-draft\u2463"}],"title":"9.4. Hard and Soft Links {#links}"}],"url":"#draft"},
 "finalized": {"dfnID":"finalized","dfnText":"finalized","external":false,"refSections":[{"refs":[{"id":"ref-for-finalized"},{"id":"ref-for-finalized\u2460"}],"title":"7.2. Linkability"},{"refs":[{"id":"ref-for-finalized\u2461"}],"title":"7.4. Irreversibility of Finalisation"},{"refs":[{"id":"ref-for-finalized\u2462"}],"title":"8.4. Branches"},{"refs":[{"id":"ref-for-finalized\u2463"},{"id":"ref-for-finalized\u2464"}],"title":"8.6. Cross-Record Merges"},{"refs":[{"id":"ref-for-finalized\u2465"},{"id":"ref-for-finalized\u2466"}],"title":"9.4. Hard and Soft Links {#links}"},{"refs":[{"id":"ref-for-finalized\u2467"}],"title":"9.5. CaseRecord-to-CaseRecord Links {#case-to-case-links}"}],"url":"#finalized"},
-"hard-link": {"dfnID":"hard-link","dfnText":"hard link","external":false,"refSections":[{"refs":[{"id":"ref-for-hard-link"}],"title":"9.5. CaseRecord-to-CaseRecord Links {#case-to-case-links}"},{"refs":[{"id":"ref-for-hard-link\u2460"},{"id":"ref-for-hard-link\u2461"}],"title":"9.6. Case Merkle Root"},{"refs":[{"id":"ref-for-hard-link\u2462"}],"title":"15.4. Cross-Namespace Links"}],"url":"#hard-link"},
+"hard-link": {"dfnID":"hard-link","dfnText":"hard link","external":false,"refSections":[{"refs":[{"id":"ref-for-hard-link"}],"title":"9.5. CaseRecord-to-CaseRecord Links {#case-to-case-links}"},{"refs":[{"id":"ref-for-hard-link\u2460"}],"title":"15.4. Cross-Namespace Links"}],"url":"#hard-link"},
 "identity": {"dfnID":"identity","dfnText":"identity","external":false,"refSections":[{"refs":[{"id":"ref-for-identity"}],"title":"4.1. Overview"}],"url":"#identity"},
 "informationrecord": {"dfnID":"informationrecord","dfnText":"InformationRecord","external":false,"refSections":[{"refs":[{"id":"ref-for-informationrecord"}],"title":"2.2. Record taxonomy {#record-taxonomy}"},{"refs":[{"id":"ref-for-informationrecord\u2460"}],"title":"9.4. Hard and Soft Links {#links}"}],"url":"#informationrecord"},
-"merkle-root": {"dfnID":"merkle-root","dfnText":"Merkle root","external":false,"refSections":[{"refs":[{"id":"ref-for-merkle-root"}],"title":"9.5. CaseRecord-to-CaseRecord Links {#case-to-case-links}"},{"refs":[{"id":"ref-for-merkle-root\u2460"},{"id":"ref-for-merkle-root\u2461"},{"id":"ref-for-merkle-root\u2462"}],"title":"9.6. Case Merkle Root"},{"refs":[{"id":"ref-for-merkle-root\u2463"}],"title":"12.5. Merkle Tree Algorithm"},{"refs":[{"id":"ref-for-merkle-root\u2464"}],"title":"13.1. Purpose and Scope"}],"url":"#merkle-root"},
+"merkle-root": {"dfnID":"merkle-root","dfnText":"Merkle root","external":false,"refSections":[{"refs":[{"id":"ref-for-merkle-root"}],"title":"9.5. CaseRecord-to-CaseRecord Links {#case-to-case-links}"},{"refs":[{"id":"ref-for-merkle-root\u2460"}],"title":"12.5. Merkle Tree Algorithm"},{"refs":[{"id":"ref-for-merkle-root\u2461"}],"title":"13.1. Purpose and Scope"}],"url":"#merkle-root"},
 "metadata": {"dfnID":"metadata","dfnText":"metadata","external":false,"refSections":[{"refs":[{"id":"ref-for-metadata"}],"title":"4.1. Overview"},{"refs":[{"id":"ref-for-metadata\u2460"}],"title":"6.1. Record Type Definition"},{"refs":[{"id":"ref-for-metadata\u2461"}],"title":"14.2. Access Policy Block"},{"refs":[{"id":"ref-for-metadata\u2462"}],"title":"16.1. Deletion Principles"},{"refs":[{"id":"ref-for-metadata\u2463"}],"title":"16.4. Solid Pod Delivery (optional)"}],"url":"#metadata"},
 "payload": {"dfnID":"payload","dfnText":"payload","external":false,"refSections":[{"refs":[{"id":"ref-for-payload"}],"title":"4.1. Overview"},{"refs":[{"id":"ref-for-payload\u2460"}],"title":"5.1. Payload Definition"},{"refs":[{"id":"ref-for-payload\u2461"}],"title":"5.3. Multi-Representation"},{"refs":[{"id":"ref-for-payload\u2462"}],"title":"6.1. Record Type Definition"},{"refs":[{"id":"ref-for-payload\u2463"}],"title":"8.3. Edges (Parent References)"},{"refs":[{"id":"ref-for-payload\u2464"},{"id":"ref-for-payload\u2465"}],"title":"16.3. DeletionRecord Protocol"},{"refs":[{"id":"ref-for-payload\u2466"}],"title":"16.4. Solid Pod Delivery (optional)"}],"url":"#payload"},
+"producer": {"dfnID":"producer","dfnText":"producer","external":false,"refSections":[],"url":"#producer"},
 "record": {"dfnID":"record","dfnText":"Record","external":false,"refSections":[{"refs":[{"id":"ref-for-record"}],"title":"1.1. Purpose"},{"refs":[{"id":"ref-for-record\u2460"},{"id":"ref-for-record\u2461"}],"title":"1.2. Scope"},{"refs":[{"id":"ref-for-record\u2462"}],"title":"2.2. Record taxonomy {#record-taxonomy}"},{"refs":[{"id":"ref-for-record\u2463"},{"id":"ref-for-record\u2464"},{"id":"ref-for-record\u2465"},{"id":"ref-for-record\u2466"}],"title":"3.1. Requirements for Record Identity"},{"refs":[{"id":"ref-for-record\u2467"},{"id":"ref-for-record\u2468"}],"title":"3.2. DID Format"},{"refs":[{"id":"ref-for-record\u2460\u24ea"},{"id":"ref-for-record\u2460\u2460"}],"title":"3.3. DID Document"},{"refs":[{"id":"ref-for-record\u2460\u2461"}],"title":"3.4. DID Resolver Requirements"},{"refs":[{"id":"ref-for-record\u2460\u2462"},{"id":"ref-for-record\u2460\u2463"},{"id":"ref-for-record\u2460\u2464"},{"id":"ref-for-record\u2460\u2465"},{"id":"ref-for-record\u2460\u2466"}],"title":"4.1. Overview"},{"refs":[{"id":"ref-for-record\u2460\u2467"}],"title":"4.3. Minimum Metadata Set"},{"refs":[{"id":"ref-for-record\u2460\u2468"},{"id":"ref-for-record\u2461\u24ea"}],"title":"5.1. Payload Definition"},{"refs":[{"id":"ref-for-record\u2461\u2460"},{"id":"ref-for-record\u2461\u2461"}],"title":"5.5. Conversion During Finalisation"},{"refs":[{"id":"ref-for-record\u2461\u2462"},{"id":"ref-for-record\u2461\u2463"}],"title":"6.1. Record Type Definition"},{"refs":[{"id":"ref-for-record\u2461\u2464"}],"title":"6.2. SchemaRecord"},{"refs":[{"id":"ref-for-record\u2461\u2465"}],"title":"6.4. Schema Versioning and Backward Compatibility"},{"refs":[{"id":"ref-for-record\u2461\u2466"}],"title":"7.1. State Model"},{"refs":[{"id":"ref-for-record\u2461\u2467"}],"title":"7.2. Linkability"},{"refs":[{"id":"ref-for-record\u2461\u2468"}],"title":"8.1. Graph Structure"},{"refs":[{"id":"ref-for-record\u2462\u24ea"},{"id":"ref-for-record\u2462\u2460"}],"title":"8.3. Edges (Parent References)"},{"refs":[{"id":"ref-for-record\u2462\u2461"}],"title":"8.4. Branches"},{"refs":[{"id":"ref-for-record\u2462\u2462"},{"id":"ref-for-record\u2462\u2463"},{"id":"ref-for-record\u2462\u2464"}],"title":"8.6. Cross-Record Merges"},{"refs":[{"id":"ref-for-record\u2462\u2465"}],"title":"9.1. Case as a specialised Record Type {#case-type}"},{"refs":[{"id":"ref-for-record\u2462\u2466"}],"title":"9.4. Hard and Soft Links {#links}"},{"refs":[{"id":"ref-for-record\u2462\u2467"}],"title":"10.1. Purpose and scope {#assertionrecord-purpose}"},{"refs":[{"id":"ref-for-record\u2462\u2468"}],"title":"12.3. Snapshot Integrity"},{"refs":[{"id":"ref-for-record\u2463\u24ea"}],"title":"13.2. Requirements for the Ledger"},{"refs":[{"id":"ref-for-record\u2463\u2460"}],"title":"14.2. Access Policy Block"},{"refs":[{"id":"ref-for-record\u2463\u2461"},{"id":"ref-for-record\u2463\u2462"},{"id":"ref-for-record\u2463\u2463"}],"title":"15.4. Cross-Namespace Links"},{"refs":[{"id":"ref-for-record\u2463\u2464"}],"title":"16.1. Deletion Principles"},{"refs":[{"id":"ref-for-record\u2463\u2465"},{"id":"ref-for-record\u2463\u2466"},{"id":"ref-for-record\u2463\u2467"}],"title":"16.4. Solid Pod Delivery (optional)"}],"url":"#record"},
 "relationrecord": {"dfnID":"relationrecord","dfnText":"RelationRecord","external":false,"refSections":[{"refs":[{"id":"ref-for-relationrecord"},{"id":"ref-for-relationrecord\u2460"},{"id":"ref-for-relationrecord\u2461"}],"title":"2.2. Record taxonomy {#record-taxonomy}"},{"refs":[{"id":"ref-for-relationrecord\u2462"}],"title":"9.1. Case as a specialised Record Type {#case-type}"},{"refs":[{"id":"ref-for-relationrecord\u2463"}],"title":"9.4. Hard and Soft Links {#links}"},{"refs":[{"id":"ref-for-relationrecord\u2464"}],"title":"10.1. Purpose and scope {#assertionrecord-purpose}"}],"url":"#relationrecord"},
+"resolver": {"dfnID":"resolver","dfnText":"resolver","external":false,"refSections":[],"url":"#resolver"},
 "schemarecord": {"dfnID":"schemarecord","dfnText":"SchemaRecord","external":false,"refSections":[{"refs":[{"id":"ref-for-schemarecord"}],"title":"2.2. Record taxonomy {#record-taxonomy}"},{"refs":[{"id":"ref-for-schemarecord\u2460"}],"title":"6.2. SchemaRecord"},{"refs":[{"id":"ref-for-schemarecord\u2461"}],"title":"6.3. Core Record Types"},{"refs":[{"id":"ref-for-schemarecord\u2462"},{"id":"ref-for-schemarecord\u2463"}],"title":"6.4. Schema Versioning and Backward Compatibility"},{"refs":[{"id":"ref-for-schemarecord\u2464"}],"title":"7.1. State Model"}],"url":"#schemarecord"},
 "snapshot": {"dfnID":"snapshot","dfnText":"snapshot","external":false,"refSections":[{"refs":[{"id":"ref-for-snapshot"},{"id":"ref-for-snapshot\u2460"}],"title":"4.2. Snapshot Definition"},{"refs":[{"id":"ref-for-snapshot\u2461"}],"title":"4.3. Minimum Metadata Set"},{"refs":[{"id":"ref-for-snapshot\u2462"}],"title":"5.1. Payload Definition"},{"refs":[{"id":"ref-for-snapshot\u2463"},{"id":"ref-for-snapshot\u2464"}],"title":"5.3. Multi-Representation"},{"refs":[{"id":"ref-for-snapshot\u2465"},{"id":"ref-for-snapshot\u2466"}],"title":"7.3. Finalisation Requirements"},{"refs":[{"id":"ref-for-snapshot\u2467"}],"title":"7.4. Irreversibility of Finalisation"},{"refs":[{"id":"ref-for-snapshot\u2468"},{"id":"ref-for-snapshot\u2460\u24ea"}],"title":"8.1. Graph Structure"},{"refs":[{"id":"ref-for-snapshot\u2460\u2460"}],"title":"8.2. Nodes"},{"refs":[{"id":"ref-for-snapshot\u2460\u2461"},{"id":"ref-for-snapshot\u2460\u2462"},{"id":"ref-for-snapshot\u2460\u2463"},{"id":"ref-for-snapshot\u2460\u2464"},{"id":"ref-for-snapshot\u2460\u2465"},{"id":"ref-for-snapshot\u2460\u2466"},{"id":"ref-for-snapshot\u2460\u2467"}],"title":"8.3. Edges (Parent References)"},{"refs":[{"id":"ref-for-snapshot\u2460\u2468"}],"title":"8.5. Merges"},{"refs":[{"id":"ref-for-snapshot\u2461\u24ea"}],"title":"9.4. Hard and Soft Links {#links}"},{"refs":[{"id":"ref-for-snapshot\u2461\u2460"},{"id":"ref-for-snapshot\u2461\u2461"},{"id":"ref-for-snapshot\u2461\u2462"},{"id":"ref-for-snapshot\u2461\u2463"}],"title":"12.3. Snapshot Integrity"},{"refs":[{"id":"ref-for-snapshot\u2461\u2464"},{"id":"ref-for-snapshot\u2461\u2465"}],"title":"15.4. Cross-Namespace Links"},{"refs":[{"id":"ref-for-snapshot\u2461\u2466"}],"title":"16.3. DeletionRecord Protocol"},{"refs":[{"id":"ref-for-snapshot\u2461\u2467"}],"title":"16.4. Solid Pod Delivery (optional)"}],"url":"#snapshot"},
 "soft-link": {"dfnID":"soft-link","dfnText":"soft link","external":false,"refSections":[{"refs":[{"id":"ref-for-soft-link"}],"title":"9.5. CaseRecord-to-CaseRecord Links {#case-to-case-links}"}],"url":"#soft-link"},
+"source-adapter": {"dfnID":"source-adapter","dfnText":"source-adapter","external":false,"refSections":[],"url":"#source-adapter"},
 "systemrecord": {"dfnID":"systemrecord","dfnText":"SystemRecord","external":false,"refSections":[{"refs":[{"id":"ref-for-systemrecord"},{"id":"ref-for-systemrecord\u2460"},{"id":"ref-for-systemrecord\u2461"},{"id":"ref-for-systemrecord\u2462"},{"id":"ref-for-systemrecord\u2463"},{"id":"ref-for-systemrecord\u2464"}],"title":"2.2. Record taxonomy {#record-taxonomy}"},{"refs":[{"id":"ref-for-systemrecord\u2465"}],"title":"9.4. Hard and Soft Links {#links}"}],"url":"#systemrecord"},
 "version-graph": {"dfnID":"version-graph","dfnText":"version graph","external":false,"refSections":[{"refs":[{"id":"ref-for-version-graph"}],"title":"8.1. Graph Structure"},{"refs":[{"id":"ref-for-version-graph\u2460"}],"title":"8.2. Nodes"}],"url":"#version-graph"},
 };
