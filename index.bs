@@ -858,7 +858,7 @@ The schema of a Record type MUST define the permitted payload formats for each s
     </tr>
     <tr>
       <td><code>finalized</code></td>
-      <td>Only formats listed under [RWP archival-grade formats](#format-requirements)</td>
+      <td>Only formats listed under [RWP archival-grade formats](#section-payload-archival-formats)</td>
     </tr>
   </tbody>
 </table>
@@ -1179,7 +1179,7 @@ Record Integrity {#chapter-record-integrity}
 
 ## Purpose ## {#section-record-integrity-purpose}
 
-The <dfn>recordHash</dfn> is a Record-level integrity value that covers the entire [=Record=] (its `did`, `payload`, and `metadata`) at the time the hash was calculated. It provides evidence that a Record has not been altered since that point, independent of whether the alteration occurred in `payload` or in `metadata`.
+The <dfn>recordHash</dfn> is a Record-level <dfn>integrity</dfn> value that covers the entire [=Record=] (its `did`, `payload`, and `metadata`) at the time the hash was calculated. It provides evidence that a Record has not been altered since that point, independent of whether the alteration occurred in `payload` or in `metadata`.
 
 The `recordHash` is distinct from the `signature` carried by an individual [=snapshot=] (see [Signature Procedure](#section-crypto-procedures-signature)). A `signature` is an owner's cryptographic authorisation of one specific snapshot's content at finalisation. The `recordHash` is an unsigned, purely computational value; it does not require, and MUST NOT be interpreted as, an authorisation or attestation. It exists solely to make unauthorised or accidental modification of any part of the Record detectable.
 
