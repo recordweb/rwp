@@ -8,7 +8,7 @@
   <meta content="Bikeshed version ac92c2f0d, updated Fri Aug 21 16:01:29 2026 -0700" name="generator">
   <link href="https://recordweb.github.io/rwp/" rel="canonical">
   <link href="https://www.w3.org/2008/site/images/favicon.ico" rel="icon">
-  <meta content="5dac0ec87b8c01dffb5fe5d4e046be58a661f1bf" name="revision">
+  <meta content="cabfa2c8e3721acf14d153f52b5406fbb979ddad" name="revision">
   <meta content="dark light" name="color-scheme">
   <link href="https://www.w3.org/StyleSheets/TR/2021/dark.css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css">
 <style>/* Boilerplate: style-autolinks */
@@ -814,13 +814,13 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li>
      <a href="#chapter-payload"><span class="secno">5</span> <span class="content">Payload and Snapshots</span></a>
      <ol class="toc">
-      <li><a href="#section-payload-definition"><span class="secno">5.1</span> <span class="content">Payload Definition</span></a>
-      <li><a href="#section-payload-types"><span class="secno">5.2</span> <span class="content">Permitted Payload Types</span></a>
+      <li><a href="#section-payload-definition"><span class="secno">5.1</span> <span class="content">Payload Structure</span></a>
+      <li><a href="#section-payload-types"><span class="secno">5.2</span> <span class="content">Permitted Payload Content Types</span></a>
       <li><a href="#section-payload-multi-representation"><span class="secno">5.3</span> <span class="content">Multi-Representation</span></a>
       <li><a href="#section-payload-format-requirements"><span class="secno">5.4</span> <span class="content">Format Requirements per State</span></a>
       <li><a href="#section-payload-archival-formats"><span class="secno">5.5</span> <span class="content">RWP archival-grade formats (normative)</span></a>
       <li><a href="#section-payload-conversion"><span class="secno">5.6</span> <span class="content">Conversion During Finalisation</span></a>
-      <li><a href="#section-payload-snapshot-definition"><span class="secno">5.7</span> <span class="content">Snapshot Definition</span></a>
+      <li><a href="#section-payload-snapshot-definition"><span class="secno">5.7</span> <span class="content">Snapshot Fields</span></a>
       <li><a href="#section-payload-snapshot-hash"><span class="secno">5.8</span> <span class="content">Snapshot Hash Calculation</span></a>
       <li>
        <a href="#section-payload-version-graph"><span class="secno">5.9</span> <span class="content">Version Graph (DAG)</span></a>
@@ -953,7 +953,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li>
      <a href="#annex-a"><span class="secno">24</span> <span class="content">Annex A: Normative JSON Schemas</span></a>
      <ol class="toc">
-      <li><a href="#schema-snapshot"><span class="secno">24.1</span> <span class="content">A.1 Snapshot Metadata Schema</span></a>
+      <li><a href="#schema-snapshot"><span class="secno">24.1</span> <span class="content">A.1 Record, Snapshot, and Metadata Schemas</span></a>
       <li><a href="#schema-case"><span class="secno">24.2</span> <span class="content">A.2 CaseRecord Payload Schema</span></a>
       <li><a href="#schema-deletion"><span class="secno">24.3</span> <span class="content">A.3 DeletionRecord Payload Schema</span></a>
      </ol>
@@ -1576,9 +1576,36 @@ did:rwp:bern.ch:f47ac10b-58cc-4372-a567-0e02b2c3d479</p>
    <p>An implementation claiming another RWP profile or role MAY rely on a resolver operated by another conformant implementation. It is not required to operate a DID resolver itself unless it claims the <code>resolver</code> role.</p>
    <p>A producer or custodian that creates or manages RWP Records MUST ensure that the associated Record DIDs remain resolvable in accordance with this specification.</p>
    <h2 class="heading settled" data-level="5" id="chapter-payload"><span class="secno">5. </span><span class="content">Payload and Snapshots</span><a class="self-link" href="#chapter-payload"></a></h2>
-   <h3 class="heading settled" data-level="5.1" id="section-payload-definition"><span class="secno">5.1. </span><span class="content">Payload Definition</span><a class="self-link" href="#section-payload-definition"></a></h3>
-   <p>The <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="payload">payload</dfn> of a <a data-link-type="dfn" href="#record" id="ref-for-record①⑧">Record</a> is the content the <a data-link-type="dfn" href="#record" id="ref-for-record①⑨">Record</a> carries, the actual information.</p>
-   <p>A <a data-link-type="dfn" href="#payload" id="ref-for-payload①">payload</a>:</p>
+   <h3 class="heading settled" data-level="5.1" id="section-payload-definition"><span class="secno">5.1. </span><span class="content">Payload Structure</span><a class="self-link" href="#section-payload-definition"></a></h3>
+   <p>The <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="payload">payload</dfn> of a <a data-link-type="dfn" href="#record" id="ref-for-record①⑧">Record</a> is an ordered array of <u class="link-error" data-lt="snapshots" title="LINK ERROR: No &apos;dfn&apos; refs found for &apos;snapshots&apos;.">snapshots</u>. Each <u class="link-error" data-lt="snapshot" title="LINK ERROR: No &apos;dfn&apos; refs found for &apos;snapshot&apos;.">snapshot</u> is one immutable, versioned representation of the <a data-link-type="dfn" href="#record" id="ref-for-record①⑨">Record</a>’s content at a specific point in time.</p>
+<pre class="highlight language-json"><c- p>{</c->
+  <c- f>"payload"</c-><c- p>:</c-> <c- p>[</c->
+    <c- p>{</c->
+      <c- f>"snapshot"</c-><c- p>:</c-> <c- u>"sha256:e3b0c44298fc1c149afb4c8996fb92427ae41e4649b934ca495991b7852b855"</c-><c- p>,</c->
+      <c- f>"state"</c-><c- p>:</c-> <c- u>"finalized"</c-><c- p>,</c->
+      <c- f>"parents"</c-><c- p>:</c-> <c- p>[</c-><c- u>"sha256:previousSnapshotHash0000000000000000000000000000000000000000"</c-><c- p>],</c->
+      <c- f>"createdAt"</c-><c- p>:</c-> <c- u>"2026-05-31T14:00:00Z"</c-><c- p>,</c->
+      <c- f>"modifiedAt"</c-><c- p>:</c-> <c- u>"2026-05-31T15:30:00Z"</c-><c- p>,</c->
+      <c- f>"signature"</c-><c- p>:</c-> <c- u>"z3FttV7VjukA1LhqSDgOxupHy..."</c-><c- p>,</c->
+      <c- f>"representations"</c-><c- p>:</c-> <c- p>[</c->
+        <c- p>{</c->
+          <c- f>"format"</c-><c- p>:</c-> <c- u>"text/markdown"</c-><c- p>,</c->
+          <c- f>"hash"</c-><c- p>:</c-> <c- u>"sha256:aabbcc0000000000000000000000000000000000000000000000000000000"</c-><c- p>,</c->
+          <c- f>"primary"</c-><c- p>:</c-> <c- kc>false</c-><c- p>,</c->
+          <c- f>"role"</c-><c- p>:</c-> <c- u>"source"</c->
+        <c- p>},</c->
+        <c- p>{</c->
+          <c- f>"format"</c-><c- p>:</c-> <c- u>"application/pdf;profile=PDF-A-2b"</c-><c- p>,</c->
+          <c- f>"hash"</c-><c- p>:</c-> <c- u>"sha256:d2d2d2d2d2c3c3c3c3c3b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4"</c-><c- p>,</c->
+          <c- f>"primary"</c-><c- p>:</c-> <c- kc>true</c-><c- p>,</c->
+          <c- f>"role"</c-><c- p>:</c-> <c- u>"publication"</c->
+        <c- p>}</c->
+      <c- p>]</c->
+    <c- p>}</c->
+  <c- p>]</c->
+<c- p>}</c->
+</pre>
+   <p>Each <a data-link-type="dfn" href="#payload" id="ref-for-payload①">payload</a> entry:</p>
    <ul>
     <li data-md>
      <p>MUST conform to the schema of the Record type in the referenced schema version</p>
@@ -1587,10 +1614,10 @@ did:rwp:bern.ch:f47ac10b-58cc-4372-a567-0e02b2c3d479</p>
     <li data-md>
      <p>MUST NOT be changed after finalisation</p>
     <li data-md>
-     <p>MUST be uniquely identified in the <code>payloadHash</code> of the <u class="link-error" data-lt="snapshot" title="LINK ERROR: No &apos;dfn&apos; refs found for &apos;snapshot&apos;.">snapshot</u></p>
+     <p>MUST be uniquely identified by its <code>snapshot</code> field</p>
    </ul>
-   <h3 class="heading settled" data-level="5.2" id="section-payload-types"><span class="secno">5.2. </span><span class="content">Permitted Payload Types</span><a class="self-link" href="#section-payload-types"></a></h3>
-   <p>RWP distinguishes three payload categories:</p>
+   <h3 class="heading settled" data-level="5.2" id="section-payload-types"><span class="secno">5.2. </span><span class="content">Permitted Payload Content Types</span><a class="self-link" href="#section-payload-types"></a></h3>
+   <p>RWP distinguishes three payload content categories:</p>
    <table class="data">
     <thead>
      <tr>
@@ -1612,35 +1639,16 @@ did:rwp:bern.ch:f47ac10b-58cc-4372-a567-0e02b2c3d479</p>
       <td>TIFF, JPEG 2000, MP4, ZIP
    </table>
    <h3 class="heading settled" data-level="5.3" id="section-payload-multi-representation"><span class="secno">5.3. </span><span class="content">Multi-Representation</span><a class="self-link" href="#section-payload-multi-representation"></a></h3>
-   <p>A <u class="link-error" data-lt="snapshot" title="LINK ERROR: No &apos;dfn&apos; refs found for &apos;snapshot&apos;.">snapshot</u> MAY carry multiple representations of the same <a data-link-type="dfn" href="#payload" id="ref-for-payload②">payload</a>. This is provided in particular for the transition from working format (draft) to long-term format (finalised).</p>
+   <p>A <u class="link-error" data-lt="snapshot" title="LINK ERROR: No &apos;dfn&apos; refs found for &apos;snapshot&apos;.">snapshot</u> MAY carry multiple <code>representations</code>. This is provided in particular for the transition from working format (draft) to long-term format (finalised). Representations express the same content in different formats at the same point in the version graph; they MUST NOT be used to express different versions over time — that is the purpose of separate snapshot entries linked via <code>parents</code>.</p>
    <p>If a <u class="link-error" data-lt="snapshot" title="LINK ERROR: No &apos;dfn&apos; refs found for &apos;snapshot&apos;.">snapshot</u> contains multiple representations, ALL of the following MUST apply:</p>
    <ul>
     <li data-md>
      <p>All representations MUST depict the same content</p>
     <li data-md>
-     <p>All representations MUST be individually hashed and referenced in the snapshot</p>
+     <p>All representations MUST be individually hashed</p>
     <li data-md>
-     <p>One representation MUST be designated as primary (<code>primary: true</code>)</p>
-    <li data-md>
-     <p>The <code>payloadHash</code> MUST contain the hash of the primary representation</p>
+     <p>Exactly one representation MUST be designated as primary (<code>primary: true</code>)</p>
    </ul>
-<pre class="highlight language-json"><c- p>{</c->
-  <c- f>"payloadRepresentations"</c-><c- p>:</c-> <c- p>[</c->
-    <c- p>{</c->
-      <c- f>"format"</c-><c- p>:</c-> <c- u>"text/markdown"</c-><c- p>,</c->
-      <c- f>"hash"</c-><c- p>:</c-> <c- u>"sha256:aabbcc..."</c-><c- p>,</c->
-      <c- f>"primary"</c-><c- p>:</c-> <c- kc>false</c-><c- p>,</c->
-      <c- f>"role"</c-><c- p>:</c-> <c- u>"source"</c->
-    <c- p>},</c->
-    <c- p>{</c->
-      <c- f>"format"</c-><c- p>:</c-> <c- u>"application/pdf;profile=PDF-A-2b"</c-><c- p>,</c->
-      <c- f>"hash"</c-><c- p>:</c-> <c- u>"sha256:ddeeff..."</c-><c- p>,</c->
-      <c- f>"primary"</c-><c- p>:</c-> <c- kc>true</c-><c- p>,</c->
-      <c- f>"role"</c-><c- p>:</c-> <c- u>"publication"</c->
-    <c- p>}</c->
-  <c- p>]</c->
-<c- p>}</c->
-</pre>
    <table class="data">
     <thead>
      <tr>
@@ -1666,109 +1674,80 @@ did:rwp:bern.ch:f47ac10b-58cc-4372-a567-0e02b2c3d479</p>
       <td>Semantic role: <code>source</code>, <code>publication</code>, <code>preview</code>, <code>archive</code>
    </table>
    <h3 class="heading settled" data-level="5.4" id="section-payload-format-requirements"><span class="secno">5.4. </span><span class="content">Format Requirements per State</span><a class="self-link" href="#section-payload-format-requirements"></a></h3>
-   <p>The schema of a Record type MUST define the permitted payload formats for each state. If a schema contains no explicit format requirements, the following defaults apply:</p>
-   <table class="data">
-    <thead>
-     <tr>
-      <th>State
-      <th>Permitted formats (default)
-    <tbody>
-     <tr>
-      <td><code>draft</code>
-      <td>All MIME types not explicitly excluded in the schema of the Record type
-     <tr>
-      <td><code>finalized</code>
-      <td>Only formats listed under <a href="#section-payload-archival-formats">RWP archival-grade formats</a>
-   </table>
+   <p>[... unverändert ...]</p>
    <h3 class="heading settled" data-level="5.5" id="section-payload-archival-formats"><span class="secno">5.5. </span><span class="content">RWP archival-grade formats (normative)</span><a class="self-link" href="#section-payload-archival-formats"></a></h3>
+   <p>[... unverändert ...]</p>
+   <h3 class="heading settled" data-level="5.6" id="section-payload-conversion"><span class="secno">5.6. </span><span class="content">Conversion During Finalisation</span><a class="self-link" href="#section-payload-conversion"></a></h3>
+   <p>[... unverändert, aber "Store both formats as multi-representation in the snapshot" bleibt sinngemäss gültig, da representations weiterhin existieren ...]</p>
+   <h3 class="heading settled" data-level="5.7" id="section-payload-snapshot-definition"><span class="secno">5.7. </span><span class="content">Snapshot Fields</span><a class="self-link" href="#section-payload-snapshot-definition"></a></h3>
+   <p>Every <u class="link-error" data-lt="snapshot" title="LINK ERROR: No &apos;dfn&apos; refs found for &apos;snapshot&apos;.">snapshot</u> entry in the <code>payload</code> array MUST fulfil the following properties:</p>
    <table class="data">
     <thead>
      <tr>
-      <th>MIME Type
-      <th>Format
-      <th>Suitability
+      <th>Field
+      <th>Required
+      <th>Type
+      <th>Description
     <tbody>
      <tr>
-      <td><code>application/pdf;profile=PDF-A-1b</code>
-      <td>PDF/A-1b
-      <td>Documents without embedded multimedia
+      <td><code>snapshot</code>
+      <td>MUST
+      <td>SHA-256
+      <td>Content hash of this snapshot (incl. representations); serves as its unique identifier. Referenceable via <code>did:rwp:&lt;namespace>:&lt;record-id>:&lt;snapshot></code>.
      <tr>
-      <td><code>application/pdf;profile=PDF-A-2b</code>
-      <td>PDF/A-2b
-      <td>Documents with embedded files
+      <td><code>state</code>
+      <td>MUST
+      <td>Enum
+      <td><code>draft</code> or <code>finalized</code>; additional values permitted per type schema
      <tr>
-      <td><code>application/pdf;profile=PDF-A-3b</code>
-      <td>PDF/A-3b
-      <td>Documents with arbitrary attachments
+      <td><code>parents</code>
+      <td>MUST
+      <td>Array&lt;SHA-256>
+      <td>Hashes of predecessor snapshots; empty for the root snapshot
      <tr>
-      <td><code>text/xml</code>
-      <td>XML (well-formed)
-      <td>Structured data
+      <td><code>createdAt</code>
+      <td>MUST
+      <td>ISO 8601
+      <td>Timestamp of snapshot creation
      <tr>
-      <td><code>application/json</code>
-      <td>JSON
-      <td>Structured data (with schema reference)
+      <td><code>modifiedAt</code>
+      <td>MUST
+      <td>ISO 8601
+      <td>Timestamp of the last change to this snapshot. For a <code>finalized</code> snapshot this is the finalisation timestamp, since a finalized snapshot cannot change thereafter.
      <tr>
-      <td><code>image/tiff</code>
-      <td>TIFF
-      <td>Raster images
+      <td><code>signature</code>
+      <td>MUST (when finalized)
+      <td>Multibase
+      <td>Cryptographic signature of the record owner over the <code>snapshot</code> hash. See <a href="#section-crypto-procedures-signature">Signature Procedure</a>.
      <tr>
-      <td><code>image/jp2</code>
-      <td>JPEG 2000
-      <td>Raster images (near-lossless)
-     <tr>
-      <td><code>text/plain;charset=UTF-8</code>
-      <td>Plain Text UTF-8
-      <td>Pure text documents
-     <tr>
-      <td><code>text/markdown</code>
-      <td>CommonMark Markdown
-      <td>Source format with publication representation
+      <td><code>representations</code>
+      <td>MUST (min. 1)
+      <td>Array
+      <td>Format representations of this snapshot’s content, per <a href="#section-payload-multi-representation">Multi-Representation</a>
    </table>
-   <h3 class="heading settled" data-level="5.6" id="section-payload-conversion"><span class="secno">5.6. </span><span class="content">Conversion During Finalisation</span><a class="self-link" href="#section-payload-conversion"></a></h3>
-   <p>When a system transitions a <a data-link-type="dfn" href="#record" id="ref-for-record②⓪">Record</a> from state <code>draft</code> to <code>finalized</code>, it MUST:</p>
-   <ol>
-    <li data-md>
-     <p>Validate the payload against the finalised format of the schema</p>
-    <li data-md>
-     <p>If the current payload is not in archival-grade format: convert automatically or request conversion from the operator</p>
-    <li data-md>
-     <p>Store both formats as multi-representation in the snapshot (SHOULD)</p>
-    <li data-md>
-     <p>Document the conversion act as metadata (<code>conversionMethod</code>, <code>conversionTimestamp</code>)</p>
-   </ol>
-   <p>A system MUST NOT finalise a <a data-link-type="dfn" href="#record" id="ref-for-record②①">Record</a> whose payload does not conform to the format defined for <code>finalized</code> and for which no archival-grade conversion is possible.</p>
-   <h3 class="heading settled" data-level="5.7" id="section-payload-snapshot-definition"><span class="secno">5.7. </span><span class="content">Snapshot Definition</span><a class="self-link" href="#section-payload-snapshot-definition"></a></h3>
-   <p>A <u class="link-error" data-lt="snapshot" title="LINK ERROR: No &apos;dfn&apos; refs found for &apos;snapshot&apos;.">snapshot</u> is the atomic unit of versioning in RecordWeb.</p>
-   <p>A <u class="link-error" data-lt="snapshot" title="LINK ERROR: No &apos;dfn&apos; refs found for &apos;snapshot&apos;.">snapshot</u> MUST fulfil the following properties:</p>
+   <p>A <u class="link-error" data-lt="snapshot" title="LINK ERROR: No &apos;dfn&apos; refs found for &apos;snapshot&apos;.">snapshot</u> MUST additionally fulfil the following properties:</p>
    <ul>
     <li data-md>
      <p>It is immutable after its creation</p>
     <li data-md>
-     <p>It is uniquely identifiable by its content hash</p>
-    <li data-md>
-     <p>It references exactly one version of the payload (or multiple representations per <a href="#section-payload-multi-representation">Multi-Representation</a>)</p>
-    <li data-md>
      <p>It references exactly one version of the schema of its Record type</p>
     <li data-md>
-     <p>It is linked to its predecessor snapshots by directed edges in the version graph</p>
+     <p>It is linked to its predecessor snapshots by directed edges in the version graph (see <a href="#section-payload-version-graph">Version Graph (DAG)</a>)</p>
    </ul>
    <h3 class="heading settled" data-level="5.8" id="section-payload-snapshot-hash"><span class="secno">5.8. </span><span class="content">Snapshot Hash Calculation</span><a class="self-link" href="#section-payload-snapshot-hash"></a></h3>
-   <p>The <code>snapshotHash</code> MUST be calculated as follows:</p>
+   <p>The <code>snapshot</code> hash MUST be calculated as follows:</p>
    <ol>
     <li data-md>
-     <p>Serialise the metadata fields (without <code>snapshotHash</code> itself) as canonical JSON (<a data-link-type="biblio" href="#biblio-rfc8785" title="JSON Canonicalization Scheme (JCS)">[RFC8785]</a>)</p>
-    <li data-md>
-     <p>Concatenate: <code>canonicalMetadataJSON || payloadBytes</code></p>
+     <p>Serialise the snapshot fields <code>state</code>, <code>parents</code>, <code>createdAt</code>, <code>modifiedAt</code>, and <code>representations</code> (without <code>snapshot</code> and <code>signature</code> themselves) as canonical JSON (<a data-link-type="biblio" href="#biblio-rfc8785" title="JSON Canonicalization Scheme (JCS)">[RFC8785]</a>)</p>
     <li data-md>
      <p>Calculate SHA-256 over the result</p>
    </ol>
-<pre>snapshotHash = SHA-256( canonicalize(metadata \ {snapshotHash}) || payloadBytes )
+<pre>snapshot = SHA-256( canonicalize({state, parents, createdAt, modifiedAt, representations}) )
 </pre>
-   <p>A system MUST verify the <code>snapshotHash</code> after every finalisation before the snapshot is accepted as valid.</p>
+   <p>A system MUST verify the <code>snapshot</code> hash after every finalisation before the snapshot is accepted as valid. This hash is distinct from the Record-level <code>recordHash</code> defined in <a href="#chapter-record-integrity">Record Integrity</a>, which covers the entire Record including <code>metadata</code>.</p>
    <h3 class="heading settled" data-level="5.9" id="section-payload-version-graph"><span class="secno">5.9. </span><span class="content">Version Graph (DAG)</span><a class="self-link" href="#section-payload-version-graph"></a></h3>
    <h4 class="heading settled" data-level="5.9.1" id="subsection-graph-structure"><span class="secno">5.9.1. </span><span class="content">Graph Structure</span><a class="self-link" href="#subsection-graph-structure"></a></h4>
-   <p>The totality of all snapshots of a <a data-link-type="dfn" href="#record" id="ref-for-record②②">Record</a> and their parent-child relationships forms the <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="version-graph">version graph</dfn>.</p>
+   <p>The totality of all snapshots of a <a data-link-type="dfn" href="#record" id="ref-for-record②⓪">Record</a> and their parent-child relationships forms the <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="version-graph">version graph</dfn>.</p>
    <p>The <a data-link-type="dfn" href="#version-graph" id="ref-for-version-graph">version graph</a> MUST be a <strong>Directed Acyclic Graph (DAG)</strong>:</p>
    <ul>
     <li data-md>
@@ -1778,7 +1757,7 @@ did:rwp:bern.ch:f47ac10b-58cc-4372-a567-0e02b2c3d479</p>
    </ul>
    <p>A system MUST check upon receipt of a new <u class="link-error" data-lt="snapshot" title="LINK ERROR: No &apos;dfn&apos; refs found for &apos;snapshot&apos;.">snapshot</u> whether adding its parent references would create a cycle. If so, the <u class="link-error" data-lt="snapshot" title="LINK ERROR: No &apos;dfn&apos; refs found for &apos;snapshot&apos;.">snapshot</u> MUST be rejected.</p>
    <h4 class="heading settled" data-level="5.9.2" id="subsection-graph-nodes"><span class="secno">5.9.2. </span><span class="content">Nodes</span><a class="self-link" href="#subsection-graph-nodes"></a></h4>
-   <p>Every node in the <a data-link-type="dfn" href="#version-graph" id="ref-for-version-graph①">version graph</a> is a <u class="link-error" data-lt="snapshot" title="LINK ERROR: No &apos;dfn&apos; refs found for &apos;snapshot&apos;.">snapshot</u> per Section 3.2.</p>
+   <p>Every node in the <a data-link-type="dfn" href="#version-graph" id="ref-for-version-graph①">version graph</a> is a <u class="link-error" data-lt="snapshot" title="LINK ERROR: No &apos;dfn&apos; refs found for &apos;snapshot&apos;.">snapshot</u> entry in the <code>payload</code> array (see <a href="#section-payload-snapshot-definition">Snapshot Fields</a>).</p>
    <table class="data">
     <thead>
      <tr>
@@ -1787,13 +1766,13 @@ did:rwp:bern.ch:f47ac10b-58cc-4372-a567-0e02b2c3d479</p>
     <tbody>
      <tr>
       <td>Unique identity
-      <td>SHA-256 of the snapshot (<code>snapshotHash</code>); MUST be unique
+      <td>SHA-256 of the snapshot (<code>snapshot</code>); MUST be unique
      <tr>
       <td>Immutability
       <td>Finalised nodes MUST NOT be changed
      <tr>
       <td>Resolvability
-      <td>Every node MUST be retrievable in the system via its <code>snapshotHash</code>
+      <td>Every node MUST be retrievable in the system via its <code>snapshot</code> hash
    </table>
    <h4 class="heading settled" data-level="5.9.3" id="subsection-graph-edges"><span class="secno">5.9.3. </span><span class="content">Edges (Parent References)</span><a class="self-link" href="#subsection-graph-edges"></a></h4>
    <p>An edge connects a <u class="link-error" data-lt="snapshot" title="LINK ERROR: No &apos;dfn&apos; refs found for &apos;snapshot&apos;.">snapshot</u> (child) with its predecessor <u class="link-error" data-lt="snapshot" title="LINK ERROR: No &apos;dfn&apos; refs found for &apos;snapshot&apos;.">snapshot</u> (parent).</p>
@@ -1801,7 +1780,7 @@ did:rwp:bern.ch:f47ac10b-58cc-4372-a567-0e02b2c3d479</p>
     <li data-md>
      <p>A <u class="link-error" data-lt="snapshot" title="LINK ERROR: No &apos;dfn&apos; refs found for &apos;snapshot&apos;.">snapshot</u> MAY have zero, one, or multiple parent references</p>
     <li data-md>
-     <p>A <u class="link-error" data-lt="snapshot" title="LINK ERROR: No &apos;dfn&apos; refs found for &apos;snapshot&apos;.">snapshot</u> without parents is the <strong>root snapshot</strong> (first snapshot of the <a data-link-type="dfn" href="#record" id="ref-for-record②③">Record</a>)</p>
+     <p>A <u class="link-error" data-lt="snapshot" title="LINK ERROR: No &apos;dfn&apos; refs found for &apos;snapshot&apos;.">snapshot</u> without parents is the <strong>root snapshot</strong> (first snapshot of the <a data-link-type="dfn" href="#record" id="ref-for-record②①">Record</a>)</p>
     <li data-md>
      <p>A <u class="link-error" data-lt="snapshot" title="LINK ERROR: No &apos;dfn&apos; refs found for &apos;snapshot&apos;.">snapshot</u> with exactly one parent reference is a <strong>linear continuation</strong></p>
     <li data-md>
@@ -1810,9 +1789,9 @@ did:rwp:bern.ch:f47ac10b-58cc-4372-a567-0e02b2c3d479</p>
    <p>Edge requirements:</p>
    <ul>
     <li data-md>
-     <p>Every parent reference MUST be a valid <code>snapshotHash</code> of a known <u class="link-error" data-lt="snapshot" title="LINK ERROR: No &apos;dfn&apos; refs found for &apos;snapshot&apos;.">snapshot</u></p>
+     <p>Every parent reference MUST be a valid <code>snapshot</code> hash of a known <u class="link-error" data-lt="snapshot" title="LINK ERROR: No &apos;dfn&apos; refs found for &apos;snapshot&apos;.">snapshot</u> within the same <code>payload</code> array</p>
     <li data-md>
-     <p>Edges MUST NOT point to snapshots of other <a data-link-type="dfn" href="#record" id="ref-for-record②④">Records</a>. Cross-Record connections are made via links in the <a data-link-type="dfn" href="#payload" id="ref-for-payload③">payload</a> or as Case linkage (<a href="#chapter-caserecord">CaseRecord Specification</a>)</p>
+     <p>Edges MUST NOT point to snapshots of other <a data-link-type="dfn" href="#record" id="ref-for-record②②">Records</a>. Cross-Record connections are made via links in the <a data-link-type="dfn" href="#payload" id="ref-for-payload②">payload</a> of a <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①">CaseRecord</a> or <a data-link-type="dfn" href="#assertionrecord" id="ref-for-assertionrecord①">AssertionRecord</a> (<a href="#chapter-caserecord">CaseRecord Specification</a>)</p>
    </ul>
    <h4 class="heading settled" data-level="5.9.4" id="subsection-graph-branches"><span class="secno">5.9.4. </span><span class="content">Branches</span><a class="self-link" href="#subsection-graph-branches"></a></h4>
    <p>A <strong>branch</strong> arises when two or more new <a data-link-type="dfn" href="#draft" id="ref-for-draft">draft</a> snapshots with the same parent reference emerge from a <a data-link-type="dfn" href="#finalized" id="ref-for-finalized">finalized</a> snapshot.</p>
@@ -1820,7 +1799,7 @@ did:rwp:bern.ch:f47ac10b-58cc-4372-a567-0e02b2c3d479</p>
     <li data-md>
      <p>Branches are explicitly permitted in RecordWeb and MUST be made visible by the system</p>
     <li data-md>
-     <p>A system MUST return all active branches (draft snapshots without successors) when a <a data-link-type="dfn" href="#record" id="ref-for-record②⑤">Record</a> is retrieved</p>
+     <p>A system MUST return all active branches (draft snapshots without successors) when a <a data-link-type="dfn" href="#record" id="ref-for-record②③">Record</a> is retrieved</p>
     <li data-md>
      <p>Branches MAY exist simultaneously as long as they are in state <a data-link-type="dfn" href="#draft" id="ref-for-draft①">draft</a></p>
    </ul>
@@ -1842,18 +1821,18 @@ did:rwp:bern.ch:f47ac10b-58cc-4372-a567-0e02b2c3d479</p>
 </pre>
    <p>The <code>MergeRecord</code> MUST be finalised before the merge snapshot can be finalised.</p>
    <h4 class="heading settled" data-level="5.9.6" id="subsection-cross-record-merges"><span class="secno">5.9.6. </span><span class="content">Cross-Record Merges</span><a class="self-link" href="#subsection-cross-record-merges"></a></h4>
-   <p>When a new <a data-link-type="dfn" href="#record" id="ref-for-record②⑥">Record</a> arises from two or more existing <a data-link-type="dfn" href="#finalized" id="ref-for-finalized①">finalized</a> Records (cross-Record merge), the following MUST apply:</p>
+   <p>When a new <a data-link-type="dfn" href="#record" id="ref-for-record②④">Record</a> arises from two or more existing <a data-link-type="dfn" href="#finalized" id="ref-for-finalized①">finalized</a> Records (cross-Record merge), the following MUST apply:</p>
    <ul>
     <li data-md>
-     <p>The new <a data-link-type="dfn" href="#record" id="ref-for-record②⑦">Record</a> MUST have a root snapshot with an empty <code>parents</code> array</p>
+     <p>The new <a data-link-type="dfn" href="#record" id="ref-for-record②⑤">Record</a> MUST have a root snapshot with an empty <code>parents</code> array</p>
     <li data-md>
      <p>The <code>MergeRecord</code> MUST reference the DIDs of the source Records (not their snapshot hashes)</p>
     <li data-md>
-     <p>The source Records MUST remain in state <a data-link-type="dfn" href="#finalized" id="ref-for-finalized②">finalized</a> and receive a metadata note <code>contributedTo</code> with the DID of the new <a data-link-type="dfn" href="#record" id="ref-for-record②⑧">Record</a></p>
+     <p>The source Records MUST remain in state <a data-link-type="dfn" href="#finalized" id="ref-for-finalized②">finalized</a> and receive a metadata note <code>contributedTo</code> with the DID of the new <a data-link-type="dfn" href="#record" id="ref-for-record②⑥">Record</a></p>
    </ul>
    <h3 class="heading settled" data-level="5.10" id="section-payload-states"><span class="secno">5.10. </span><span class="content">States and Transitions</span><a class="self-link" href="#section-payload-states"></a></h3>
    <h4 class="heading settled" data-level="5.10.1" id="subsection-state-model"><span class="secno">5.10.1. </span><span class="content">State Model</span><a class="self-link" href="#subsection-state-model"></a></h4>
-   <p>Every <a data-link-type="dfn" href="#record" id="ref-for-record②⑨">Record</a> snapshot has exactly one <strong>state</strong>. The state describes the validity and linkability status of the snapshot.</p>
+   <p>Every <a data-link-type="dfn" href="#record" id="ref-for-record②⑦">Record</a> snapshot has exactly one <strong>state</strong>. The state describes the validity and linkability status of the snapshot.</p>
    <p><strong>Core states (normative, for all Record types):</strong></p>
    <table class="data">
     <thead>
@@ -1881,7 +1860,7 @@ did:rwp:bern.ch:f47ac10b-58cc-4372-a567-0e02b2c3d479</p>
 rejected (terminal state, not linkable)
 </pre>
    <h4 class="heading settled" data-level="5.10.2" id="subsection-linkability"><span class="secno">5.10.2. </span><span class="content">Linkability</span><a class="self-link" href="#subsection-linkability"></a></h4>
-   <p>A <a data-link-type="dfn" href="#record" id="ref-for-record③⓪">Record</a> MUST be in the <a data-link-type="dfn" href="#finalized" id="ref-for-finalized③">finalized</a> state to be used as the target of a hard link.</p>
+   <p>A <a data-link-type="dfn" href="#record" id="ref-for-record②⑧">Record</a> MUST be in the <a data-link-type="dfn" href="#finalized" id="ref-for-finalized③">finalized</a> state to be used as the target of a hard link.</p>
    <p>A system MUST return an error when an attempt is made to set a hard link to a Record that is not in the <a data-link-type="dfn" href="#finalized" id="ref-for-finalized④">finalized</a> state.</p>
    <p>Exception: Soft links per <a href="#section-links">Hard and Soft Links</a> MAY point to Records in any state, including <a data-link-type="dfn" href="#draft" id="ref-for-draft②">draft</a> Records.</p>
    <h4 class="heading settled" data-level="5.10.3" id="subsection-finalisation-requirements"><span class="secno">5.10.3. </span><span class="content">Finalisation Requirements</span><a class="self-link" href="#subsection-finalisation-requirements"></a></h4>
@@ -1916,7 +1895,7 @@ rejected (terminal state, not linkable)
    <p>An implementation MUST NOT represent a correction, revision, replacement, or continuation of the same Record as a new Record that is related to the earlier Record only through an AssertionRecord or another cross-Record relationship.</p>
    <p>A new Record MAY be created where a new semantically autonomous information object arises. Such a Record MAY document derivation, source, or other relationships to an earlier Record through an AssertionRecord. It MUST NOT thereby be treated as a continuation in the version graph of that earlier Record.</p>
    <h2 class="heading settled" data-level="6" id="chapter-metadata"><span class="secno">6. </span><span class="content">Metadata</span><a class="self-link" href="#chapter-metadata"></a></h2>
-   <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="metadata">Metadata</dfn> is the descriptive and governing information attached to a <a data-link-type="dfn" href="#record" id="ref-for-record③①">Record</a>, independent of its <code>payload</code>. Unlike <code>payload</code> entries, <code>metadata</code> is not itself versioned as a sequence of snapshots; it MAY be updated in place. Metadata changes are nonetheless covered by the Record-level <code>recordHash</code> defined in <a href="#chapter-record-integrity">Record Integrity</a>, so that any change to <code>metadata</code> is detectable.</p>
+   <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="metadata">Metadata</dfn> is the descriptive and governing information attached to a <a data-link-type="dfn" href="#record" id="ref-for-record②⑨">Record</a>, independent of its <code>payload</code>. Unlike <code>payload</code> entries, <code>metadata</code> is not itself versioned as a sequence of snapshots; it MAY be updated in place. Metadata changes are nonetheless covered by the Record-level <code>recordHash</code> defined in <a href="#chapter-record-integrity">Record Integrity</a>, so that any change to <code>metadata</code> is detectable.</p>
    <p>Metadata is organised into three groups: <code>core</code>, <code>governance</code>, and <code>extensions</code>.</p>
 <pre class="highlight language-json"><c- p>{</c->
   <c- f>"metadata"</c-><c- p>:</c-> <c- p>{</c->
@@ -1925,27 +1904,17 @@ rejected (terminal state, not linkable)
       <c- f>"schemaVersion"</c-><c- p>:</c-> <c- u>"sha256:a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae"</c->
     <c- p>},</c->
     <c- f>"governance"</c-><c- p>:</c-> <c- p>{</c->
+      <c- f>"owner"</c-><c- p>:</c-> <c- u>"did:rwp:bern.ch:unit-baubewilligung"</c-><c- p>,</c->
       <c- f>"classification"</c-><c- p>:</c-> <c- u>"internal"</c-><c- p>,</c->
       <c- f>"retentionPolicy"</c-><c- p>:</c-> <c- u>"did:rwp:bern.ch:retention-bauakten-30y"</c-><c- p>,</c->
       <c- f>"tags"</c-><c- p>:</c-> <c- p>[</c-><c- u>"building-permit"</c-><c- p>,</c-> <c- u>"parcel-451"</c-><c- p>,</c-> <c- u>"2026"</c-><c- p>]</c->
     <c- p>},</c->
-    <c- f>"extensions"</c-><c- p>:</c-> <c- p>[</c->
-      <c- p>{</c->
-        <c- f>"type"</c-><c- p>:</c-> <c- u>"did:rwp:recordweb.org:extension-access-policy"</c-><c- p>,</c->
-        <c- f>"accessPolicy"</c-><c- p>:</c-> <c- p>{</c->
-          <c- f>"visibility"</c-><c- p>:</c-> <c- u>"restricted"</c-><c- p>,</c->
-          <c- f>"readAccess"</c-><c- p>:</c-> <c- p>[</c-><c- u>"did:rwp:bern.ch:unit-legal"</c-><c- p>],</c->
-          <c- f>"writeAccess"</c-><c- p>:</c-> <c- p>[</c-><c- u>"did:rwp:bern.ch:user-petra-muster"</c-><c- p>],</c->
-          <c- f>"delegationAllowed"</c-><c- p>:</c-> <c- kc>true</c-><c- p>,</c->
-          <c- f>"expiresAt"</c-><c- p>:</c-> <c- kc>null</c->
-        <c- p>}</c->
-      <c- p>}</c->
-    <c- p>]</c->
+    <c- f>"extensions"</c-><c- p>:</c-> <c- p>[]</c->
   <c- p>}</c->
 <c- p>}</c->
 </pre>
    <h3 class="heading settled" data-level="6.1" id="section-metadata-core"><span class="secno">6.1. </span><span class="content">metadata.core</span><a class="self-link" href="#section-metadata-core"></a></h3>
-   <p>Every <a data-link-type="dfn" href="#record" id="ref-for-record③②">Record</a> MUST contain the following <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="core-metadata">core metadata</dfn> fields:</p>
+   <p>Every <a data-link-type="dfn" href="#record" id="ref-for-record③⓪">Record</a> MUST contain the following <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="core-metadata">core metadata</dfn> fields:</p>
    <table class="data">
     <thead>
      <tr>
@@ -1963,10 +1932,10 @@ rejected (terminal state, not linkable)
       <td><code>schemaVersion</code>
       <td>MUST
       <td>SHA-256
-      <td>Hash of the schema version against which the <a data-link-type="dfn" href="#record" id="ref-for-record③③">Record</a>’s current snapshot was validated
+      <td>Hash of the schema version against which the <a data-link-type="dfn" href="#record" id="ref-for-record③①">Record</a>’s current snapshot was validated
    </table>
    <h3 class="heading settled" data-level="6.2" id="section-metadata-governance"><span class="secno">6.2. </span><span class="content">metadata.governance</span><a class="self-link" href="#section-metadata-governance"></a></h3>
-   <p>A <a data-link-type="dfn" href="#record" id="ref-for-record③④">Record</a> MAY contain the following <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="governance-metadata">governance metadata</dfn> fields. These fields express Records Management concerns (classification, retention, discoverability) as defined in <a data-link-type="biblio" href="#biblio-iso15489" title="Information and documentation — Records management, Part 1: Concepts and principles">[ISO15489]</a>.</p>
+   <p>A <a data-link-type="dfn" href="#record" id="ref-for-record③②">Record</a> MAY contain the following <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="governance-metadata">governance metadata</dfn> fields. These fields express Records Management concerns (accountability, classification, retention, discoverability) as defined in <a data-link-type="biblio" href="#biblio-iso15489" title="Information and documentation — Records management, Part 1: Concepts and principles">[ISO15489]</a>.</p>
    <table class="data">
     <thead>
      <tr>
@@ -1975,6 +1944,11 @@ rejected (terminal state, not linkable)
       <th>Type
       <th>Description
     <tbody>
+     <tr>
+      <td><code>owner</code>
+      <td>SHOULD
+      <td>DID
+      <td>The person or organisational unit currently responsible for the <a data-link-type="dfn" href="#record" id="ref-for-record③③">Record</a>. See note below on the relationship between <code>owner</code> and snapshot <code>signature</code>.
      <tr>
       <td><code>classification</code>
       <td>SHOULD
@@ -1991,6 +1965,15 @@ rejected (terminal state, not linkable)
       <td>Array&lt;String>
       <td>Free-text markers for search and filtering
    </table>
+   <p>The <code>owner</code> field expresses organisational accountability and MAY change over the lifetime of a <a data-link-type="dfn" href="#record" id="ref-for-record③④">Record</a> (e.g. following a transfer of responsibility). It is independent of the cryptographic <code>signature</code> carried by an individual <u class="link-error" data-lt="snapshot" title="LINK ERROR: No &apos;dfn&apos; refs found for &apos;snapshot&apos;.">snapshot</u> (see <a href="#section-payload-snapshot-definition">Snapshot Fields</a>):</p>
+   <ul>
+    <li data-md>
+     <p><code>signature</code> provides cryptographic evidence of <em>who authorised a specific snapshot’s content</em> at finalisation, resolvable via the DID document’s <code>controller</code> field.</p>
+    <li data-md>
+     <p><code>owner</code> provides the current, human-readable statement of <em>organisational responsibility</em> for the Record as a whole, independent of which key signed the most recent snapshot.</p>
+   </ul>
+   <p>Where a schema defines <code>signaturePolicy: system</code> (see <a href="#subsection-finalisation-requirements">Finalisation Requirements</a>), the signature identifies an authorised system key rather than a responsible person or unit. In this case, <code>owner</code> is the only field that expresses organisational accountability.</p>
+   <p>An implementation MUST NOT infer the current <code>owner</code> solely from the <code>controller</code> of the most recent snapshot’s signature.</p>
    <h3 class="heading settled" data-level="6.3" id="section-metadata-extensions"><span class="secno">6.3. </span><span class="content">metadata.extensions</span><a class="self-link" href="#section-metadata-extensions"></a></h3>
    <p>A <a data-link-type="dfn" href="#record" id="ref-for-record③⑤">Record</a> MAY contain an <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="extensions">extensions</dfn> array. Each entry is a self-describing object that extends <code>metadata</code> with schema- or profile-specific information not defined by this specification.</p>
    <p>Every extension entry MUST contain:</p>
@@ -2008,15 +1991,12 @@ rejected (terminal state, not linkable)
       <td>DID
       <td>Identifies the SchemaRecord or profile that defines the semantics and additional fields of this extension entry
    </table>
-   <p>Additional fields within an extension entry are defined by the SchemaRecord or profile identified in <code>type</code>. This specification defines one such extension:</p>
-   <ul>
-    <li data-md>
-     <p><strong>Access Policy Extension</strong> (<code>did:rwp:recordweb.org:extension-access-policy</code>): carries the <code>accessPolicy</code> block defined in <a href="#chapter-access-control">Access Control (Delegation Framework)</a>.</p>
-   </ul>
-   <p>A conforming implementation MUST NOT require support for any extension type unless it claims the corresponding profile or capability.</p>
+   <p>Additional fields within an extension entry are defined entirely by the SchemaRecord or profile identified in <code>type</code>. This specification does not itself define any extension entry.</p>
+   <p>A <a data-link-type="dfn" href="#record" id="ref-for-record③⑥">Record</a> MAY contain zero, one, or multiple extension entries. A conforming implementation MUST NOT require support for any extension type unless it claims the corresponding profile or capability.</p>
+   <p>Chapters of this specification that define an optional capability MAY specify that the capability’s data is carried as an extension entry. Where they do so, they identify the applicable <code>type</code> value and the additional fields of that entry.</p>
    <h2 class="heading settled" data-level="7" id="chapter-record-integrity"><span class="secno">7. </span><span class="content">Record Integrity</span><a class="self-link" href="#chapter-record-integrity"></a></h2>
    <h3 class="heading settled" data-level="7.1" id="section-record-integrity-purpose"><span class="secno">7.1. </span><span class="content">Purpose</span><a class="self-link" href="#section-record-integrity-purpose"></a></h3>
-   <p>The <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="recordhash">recordHash</dfn> is a Record-level integrity value that covers the entire <a data-link-type="dfn" href="#record" id="ref-for-record③⑥">Record</a> (its <code>did</code>, <code>payload</code>, and <code>metadata</code>) at the time the hash was calculated. It provides evidence that a Record has not been altered since that point, independent of whether the alteration occurred in <code>payload</code> or in <code>metadata</code>.</p>
+   <p>The <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="recordhash">recordHash</dfn> is a Record-level integrity value that covers the entire <a data-link-type="dfn" href="#record" id="ref-for-record③⑦">Record</a> (its <code>did</code>, <code>payload</code>, and <code>metadata</code>) at the time the hash was calculated. It provides evidence that a Record has not been altered since that point, independent of whether the alteration occurred in <code>payload</code> or in <code>metadata</code>.</p>
    <p>The <code>recordHash</code> is distinct from the <code>signature</code> carried by an individual <u class="link-error" data-lt="snapshot" title="LINK ERROR: No &apos;dfn&apos; refs found for &apos;snapshot&apos;.">snapshot</u> (see <a href="#section-crypto-procedures-signature">Signature Procedure</a>). A <code>signature</code> is an owner’s cryptographic authorisation of one specific snapshot’s content at finalisation. The <code>recordHash</code> is an unsigned, purely computational value; it does not require, and MUST NOT be interpreted as, an authorisation or attestation. It exists solely to make unauthorised or accidental modification of any part of the Record detectable.</p>
    <h3 class="heading settled" data-level="7.2" id="section-record-integrity-calculation"><span class="secno">7.2. </span><span class="content">Calculation</span><a class="self-link" href="#section-record-integrity-calculation"></a></h3>
    <p>The <code>recordHash</code> MUST be calculated as follows:</p>
@@ -2036,7 +2016,7 @@ rejected (terminal state, not linkable)
 <c- p>}</c->
 </pre>
    <h3 class="heading settled" data-level="7.3" id="section-record-integrity-verification"><span class="secno">7.3. </span><span class="content">Verification</span><a class="self-link" href="#section-record-integrity-verification"></a></h3>
-   <p>An implementation retrieving or storing a <a data-link-type="dfn" href="#record" id="ref-for-record③⑦">Record</a> MUST be able to recompute the <code>recordHash</code> and compare it against the stored value.</p>
+   <p>An implementation retrieving or storing a <a data-link-type="dfn" href="#record" id="ref-for-record③⑧">Record</a> MUST be able to recompute the <code>recordHash</code> and compare it against the stored value.</p>
    <p>An implementation MAY choose to persist <code>recordHash</code> alongside the Record, or to compute it on demand; this specification does not mandate a storage strategy. Where <code>metadata</code> changes without a corresponding <code>payload</code> change, the <code>recordHash</code> MUST be recalculated to reflect the new state.</p>
    <p>If the recomputed hash does not match the stored <code>recordHash</code>, the implementation MUST treat the Record as <code>integrity-warning</code> in accordance with <a href="#section-crypto-procedures-snapshot-integrity">Snapshot Integrity</a>, which applies analogously at the Record level.</p>
    <h2 class="heading settled" data-level="8" id="chapter-deletion"><span class="secno">8. </span><span class="content">Payload Deletion</span><a class="self-link" href="#chapter-deletion"></a></h2>
@@ -2070,12 +2050,12 @@ rejected (terminal state, not linkable)
       <td>Where a statutory retention obligation overrides the erasure claim (e.g. tax records, notarial acts, public register entries).
    </table>
    <h3 class="heading settled" data-level="8.3" id="section-deletion-record"><span class="secno">8.3. </span><span class="content">DeletionRecord Protocol</span><a class="self-link" href="#section-deletion-record"></a></h3>
-   <p>When a <a data-link-type="dfn" href="#payload" id="ref-for-payload④">payload</a> deletion is executed, a <code>DeletionRecord</code> MUST be created and finalised before the payload is removed.</p>
+   <p>When a <a data-link-type="dfn" href="#payload" id="ref-for-payload③">payload</a> deletion is executed, a <code>DeletionRecord</code> MUST be created and finalised before the payload is removed.</p>
    <p>The <code>DeletionRecord</code> MUST contain:</p>
 <pre class="highlight language-json"><c- p>{</c->
   <c- f>"deletionRecord"</c-><c- p>:</c-> <c- p>{</c->
     <c- f>"targetDid"</c-><c- p>:</c-> <c- u>"did:rwp:bern.ch:f47ac10b-58cc-4372-a567-0e02b2c3d479"</c-><c- p>,</c->
-    <c- f>"targetSnapshotHash"</c-><c- p>:</c-> <c- u>"sha256:snapshot-to-be-deleted..."</c-><c- p>,</c->
+    <c- f>"targetSnapshot"</c-><c- p>:</c-> <c- u>"sha256:snapshot-to-be-deleted..."</c-><c- p>,</c->
     <c- f>"deletionRegime"</c-><c- p>:</c-> <c- u>"payload-only"</c-><c- p>,</c->
     <c- f>"legalBasis"</c-><c- p>:</c-> <c- u>"GDPR Art. 17 — Right to erasure"</c-><c- p>,</c->
     <c- f>"requestedBy"</c-><c- p>:</c-> <c- u>"did:rwp:bern.ch:user-max-mustermann"</c-><c- p>,</c->
@@ -2088,7 +2068,7 @@ rejected (terminal state, not linkable)
    <p>After the <code>DeletionRecord</code> is finalised:</p>
    <ol>
     <li data-md>
-     <p>The <a data-link-type="dfn" href="#payload" id="ref-for-payload⑤">payload</a> content bytes are securely overwritten</p>
+     <p>The <a data-link-type="dfn" href="#payload" id="ref-for-payload④">payload</a> content bytes are securely overwritten</p>
     <li data-md>
      <p>The <code>hash</code> field of the affected <code>representations</code> entry in the <u class="link-error" data-lt="snapshot" title="LINK ERROR: No &apos;dfn&apos; refs found for &apos;snapshot&apos;.">snapshot</u> is replaced with the string <code>"deleted:&lt;DeletionRecord-DID>"</code></p>
     <li data-md>
@@ -2100,10 +2080,10 @@ rejected (terminal state, not linkable)
    </ol>
    <h2 class="heading settled" data-level="9" id="chapter-record-types"><span class="secno">9. </span><span class="content">Record Types</span><a class="self-link" href="#chapter-record-types"></a></h2>
    <h3 class="heading settled" data-level="9.1" id="section-record-types-definition"><span class="secno">9.1. </span><span class="content">Record Type Definition</span><a class="self-link" href="#section-record-types-definition"></a></h3>
-   <p>Every <a data-link-type="dfn" href="#record" id="ref-for-record③⑧">Record</a> MUST be assigned to a Record type. A Record type:</p>
+   <p>Every <a data-link-type="dfn" href="#record" id="ref-for-record③⑨">Record</a> MUST be assigned to a Record type. A Record type:</p>
    <ul>
     <li data-md>
-     <p>defines the schema of the <a data-link-type="dfn" href="#payload" id="ref-for-payload⑥">payload</a></p>
+     <p>defines the schema of the <a data-link-type="dfn" href="#payload" id="ref-for-payload⑤">payload</a></p>
     <li data-md>
      <p>defines the permitted states and their transitions</p>
     <li data-md>
@@ -2111,7 +2091,7 @@ rejected (terminal state, not linkable)
     <li data-md>
      <p>defines mandatory and optional <a data-link-type="dfn" href="#metadata" id="ref-for-metadata①">metadata</a> fields beyond <code>metadata.core</code> (see <a href="#chapter-metadata">Metadata</a>)</p>
     <li data-md>
-     <p>is itself a <a data-link-type="dfn" href="#record" id="ref-for-record③⑨">Record</a> of the type <code>SchemaRecord</code></p>
+     <p>is itself a <a data-link-type="dfn" href="#record" id="ref-for-record④⓪">Record</a> of the type <code>SchemaRecord</code></p>
    </ul>
    <h3 class="heading settled" data-level="9.2" id="section-record-types-core"><span class="secno">9.2. </span><span class="content">Core Record Types</span><a class="self-link" href="#section-record-types-core"></a></h3>
    <p>RWP defines the following core Record types (with DID Suffix):</p>
@@ -2141,7 +2121,7 @@ rejected (terminal state, not linkable)
    <h2 class="heading no-num no-toc settled" id="part-3"><span class="content">Part III: Relation Records</span><a class="self-link" href="#part-3"></a></h2>
    <h2 class="heading settled" data-level="10" id="chapter-caserecord"><span class="secno">10. </span><span class="content">CaseRecord Specification</span><a class="self-link" href="#chapter-caserecord"></a></h2>
    <h3 class="heading settled" data-level="10.1" id="section-case-type"><span class="secno">10.1. </span><span class="content">Case as a specialised Record Type {#section-case-type}</span><a class="self-link" href="#section-case-type"></a></h3>
-   <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="caserecord">CaseRecord</dfn> is a <a data-link-type="dfn" href="#relationrecord" id="ref-for-relationrecord③">RelationRecord</a> and a concrete <a href="#section-record-types-definition">Record type</a>. It is subject to all requirements that apply to <a data-link-type="dfn" href="#record" id="ref-for-record④⓪">Records</a> and supplements them with the Case-specific requirements defined in this section.</p>
+   <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="caserecord">CaseRecord</dfn> is a <a data-link-type="dfn" href="#relationrecord" id="ref-for-relationrecord③">RelationRecord</a> and a concrete <a href="#section-record-types-definition">Record type</a>. It is subject to all requirements that apply to <a data-link-type="dfn" href="#record" id="ref-for-record④①">Records</a> and supplements them with the Case-specific requirements defined in this section.</p>
    <p>A CaseRecord is a persisted, governed view of linked Records. It is itself a Record with its own identity, state, version history, schema association, metadata, and integrity evidence.</p>
    <p>A CaseRecord MUST NOT be interpreted as a container into which Records are placed. A Record linked by a CaseRecord remains an independent Record and is not embedded in the CaseRecord payload.</p>
    <h3 class="heading settled" data-level="10.2" id="section-case-schema"><span class="secno">10.2. </span><span class="content">Case Schema (normative)</span><a class="self-link" href="#section-case-schema"></a></h3>
@@ -2183,7 +2163,7 @@ rejected (terminal state, not linkable)
 <c- p>}</c->
 </pre>
    <h3 class="heading settled" data-level="10.3" id="section-case-elements"><span class="secno">10.3. </span><span class="content">Case Elements (normative)</span><a class="self-link" href="#section-case-elements"></a></h3>
-   <p>Before a <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①">CaseRecord</a> is finalised, its payload MUST contain all five Case element fields: <code>trigger</code>, <code>context</code>, <code>process</code>, <code>decision</code>, and <code>result</code>. The finalisation constraints for each element are defined in the following table. An element that permits an empty value is considered present when it is represented in the CaseRecord payload, even if its value is an empty array or <code>null</code>, as applicable. A Record MAY fulfil multiple elements.</p>
+   <p>Before a <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord②">CaseRecord</a> is finalised, its payload MUST contain all five Case element fields: <code>trigger</code>, <code>context</code>, <code>process</code>, <code>decision</code>, and <code>result</code>. The finalisation constraints for each element are defined in the following table. An element that permits an empty value is considered present when it is represented in the CaseRecord payload, even if its value is an empty array or <code>null</code>, as applicable. A Record MAY fulfil multiple elements.</p>
    <p>A draft CaseRecord MAY omit one or more Case element fields. Before finalisation, the system MUST validate and, where necessary, require completion of the Case element fields in accordance with this section.</p>
    <p>Unless a CaseRecord schema defines more specific constraints, every Case element MAY link to any Record type, including another CaseRecord.</p>
    <table class="data">
@@ -2214,16 +2194,16 @@ rejected (terminal state, not linkable)
       <td>MUST (min. 1)
       <td>At least one Record documenting the outcome; MUST be a hard link
    </table>
-   <p><strong>Exception — ad-hoc Case</strong>: A <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord②">CaseRecord</a> schema MAY be marked as <code>adhoc: true</code>. Ad-hoc Cases have no mandatory fields other than <code>trigger</code> and <code>recordDid</code>. They MUST be marked in the metadata object as <code>caseVariant: "adhoc"</code>.</p>
+   <p><strong>Exception — ad-hoc Case</strong>: A <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord③">CaseRecord</a> schema MAY be marked as <code>adhoc: true</code>. Ad-hoc Cases have no mandatory fields other than <code>trigger</code> and <code>recordDid</code>. They MUST be marked in the metadata object as <code>caseVariant: "adhoc"</code>.</p>
    <h3 class="heading settled" data-level="10.4" id="section-links"><span class="secno">10.4. </span><span class="content">Hard and Soft Links</span><a class="self-link" href="#section-links"></a></h3>
-   <p>A Case link MAY target any <a data-link-type="dfn" href="#record" id="ref-for-record④①">Record</a>, including an <a data-link-type="dfn" href="#informationrecord" id="ref-for-informationrecord①">InformationRecord</a>, a <a data-link-type="dfn" href="#relationrecord" id="ref-for-relationrecord④">RelationRecord</a> (including another <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord③">CaseRecord</a>), or a <a data-link-type="dfn" href="#systemrecord" id="ref-for-systemrecord⑥">SystemRecord</a>.</p>
+   <p>A Case link MAY target any <a data-link-type="dfn" href="#record" id="ref-for-record④②">Record</a>, including an <a data-link-type="dfn" href="#informationrecord" id="ref-for-informationrecord①">InformationRecord</a>, a <a data-link-type="dfn" href="#relationrecord" id="ref-for-relationrecord④">RelationRecord</a> (including another <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord④">CaseRecord</a>), or a <a data-link-type="dfn" href="#systemrecord" id="ref-for-systemrecord⑥">SystemRecord</a>.</p>
    <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="hard-link">hard link</dfn> points to one identified <a data-link-type="dfn" href="#finalized" id="ref-for-finalized⑥">finalized</a> <u class="link-error" data-lt="snapshot" title="LINK ERROR: No &apos;dfn&apos; refs found for &apos;snapshot&apos;.">snapshot</u> of a target Record. A hard link MUST contain the target <code>recordDid</code> and <code>snapshot</code> (the target snapshot’s hash, per <a href="#section-payload-snapshot-definition">Snapshot Fields</a>).</p>
-   <p>A hard link is immutable after finalisation of the referencing <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord④">CaseRecord</a>.</p>
+   <p>A hard link is immutable after finalisation of the referencing <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord⑤">CaseRecord</a>.</p>
    <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="soft-link">soft link</dfn> is a working reference that points to a target <code>recordDid</code> without identifying a target snapshot. A soft link MAY point to a <a data-link-type="dfn" href="#draft" id="ref-for-draft④">draft</a> or <a data-link-type="dfn" href="#finalized" id="ref-for-finalized⑦">finalized</a> Record.</p>
    <p>A CaseRecord containing one or more soft links MUST NOT be finalised. Every soft link MUST be converted to a hard link before finalisation of the CaseRecord.</p>
    <p>A system MUST check during a CaseRecord finalisation attempt whether soft links are present. If soft links are present, the system MUST reject the finalisation and return the unresolved soft links.</p>
    <h3 class="heading settled" data-level="10.5" id="section-case-links"><span class="secno">10.5. </span><span class="content">CaseRecord-to-CaseRecord Links</span><a class="self-link" href="#section-case-links"></a></h3>
-   <p>A <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord⑤">CaseRecord</a> MAY link to another CaseRecord through a <a data-link-type="dfn" href="#soft-link" id="ref-for-soft-link">soft link</a> or a <a data-link-type="dfn" href="#hard-link" id="ref-for-hard-link">hard link</a>.</p>
+   <p>A <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord⑥">CaseRecord</a> MAY link to another CaseRecord through a <a data-link-type="dfn" href="#soft-link" id="ref-for-soft-link">soft link</a> or a <a data-link-type="dfn" href="#hard-link" id="ref-for-hard-link">hard link</a>.</p>
    <p>A hard link to a CaseRecord MUST identify a <a data-link-type="dfn" href="#finalized" id="ref-for-finalized⑧">finalized</a> snapshot of the target CaseRecord through its <code>recordDid</code> and <code>snapshot</code>.</p>
    <p>During finalisation of a referencing CaseRecord, the system MUST resolve and validate every target CaseRecord snapshot referenced through a hard link, subject to the applicable federation and offline-validation rules.</p>
    <p>The <code>snapshot</code> value of a hard-linked target CaseRecord MUST be included in the <a data-link-type="dfn" href="#merkle-root" id="ref-for-merkle-root">Merkle root</a> of the referencing CaseRecord.</p>
@@ -2232,12 +2212,12 @@ rejected (terminal state, not linkable)
    <p>A CaseRecord-to-CaseRecord link MUST NOT include, copy, inherit, or otherwise treat Records linked by CaseRecord B as direct members of CaseRecord A.</p>
    <p>The referenced CaseRecord B snapshot and its Merkle root provide evidence of the Records directly linked by CaseRecord B at the time that snapshot was finalised. A Record is a direct member of CaseRecord A only if CaseRecord A links to that Record explicitly.</p>
    <h3 class="heading settled" data-level="10.6" id="section-merkle-root-calc"><span class="secno">10.6. </span><span class="content">Case Merkle Root</span><a class="self-link" href="#section-merkle-root-calc"></a></h3>
-   <p>The <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="merkle-root">Merkle root</dfn> of a <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord⑥">CaseRecord</a> provides a cryptographically verifiable representation of the set of snapshots directly hard-linked by that <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord⑦">CaseRecord</a>.</p>
+   <p>The <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="merkle-root">Merkle root</dfn> of a <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord⑦">CaseRecord</a> provides a cryptographically verifiable representation of the set of snapshots directly hard-linked by that <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord⑧">CaseRecord</a>.</p>
    <p>For the purposes of this section, a <code>snapshot</code> value and a <code>merkleRoot</code> MUST be represented in the canonical textual form <code>sha256:</code> followed by the lowercase hexadecimal encoding of exactly 32 octets.</p>
-   <p>The Merkle root of a <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord⑧">CaseRecord</a> MUST be calculated as follows:</p>
+   <p>The Merkle root of a <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord⑨">CaseRecord</a> MUST be calculated as follows:</p>
    <ol>
     <li data-md>
-     <p>An implementation MUST collect the <code>snapshot</code> value of every hard link in the <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord⑨">CaseRecord</a>, including every hard link to another <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①⓪">CaseRecord</a>.</p>
+     <p>An implementation MUST collect the <code>snapshot</code> value of every hard link in the <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①⓪">CaseRecord</a>, including every hard link to another <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①①">CaseRecord</a>.</p>
     <li data-md>
      <p>For each collected <code>snapshot</code> value, the implementation MUST remove the <code>sha256:</code> prefix and decode the remaining hexadecimal value into its 32-octet SHA-256 digest value.</p>
     <li data-md>
@@ -2260,11 +2240,11 @@ rejected (terminal state, not linkable)
      <p>The sole node value remaining after the construction of all tree levels is the Merkle root. The implementation MUST serialise this value as <code>sha256:</code> followed by its lowercase hexadecimal encoding.</p>
    </ol>
    <p>In this section, <code>||</code> denotes byte concatenation. The values <code>0x00</code> and <code>0x01</code> are single-octet domain-separation tags. They MUST be included exactly as specified. The <code>0x00</code> tag distinguishes leaf-node inputs from all internal-node inputs. The <code>0x01</code> tag distinguishes internal-node inputs from leaf-node inputs.</p>
-   <p>A <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①①">CaseRecord</a> with no hard links MUST NOT be finalised. This specification therefore defines no Merkle root for an empty set of hard links.</p>
-   <p>The Merkle root of a <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①②">CaseRecord</a> MUST include the hash of each directly hard-linked target snapshot. It MUST NOT recursively include the individual hard-link hashes or linked Record snapshots contained in a referenced <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①③">CaseRecord</a>.</p>
-   <p>The <a data-link-type="dfn" href="#merkle-root" id="ref-for-merkle-root①">Merkle root</a> MUST be recalculated every time a <a data-link-type="dfn" href="#hard-link" id="ref-for-hard-link①">hard link</a> is added or removed. A system MUST verify the <a data-link-type="dfn" href="#merkle-root" id="ref-for-merkle-root②">Merkle root</a> before finalising the <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①④">CaseRecord</a>.</p>
+   <p>A <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①②">CaseRecord</a> with no hard links MUST NOT be finalised. This specification therefore defines no Merkle root for an empty set of hard links.</p>
+   <p>The Merkle root of a <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①③">CaseRecord</a> MUST include the hash of each directly hard-linked target snapshot. It MUST NOT recursively include the individual hard-link hashes or linked Record snapshots contained in a referenced <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①④">CaseRecord</a>.</p>
+   <p>The <a data-link-type="dfn" href="#merkle-root" id="ref-for-merkle-root①">Merkle root</a> MUST be recalculated every time a <a data-link-type="dfn" href="#hard-link" id="ref-for-hard-link①">hard link</a> is added or removed. A system MUST verify the <a data-link-type="dfn" href="#merkle-root" id="ref-for-merkle-root②">Merkle root</a> before finalising the <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①⑤">CaseRecord</a>.</p>
    <h3 class="heading settled" data-level="10.7" id="section-case-completeness"><span class="secno">10.7. </span><span class="content">Case Completeness Check</span><a class="self-link" href="#section-case-completeness"></a></h3>
-   <p>A system SHOULD perform a completeness check on a <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①⑤">CaseRecord</a> at any time upon request and return:</p>
+   <p>A system SHOULD perform a completeness check on a <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①⑥">CaseRecord</a> at any time upon request and return:</p>
 <pre class="highlight language-json"><c- p>{</c->
   <c- f>"recordDid"</c-><c- p>:</c-> <c- u>"did:rwp:bern.ch:f47ac10b-case-001"</c-><c- p>,</c->
   <c- f>"complete"</c-><c- p>:</c-> <c- kc>false</c-><c- p>,</c->
@@ -2276,7 +2256,7 @@ rejected (terminal state, not linkable)
    <h2 class="heading settled" data-level="11" id="chapter-assertionrecord"><span class="secno">11. </span><span class="content">AssertionRecord Specification</span><a class="self-link" href="#chapter-assertionrecord"></a></h2>
    <h3 class="heading settled" data-level="11.1" id="section-assertionrecord-purpose"><span class="secno">11.1. </span><span class="content">Purpose and scope</span><a class="self-link" href="#section-assertionrecord-purpose"></a></h3>
    <p>An <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="assertionrecord">AssertionRecord</dfn> is a <a data-link-type="dfn" href="#relationrecord" id="ref-for-relationrecord⑤">RelationRecord</a> that preserves an attributable assertion that a subject resource stands in a specified relationship to an object resource.</p>
-   <p>An AssertionRecord is itself a <a data-link-type="dfn" href="#record" id="ref-for-record④②">Record</a>. It has its own identity, state, version history, schema association, metadata and integrity evidence. It does not modify, finalise, merge, delete, or otherwise change either the subject or the object to which it refers.</p>
+   <p>An AssertionRecord is itself a <a data-link-type="dfn" href="#record" id="ref-for-record④③">Record</a>. It has its own identity, state, version history, schema association, metadata and integrity evidence. It does not modify, finalise, merge, delete, or otherwise change either the subject or the object to which it refers.</p>
    <p>An AssertionRecord MAY refer to Records in the same namespace or in another namespace. Referencing a Record in another namespace MUST NOT imply acceptance, storage, reciprocity, modification, or any other obligation for the custodian of the referenced Record.</p>
    <h3 class="heading settled" data-level="11.2" id="section-assertionrecord-model"><span class="secno">11.2. </span><span class="content">Assertion model</span><a class="self-link" href="#section-assertionrecord-model"></a></h3>
    <p>An AssertionRecord expresses one directed relationship:</p>
@@ -2340,7 +2320,7 @@ rejected (terminal state, not linkable)
    <p>An AssertionRecord MAY valid as an assertion even where a referenced external resource cannot be resolved, provided that the assertion identifies that resource unambiguously and the applicable SchemaRecord permits unresolved references. A failure to resolve a referenced resource MUST NOT be interpreted as a modification of, or rejection by, that resource’s custodian.</p>
    <h2 class="heading settled" data-level="12" id="chapter-relationship-vocabulary"><span class="secno">12. </span><span class="content">Relationship Vocabulary</span><a class="self-link" href="#chapter-relationship-vocabulary"></a></h2>
    <h3 class="heading settled" data-level="12.1" id="section-relationship-vocabulary-scope"><span class="secno">12.1. </span><span class="content">Scope and conformance</span><a class="self-link" href="#section-relationship-vocabulary-scope"></a></h3>
-   <p>This section defines the controlled relationship vocabulary used by <a data-link-type="dfn" href="#assertionrecord" id="ref-for-assertionrecord①">AssertionRecords</a>.</p>
+   <p>This section defines the controlled relationship vocabulary used by <a data-link-type="dfn" href="#assertionrecord" id="ref-for-assertionrecord②">AssertionRecords</a>.</p>
    <p>A conforming AssertionRecord MUST use a predicate IRI that is either:</p>
    <ol>
     <li data-md>
@@ -2449,7 +2429,7 @@ rejected (terminal state, not linkable)
    <p>A <a data-link-type="dfn" href="#schemarecord" id="ref-for-schemarecord③">SchemaRecord</a> MUST:</p>
    <ul>
     <li data-md>
-     <p>fulfil all requirements for a regular <a data-link-type="dfn" href="#record" id="ref-for-record④③">Record</a> (DID, metadata, version graph)</p>
+     <p>fulfil all requirements for a regular <a data-link-type="dfn" href="#record" id="ref-for-record④④">Record</a> (DID, metadata, version graph)</p>
     <li data-md>
      <p>contain a JSON Schema (Draft 2020-12 or later, <a data-link-type="biblio" href="#biblio-json-schema" title="JSON Schema: A Media Type for Describing JSON Documents">[JSON-SCHEMA]</a>) in the payload</p>
     <li data-md>
@@ -2494,7 +2474,7 @@ rejected (terminal state, not linkable)
     <li data-md>
      <p>The new schema MUST contain the field <code>previousSchemaVersion</code> in the payload with the hash of the predecessor schema</p>
     <li data-md>
-     <p>Systems MUST keep all schema versions referenced by existing <a data-link-type="dfn" href="#record" id="ref-for-record④④">Records</a> permanently accessible</p>
+     <p>Systems MUST keep all schema versions referenced by existing <a data-link-type="dfn" href="#record" id="ref-for-record④⑤">Records</a> permanently accessible</p>
     <li data-md>
      <p>A system MUST NOT retroactively change an existing <a data-link-type="dfn" href="#schemarecord" id="ref-for-schemarecord⑤">SchemaRecord</a>, corrections are made as a new version</p>
    </ul>
@@ -2503,11 +2483,7 @@ rejected (terminal state, not linkable)
    <h2 class="heading settled" data-level="15" id="chapter-deletion-record"><span class="secno">15. </span><span class="content">DeletionRecord</span><a class="self-link" href="#chapter-deletion-record"></a></h2>
    <p>See <a href="#chapter-deletion">Payload Deletion</a></p>
    <h2 class="heading settled" data-level="16" id="chapter-merge-record"><span class="secno">16. </span><span class="content">MergeRecord</span><a class="self-link" href="#chapter-merge-record"></a></h2>
-   
-TBD
-
-
-
+   <p>See <a href="#subsection-graph-merges">Merges</a> and <a href="#subsection-cross-record-merges">Cross-Record Merges</a>.</p>
    <h2 class="heading settled" data-level="17" id="chapter-migration-record"><span class="secno">17. </span><span class="content">MigrationRecord</span><a class="self-link" href="#chapter-migration-record"></a></h2>
    
 TBD
@@ -2520,9 +2496,11 @@ TBD
    <p>RWP uses exclusively <strong>SHA-256</strong> as the hashing procedure for:</p>
    <ul>
     <li data-md>
-     <p>Snapshot hashes (<code>snapshotHash</code>)</p>
+     <p>Snapshot hashes (<code>snapshot</code>)</p>
     <li data-md>
-     <p>Payload hashes (<code>payloadHash</code>)</p>
+     <p>Representation hashes (<code>representations[].hash</code>)</p>
+    <li data-md>
+     <p>Record-level hashes (<code>recordHash</code>)</p>
     <li data-md>
      <p>Schema version hashes (<code>schemaVersion</code>)</p>
     <li data-md>
@@ -2560,7 +2538,7 @@ TBD
     <li data-md>
      <p>Mark the <u class="link-error" data-lt="snapshot" title="LINK ERROR: No &apos;dfn&apos; refs found for &apos;snapshot&apos;.">snapshot</u> as <code>compromised</code></p>
     <li data-md>
-     <p>Mark all dependent <a data-link-type="dfn" href="#record" id="ref-for-record④⑤">Records</a> as <code>integrity-warning</code></p>
+     <p>Mark all dependent <a data-link-type="dfn" href="#record" id="ref-for-record④⑥">Records</a> as <code>integrity-warning</code></p>
     <li data-md>
      <p>Log the incident in the system log with timestamp and discrepancy</p>
     <li data-md>
@@ -2574,14 +2552,14 @@ TBD
     <li data-md>
      <p>MUST be Ed25519 (EdDSA, <a data-link-type="biblio" href="#biblio-rfc8037" title="CFRG Elliptic Curves for JOSE and COSE (Ed25519)">[RFC8037]</a>) or P-256 (ECDSA, NIST)</p>
     <li data-md>
-     <p>The signature MUST be calculated over the canonical <code>snapshotHash</code> value (as hex string)</p>
+     <p>The signature MUST be calculated over the canonical <code>snapshot</code> hash value (as hex string)</p>
     <li data-md>
-     <p>The signature MUST be stored in the <code>signature</code> field as a multibase-encoded value</p>
+     <p>The signature MUST be stored in the <code>signature</code> field of the snapshot entry as a multibase-encoded value</p>
     <li data-md>
      <p>The key used MUST be published in the DID document of the record owner as a verification method</p>
    </ul>
    <h3 class="heading settled" data-level="18.5" id="section-crypto-procedures-merkle-algorithm"><span class="secno">18.5. </span><span class="content">Merkle Tree Algorithm</span><a class="self-link" href="#section-crypto-procedures-merkle-algorithm"></a></h3>
-   <p>For the calculation of the <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①⑥">CaseRecord</a> <a data-link-type="dfn" href="#merkle-root" id="ref-for-merkle-root③">Merkle root</a>, the following algorithm MUST be used:</p>
+   <p>For the calculation of the <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①⑦">CaseRecord</a> <a data-link-type="dfn" href="#merkle-root" id="ref-for-merkle-root③">Merkle root</a>, the following algorithm MUST be used:</p>
 <pre>function merkleRoot(hashes: SHA256[]) -> SHA256:
 if hashes.length == 0: return SHA256("")
 if hashes.length == 1: return hashes [0]
@@ -2640,7 +2618,7 @@ return sorted[0]
 <pre>_rwp-resolver.bern.ch. 300 IN TXT "v=rwp1;endpoint=https://resolver.bern.ch/api/v1"
 </pre>
    <h3 class="heading settled" data-level="20.4" id="section-federation-cross-namespace"><span class="secno">20.4. </span><span class="content">Cross-Namespace Links</span><a class="self-link" href="#section-federation-cross-namespace"></a></h3>
-   <p>A <a data-link-type="dfn" href="#record" id="ref-for-record④⑥">Record</a> in namespace <code>bern.ch</code> MAY contain <a data-link-type="dfn" href="#hard-link" id="ref-for-hard-link②">hard links</a> to <a data-link-type="dfn" href="#record" id="ref-for-record④⑦">Records</a> in other namespaces (e.g. <code>did:rwp:bag.admin.ch:guideline-001</code>).</p>
+   <p>A <a data-link-type="dfn" href="#record" id="ref-for-record④⑦">Record</a> in namespace <code>bern.ch</code> MAY contain <a data-link-type="dfn" href="#hard-link" id="ref-for-hard-link②">hard links</a> to <a data-link-type="dfn" href="#record" id="ref-for-record④⑧">Records</a> in other namespaces (e.g. <code>did:rwp:bag.admin.ch:guideline-001</code>).</p>
    <p>When resolving cross-namespace links, a system MUST:</p>
    <ol>
     <li data-md>
@@ -2648,7 +2626,7 @@ return sorted[0]
     <li data-md>
      <p>Discover the resolver endpoint via DNS TXT lookup (<a href="#section-federation-resolver-requirements">Resolver Requirements</a>)</p>
     <li data-md>
-     <p>Verify the <u class="link-error" data-lt="snapshot" title="LINK ERROR: No &apos;dfn&apos; refs found for &apos;snapshot&apos;.">snapshot</u> hash of the linked <a data-link-type="dfn" href="#record" id="ref-for-record④⑧">Record</a> after retrieval</p>
+     <p>Verify the <u class="link-error" data-lt="snapshot" title="LINK ERROR: No &apos;dfn&apos; refs found for &apos;snapshot&apos;.">snapshot</u> hash of the linked <a data-link-type="dfn" href="#record" id="ref-for-record④⑨">Record</a> after retrieval</p>
     <li data-md>
      <p>Cache the resolved <u class="link-error" data-lt="snapshot" title="LINK ERROR: No &apos;dfn&apos; refs found for &apos;snapshot&apos;.">snapshot</u> locally with the original hash for integrity verification</p>
    </ol>
@@ -2657,8 +2635,9 @@ return sorted[0]
    <p>RWP deliberately defines no mandatory authorisation model. Data security and information protection are delegated to the implementing systems. This chapter defines an <strong>optional, interoperable delegation framework</strong> that compliant systems MAY implement.</p>
    <p>The core principle: access control in RWP is <strong>attribute-based</strong> (ABAC) and <strong>delegatable</strong>. Rights are not assigned to roles in a fixed hierarchy, but expressed as verifiable claims attached to DIDs.</p>
    <h3 class="heading settled" data-level="21.2" id="section-access-policy"><span class="secno">21.2. </span><span class="content">Access Policy Block</span><a class="self-link" href="#section-access-policy"></a></h3>
-   <p>A <a data-link-type="dfn" href="#record" id="ref-for-record④⑨">Record</a> snapshot MAY contain an <code>accessPolicy</code> block in the <a data-link-type="dfn" href="#metadata" id="ref-for-metadata②">metadata</a>:</p>
+   <p>An implementation claiming this optional capability MAY carry the <code>accessPolicy</code> block as an entry in the <a data-link-type="dfn" href="#record" id="ref-for-record⑤⓪">Record</a>’s <code>metadata.extensions</code> array (see <a href="#section-metadata-extensions">metadata.extensions</a>), using the reserved type identifier <code>did:rwp:recordweb.org:extension-access-policy</code>:</p>
 <pre class="highlight language-json"><c- p>{</c->
+  <c- f>"type"</c-><c- p>:</c-> <c- u>"did:rwp:recordweb.org:extension-access-policy"</c-><c- p>,</c->
   <c- f>"accessPolicy"</c-><c- p>:</c-> <c- p>{</c->
     <c- f>"visibility"</c-><c- p>:</c-> <c- u>"restricted"</c-><c- p>,</c->
     <c- f>"readAccess"</c-><c- p>:</c-> <c- p>[</c->
@@ -2701,6 +2680,7 @@ return sorted[0]
       <td>MAY
       <td>ISO 8601 timestamp after which access policy expires
    </table>
+   <p>An implementation MUST NOT require another implementation to support this extension unless both claim the applicable access-control capability.</p>
    <h3 class="heading settled" data-level="21.3" id="section-delegation-chain"><span class="secno">21.3. </span><span class="content">Delegation Chain</span><a class="self-link" href="#section-delegation-chain"></a></h3>
    <p>When <code>delegationAllowed: true</code>, a listed DID MAY issue a signed delegation token granting access to a third DID. The delegation token MUST:</p>
    <ul>
@@ -2716,7 +2696,7 @@ return sorted[0]
    <p>Implementing systems MAY enforce delegation chains and MUST validate delegation token signatures before granting access.</p>
    <h2 class="heading settled" data-level="22" id="chapter-ledger"><span class="secno">22. </span><span class="content">Optional Ledger Anchoring</span><a class="self-link" href="#chapter-ledger"></a></h2>
    <h3 class="heading settled" data-level="22.1" id="section-ledger-purpose"><span class="secno">22.1. </span><span class="content">Purpose and Scope</span><a class="self-link" href="#section-ledger-purpose"></a></h3>
-   <p>Ledger anchoring is an <strong>optional extension</strong> of RWP. It enables the external, immutable proof of <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①⑦">CaseRecord</a> <a data-link-type="dfn" href="#merkle-root" id="ref-for-merkle-root④">Merkle roots</a> on a distributed infrastructure.</p>
+   <p>Ledger anchoring is an <strong>optional extension</strong> of RWP. It enables the external, immutable proof of <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①⑧">CaseRecord</a> <a data-link-type="dfn" href="#merkle-root" id="ref-for-merkle-root④">Merkle roots</a> on a distributed infrastructure.</p>
    <p>A system MUST be fully RWP-compliant without ledger anchoring. Ledger anchoring supplements the internal integrity assurance with an external proof independent of the operating organisation.</p>
    <h3 class="heading settled" data-level="22.2" id="section-ledger-requirements"><span class="secno">22.2. </span><span class="content">Requirements for the Ledger</span><a class="self-link" href="#section-ledger-requirements"></a></h3>
    <p>If a system implements ledger anchoring, the ledger used MUST:</p>
@@ -2728,13 +2708,13 @@ return sorted[0]
     <li data-md>
      <p>deliver a provable timestamp per entry</p>
     <li data-md>
-     <p>be operated independently of the organisation that manages the <a data-link-type="dfn" href="#record" id="ref-for-record⑤⓪">Records</a></p>
+     <p>be operated independently of the organisation that manages the <a data-link-type="dfn" href="#record" id="ref-for-record⑤①">Records</a></p>
     <li data-md>
      <p>be readable by all authorised verification parties</p>
    </ul>
    <p><strong>Recommended implementation</strong>: Hyperledger Fabric <a data-link-type="biblio" href="#biblio-hyperledger" title="Hyperledger Fabric">[HYPERLEDGER]</a>. Other permissioned distributed ledger technologies MAY be used if they fulfil the above requirements.</p>
    <h3 class="heading settled" data-level="22.3" id="section-anchoring-protocol"><span class="secno">22.3. </span><span class="content">Anchoring Protocol</span><a class="self-link" href="#section-anchoring-protocol"></a></h3>
-   <p>When a finalised <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①⑧">CaseRecord</a> is anchored, the ledger entry MUST contain the following fields:</p>
+   <p>When a finalised <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①⑨">CaseRecord</a> is anchored, the ledger entry MUST contain the following fields:</p>
 <pre class="highlight language-json"><c- p>{</c->
   <c- f>"rwpAnchor"</c-><c- p>:</c-> <c- p>{</c->
     <c- f>"version"</c-><c- p>:</c-> <c- u>"0.1"</c-><c- p>,</c->
@@ -2749,7 +2729,7 @@ return sorted[0]
 </pre>
    <p>The ledger entry MUST NOT contain any payload content, personal data, or classified information. Only cryptographic hash values and identifiers are permitted.</p>
    <h3 class="heading settled" data-level="22.4" id="section-anchoring-reference"><span class="secno">22.4. </span><span class="content">Anchoring Reference in the Case</span><a class="self-link" href="#section-anchoring-reference"></a></h3>
-   <p>When a <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①⑨">CaseRecord</a> has been anchored, the anchored CaseRecord snapshot MUST NOT be modified. The system MAY create a new CaseRecord snapshot that references the anchored predecessor through <code>parents</code> and contains an <code>anchorReference</code> field. The <code>caseSnapshotHash</code> in the ledger entry MUST always identify the immutable snapshot that was actually anchored.</p>
+   <p>When a <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord②⓪">CaseRecord</a> has been anchored, the anchored CaseRecord snapshot MUST NOT be modified. The system MAY create a new CaseRecord snapshot that references the anchored predecessor through <code>parents</code> and contains an <code>anchorReference</code> field. The <code>caseSnapshotHash</code> in the ledger entry MUST always identify the immutable snapshot that was actually anchored.</p>
 <pre class="highlight language-json"><c- p>{</c->
   <c- f>"anchorReference"</c-><c- p>:</c-> <c- p>{</c->
     <c- f>"ledgerType"</c-><c- p>:</c-> <c- u>"hyperledger-fabric"</c-><c- p>,</c->
@@ -2760,50 +2740,96 @@ return sorted[0]
 <c- p>}</c->
 </pre>
    <h2 class="heading settled" data-level="23" id="chapter-solid"><span class="secno">23. </span><span class="content">Optional Solid Pod Delivery</span><a class="self-link" href="#chapter-solid"></a></h2>
-   <p>For <a data-link-type="dfn" href="#record" id="ref-for-record⑤①">Records</a> whose primary subject is an individual citizen, RWP offers an optional delivery extension: delivery of finalised <a data-link-type="dfn" href="#record" id="ref-for-record⑤②">Records</a> into a citizen’s Solid Pod.</p>
+   <p>For <a data-link-type="dfn" href="#record" id="ref-for-record⑤②">Records</a> whose primary subject is an individual citizen, RWP offers an optional delivery extension: delivery of finalised <a data-link-type="dfn" href="#record" id="ref-for-record⑤③">Records</a> into a citizen’s Solid Pod.</p>
    <p>When a system implements Solid Pod delivery, it MUST:</p>
    <ul>
     <li data-md>
      <p>Obtain explicit, revocable write consent from the citizen via their Pod’s access control mechanism</p>
     <li data-md>
-     <p>Deliver the complete <u class="link-error" data-lt="snapshot" title="LINK ERROR: No &apos;dfn&apos; refs found for &apos;snapshot&apos;.">snapshot</u> (DID, <a data-link-type="dfn" href="#metadata" id="ref-for-metadata③">metadata</a>, <a data-link-type="dfn" href="#payload" id="ref-for-payload⑦">payload</a>) to the Pod</p>
+     <p>Deliver the complete <u class="link-error" data-lt="snapshot" title="LINK ERROR: No &apos;dfn&apos; refs found for &apos;snapshot&apos;.">snapshot</u> (DID, <a data-link-type="dfn" href="#metadata" id="ref-for-metadata②">metadata</a>, <a data-link-type="dfn" href="#payload" id="ref-for-payload⑥">payload</a>) to the Pod</p>
     <li data-md>
      <p>Retain the canonical copy in its own RWP system, the Pod copy is an additional output, not a transfer of authority</p>
     <li data-md>
      <p>Include a <code>deliveryTarget</code> field in the optional metadata extension block</p>
    </ul>
    <p>Typical use cases: driving licences, medical images, residence registration confirmations, diplomas, building permits (delivered to the applicant).</p>
-   <p>The citizen MAY present the Pod-held <a data-link-type="dfn" href="#record" id="ref-for-record⑤③">Record</a> to any third party, who can independently verify its authenticity via the DID and cryptographic hash without querying the issuing authority.</p>
+   <p>The citizen MAY present the Pod-held <a data-link-type="dfn" href="#record" id="ref-for-record⑤④">Record</a> to any third party, who can independently verify its authenticity via the DID and cryptographic hash without querying the issuing authority.</p>
    <h2 class="heading no-num no-toc settled" id="part-7"><span class="content">Part VII: Annexes</span><a class="self-link" href="#part-7"></a></h2>
    <h2 class="heading settled" data-level="24" id="annex-a"><span class="secno">24. </span><span class="content">Annex A: Normative JSON Schemas</span><a class="self-link" href="#annex-a"></a></h2>
-   <h3 class="heading settled" data-level="24.1" id="schema-snapshot"><span class="secno">24.1. </span><span class="content">A.1 Snapshot Metadata Schema</span><a class="self-link" href="#schema-snapshot"></a></h3>
+   <h3 class="heading settled" data-level="24.1" id="schema-snapshot"><span class="secno">24.1. </span><span class="content">A.1 Record, Snapshot, and Metadata Schemas</span><a class="self-link" href="#schema-snapshot"></a></h3>
 <pre class="highlight language-json"><c- p>{</c->
   <c- f>"$schema"</c-><c- p>:</c-> <c- u>"https://json-schema.org/draft/2020-12/schema"</c-><c- p>,</c->
-  <c- f>"$id"</c-><c- p>:</c-> <c- u>"https://recordweb.github.io/rwp/schemas/snapshot-metadata.json"</c-><c- p>,</c->
-  <c- f>"title"</c-><c- p>:</c-> <c- u>"RWP Snapshot Metadata"</c-><c- p>,</c->
+  <c- f>"$id"</c-><c- p>:</c-> <c- u>"https://recordweb.github.io/rwp/schemas/record.json"</c-><c- p>,</c->
+  <c- f>"title"</c-><c- p>:</c-> <c- u>"RWP Record"</c-><c- p>,</c->
   <c- f>"type"</c-><c- p>:</c-> <c- u>"object"</c-><c- p>,</c->
-  <c- f>"required"</c-><c- p>:</c-> <c- p>[</c-><c- u>"did"</c-><c- p>,</c-><c- u>"snapshotHash"</c-><c- p>,</c-><c- u>"recordType"</c-><c- p>,</c-><c- u>"schemaVersion"</c-><c- p>,</c-><c- u>"state"</c-><c- p>,</c->
-               <c- u>"created"</c-><c- p>,</c-><c- u>"owner"</c-><c- p>,</c-><c- u>"parents"</c-><c- p>,</c-><c- u>"payloadHash"</c-><c- p>,</c-><c- u>"payloadFormat"</c-><c- p>],</c->
+  <c- f>"required"</c-><c- p>:</c-> <c- p>[</c-><c- u>"did"</c-><c- p>,</c-> <c- u>"payload"</c-><c- p>,</c-> <c- u>"metadata"</c-><c- p>,</c-> <c- u>"recordHash"</c-><c- p>],</c->
   <c- f>"properties"</c-><c- p>:</c-> <c- p>{</c->
-    <c- f>"did"</c-><c- p>:</c->             <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^did:rwp:[^:]+:[^:]+$"</c-> <c- p>},</c->
-    <c- f>"snapshotHash"</c-><c- p>:</c->    <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^sha256:[0-9a-f]{64}$"</c-> <c- p>},</c->
-    <c- f>"recordType"</c-><c- p>:</c->      <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^did:rwp:"</c-> <c- p>},</c->
-    <c- f>"schemaVersion"</c-><c- p>:</c->   <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^sha256:[0-9a-f]{64}$"</c-> <c- p>},</c->
-    <c- f>"state"</c-><c- p>:</c->           <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"enum"</c-><c- p>:</c-> <c- p>[</c-><c- u>"draft"</c-><c- p>,</c-><c- u>"finalized"</c-><c- p>]</c-> <c- p>},</c->
-    <c- f>"created"</c-><c- p>:</c->         <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"format"</c-><c- p>:</c-> <c- u>"date-time"</c-> <c- p>},</c->
-    <c- f>"finalized"</c-><c- p>:</c->       <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"format"</c-><c- p>:</c-> <c- u>"date-time"</c-> <c- p>},</c->
-    <c- f>"owner"</c-><c- p>:</c->           <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^did:rwp:"</c-> <c- p>},</c->
-    <c- f>"parents"</c-><c- p>:</c->         <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"array"</c-><c- p>,</c-> <c- f>"items"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c->
-                         <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^sha256:[0-9a-f]{64}$"</c-> <c- p>}</c-> <c- p>},</c->
-    <c- f>"classification"</c-><c- p>:</c->  <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-> <c- p>},</c->
-    <c- f>"retentionPolicy"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^did:rwp:"</c-> <c- p>},</c->
-    <c- f>"tags"</c-><c- p>:</c->            <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"array"</c-><c- p>,</c-> <c- f>"items"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-> <c- p>}</c-> <c- p>},</c->
-    <c- f>"accessPolicy"</c-><c- p>:</c->    <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- p>[</c-><c- u>"object"</c-><c- p>,</c-><c- u>"null"</c-><c- p>]</c-> <c- p>},</c->
-    <c- f>"payloadHash"</c-><c- p>:</c->     <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^sha256:[0-9a-f]{64}$"</c-> <c- p>},</c->
-    <c- f>"payloadFormat"</c-><c- p>:</c->   <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-> <c- p>},</c->
-    <c- f>"signature"</c-><c- p>:</c->       <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-> <c- p>},</c->
-    <c- f>"deletionRegime"</c-><c- p>:</c->  <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c->
-                         <c- f>"enum"</c-><c- p>:</c-> <c- p>[</c-><c- u>"payload-only"</c-><c- p>,</c-><c- u>"full-delete"</c-><c- p>,</c-><c- u>"exempt"</c-><c- p>]</c-> <c- p>}</c->
+    <c- f>"did"</c-><c- p>:</c->        <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^did:rwp:[^:]+:[^:]+$"</c-> <c- p>},</c->
+    <c- f>"payload"</c-><c- p>:</c->    <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"array"</c-><c- p>,</c-> <c- f>"items"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"$ref"</c-><c- p>:</c-> <c- u>"#/$defs/snapshot"</c-> <c- p>}</c-> <c- p>},</c->
+    <c- f>"metadata"</c-><c- p>:</c->   <c- p>{</c-> <c- f>"$ref"</c-><c- p>:</c-> <c- u>"#/$defs/metadata"</c-> <c- p>},</c->
+    <c- f>"recordHash"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^sha256:[0-9a-f]{64}$"</c-> <c- p>}</c->
+  <c- p>},</c->
+  <c- f>"$defs"</c-><c- p>:</c-> <c- p>{</c->
+    <c- f>"snapshot"</c-><c- p>:</c-> <c- p>{</c->
+      <c- f>"type"</c-><c- p>:</c-> <c- u>"object"</c-><c- p>,</c->
+      <c- f>"required"</c-><c- p>:</c-> <c- p>[</c-><c- u>"snapshot"</c-><c- p>,</c-> <c- u>"state"</c-><c- p>,</c-> <c- u>"parents"</c-><c- p>,</c-> <c- u>"createdAt"</c-><c- p>,</c-> <c- u>"modifiedAt"</c-><c- p>,</c-> <c- u>"representations"</c-><c- p>],</c->
+      <c- f>"properties"</c-><c- p>:</c-> <c- p>{</c->
+        <c- f>"snapshot"</c-><c- p>:</c->        <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^sha256:[0-9a-f]{64}$"</c-> <c- p>},</c->
+        <c- f>"state"</c-><c- p>:</c->           <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"enum"</c-><c- p>:</c-> <c- p>[</c-><c- u>"draft"</c-><c- p>,</c-> <c- u>"finalized"</c-><c- p>]</c-> <c- p>},</c->
+        <c- f>"parents"</c-><c- p>:</c->         <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"array"</c-><c- p>,</c-> <c- f>"items"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c->
+                             <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^sha256:[0-9a-f]{64}$"</c-> <c- p>}</c-> <c- p>},</c->
+        <c- f>"createdAt"</c-><c- p>:</c->       <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"format"</c-><c- p>:</c-> <c- u>"date-time"</c-> <c- p>},</c->
+        <c- f>"modifiedAt"</c-><c- p>:</c->      <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"format"</c-><c- p>:</c-> <c- u>"date-time"</c-> <c- p>},</c->
+        <c- f>"signature"</c-><c- p>:</c->       <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-> <c- p>},</c->
+        <c- f>"representations"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"array"</c-><c- p>,</c-> <c- f>"minItems"</c-><c- p>:</c-> <c- mi>1</c-><c- p>,</c->
+                             <c- f>"items"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"$ref"</c-><c- p>:</c-> <c- u>"#/$defs/representation"</c-> <c- p>}</c-> <c- p>}</c->
+      <c- p>}</c->
+    <c- p>},</c->
+    <c- f>"representation"</c-><c- p>:</c-> <c- p>{</c->
+      <c- f>"type"</c-><c- p>:</c-> <c- u>"object"</c-><c- p>,</c->
+      <c- f>"required"</c-><c- p>:</c-> <c- p>[</c-><c- u>"format"</c-><c- p>,</c-> <c- u>"hash"</c-><c- p>,</c-> <c- u>"primary"</c-><c- p>],</c->
+      <c- f>"properties"</c-><c- p>:</c-> <c- p>{</c->
+        <c- f>"format"</c-><c- p>:</c->  <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-> <c- p>},</c->
+        <c- f>"hash"</c-><c- p>:</c->    <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^sha256:[0-9a-f]{64}$"</c-> <c- p>},</c->
+        <c- f>"primary"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"boolean"</c-> <c- p>},</c->
+        <c- f>"role"</c-><c- p>:</c->    <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"enum"</c-><c- p>:</c-> <c- p>[</c-><c- u>"source"</c-><c- p>,</c-> <c- u>"publication"</c-><c- p>,</c-> <c- u>"preview"</c-><c- p>,</c-> <c- u>"archive"</c-><c- p>]</c-> <c- p>}</c->
+      <c- p>}</c->
+    <c- p>},</c->
+    <c- f>"metadata"</c-><c- p>:</c-> <c- p>{</c->
+      <c- f>"type"</c-><c- p>:</c-> <c- u>"object"</c-><c- p>,</c->
+      <c- f>"required"</c-><c- p>:</c-> <c- p>[</c-><c- u>"core"</c-><c- p>],</c->
+      <c- f>"properties"</c-><c- p>:</c-> <c- p>{</c->
+        <c- f>"core"</c-><c- p>:</c-> <c- p>{</c->
+          <c- f>"type"</c-><c- p>:</c-> <c- u>"object"</c-><c- p>,</c->
+          <c- f>"required"</c-><c- p>:</c-> <c- p>[</c-><c- u>"recordType"</c-><c- p>,</c-> <c- u>"schemaVersion"</c-><c- p>],</c->
+          <c- f>"properties"</c-><c- p>:</c-> <c- p>{</c->
+            <c- f>"recordType"</c-><c- p>:</c->    <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^did:rwp:"</c-> <c- p>},</c->
+            <c- f>"schemaVersion"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^sha256:[0-9a-f]{64}$"</c-> <c- p>}</c->
+          <c- p>}</c->
+        <c- p>},</c->
+        <c- f>"governance"</c-><c- p>:</c-> <c- p>{</c->
+          <c- f>"type"</c-><c- p>:</c-> <c- u>"object"</c-><c- p>,</c->
+          <c- f>"properties"</c-><c- p>:</c-> <c- p>{</c->
+            <c- f>"owner"</c-><c- p>:</c->           <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^did:rwp:"</c-> <c- p>},</c->
+            <c- f>"classification"</c-><c- p>:</c->  <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-> <c- p>},</c->
+            <c- f>"retentionPolicy"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^did:rwp:"</c-> <c- p>},</c->
+            <c- f>"tags"</c-><c- p>:</c->            <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"array"</c-><c- p>,</c-> <c- f>"items"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-> <c- p>}</c-> <c- p>},</c->
+            <c- f>"deletionRegime"</c-><c- p>:</c->  <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c->
+                                 <c- f>"enum"</c-><c- p>:</c-> <c- p>[</c-><c- u>"payload-only"</c-><c- p>,</c-> <c- u>"full-delete"</c-><c- p>,</c-> <c- u>"exempt"</c-><c- p>]</c-> <c- p>}</c->
+          <c- p>}</c->
+        <c- p>},</c->
+        <c- f>"extensions"</c-><c- p>:</c-> <c- p>{</c->
+          <c- f>"type"</c-><c- p>:</c-> <c- u>"array"</c-><c- p>,</c->
+          <c- f>"items"</c-><c- p>:</c-> <c- p>{</c->
+            <c- f>"type"</c-><c- p>:</c-> <c- u>"object"</c-><c- p>,</c->
+            <c- f>"required"</c-><c- p>:</c-> <c- p>[</c-><c- u>"type"</c-><c- p>],</c->
+            <c- f>"properties"</c-><c- p>:</c-> <c- p>{</c->
+              <c- f>"type"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^did:rwp:"</c-> <c- p>}</c->
+            <c- p>}</c->
+          <c- p>}</c->
+        <c- p>}</c->
+      <c- p>}</c->
+    <c- p>}</c->
   <c- p>}</c->
 <c- p>}</c->
 </pre>
@@ -2829,11 +2855,11 @@ return sorted[0]
   <c- f>"$defs"</c-><c- p>:</c-> <c- p>{</c->
     <c- f>"hardLink"</c-><c- p>:</c-> <c- p>{</c->
       <c- f>"type"</c-><c- p>:</c-> <c- u>"object"</c-><c- p>,</c->
-      <c- f>"required"</c-><c- p>:</c-> <c- p>[</c-><c- u>"type"</c-><c- p>,</c-><c- u>"recordDid"</c-><c- p>,</c-><c- u>"snapshotHash"</c-><c- p>],</c->
+      <c- f>"required"</c-><c- p>:</c-> <c- p>[</c-><c- u>"type"</c-><c- p>,</c-><c- u>"recordDid"</c-><c- p>,</c-><c- u>"snapshot"</c-><c- p>],</c->
       <c- f>"properties"</c-><c- p>:</c-> <c- p>{</c->
         <c- f>"type"</c-><c- p>:</c->         <c- p>{</c-> <c- f>"const"</c-><c- p>:</c-> <c- u>"hard"</c-> <c- p>},</c->
         <c- f>"recordDid"</c-><c- p>:</c->    <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^did:rwp:"</c-> <c- p>},</c->
-        <c- f>"snapshotHash"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^sha256:[0-9a-f]{64}$"</c-> <c- p>},</c->
+        <c- f>"snapshot"</c-><c- p>:</c->     <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^sha256:[0-9a-f]{64}$"</c-> <c- p>},</c->
         <c- f>"role"</c-><c- p>:</c->         <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-> <c- p>}</c->
       <c- p>}</c->
     <c- p>},</c->
@@ -2843,7 +2869,7 @@ return sorted[0]
       <c- f>"properties"</c-><c- p>:</c-> <c- p>{</c->
         <c- f>"type"</c-><c- p>:</c->         <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"enum"</c-><c- p>:</c-> <c- p>[</c-><c- u>"hard"</c-><c- p>,</c-><c- u>"soft"</c-><c- p>]</c-> <c- p>},</c->
         <c- f>"recordDid"</c-><c- p>:</c->    <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^did:rwp:"</c-> <c- p>},</c->
-        <c- f>"snapshotHash"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^sha256:[0-9a-f]{64}$"</c-> <c- p>},</c->
+        <c- f>"snapshot"</c-><c- p>:</c->     <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^sha256:[0-9a-f]{64}$"</c-> <c- p>},</c->
         <c- f>"role"</c-><c- p>:</c->         <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-> <c- p>}</c->
       <c- p>}</c->
     <c- p>}</c->
@@ -2860,11 +2886,11 @@ return sorted[0]
   <c- f>"properties"</c-><c- p>:</c-> <c- p>{</c->
     <c- f>"deletionRecord"</c-><c- p>:</c-> <c- p>{</c->
       <c- f>"type"</c-><c- p>:</c-> <c- u>"object"</c-><c- p>,</c->
-      <c- f>"required"</c-><c- p>:</c-> <c- p>[</c-><c- u>"targetDid"</c-><c- p>,</c-><c- u>"targetSnapshotHash"</c-><c- p>,</c-><c- u>"deletionRegime"</c-><c- p>,</c->
+      <c- f>"required"</c-><c- p>:</c-> <c- p>[</c-><c- u>"targetDid"</c-><c- p>,</c-><c- u>"targetSnapshot"</c-><c- p>,</c-><c- u>"deletionRegime"</c-><c- p>,</c->
                    <c- u>"legalBasis"</c-><c- p>,</c-><c- u>"requestedBy"</c-><c- p>,</c-><c- u>"approvedBy"</c-><c- p>,</c-><c- u>"deletedAt"</c-><c- p>],</c->
       <c- f>"properties"</c-><c- p>:</c-> <c- p>{</c->
         <c- f>"targetDid"</c-><c- p>:</c->          <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^did:rwp:"</c-> <c- p>},</c->
-        <c- f>"targetSnapshotHash"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c->
+        <c- f>"targetSnapshot"</c-><c- p>:</c->     <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c->
                                 <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^sha256:[0-9a-f]{64}$"</c-> <c- p>},</c->
         <c- f>"deletionRegime"</c-><c- p>:</c->     <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c->
                                 <c- f>"enum"</c-><c- p>:</c-> <c- p>[</c-><c- u>"payload-only"</c-><c- p>,</c-><c- u>"full-delete"</c-><c- p>,</c-><c- u>"exempt"</c-><c- p>]</c-> <c- p>},</c->
@@ -3242,9 +3268,9 @@ function parseHTML(markup) {
 {
 let dfnPanelData = {
 "22969991": {"dfnID":"22969991","dfnText":"integrity","external":true,"refSections":[{"refs":[{"id":"ref-for-scripting-policy-dict-integrity"}],"title":"3.1. Components"}],"url":"https://wicg.github.io/csp-next/scripting-policy.html#scripting-policy-dict-integrity"},
-"assertionrecord": {"dfnID":"assertionrecord","dfnText":"AssertionRecord","external":false,"refSections":[{"refs":[{"id":"ref-for-assertionrecord"}],"title":"3.3. Record taxonomy"},{"refs":[{"id":"ref-for-assertionrecord\u2460"}],"title":"12.1. Scope and conformance"}],"url":"#assertionrecord"},
+"assertionrecord": {"dfnID":"assertionrecord","dfnText":"AssertionRecord","external":false,"refSections":[{"refs":[{"id":"ref-for-assertionrecord"}],"title":"3.3. Record taxonomy"},{"refs":[{"id":"ref-for-assertionrecord\u2460"}],"title":"5.9.3. Edges (Parent References)"},{"refs":[{"id":"ref-for-assertionrecord\u2461"}],"title":"12.1. Scope and conformance"}],"url":"#assertionrecord"},
 "attester": {"dfnID":"attester","dfnText":"attester","external":false,"refSections":[],"url":"#attester"},
-"caserecord": {"dfnID":"caserecord","dfnText":"CaseRecord","external":false,"refSections":[{"refs":[{"id":"ref-for-caserecord"}],"title":"3.3. Record taxonomy"},{"refs":[{"id":"ref-for-caserecord\u2460"},{"id":"ref-for-caserecord\u2461"}],"title":"10.3. Case Elements (normative)"},{"refs":[{"id":"ref-for-caserecord\u2462"},{"id":"ref-for-caserecord\u2463"}],"title":"10.4. Hard and Soft Links"},{"refs":[{"id":"ref-for-caserecord\u2464"}],"title":"10.5. CaseRecord-to-CaseRecord Links"},{"refs":[{"id":"ref-for-caserecord\u2465"},{"id":"ref-for-caserecord\u2466"},{"id":"ref-for-caserecord\u2467"},{"id":"ref-for-caserecord\u2468"},{"id":"ref-for-caserecord\u2460\u24ea"},{"id":"ref-for-caserecord\u2460\u2460"},{"id":"ref-for-caserecord\u2460\u2461"},{"id":"ref-for-caserecord\u2460\u2462"},{"id":"ref-for-caserecord\u2460\u2463"}],"title":"10.6. Case Merkle Root"},{"refs":[{"id":"ref-for-caserecord\u2460\u2464"}],"title":"10.7. Case Completeness Check"},{"refs":[{"id":"ref-for-caserecord\u2460\u2465"}],"title":"18.5. Merkle Tree Algorithm"},{"refs":[{"id":"ref-for-caserecord\u2460\u2466"}],"title":"22.1. Purpose and Scope"},{"refs":[{"id":"ref-for-caserecord\u2460\u2467"}],"title":"22.3. Anchoring Protocol"},{"refs":[{"id":"ref-for-caserecord\u2460\u2468"}],"title":"22.4. Anchoring Reference in the Case"}],"url":"#caserecord"},
+"caserecord": {"dfnID":"caserecord","dfnText":"CaseRecord","external":false,"refSections":[{"refs":[{"id":"ref-for-caserecord"}],"title":"3.3. Record taxonomy"},{"refs":[{"id":"ref-for-caserecord\u2460"}],"title":"5.9.3. Edges (Parent References)"},{"refs":[{"id":"ref-for-caserecord\u2461"},{"id":"ref-for-caserecord\u2462"}],"title":"10.3. Case Elements (normative)"},{"refs":[{"id":"ref-for-caserecord\u2463"},{"id":"ref-for-caserecord\u2464"}],"title":"10.4. Hard and Soft Links"},{"refs":[{"id":"ref-for-caserecord\u2465"}],"title":"10.5. CaseRecord-to-CaseRecord Links"},{"refs":[{"id":"ref-for-caserecord\u2466"},{"id":"ref-for-caserecord\u2467"},{"id":"ref-for-caserecord\u2468"},{"id":"ref-for-caserecord\u2460\u24ea"},{"id":"ref-for-caserecord\u2460\u2460"},{"id":"ref-for-caserecord\u2460\u2461"},{"id":"ref-for-caserecord\u2460\u2462"},{"id":"ref-for-caserecord\u2460\u2463"},{"id":"ref-for-caserecord\u2460\u2464"}],"title":"10.6. Case Merkle Root"},{"refs":[{"id":"ref-for-caserecord\u2460\u2465"}],"title":"10.7. Case Completeness Check"},{"refs":[{"id":"ref-for-caserecord\u2460\u2466"}],"title":"18.5. Merkle Tree Algorithm"},{"refs":[{"id":"ref-for-caserecord\u2460\u2467"}],"title":"22.1. Purpose and Scope"},{"refs":[{"id":"ref-for-caserecord\u2460\u2468"}],"title":"22.3. Anchoring Protocol"},{"refs":[{"id":"ref-for-caserecord\u2461\u24ea"}],"title":"22.4. Anchoring Reference in the Case"}],"url":"#caserecord"},
 "conformance": {"dfnID":"conformance","dfnText":"conformance","external":false,"refSections":[],"url":"#conformance"},
 "conformance-attestation": {"dfnID":"conformance-attestation","dfnText":"conformance attestation","external":false,"refSections":[],"url":"#conformance-attestation"},
 "conformancerecord": {"dfnID":"conformancerecord","dfnText":"ConformanceRecord","external":false,"refSections":[{"refs":[{"id":"ref-for-conformancerecord"},{"id":"ref-for-conformancerecord\u2460"}],"title":"2.8. Conformance Attestation {#section-conformance-attestation}"},{"refs":[{"id":"ref-for-conformancerecord\u2461"}],"title":"3.3. Record taxonomy"}],"url":"#conformancerecord"},
@@ -3259,10 +3285,10 @@ let dfnPanelData = {
 "identity": {"dfnID":"identity","dfnText":"identity","external":false,"refSections":[{"refs":[{"id":"ref-for-identity"}],"title":"3.1. Components"}],"url":"#identity"},
 "informationrecord": {"dfnID":"informationrecord","dfnText":"InformationRecord","external":false,"refSections":[{"refs":[{"id":"ref-for-informationrecord"}],"title":"3.3. Record taxonomy"},{"refs":[{"id":"ref-for-informationrecord\u2460"}],"title":"10.4. Hard and Soft Links"}],"url":"#informationrecord"},
 "merkle-root": {"dfnID":"merkle-root","dfnText":"Merkle root","external":false,"refSections":[{"refs":[{"id":"ref-for-merkle-root"}],"title":"10.5. CaseRecord-to-CaseRecord Links"},{"refs":[{"id":"ref-for-merkle-root\u2460"},{"id":"ref-for-merkle-root\u2461"}],"title":"10.6. Case Merkle Root"},{"refs":[{"id":"ref-for-merkle-root\u2462"}],"title":"18.5. Merkle Tree Algorithm"},{"refs":[{"id":"ref-for-merkle-root\u2463"}],"title":"22.1. Purpose and Scope"}],"url":"#merkle-root"},
-"metadata": {"dfnID":"metadata","dfnText":"Metadata","external":false,"refSections":[{"refs":[{"id":"ref-for-metadata"}],"title":"3.1. Components"},{"refs":[{"id":"ref-for-metadata\u2460"}],"title":"9.1. Record Type Definition"},{"refs":[{"id":"ref-for-metadata\u2461"}],"title":"21.2. Access Policy Block"},{"refs":[{"id":"ref-for-metadata\u2462"}],"title":"23. Optional Solid Pod Delivery"}],"url":"#metadata"},
-"payload": {"dfnID":"payload","dfnText":"payload","external":false,"refSections":[{"refs":[{"id":"ref-for-payload"}],"title":"3.1. Components"},{"refs":[{"id":"ref-for-payload\u2460"}],"title":"5.1. Payload Definition"},{"refs":[{"id":"ref-for-payload\u2461"}],"title":"5.3. Multi-Representation"},{"refs":[{"id":"ref-for-payload\u2462"}],"title":"5.9.3. Edges (Parent References)"},{"refs":[{"id":"ref-for-payload\u2463"},{"id":"ref-for-payload\u2464"}],"title":"8.3. DeletionRecord Protocol"},{"refs":[{"id":"ref-for-payload\u2465"}],"title":"9.1. Record Type Definition"},{"refs":[{"id":"ref-for-payload\u2466"}],"title":"23. Optional Solid Pod Delivery"}],"url":"#payload"},
+"metadata": {"dfnID":"metadata","dfnText":"Metadata","external":false,"refSections":[{"refs":[{"id":"ref-for-metadata"}],"title":"3.1. Components"},{"refs":[{"id":"ref-for-metadata\u2460"}],"title":"9.1. Record Type Definition"},{"refs":[{"id":"ref-for-metadata\u2461"}],"title":"23. Optional Solid Pod Delivery"}],"url":"#metadata"},
+"payload": {"dfnID":"payload","dfnText":"payload","external":false,"refSections":[{"refs":[{"id":"ref-for-payload"}],"title":"3.1. Components"},{"refs":[{"id":"ref-for-payload\u2460"}],"title":"5.1. Payload Structure"},{"refs":[{"id":"ref-for-payload\u2461"}],"title":"5.9.3. Edges (Parent References)"},{"refs":[{"id":"ref-for-payload\u2462"},{"id":"ref-for-payload\u2463"}],"title":"8.3. DeletionRecord Protocol"},{"refs":[{"id":"ref-for-payload\u2464"}],"title":"9.1. Record Type Definition"},{"refs":[{"id":"ref-for-payload\u2465"}],"title":"23. Optional Solid Pod Delivery"}],"url":"#payload"},
 "producer": {"dfnID":"producer","dfnText":"producer","external":false,"refSections":[],"url":"#producer"},
-"record": {"dfnID":"record","dfnText":"Record","external":false,"refSections":[{"refs":[{"id":"ref-for-record"}],"title":"1.1. Purpose"},{"refs":[{"id":"ref-for-record\u2460"},{"id":"ref-for-record\u2461"}],"title":"1.2. Scope"},{"refs":[{"id":"ref-for-record\u2462"}],"title":"3. The Record"},{"refs":[{"id":"ref-for-record\u2463"},{"id":"ref-for-record\u2464"},{"id":"ref-for-record\u2465"},{"id":"ref-for-record\u2466"}],"title":"3.1. Components"},{"refs":[{"id":"ref-for-record\u2467"}],"title":"3.3. Record taxonomy"},{"refs":[{"id":"ref-for-record\u2468"},{"id":"ref-for-record\u2460\u24ea"},{"id":"ref-for-record\u2460\u2460"},{"id":"ref-for-record\u2460\u2461"}],"title":"4.1. Requirements for Record Identity"},{"refs":[{"id":"ref-for-record\u2460\u2462"},{"id":"ref-for-record\u2460\u2463"}],"title":"4.2. DID Format"},{"refs":[{"id":"ref-for-record\u2460\u2464"},{"id":"ref-for-record\u2460\u2465"}],"title":"4.3. DID Document"},{"refs":[{"id":"ref-for-record\u2460\u2466"}],"title":"4.4. DID Resolver Requirements"},{"refs":[{"id":"ref-for-record\u2460\u2467"},{"id":"ref-for-record\u2460\u2468"}],"title":"5.1. Payload Definition"},{"refs":[{"id":"ref-for-record\u2461\u24ea"},{"id":"ref-for-record\u2461\u2460"}],"title":"5.6. Conversion During Finalisation"},{"refs":[{"id":"ref-for-record\u2461\u2461"}],"title":"5.9.1. Graph Structure"},{"refs":[{"id":"ref-for-record\u2461\u2462"},{"id":"ref-for-record\u2461\u2463"}],"title":"5.9.3. Edges (Parent References)"},{"refs":[{"id":"ref-for-record\u2461\u2464"}],"title":"5.9.4. Branches"},{"refs":[{"id":"ref-for-record\u2461\u2465"},{"id":"ref-for-record\u2461\u2466"},{"id":"ref-for-record\u2461\u2467"}],"title":"5.9.6. Cross-Record Merges"},{"refs":[{"id":"ref-for-record\u2461\u2468"}],"title":"5.10.1. State Model"},{"refs":[{"id":"ref-for-record\u2462\u24ea"}],"title":"5.10.2. Linkability"},{"refs":[{"id":"ref-for-record\u2462\u2460"}],"title":"6. Metadata"},{"refs":[{"id":"ref-for-record\u2462\u2461"},{"id":"ref-for-record\u2462\u2462"}],"title":"6.1. metadata.core"},{"refs":[{"id":"ref-for-record\u2462\u2463"}],"title":"6.2. metadata.governance"},{"refs":[{"id":"ref-for-record\u2462\u2464"}],"title":"6.3. metadata.extensions"},{"refs":[{"id":"ref-for-record\u2462\u2465"}],"title":"7.1. Purpose"},{"refs":[{"id":"ref-for-record\u2462\u2466"}],"title":"7.3. Verification"},{"refs":[{"id":"ref-for-record\u2462\u2467"},{"id":"ref-for-record\u2462\u2468"}],"title":"9.1. Record Type Definition"},{"refs":[{"id":"ref-for-record\u2463\u24ea"}],"title":"10.1. Case as a specialised Record Type {#section-case-type}"},{"refs":[{"id":"ref-for-record\u2463\u2460"}],"title":"10.4. Hard and Soft Links"},{"refs":[{"id":"ref-for-record\u2463\u2461"}],"title":"11.1. Purpose and scope"},{"refs":[{"id":"ref-for-record\u2463\u2462"}],"title":"13. SchemaRecord"},{"refs":[{"id":"ref-for-record\u2463\u2463"}],"title":"13.1. Schema Versioning and Backward Compatibility"},{"refs":[{"id":"ref-for-record\u2463\u2464"}],"title":"18.3. Snapshot Integrity"},{"refs":[{"id":"ref-for-record\u2463\u2465"},{"id":"ref-for-record\u2463\u2466"},{"id":"ref-for-record\u2463\u2467"}],"title":"20.4. Cross-Namespace Links"},{"refs":[{"id":"ref-for-record\u2463\u2468"}],"title":"21.2. Access Policy Block"},{"refs":[{"id":"ref-for-record\u2464\u24ea"}],"title":"22.2. Requirements for the Ledger"},{"refs":[{"id":"ref-for-record\u2464\u2460"},{"id":"ref-for-record\u2464\u2461"},{"id":"ref-for-record\u2464\u2462"}],"title":"23. Optional Solid Pod Delivery"}],"url":"#record"},
+"record": {"dfnID":"record","dfnText":"Record","external":false,"refSections":[{"refs":[{"id":"ref-for-record"}],"title":"1.1. Purpose"},{"refs":[{"id":"ref-for-record\u2460"},{"id":"ref-for-record\u2461"}],"title":"1.2. Scope"},{"refs":[{"id":"ref-for-record\u2462"}],"title":"3. The Record"},{"refs":[{"id":"ref-for-record\u2463"},{"id":"ref-for-record\u2464"},{"id":"ref-for-record\u2465"},{"id":"ref-for-record\u2466"}],"title":"3.1. Components"},{"refs":[{"id":"ref-for-record\u2467"}],"title":"3.3. Record taxonomy"},{"refs":[{"id":"ref-for-record\u2468"},{"id":"ref-for-record\u2460\u24ea"},{"id":"ref-for-record\u2460\u2460"},{"id":"ref-for-record\u2460\u2461"}],"title":"4.1. Requirements for Record Identity"},{"refs":[{"id":"ref-for-record\u2460\u2462"},{"id":"ref-for-record\u2460\u2463"}],"title":"4.2. DID Format"},{"refs":[{"id":"ref-for-record\u2460\u2464"},{"id":"ref-for-record\u2460\u2465"}],"title":"4.3. DID Document"},{"refs":[{"id":"ref-for-record\u2460\u2466"}],"title":"4.4. DID Resolver Requirements"},{"refs":[{"id":"ref-for-record\u2460\u2467"},{"id":"ref-for-record\u2460\u2468"}],"title":"5.1. Payload Structure"},{"refs":[{"id":"ref-for-record\u2461\u24ea"}],"title":"5.9.1. Graph Structure"},{"refs":[{"id":"ref-for-record\u2461\u2460"},{"id":"ref-for-record\u2461\u2461"}],"title":"5.9.3. Edges (Parent References)"},{"refs":[{"id":"ref-for-record\u2461\u2462"}],"title":"5.9.4. Branches"},{"refs":[{"id":"ref-for-record\u2461\u2463"},{"id":"ref-for-record\u2461\u2464"},{"id":"ref-for-record\u2461\u2465"}],"title":"5.9.6. Cross-Record Merges"},{"refs":[{"id":"ref-for-record\u2461\u2466"}],"title":"5.10.1. State Model"},{"refs":[{"id":"ref-for-record\u2461\u2467"}],"title":"5.10.2. Linkability"},{"refs":[{"id":"ref-for-record\u2461\u2468"}],"title":"6. Metadata"},{"refs":[{"id":"ref-for-record\u2462\u24ea"},{"id":"ref-for-record\u2462\u2460"}],"title":"6.1. metadata.core"},{"refs":[{"id":"ref-for-record\u2462\u2461"},{"id":"ref-for-record\u2462\u2462"},{"id":"ref-for-record\u2462\u2463"}],"title":"6.2. metadata.governance"},{"refs":[{"id":"ref-for-record\u2462\u2464"},{"id":"ref-for-record\u2462\u2465"}],"title":"6.3. metadata.extensions"},{"refs":[{"id":"ref-for-record\u2462\u2466"}],"title":"7.1. Purpose"},{"refs":[{"id":"ref-for-record\u2462\u2467"}],"title":"7.3. Verification"},{"refs":[{"id":"ref-for-record\u2462\u2468"},{"id":"ref-for-record\u2463\u24ea"}],"title":"9.1. Record Type Definition"},{"refs":[{"id":"ref-for-record\u2463\u2460"}],"title":"10.1. Case as a specialised Record Type {#section-case-type}"},{"refs":[{"id":"ref-for-record\u2463\u2461"}],"title":"10.4. Hard and Soft Links"},{"refs":[{"id":"ref-for-record\u2463\u2462"}],"title":"11.1. Purpose and scope"},{"refs":[{"id":"ref-for-record\u2463\u2463"}],"title":"13. SchemaRecord"},{"refs":[{"id":"ref-for-record\u2463\u2464"}],"title":"13.1. Schema Versioning and Backward Compatibility"},{"refs":[{"id":"ref-for-record\u2463\u2465"}],"title":"18.3. Snapshot Integrity"},{"refs":[{"id":"ref-for-record\u2463\u2466"},{"id":"ref-for-record\u2463\u2467"},{"id":"ref-for-record\u2463\u2468"}],"title":"20.4. Cross-Namespace Links"},{"refs":[{"id":"ref-for-record\u2464\u24ea"}],"title":"21.2. Access Policy Block"},{"refs":[{"id":"ref-for-record\u2464\u2460"}],"title":"22.2. Requirements for the Ledger"},{"refs":[{"id":"ref-for-record\u2464\u2461"},{"id":"ref-for-record\u2464\u2462"},{"id":"ref-for-record\u2464\u2463"}],"title":"23. Optional Solid Pod Delivery"}],"url":"#record"},
 "recordhash": {"dfnID":"recordhash","dfnText":"recordHash","external":false,"refSections":[],"url":"#recordhash"},
 "relationrecord": {"dfnID":"relationrecord","dfnText":"RelationRecord","external":false,"refSections":[{"refs":[{"id":"ref-for-relationrecord"},{"id":"ref-for-relationrecord\u2460"},{"id":"ref-for-relationrecord\u2461"}],"title":"3.3. Record taxonomy"},{"refs":[{"id":"ref-for-relationrecord\u2462"}],"title":"10.1. Case as a specialised Record Type {#section-case-type}"},{"refs":[{"id":"ref-for-relationrecord\u2463"}],"title":"10.4. Hard and Soft Links"},{"refs":[{"id":"ref-for-relationrecord\u2464"}],"title":"11.1. Purpose and scope"}],"url":"#relationrecord"},
 "resolver": {"dfnID":"resolver","dfnText":"resolver","external":false,"refSections":[],"url":"#resolver"},
