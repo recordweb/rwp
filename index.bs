@@ -15,7 +15,7 @@ Previous Version: https://doi.org/10.5281/zenodo.20475345
 </pre>
 
 <div class="copyright">
-<p>Copyright © 2026 the Contributors to the RecordWeb Protocol (RWP) v0.0.4, published by the <a href="https://www.w3.org/community/recordweb/">RecordWeb Community Group</a> under the <a href="https://www.w3.org/community/about/process/cla/">W3C Community Contributor License Agreement (CLA)</a>. A human-readable <a href="https://www.w3.org/community/about/process/cla-deed/">summary</a> is available.</p>
+<p>Copyright © 2026 the Contributors to the RecordWeb Protocol (RWP) v0.0.5, published by the <a href="https://www.w3.org/community/recordweb/">RecordWeb Community Group</a> under the <a href="https://www.w3.org/community/about/process/cla/">W3C Community Contributor License Agreement (CLA)</a>. A human-readable <a href="https://www.w3.org/community/about/process/cla-deed/">summary</a> is available.</p>
 </div>
 
 <pre class="biblio">
@@ -2079,7 +2079,7 @@ This schema defines structural validation only. State-dependent finalisation req
   "$id": "https://recordweb.github.io/rwp/schemas/case-record.json",
   "title": "RWP CaseRecord Payload",
   "type": "object",
-  "required": ["recordDid","caseType","title","trigger","merkleRoot"],
+  "required": ["recordDid","caseType","title","trigger","context","process","decision","result","merkleRoot"],
   "properties": {
     "recordDid":  { "type": "string", "pattern": "^did:rwp:" },
     "caseType":   { "type": "string", "pattern": "^did:rwp:" },
@@ -2088,7 +2088,7 @@ This schema defines structural validation only. State-dependent finalisation req
     "context":    { "type": "array", "items": { "$ref": "#/$defs/link" } },
     "process":    { "type": "array", "items": { "$ref": "#/$defs/link" } },
     "decision":   { "oneOf": [{ "$ref": "#/$defs/hardLink" }, { "type": "null" }] },
-    "result":     { "type": "array", "items": { "$ref": "#/$defs/hardLink" } },
+    "result":     { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/hardLink" } },
     "merkleRoot": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
   },
   "$defs": {
@@ -2106,7 +2106,7 @@ This schema defines structural validation only. State-dependent finalisation req
       "type": "object",
       "required": ["type","recordDid"],
       "properties": {
-        "type":         { "type": "string", "enum": ["hard","working"] },
+        "type":         { "type": "string", "enum": ["hard","soft"] },
         "recordDid":    { "type": "string", "pattern": "^did:rwp:" },
         "snapshotHash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
         "role":         { "type": "string" }
