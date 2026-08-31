@@ -754,20 +754,49 @@ A producer or custodian that creates or manages RWP Records MUST ensure that the
 Payload and Snapshots {#chapter-payload}
 =================================
 
-## Payload Definition ## {#section-payload-definition}
+## Payload Structure ## {#section-payload-definition}
 
-The <dfn>payload</dfn> of a [=Record=] is the content the [=Record=] carries, the actual information.
+The <dfn>payload</dfn> of a [=Record=] is an ordered array of [=snapshots=]. Each [=snapshot=] is one immutable, versioned representation of the [=Record=]'s content at a specific point in time.
 
-A [=payload=]:
+```json
+{
+  "payload": [
+    {
+      "snapshot": "sha256:e3b0c44298fc1c149afb4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "state": "finalized",
+      "parents": ["sha256:previousSnapshotHash0000000000000000000000000000000000000000"],
+      "createdAt": "2026-05-31T14:00:00Z",
+      "modifiedAt": "2026-05-31T15:30:00Z",
+      "signature": "z3FttV7VjukA1LhqSDgOxupHy...",
+      "representations": [
+        {
+          "format": "text/markdown",
+          "hash": "sha256:aabbcc0000000000000000000000000000000000000000000000000000000",
+          "primary": false,
+          "role": "source"
+        },
+        {
+          "format": "application/pdf;profile=PDF-A-2b",
+          "hash": "sha256:d2d2d2d2d2c3c3c3c3c3b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4",
+          "primary": true,
+          "role": "publication"
+        }
+      ]
+    }
+  ]
+}
+```
+
+Each [=payload=] entry:
 
 - MUST conform to the schema of the Record type in the referenced schema version
 - MUST be validated against the schema before finalisation
 - MUST NOT be changed after finalisation
-- MUST be uniquely identified in the `payloadHash` of the [=snapshot=]
+- MUST be uniquely identified by its `snapshot` field
 
-## Permitted Payload Types ## {#section-payload-types}
+## Permitted Payload Content Types ## {#section-payload-types}
 
-RWP distinguishes three payload categories:
+RWP distinguishes three payload content categories:
 
 <table class="data">
   <thead>
@@ -794,33 +823,13 @@ RWP distinguishes three payload categories:
 
 ## Multi-Representation ## {#section-payload-multi-representation}
 
-A [=snapshot=] MAY carry multiple representations of the same [=payload=]. This is provided in particular for the transition from working format (draft) to long-term format (finalised).
+A [=snapshot=] MAY carry multiple `representations`. This is provided in particular for the transition from working format (draft) to long-term format (finalised). Representations express the same content in different formats at the same point in the version graph; they MUST NOT be used to express different versions over time — that is the purpose of separate snapshot entries linked via `parents`.
 
 If a [=snapshot=] contains multiple representations, ALL of the following MUST apply:
 
 - All representations MUST depict the same content
-- All representations MUST be individually hashed and referenced in the snapshot
-- One representation MUST be designated as primary (`primary: true`)
-- The `payloadHash` MUST contain the hash of the primary representation
-
-```json
-{
-  "payloadRepresentations": [
-    {
-      "format": "text/markdown",
-      "hash": "sha256:aabbcc...",
-      "primary": false,
-      "role": "source"
-    },
-    {
-      "format": "application/pdf;profile=PDF-A-2b",
-      "hash": "sha256:ddeeff...",
-      "primary": true,
-      "role": "publication"
-    }
-  ]
-}
-```
+- All representations MUST be individually hashed
+- Exactly one representation MUST be designated as primary (`primary: true`)
 
 <table class="data">
   <thead>
@@ -836,79 +845,53 @@ If a [=snapshot=] contains multiple representations, ALL of the following MUST a
 
 ## Format Requirements per State ## {#section-payload-format-requirements}
 
-The schema of a Record type MUST define the permitted payload formats for each state. If a schema contains no explicit format requirements, the following defaults apply:
-
-<table class="data">
-  <thead>
-    <tr><th>State</th><th>Permitted formats (default)</th></tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code>draft</code></td>
-      <td>All MIME types not explicitly excluded in the schema of the Record type</td>
-    </tr>
-    <tr>
-      <td><code>finalized</code></td>
-      <td>Only formats listed under [RWP archival-grade formats](#section-payload-archival-formats)</td>
-    </tr>
-  </tbody>
-</table>
+[... unverändert ...]
 
 ## RWP archival-grade formats (normative) ## {#section-payload-archival-formats}
 
-<table class="data">
-  <thead>
-    <tr><th>MIME Type</th><th>Format</th><th>Suitability</th></tr>
-  </thead>
-  <tbody>
-    <tr><td><code>application/pdf;profile=PDF-A-1b</code></td><td>PDF/A-1b</td><td>Documents without embedded multimedia</td></tr>
-    <tr><td><code>application/pdf;profile=PDF-A-2b</code></td><td>PDF/A-2b</td><td>Documents with embedded files</td></tr>
-    <tr><td><code>application/pdf;profile=PDF-A-3b</code></td><td>PDF/A-3b</td><td>Documents with arbitrary attachments</td></tr>
-    <tr><td><code>text/xml</code></td><td>XML (well-formed)</td><td>Structured data</td></tr>
-    <tr><td><code>application/json</code></td><td>JSON</td><td>Structured data (with schema reference)</td></tr>
-    <tr><td><code>image/tiff</code></td><td>TIFF</td><td>Raster images</td></tr>
-    <tr><td><code>image/jp2</code></td><td>JPEG 2000</td><td>Raster images (near-lossless)</td></tr>
-    <tr><td><code>text/plain;charset=UTF-8</code></td><td>Plain Text UTF-8</td><td>Pure text documents</td></tr>
-    <tr><td><code>text/markdown</code></td><td>CommonMark Markdown</td><td>Source format with publication representation</td></tr>
-  </tbody>
-</table>
+[... unverändert ...]
 
 ## Conversion During Finalisation ## {#section-payload-conversion}
 
-When a system transitions a [=Record=] from state `draft` to `finalized`, it MUST:
+[... unverändert, aber "Store both formats as multi-representation in the snapshot" bleibt sinngemäss gültig, da representations weiterhin existieren ...]
 
-1. Validate the payload against the finalised format of the schema
-2. If the current payload is not in archival-grade format: convert automatically or request conversion from the operator
-3. Store both formats as multi-representation in the snapshot (SHOULD)
-4. Document the conversion act as metadata (`conversionMethod`, `conversionTimestamp`)
+## Snapshot Fields ## {#section-payload-snapshot-definition}
 
-A system MUST NOT finalise a [=Record=] whose payload does not conform to the format defined for `finalized` and for which no archival-grade conversion is possible.
+Every [=snapshot=] entry in the `payload` array MUST fulfil the following properties:
 
-## Snapshot Definition ## {#section-payload-snapshot-definition}
+<table class="data">
+  <thead>
+    <tr><th>Field</th><th>Required</th><th>Type</th><th>Description</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>snapshot</code></td><td>MUST</td><td>SHA-256</td><td>Content hash of this snapshot (incl. representations); serves as its unique identifier. Referenceable via <code>did:rwp:&lt;namespace&gt;:&lt;record-id&gt;:&lt;snapshot&gt;</code>.</td></tr>
+    <tr><td><code>state</code></td><td>MUST</td><td>Enum</td><td><code>draft</code> or <code>finalized</code>; additional values permitted per type schema</td></tr>
+    <tr><td><code>parents</code></td><td>MUST</td><td>Array&lt;SHA-256&gt;</td><td>Hashes of predecessor snapshots; empty for the root snapshot</td></tr>
+    <tr><td><code>createdAt</code></td><td>MUST</td><td>ISO 8601</td><td>Timestamp of snapshot creation</td></tr>
+    <tr><td><code>modifiedAt</code></td><td>MUST</td><td>ISO 8601</td><td>Timestamp of the last change to this snapshot. For a <code>finalized</code> snapshot this is the finalisation timestamp, since a finalized snapshot cannot change thereafter.</td></tr>
+    <tr><td><code>signature</code></td><td>MUST (when finalized)</td><td>Multibase</td><td>Cryptographic signature of the record owner over the <code>snapshot</code> hash. See [Signature Procedure](#section-crypto-procedures-signature).</td></tr>
+    <tr><td><code>representations</code></td><td>MUST (min. 1)</td><td>Array</td><td>Format representations of this snapshot's content, per [Multi-Representation](#section-payload-multi-representation)</td></tr>
+  </tbody>
+</table>
 
-A [=snapshot=] is the atomic unit of versioning in RecordWeb.
-
-A [=snapshot=] MUST fulfil the following properties:
+A [=snapshot=] MUST additionally fulfil the following properties:
 
 - It is immutable after its creation
-- It is uniquely identifiable by its content hash
-- It references exactly one version of the payload (or multiple representations per [Multi-Representation](#section-payload-multi-representation))
 - It references exactly one version of the schema of its Record type
-- It is linked to its predecessor snapshots by directed edges in the version graph
+- It is linked to its predecessor snapshots by directed edges in the version graph (see [Version Graph (DAG)](#section-payload-version-graph))
 
 ## Snapshot Hash Calculation ## {#section-payload-snapshot-hash}
 
-The `snapshotHash` MUST be calculated as follows:
+The `snapshot` hash MUST be calculated as follows:
 
-1. Serialise the metadata fields (without `snapshotHash` itself) as canonical JSON ([[RFC8785]])
-2. Concatenate: `canonicalMetadataJSON || payloadBytes`
-3. Calculate SHA-256 over the result
+1. Serialise the snapshot fields `state`, `parents`, `createdAt`, `modifiedAt`, and `representations` (without `snapshot` and `signature` themselves) as canonical JSON ([[RFC8785]])
+2. Calculate SHA-256 over the result
 
 ```
-snapshotHash = SHA-256( canonicalize(metadata \ {snapshotHash}) || payloadBytes )
+snapshot = SHA-256( canonicalize({state, parents, createdAt, modifiedAt, representations}) )
 ```
 
-A system MUST verify the `snapshotHash` after every finalisation before the snapshot is accepted as valid.
+A system MUST verify the `snapshot` hash after every finalisation before the snapshot is accepted as valid. This hash is distinct from the Record-level `recordHash` defined in [Record Integrity](#chapter-record-integrity), which covers the entire Record including `metadata`.
 
 ## Version Graph (DAG) ## {#section-payload-version-graph}
 
@@ -925,16 +908,16 @@ A system MUST check upon receipt of a new [=snapshot=] whether adding its parent
 
 ### Nodes ### {#subsection-graph-nodes}
 
-Every node in the [=version graph=] is a [=snapshot=] per Section 3.2.
+Every node in the [=version graph=] is a [=snapshot=] entry in the `payload` array (see [Snapshot Fields](#section-payload-snapshot-definition)).
 
 <table class="data">
   <thead>
     <tr><th>Property</th><th>Requirement</th></tr>
   </thead>
   <tbody>
-    <tr><td>Unique identity</td><td>SHA-256 of the snapshot (<code>snapshotHash</code>); MUST be unique</td></tr>
+    <tr><td>Unique identity</td><td>SHA-256 of the snapshot (<code>snapshot</code>); MUST be unique</td></tr>
     <tr><td>Immutability</td><td>Finalised nodes MUST NOT be changed</td></tr>
-    <tr><td>Resolvability</td><td>Every node MUST be retrievable in the system via its <code>snapshotHash</code></td></tr>
+    <tr><td>Resolvability</td><td>Every node MUST be retrievable in the system via its <code>snapshot</code> hash</td></tr>
   </tbody>
 </table>
 
@@ -949,8 +932,8 @@ An edge connects a [=snapshot=] (child) with its predecessor [=snapshot=] (paren
 
 Edge requirements:
 
-- Every parent reference MUST be a valid `snapshotHash` of a known [=snapshot=]
-- Edges MUST NOT point to snapshots of other [=Records=]. Cross-Record connections are made via links in the [=payload=] or as Case linkage ([CaseRecord Specification](#chapter-caserecord))
+- Every parent reference MUST be a valid `snapshot` hash of a known [=snapshot=] within the same `payload` array
+- Edges MUST NOT point to snapshots of other [=Records=]. Cross-Record connections are made via links in the [=payload=] of a [=CaseRecord=] or [=AssertionRecord=] ([CaseRecord Specification](#chapter-caserecord))
 
 ### Branches ### {#subsection-graph-branches}
 
@@ -1082,22 +1065,12 @@ Metadata is organised into three groups: `core`, `governance`, and `extensions`.
       "schemaVersion": "sha256:a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae"
     },
     "governance": {
+      "owner": "did:rwp:bern.ch:unit-baubewilligung",
       "classification": "internal",
       "retentionPolicy": "did:rwp:bern.ch:retention-bauakten-30y",
       "tags": ["building-permit", "parcel-451", "2026"]
     },
-    "extensions": [
-      {
-        "type": "did:rwp:recordweb.org:extension-access-policy",
-        "accessPolicy": {
-          "visibility": "restricted",
-          "readAccess": ["did:rwp:bern.ch:unit-legal"],
-          "writeAccess": ["did:rwp:bern.ch:user-petra-muster"],
-          "delegationAllowed": true,
-          "expiresAt": null
-        }
-      }
-    ]
+    "extensions": []
   }
 }
 ```
@@ -1118,18 +1091,28 @@ Every [=Record=] MUST contain the following <dfn>core metadata</dfn> fields:
 
 ## metadata.governance ## {#section-metadata-governance}
 
-A [=Record=] MAY contain the following <dfn>governance metadata</dfn> fields. These fields express Records Management concerns (classification, retention, discoverability) as defined in [[ISO15489]].
+A [=Record=] MAY contain the following <dfn>governance metadata</dfn> fields. These fields express Records Management concerns (accountability, classification, retention, discoverability) as defined in [[ISO15489]].
 
 <table class="data">
   <thead>
     <tr><th>Field</th><th>Required</th><th>Type</th><th>Description</th></tr>
   </thead>
   <tbody>
+    <tr><td><code>owner</code></td><td>SHOULD</td><td>DID</td><td>The person or organisational unit currently responsible for the [=Record=]. See note below on the relationship between <code>owner</code> and snapshot <code>signature</code>.</td></tr>
     <tr><td><code>classification</code></td><td>SHOULD</td><td>String</td><td>Protection level per the organisation's internal scheme</td></tr>
     <tr><td><code>retentionPolicy</code></td><td>SHOULD</td><td>DID</td><td>Reference to a retention rule. See [Payload Deletion](#chapter-deletion) for how this field interacts with the applicable deletion regime.</td></tr>
     <tr><td><code>tags</code></td><td>MAY</td><td>Array&lt;String&gt;</td><td>Free-text markers for search and filtering</td></tr>
   </tbody>
 </table>
+
+The `owner` field expresses organisational accountability and MAY change over the lifetime of a [=Record=] (e.g. following a transfer of responsibility). It is independent of the cryptographic `signature` carried by an individual [=snapshot=] (see [Snapshot Fields](#section-payload-snapshot-definition)):
+
+- `signature` provides cryptographic evidence of *who authorised a specific snapshot's content* at finalisation, resolvable via the DID document's `controller` field.
+- `owner` provides the current, human-readable statement of *organisational responsibility* for the Record as a whole, independent of which key signed the most recent snapshot.
+
+Where a schema defines `signaturePolicy: system` (see [Finalisation Requirements](#subsection-finalisation-requirements)), the signature identifies an authorised system key rather than a responsible person or unit. In this case, `owner` is the only field that expresses organisational accountability.
+
+An implementation MUST NOT infer the current `owner` solely from the `controller` of the most recent snapshot's signature.
 
 ## metadata.extensions ## {#section-metadata-extensions}
 
@@ -1146,11 +1129,11 @@ Every extension entry MUST contain:
   </tbody>
 </table>
 
-Additional fields within an extension entry are defined by the SchemaRecord or profile identified in `type`. This specification defines one such extension:
+Additional fields within an extension entry are defined entirely by the SchemaRecord or profile identified in `type`. This specification does not itself define any extension entry.
 
-- **Access Policy Extension** (`did:rwp:recordweb.org:extension-access-policy`): carries the `accessPolicy` block defined in [Access Control (Delegation Framework)](#chapter-access-control).
+A [=Record=] MAY contain zero, one, or multiple extension entries. A conforming implementation MUST NOT require support for any extension type unless it claims the corresponding profile or capability.
 
-A conforming implementation MUST NOT require support for any extension type unless it claims the corresponding profile or capability.
+Chapters of this specification that define an optional capability MAY specify that the capability's data is carried as an extension entry. Where they do so, they identify the applicable `type` value and the additional fields of that entry.
 
 
 Record Integrity {#chapter-record-integrity}
@@ -1240,7 +1223,7 @@ The `DeletionRecord` MUST contain:
 {
   "deletionRecord": {
     "targetDid": "did:rwp:bern.ch:f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    "targetSnapshotHash": "sha256:snapshot-to-be-deleted...",
+    "targetSnapshot": "sha256:snapshot-to-be-deleted...",
     "deletionRegime": "payload-only",
     "legalBasis": "GDPR Art. 17 — Right to erasure",
     "requestedBy": "did:rwp:bern.ch:user-max-mustermann",
@@ -1746,7 +1729,8 @@ See [Payload Deletion](#chapter-deletion)
 
 MergeRecord {#chapter-merge-record}
 =================================================
-TBD
+
+See [Merges](#subsection-graph-merges) and [Cross-Record Merges](#subsection-cross-record-merges).
 
 
 MigrationRecord {#chapter-migration-record}
@@ -1763,8 +1747,9 @@ Cryptographic Procedures {#chapter-crypto-procedures}
 
 RWP uses exclusively **SHA-256** as the hashing procedure for:
 
-- Snapshot hashes (`snapshotHash`)
-- Payload hashes (`payloadHash`)
+- Snapshot hashes (`snapshot`)
+- Representation hashes (`representations[].hash`)
+- Record-level hashes (`recordHash`)
 - Schema version hashes (`schemaVersion`)
 - Parent references (`parents`)
 - Merkle root calculations
@@ -1808,8 +1793,8 @@ If the schema prescribes a signature (`signaturePolicy: owner` or `signaturePoli
 Requirements:
 
 - MUST be Ed25519 (EdDSA, [[RFC8037]]) or P-256 (ECDSA, NIST)
-- The signature MUST be calculated over the canonical `snapshotHash` value (as hex string)
-- The signature MUST be stored in the `signature` field as a multibase-encoded value
+- The signature MUST be calculated over the canonical `snapshot` hash value (as hex string)
+- The signature MUST be stored in the `signature` field of the snapshot entry as a multibase-encoded value
 - The key used MUST be published in the DID document of the record owner as a verification method
 
 ## Merkle Tree Algorithm ## {#section-crypto-procedures-merkle-algorithm}
@@ -1912,10 +1897,11 @@ The core principle: access control in RWP is **attribute-based** (ABAC) and **de
 
 ## Access Policy Block ## {#section-access-policy}
 
-A [=Record=] snapshot MAY contain an `accessPolicy` block in the [=metadata=]:
+An implementation claiming this optional capability MAY carry the `accessPolicy` block as an entry in the [=Record=]'s `metadata.extensions` array (see [metadata.extensions](#section-metadata-extensions)), using the reserved type identifier `did:rwp:recordweb.org:extension-access-policy`:
 
 ```json
 {
+  "type": "did:rwp:recordweb.org:extension-access-policy",
   "accessPolicy": {
     "visibility": "restricted",
     "readAccess": [
@@ -1943,6 +1929,8 @@ A [=Record=] snapshot MAY contain an `accessPolicy` block in the [=metadata=]:
     <tr><td><code>expiresAt</code></td><td>MAY</td><td>ISO 8601 timestamp after which access policy expires</td></tr>
   </tbody>
 </table>
+
+An implementation MUST NOT require another implementation to support this extension unless both claim the applicable access-control capability.
 
 ## Delegation Chain ## {#section-delegation-chain}
 
@@ -2035,36 +2023,82 @@ The citizen MAY present the Pod-held [=Record=] to any third party, who can inde
 Annex A: Normative JSON Schemas {#annex-a}
 ==========================================
 
-## A.1 Snapshot Metadata Schema ## {#schema-snapshot}
+## A.1 Record, Snapshot, and Metadata Schemas ## {#schema-snapshot}
 
 ```json
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://recordweb.github.io/rwp/schemas/snapshot-metadata.json",
-  "title": "RWP Snapshot Metadata",
+  "$id": "https://recordweb.github.io/rwp/schemas/record.json",
+  "title": "RWP Record",
   "type": "object",
-  "required": ["did","snapshotHash","recordType","schemaVersion","state",
-               "created","owner","parents","payloadHash","payloadFormat"],
+  "required": ["did", "payload", "metadata", "recordHash"],
   "properties": {
-    "did":             { "type": "string", "pattern": "^did:rwp:[^:]+:[^:]+$" },
-    "snapshotHash":    { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
-    "recordType":      { "type": "string", "pattern": "^did:rwp:" },
-    "schemaVersion":   { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
-    "state":           { "type": "string", "enum": ["draft","finalized"] },
-    "created":         { "type": "string", "format": "date-time" },
-    "finalized":       { "type": "string", "format": "date-time" },
-    "owner":           { "type": "string", "pattern": "^did:rwp:" },
-    "parents":         { "type": "array", "items": { "type": "string",
-                         "pattern": "^sha256:[0-9a-f]{64}$" } },
-    "classification":  { "type": "string" },
-    "retentionPolicy": { "type": "string", "pattern": "^did:rwp:" },
-    "tags":            { "type": "array", "items": { "type": "string" } },
-    "accessPolicy":    { "type": ["object","null"] },
-    "payloadHash":     { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
-    "payloadFormat":   { "type": "string" },
-    "signature":       { "type": "string" },
-    "deletionRegime":  { "type": "string",
-                         "enum": ["payload-only","full-delete","exempt"] }
+    "did":        { "type": "string", "pattern": "^did:rwp:[^:]+:[^:]+$" },
+    "payload":    { "type": "array", "items": { "$ref": "#/$defs/snapshot" } },
+    "metadata":   { "$ref": "#/$defs/metadata" },
+    "recordHash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+  },
+  "$defs": {
+    "snapshot": {
+      "type": "object",
+      "required": ["snapshot", "state", "parents", "createdAt", "modifiedAt", "representations"],
+      "properties": {
+        "snapshot":        { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+        "state":           { "type": "string", "enum": ["draft", "finalized"] },
+        "parents":         { "type": "array", "items": { "type": "string",
+                             "pattern": "^sha256:[0-9a-f]{64}$" } },
+        "createdAt":       { "type": "string", "format": "date-time" },
+        "modifiedAt":      { "type": "string", "format": "date-time" },
+        "signature":       { "type": "string" },
+        "representations": { "type": "array", "minItems": 1,
+                             "items": { "$ref": "#/$defs/representation" } }
+      }
+    },
+    "representation": {
+      "type": "object",
+      "required": ["format", "hash", "primary"],
+      "properties": {
+        "format":  { "type": "string" },
+        "hash":    { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+        "primary": { "type": "boolean" },
+        "role":    { "type": "string", "enum": ["source", "publication", "preview", "archive"] }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["core"],
+      "properties": {
+        "core": {
+          "type": "object",
+          "required": ["recordType", "schemaVersion"],
+          "properties": {
+            "recordType":    { "type": "string", "pattern": "^did:rwp:" },
+            "schemaVersion": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+          }
+        },
+        "governance": {
+          "type": "object",
+          "properties": {
+            "owner":           { "type": "string", "pattern": "^did:rwp:" },
+            "classification":  { "type": "string" },
+            "retentionPolicy": { "type": "string", "pattern": "^did:rwp:" },
+            "tags":            { "type": "array", "items": { "type": "string" } },
+            "deletionRegime":  { "type": "string",
+                                 "enum": ["payload-only", "full-delete", "exempt"] }
+          }
+        },
+        "extensions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["type"],
+            "properties": {
+              "type": { "type": "string", "pattern": "^did:rwp:" }
+            }
+          }
+        }
+      }
+    }
   }
 }
 ```
@@ -2094,11 +2128,11 @@ This schema defines structural validation only. State-dependent finalisation req
   "$defs": {
     "hardLink": {
       "type": "object",
-      "required": ["type","recordDid","snapshotHash"],
+      "required": ["type","recordDid","snapshot"],
       "properties": {
         "type":         { "const": "hard" },
         "recordDid":    { "type": "string", "pattern": "^did:rwp:" },
-        "snapshotHash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+        "snapshot":     { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
         "role":         { "type": "string" }
       }
     },
@@ -2108,7 +2142,7 @@ This schema defines structural validation only. State-dependent finalisation req
       "properties": {
         "type":         { "type": "string", "enum": ["hard","soft"] },
         "recordDid":    { "type": "string", "pattern": "^did:rwp:" },
-        "snapshotHash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+        "snapshot":     { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
         "role":         { "type": "string" }
       }
     }
@@ -2128,11 +2162,11 @@ This schema defines structural validation only. State-dependent finalisation req
   "properties": {
     "deletionRecord": {
       "type": "object",
-      "required": ["targetDid","targetSnapshotHash","deletionRegime",
+      "required": ["targetDid","targetSnapshot","deletionRegime",
                    "legalBasis","requestedBy","approvedBy","deletedAt"],
       "properties": {
         "targetDid":          { "type": "string", "pattern": "^did:rwp:" },
-        "targetSnapshotHash": { "type": "string",
+        "targetSnapshot":     { "type": "string",
                                 "pattern": "^sha256:[0-9a-f]{64}$" },
         "deletionRegime":     { "type": "string",
                                 "enum": ["payload-only","full-delete","exempt"] },
