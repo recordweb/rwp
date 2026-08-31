@@ -15,7 +15,7 @@ Previous Version: https://doi.org/10.5281/zenodo.20475345
 </pre>
 
 <div class="copyright">
-<p>Copyright © 2026 the Contributors to the RecordWeb Protocol (RWP) v0.0.5, published by the <a href="https://www.w3.org/community/recordweb/">RecordWeb Community Group</a> under the <a href="https://www.w3.org/community/about/process/cla/">W3C Community Contributor License Agreement (CLA)</a>. A human-readable <a href="https://www.w3.org/community/about/process/cla-deed/">summary</a> is available.</p>
+<p>Copyright © 2026 the Contributors to the RecordWeb Protocol (RWP) v0.0.6, published by the <a href="https://www.w3.org/community/recordweb/">RecordWeb Community Group</a> under the <a href="https://www.w3.org/community/about/process/cla/">W3C Community Contributor License Agreement (CLA)</a>. A human-readable <a href="https://www.w3.org/community/about/process/cla-deed/">summary</a> is available.</p>
 </div>
 
 <pre class="biblio">
@@ -140,8 +140,6 @@ This document uses semantic versioning (SemVer): `MAJOR.MINOR.PATCH`.
 - **MAJOR**: Incompatible changes to existing standards
 - **MINOR**: Backward-compatible extensions
 - **PATCH**: Corrections without substantive change
-
-The current version is **0.0.2** (Draft — not yet approved for production implementations).
 
 
 Conformance and Implementation Claims {#chapter-conformance}
@@ -1354,7 +1352,9 @@ A `CaseRecord` payload MUST contain the following fields:
 
 ## Case Elements (normative) ## {#section-case-elements}
 
-A complete [=CaseRecord=] MUST contain all five Case elements. An element that permits an empty value is considered present when it is represented in the CaseRecord payload, even if its value is an empty array or `null`, as applicable. A Record MAY fulfil multiple elements.
+Before a [=CaseRecord=] is finalised, its payload MUST contain all five Case element fields: `trigger`, `context`, `process`, `decision`, and `result`. The finalisation constraints for each element are defined in the following table. An element that permits an empty value is considered present when it is represented in the CaseRecord payload, even if its value is an empty array or `null`, as applicable. A Record MAY fulfil multiple elements.
+
+A draft CaseRecord MAY omit one or more Case element fields. Before finalisation, the system MUST validate and, where necessary, require completion of the Case element fields in accordance with this section.
 
 Unless a CaseRecord schema defines more specific constraints, every Case element MAY link to any Record type, including another CaseRecord.
 

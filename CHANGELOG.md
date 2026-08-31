@@ -6,6 +6,10 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [0.0.6] – 2026-08-31
+
+- Editorial: Complete restructuring RWP without new normative changes.
+
 ## [0.0.5] – 2026-08-24
 
 Implemented CfC 2 outcomes. See 
