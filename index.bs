@@ -756,7 +756,7 @@ Payload and Snapshots {#chapter-payload}
 
 ## Payload Structure ## {#section-payload-definition}
 
-The <dfn>payload</dfn> of a [=Record=] is an ordered array of [=snapshots=]. Each [=snapshot=] is one immutable, versioned representation of the [=Record=]'s content at a specific point in time.
+The <dfn>payload</dfn> of a [=Record=] is an ordered array of <dfn>snapshots</dfn>. Each [=snapshot=] is one immutable, versioned representation of the [=Record=]'s content at a specific point in time.
 
 ```json
 {
