@@ -8,7 +8,7 @@
   <meta content="Bikeshed version ac92c2f0d, updated Fri Aug 21 16:01:29 2026 -0700" name="generator">
   <link href="https://recordweb.github.io/rwp/" rel="canonical">
   <link href="https://www.w3.org/2008/site/images/favicon.ico" rel="icon">
-  <meta content="2b60237b8b379dc401fe9c9d4163444a3a38da92" name="revision">
+  <meta content="687c31abe58b1b059bcf0708ab21ccc6dc28836d" name="revision">
   <meta content="dark light" name="color-scheme">
   <link href="https://www.w3.org/StyleSheets/TR/2021/dark.css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css">
 <style>/* Boilerplate: style-autolinks */
@@ -984,7 +984,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   </nav>
   <main>
    <div class="copyright">
-    <p>Copyright © 2026 the Contributors to the RecordWeb Protocol (RWP) v0.0.5, published by the <a href="https://www.w3.org/community/recordweb/">RecordWeb Community Group</a> under the <a href="https://www.w3.org/community/about/process/cla/">W3C Community Contributor License Agreement (CLA)</a>. A human-readable <a href="https://www.w3.org/community/about/process/cla-deed/">summary</a> is available.</p>
+    <p>Copyright © 2026 the Contributors to the RecordWeb Protocol (RWP) v0.0.6, published by the <a href="https://www.w3.org/community/recordweb/">RecordWeb Community Group</a> under the <a href="https://www.w3.org/community/about/process/cla/">W3C Community Contributor License Agreement (CLA)</a>. A human-readable <a href="https://www.w3.org/community/about/process/cla-deed/">summary</a> is available.</p>
    </div>
    <h2 class="heading no-num no-toc settled" id="part-1"><span class="content">Part I: Introduction &amp; Conformance</span></h2>
    <h2 class="heading settled" data-level="1" id="chapter-scope"><span class="secno">1. </span><span class="content">Introduction and Scope</span><a class="self-link" href="#chapter-scope"></a></h2>
@@ -1034,7 +1034,6 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li data-md>
      <p><strong>PATCH</strong>: Corrections without substantive change</p>
    </ul>
-   <p>The current version is <strong>0.0.2</strong> (Draft — not yet approved for production implementations).</p>
    <h2 class="heading settled" data-level="2" id="chapter-conformance"><span class="secno">2. </span><span class="content">Conformance and Implementation Claims</span><a class="self-link" href="#chapter-conformance"></a></h2>
    <h3 class="heading settled" data-level="2.1" id="section-conformance-scope"><span class="secno">2.1. </span><span class="content">Scope of conformance</span><a class="self-link" href="#section-conformance-scope"></a></h3>
    <p>Conformance in RWP applies to an identifiable software implementation or software component.</p>
@@ -2184,7 +2183,8 @@ rejected (terminal state, not linkable)
 <c- p>}</c->
 </pre>
    <h3 class="heading settled" data-level="10.3" id="section-case-elements"><span class="secno">10.3. </span><span class="content">Case Elements (normative)</span><a class="self-link" href="#section-case-elements"></a></h3>
-   <p>A complete <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①">CaseRecord</a> MUST contain all five Case elements. An element that permits an empty value is considered present when it is represented in the CaseRecord payload, even if its value is an empty array or <code>null</code>, as applicable. A Record MAY fulfil multiple elements.</p>
+   <p>Before a <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①">CaseRecord</a> is finalised, its payload MUST contain all five Case element fields: <code>trigger</code>, <code>context</code>, <code>process</code>, <code>decision</code>, and <code>result</code>. The finalisation constraints for each element are defined in the following table. An element that permits an empty value is considered present when it is represented in the CaseRecord payload, even if its value is an empty array or <code>null</code>, as applicable. A Record MAY fulfil multiple elements.</p>
+   <p>A draft CaseRecord MAY omit one or more Case element fields. Before finalisation, the system MUST validate and, where necessary, require completion of the Case element fields in accordance with this section.</p>
    <p>Unless a CaseRecord schema defines more specific constraints, every Case element MAY link to any Record type, including another CaseRecord.</p>
    <table class="data">
     <thead>
