@@ -845,15 +845,53 @@ If a [=snapshot=] contains multiple representations, ALL of the following MUST a
 
 ## Format Requirements per State ## {#section-payload-format-requirements}
 
-[... unverändert ...]
+The schema of a Record type MUST define the permitted payload formats for each state. If a schema contains no explicit format requirements, the following defaults apply:
+
+<table class="data">
+  <thead>
+    <tr><th>State</th><th>Permitted formats (default)</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>draft</code></td>
+      <td>All MIME types not explicitly excluded in the schema of the Record type</td>
+    </tr>
+    <tr>
+      <td><code>finalized</code></td>
+      <td>Only formats listed under [RWP archival-grade formats](#format-requirements)</td>
+    </tr>
+  </tbody>
+</table>
 
 ## RWP archival-grade formats (normative) ## {#section-payload-archival-formats}
 
-[... unverändert ...]
+<table class="data">
+  <thead>
+    <tr><th>MIME Type</th><th>Format</th><th>Suitability</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>application/pdf;profile=PDF-A-1b</code></td><td>PDF/A-1b</td><td>Documents without embedded multimedia</td></tr>
+    <tr><td><code>application/pdf;profile=PDF-A-2b</code></td><td>PDF/A-2b</td><td>Documents with embedded files</td></tr>
+    <tr><td><code>application/pdf;profile=PDF-A-3b</code></td><td>PDF/A-3b</td><td>Documents with arbitrary attachments</td></tr>
+    <tr><td><code>text/xml</code></td><td>XML (well-formed)</td><td>Structured data</td></tr>
+    <tr><td><code>application/json</code></td><td>JSON</td><td>Structured data (with schema reference)</td></tr>
+    <tr><td><code>image/tiff</code></td><td>TIFF</td><td>Raster images</td></tr>
+    <tr><td><code>image/jp2</code></td><td>JPEG 2000</td><td>Raster images (near-lossless)</td></tr>
+    <tr><td><code>text/plain;charset=UTF-8</code></td><td>Plain Text UTF-8</td><td>Pure text documents</td></tr>
+    <tr><td><code>text/markdown</code></td><td>CommonMark Markdown</td><td>Source format with publication representation</td></tr>
+  </tbody>
+</table>
 
 ## Conversion During Finalisation ## {#section-payload-conversion}
 
-[... unverändert, aber "Store both formats as multi-representation in the snapshot" bleibt sinngemäss gültig, da representations weiterhin existieren ...]
+When a system transitions a [=Record=] from state `draft` to `finalized`, it MUST:
+
+1. Validate the payload against the finalised format of the schema
+2. If the current payload is not in archival-grade format: convert automatically or request conversion from the operator
+3. Store both formats as multi-representation in the snapshot (SHOULD)
+4. Document the conversion act as metadata (`conversionMethod`, `conversionTimestamp`)
+
+A system MUST NOT finalise a [=Record=] whose payload does not conform to the format defined for `finalized` and for which no archival-grade conversion is possible.
 
 ## Snapshot Fields ## {#section-payload-snapshot-definition}
 
@@ -1261,15 +1299,15 @@ Every [=Record=] MUST be assigned to a Record type. A Record type:
 RWP defines the following core Record types (with DID Suffix):
 
 **Relation Records:**
-- `CaseRecord` (case-record)
-- `AssertionRecord` (assertion-record)
+- `CaseRecord` (see [CaseRecord Specification](#chapter-caserecord))
+- `AssertionRecord` (see [AssertionRecord  Specification](#chapter-assertionrecord))
 
 **System Records:**
-- `SchemaRecord` (schema-record)
-- `ConformanceRecord` (conformance-record)
-- `DeletionRecord` (deletion-record)
-- `MergeRecord` (merge-record)
-- `MigrationRecord` (migration-record)
+- `SchemaRecord` (see [SchemaRecord](#chapter-schema-record))
+- `ConformanceRecord` (see [ConformanceRecord](#chapter-conformance-record))
+- `DeletionRecord` (see [DeletionRecord](#chapter-deletion-record))
+- `MergeRecord` (see [MergeRecord](#chapter-merge-record))
+- `MigrationRecord` (see [MigrationRecord](#chapter-migration-record))
 
 The conformance requirements for these Record types are profile-, role-, and capability-specific. An implementation MUST support a core Record type only where this specification requires that support for a claimed profile, role, or exercised capability.
 
