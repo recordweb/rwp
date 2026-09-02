@@ -1,0 +1,49 @@
+Introduction and Scope {#chapter-scope}
+==================================
+
+## Purpose ## {#section-purpose}
+
+The RecordWeb Protocol (RWP) is the normative technical specification for the creation, identification, versioning, linking, and cryptographic proof of [=Records=] in RWP-compliant systems.
+
+The RecordWeb Concept ([[RWC]]) is an informative conceptual document. This specification defines the normative terminology and requirements for RWP conformance.
+
+## Scope ## {#section-scope}
+
+This document applies to:
+
+- Systems that create, store, or manage [=Records=] in the sense of the [[RWC]]
+- Systems that import [=Records=] from other RWP-compliant systems or access them
+- Implementations claiming interoperability with other RWP-compliant systems
+
+This document does not apply to:
+
+- The internal storage architecture of a compliant system (database, file system, object store)
+- User interfaces and workflows built on top of an RWP-compliant system
+- The content of payloads, insofar as these are not standardised by the schema of the Record type
+
+## Relationship to Other Standards ## {#section-related-standards}
+
+<table class="data">
+  <thead>
+    <tr><th>Standard</th><th>Relationship</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>[[DID-CORE]]</td>
+      <td>RWP uses DIDs as the identity mechanism; conformance with W3C DID Core 1.0 is REQUIRED</td>
+    </tr>
+    <tr>
+      <td>[[PROVO]]</td>
+      <td>RWP lineage MAY be serialised as PROV-O. PROV-O serialisation is not required for RWP conformance.</td>
+    </tr>
+  </tbody>
+</table>
+
+## Versioning of This Document ## {#section-versioning}
+
+This document uses semantic versioning (SemVer): `MAJOR.MINOR.PATCH`.
+
+- **MAJOR**: Incompatible changes to existing standards
+- **MINOR**: Backward-compatible extensions
+- **PATCH**: Corrections without substantive change
+
