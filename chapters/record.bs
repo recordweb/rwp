@@ -1,0 +1,96 @@
+The Record {#chapter-record}
+=====================================
+
+Every [=Record=] MUST consist of exactly four components:
+
+## Components ## {#section-record-components}
+
+1. **[=Identity=]** — the DID of the [=Record=] ([Record Identity (DID)](#chapter-record-identity))
+2. **[=Payload=]** — the content of the [=Record=] ([Payload and Snapshots](#chapter-payload))
+3. **[=Metadata=]** — descriptive dimensions of the [=Record=] ([Metadata](#chapter-metadata))
+4. **[=Integrity=]** — the hash of the [=Record=] ([Record Integrity](#chapter-record-integrity))
+
+```json
+{
+  "did": "did:rwp:5264d2c3-d3b1-411c-829f-90e61165251a:f47ac10b-58cc-4372-a567-0e02b2c3d479",
+  "payload": [],
+  "metadata": {},
+  "recordHash": "sha256:9f8e7d6c5b4a3928170695a4b3c2d1e0f9e8d7c6b5a4938271605948372615"
+}
+```
+
+## Definition ## {#section-record-definition}
+
+For the purposes of this specification, <dfn>Record</dfn> has the meaning defined in [[ISO15489]], clause 3.14. A Record MUST have the identity, structure, payload, type, schema, state, version and integrity evidence required by this specification.
+
+For semantic interoperability, a Record is a specialization of 'prov:Entity'. The term Record remains the primary term of this specification. The term 'prov:Entity' is used only for a [[!PROVO]]-compatible semantic representation.
+
+```text
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rw:   <https://w3id.org/recordweb/ontology#> .
+
+rw:Record
+  rdfs:subClassOf prov:Entity .
+
+rw:InformationRecord
+  rdfs:subClassOf rw:Record .
+
+rw:RelationRecord
+  rdfs:subClassOf rw:Record .
+
+rw:SystemRecord
+  rdfs:subClassOf rw:Record .
+
+rw:CaseRecord
+  rdfs:subClassOf rw:RelationRecord .
+
+rw:AssertionRecord
+  rdfs:subClassOf rw:RelationRecord .
+
+rw:SchemaRecord
+  rdfs:subClassOf rw:SystemRecord .
+
+rw:MergeRecord
+  rdfs:subClassOf rw:SystemRecord .
+
+rw:DeletionRecord
+  rdfs:subClassOf rw:SystemRecord .
+
+rw:MigrationRecord
+  rdfs:subClassOf rw:SystemRecord .
+
+rw:ConformanceRecord
+  rdfs:subClassOf rw:SystemRecord .
+```
+
+## Record taxonomy ## {#section-record-taxonomy}
+
+Every [=Record=] has one primary conceptual purpose. For the purposes of this specification, a Record is classified as an [=InformationRecord=], a [=RelationRecord=], or a [=SystemRecord=], as described in [[RWC]].
+
+Any concrete Record Type is defined by a SchemaRecord in accordance with [Record Type Definition](#section-record-types-definition).
+
+The taxonomy is normative for the interpretation of this specification. It MUST NOT be interpreted as a mandatory implementation inheritance hierarchy, a mandatory JSON type hierarchy, or a replacement for concrete Record Types and their SchemaRecords.
+
+An <dfn>InformationRecord</dfn> is a Record whose primary purpose is to carry semantically autonomous institutional or domain information.
+
+Every InformationRecord MUST conform to a concrete Record Type.  This specification does not provide a list of InformationRecord Types.
+
+A <dfn>RelationRecord</dfn> is a Record whose primary purpose is to establish, preserve, and make provable a meaningful relationship between Records.
+
+A <dfn>SystemRecord</dfn> is a Record whose primary purpose is to define, document, or prove a RecordWeb system rule, operation, or capability.
+
+A [=CaseRecord=] is a [=RelationRecord=]. It represents a persisted, governed view of linked Records. A CaseRecord MUST NOT be a container and MUST NOT contain the payload of the Records to which it relates. The protocol representation and validation requirements for CaseRecords are defined in [CaseRecord Specification](#chapter-caserecord).
+
+An [=AssertionRecord=] is a [=RelationRecord=]. It represents an attributable assertion that a subject resource stands in a specified relationship to an object resource. The protocol representation and validation requirements for
+AssertionRecords are defined in [AssertionRecord Specification](#chapter-assertionrecord).
+
+A [=SchemaRecord=] is a [=SystemRecord=]. It defines a concrete Record Type and its associated schema and validation requirements.
+
+A MergeRecord is a [=SystemRecord=].
+
+A DeletionRecord is a [=SystemRecord=].
+
+A MigrationRecord is a [=SystemRecord=].
+
+A [=ConformanceRecord=] is a [=SystemRecord=].
+

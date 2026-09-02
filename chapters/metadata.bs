@@ -1,0 +1,85 @@
+Metadata {#chapter-metadata}
+=================================
+
+<dfn>Metadata</dfn> is the descriptive and governing information attached to a [=Record=], independent of its `payload`. Unlike `payload` entries, `metadata` is not itself versioned as a sequence of snapshots; it MAY be updated in place. Metadata changes are nonetheless covered by the Record-level `recordHash` defined in [Record Integrity](#chapter-record-integrity), so that any change to `metadata` is detectable.
+
+Metadata is organised into three groups: `core`, `governance`, and `extensions`.
+
+```json
+{
+  "metadata": {
+    "core": {
+      "recordType": "did:rwp:2fe14680-575a-4da4-aa65-6e72e0866e9b:5264d2c3-d3b1-411c-829f-90e61165251a",
+      "schemaVersion": "sha256:a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae"
+    },
+    "governance": {
+      "owner": "did:rwp:bern.ch:unit-baubewilligung",
+      "classification": "internal",
+      "retentionPolicy": "did:rwp:bern.ch:retention-bauakten-30y",
+      "tags": ["building-permit", "parcel-451", "2026"]
+    },
+    "extensions": []
+  }
+}
+```
+
+## metadata.core ## {#section-metadata-core}
+
+Every [=Record=] MUST contain the following <dfn>core metadata</dfn> fields:
+
+<table class="data">
+  <thead>
+    <tr><th>Field</th><th>Required</th><th>Type</th><th>Description</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>recordType</code></td><td>MUST</td><td>DID</td><td>Reference to the SchemaRecord of the type</td></tr>
+    <tr><td><code>schemaVersion</code></td><td>MUST</td><td>SHA-256</td><td>Hash of the schema version against which the [=Record=]'s current snapshot was validated</td></tr>
+  </tbody>
+</table>
+
+## metadata.governance ## {#section-metadata-governance}
+
+A [=Record=] MAY contain the following <dfn>governance metadata</dfn> fields. These fields express Records Management concerns (accountability, classification, retention, discoverability) as defined in [[ISO15489]].
+
+<table class="data">
+  <thead>
+    <tr><th>Field</th><th>Required</th><th>Type</th><th>Description</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>owner</code></td><td>SHOULD</td><td>DID</td><td>The person or organisational unit currently responsible for the [=Record=]. See note below on the relationship between <code>owner</code> and snapshot <code>signature</code>.</td></tr>
+    <tr><td><code>classification</code></td><td>SHOULD</td><td>String</td><td>Protection level per the organisation's internal scheme</td></tr>
+    <tr><td><code>retentionPolicy</code></td><td>SHOULD</td><td>DID</td><td>Reference to a retention rule. See [Payload Deletion](#chapter-deletion) for how this field interacts with the applicable deletion regime.</td></tr>
+    <tr><td><code>tags</code></td><td>MAY</td><td>Array&lt;String&gt;</td><td>Free-text markers for search and filtering</td></tr>
+  </tbody>
+</table>
+
+The `owner` field expresses organisational accountability and MAY change over the lifetime of a [=Record=] (e.g. following a transfer of responsibility). It is independent of the cryptographic `signature` carried by an individual [=snapshot=] (see [Snapshot Fields](#section-payload-snapshot-definition)):
+
+- `signature` provides cryptographic evidence of *who authorised a specific snapshot's content* at finalisation, resolvable via the DID document's `controller` field.
+- `owner` provides the current, human-readable statement of *organisational responsibility* for the Record as a whole, independent of which key signed the most recent snapshot.
+
+Where a schema defines `signaturePolicy: system` (see [Finalisation Requirements](#subsection-finalisation-requirements)), the signature identifies an authorised system key rather than a responsible person or unit. In this case, `owner` is the only field that expresses organisational accountability.
+
+An implementation MUST NOT infer the current `owner` solely from the `controller` of the most recent snapshot's signature.
+
+## metadata.extensions ## {#section-metadata-extensions}
+
+A [=Record=] MAY contain an <dfn>extensions</dfn> array. Each entry is a self-describing object that extends `metadata` with schema- or profile-specific information not defined by this specification.
+
+Every extension entry MUST contain:
+
+<table class="data">
+  <thead>
+    <tr><th>Field</th><th>Required</th><th>Type</th><th>Description</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>type</code></td><td>MUST</td><td>DID</td><td>Identifies the SchemaRecord or profile that defines the semantics and additional fields of this extension entry</td></tr>
+  </tbody>
+</table>
+
+Additional fields within an extension entry are defined entirely by the SchemaRecord or profile identified in `type`. This specification does not itself define any extension entry.
+
+A [=Record=] MAY contain zero, one, or multiple extension entries. A conforming implementation MUST NOT require support for any extension type unless it claims the corresponding profile or capability.
+
+Chapters of this specification that define an optional capability MAY specify that the capability's data is carried as an extension entry. Where they do so, they identify the applicable `type` value and the additional fields of that entry.
+

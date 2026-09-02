@@ -1,0 +1,56 @@
+Optional Ledger Anchoring {#chapter-ledger}
+========================================
+
+## Purpose and Scope ## {#section-ledger-purpose}
+
+Ledger anchoring is an **optional extension** of RWP. It enables the external, immutable proof of [=CaseRecord=] [=Merkle roots=] on a distributed infrastructure.
+
+A system MUST be fully RWP-compliant without ledger anchoring. Ledger anchoring supplements the internal integrity assurance with an external proof independent of the operating organisation.
+
+## Requirements for the Ledger ## {#section-ledger-requirements}
+
+If a system implements ledger anchoring, the ledger used MUST:
+
+- be permissioned (no public, anonymous blockchain)
+- guarantee immutable entries (append-only)
+- deliver a provable timestamp per entry
+- be operated independently of the organisation that manages the [=Records=]
+- be readable by all authorised verification parties
+
+**Recommended implementation**: Hyperledger Fabric [[HYPERLEDGER]]. Other permissioned distributed ledger technologies MAY be used if they fulfil the above requirements.
+
+## Anchoring Protocol ## {#section-anchoring-protocol}
+
+When a finalised [=CaseRecord=] is anchored, the ledger entry MUST contain the following fields:
+
+```json
+{
+  "rwpAnchor": {
+    "version": "0.1",
+    "caseDid": "did:rwp:bern.ch:f47ac10b-case-001",
+    "caseSnapshotHash": "sha256:case-finalized-snapshot-hash...",
+    "merkleRoot": "sha256:case-merkle-root...",
+    "anchoredAt": "2026-05-31T16:00:00Z",
+    "anchoredBy": "did:rwp:bern.ch:controller-001",
+    "ledgerTxId": "abc123..."
+  }
+}
+```
+
+The ledger entry MUST NOT contain any payload content, personal data, or classified information. Only cryptographic hash values and identifiers are permitted.
+
+## Anchoring Reference in the Case ## {#section-anchoring-reference}
+
+When a [=CaseRecord=] has been anchored, the anchored CaseRecord snapshot MUST NOT be modified. The system MAY create a new CaseRecord snapshot that references the anchored predecessor through `parents` and contains an `anchorReference` field. The `caseSnapshotHash` in the ledger entry MUST always identify the immutable snapshot that was actually anchored.
+
+```json
+{
+  "anchorReference": {
+    "ledgerType": "hyperledger-fabric",
+    "ledgerEndpoint": "https://ledger.bern.ch/api/v1",
+    "txId": "abc123...",
+    "anchoredAt": "2026-05-31T16:00:00Z"
+  }
+}
+```
+

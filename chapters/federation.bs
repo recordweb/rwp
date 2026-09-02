@@ -1,0 +1,44 @@
+Federation {#chapter-federation}
+=====================================
+
+## Federation Model ## {#section-federation-model}
+
+RWP federation is modelled after the DNS architecture: a **decentralised, hierarchical namespace model** without a single point of failure.
+
+Every RWP namespace (the `<namespace>` component of a DID, e.g. `bern.ch`) is operated by the owning organisation. Namespace resolvers are federated: each resolver knows its own namespace and can route resolution requests for unknown namespaces to peer resolvers.
+
+## Namespace Registry ## {#section-federation-namespace-registry}
+
+The authoritative namespace registry is the subject of a future RWP extension. During the transition phase, the following applies:
+
+- A namespace SHOULD be formed on the basis of the DNS domain name of the organisation (e.g. `bern.ch`, `bag.admin.ch`, `usz.ch`)
+- DNS ownership of the domain implies namespace authority, no separate registration required during transition
+- Namespace conflicts are resolved by DNS priority
+
+## Resolver Requirements ## {#section-federation-resolver-requirements}
+
+An RWP federation resolver MUST:
+
+- Accept DID resolution requests of the method `rwp`
+- Resolve DIDs within its own namespace directly
+- For unknown namespaces: query the DNS TXT record of the namespace domain for the `_rwp-resolver` entry
+- Cache resolver endpoints with a TTL of at least 300 seconds
+- Return a `404` response when neither the DID nor a resolver for its namespace can be found
+
+**DNS TXT record format for resolver discovery:**
+
+```
+_rwp-resolver.bern.ch. 300 IN TXT "v=rwp1;endpoint=https://resolver.bern.ch/api/v1"
+```
+
+## Cross-Namespace Links ## {#section-federation-cross-namespace}
+
+A [=Record=] in namespace `bern.ch` MAY contain [=hard links=] to [=Records=] in other namespaces (e.g. `did:rwp:bag.admin.ch:guideline-001`).
+
+When resolving cross-namespace links, a system MUST:
+
+1. Extract the namespace component from the linked DID
+2. Discover the resolver endpoint via DNS TXT lookup ([Resolver Requirements](#section-federation-resolver-requirements))
+3. Verify the [=snapshot=] hash of the linked [=Record=] after retrieval
+4. Cache the resolved [=snapshot=] locally with the original hash for integrity verification
+

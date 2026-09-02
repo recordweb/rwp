@@ -1,0 +1,34 @@
+Record Types {#chapter-record-types}
+=======================================
+
+## Record Type Definition ## {#section-record-types-definition}
+
+Every [=Record=] MUST be assigned to a Record type. A Record type:
+
+- defines the schema of the [=payload=]
+- defines the permitted states and their transitions
+- defines the format requirements per state
+- defines mandatory and optional [=metadata=] fields beyond `metadata.core` (see [Metadata](#chapter-metadata))
+- is itself a [=Record=] of the type `SchemaRecord`
+
+## Core Record Types ## {#section-record-types-core}
+
+RWP defines the following core Record types (with DID Suffix):
+
+**Relation Records:**
+- `CaseRecord` (see [CaseRecord Specification](#chapter-caserecord))
+- `AssertionRecord` (see [AssertionRecord  Specification](#chapter-assertionrecord))
+
+**System Records:**
+- `SchemaRecord` (see [SchemaRecord](#chapter-schema-record))
+- `ConformanceRecord` (see [ConformanceRecord](#chapter-conformance-record))
+- `DeletionRecord` (see [DeletionRecord](#chapter-deletion-record))
+- `MergeRecord` (see [MergeRecord](#chapter-merge-record))
+- `MigrationRecord` (see [MigrationRecord](#chapter-migration-record))
+
+The conformance requirements for these Record types are profile-, role-, and capability-specific. An implementation MUST support a core Record type only where this specification requires that support for a claimed profile, role, or exercised capability.
+
+The capability-bound requirements are defined in [Capability-bound requirements](#section-conformance-requirements).
+
+Additional Record types MAY be defined by organisations or standards bodies. They MUST be published as [=SchemaRecords=] and be resolvable via a DID.
+

@@ -1,0 +1,37 @@
+Record Integrity {#chapter-record-integrity}
+=================================
+
+## Purpose ## {#section-record-integrity-purpose}
+
+The <dfn>recordHash</dfn> is a Record-level <dfn>integrity</dfn> value that covers the entire [=Record=] (its `did`, `payload`, and `metadata`) at the time the hash was calculated. It provides evidence that a Record has not been altered since that point, independent of whether the alteration occurred in `payload` or in `metadata`.
+
+The `recordHash` is distinct from the `signature` carried by an individual [=snapshot=] (see [Signature Procedure](#section-crypto-procedures-signature)). A `signature` is an owner's cryptographic authorisation of one specific snapshot's content at finalisation. The `recordHash` is an unsigned, purely computational value; it does not require, and MUST NOT be interpreted as, an authorisation or attestation. It exists solely to make unauthorised or accidental modification of any part of the Record detectable.
+
+## Calculation ## {#section-record-integrity-calculation}
+
+The `recordHash` MUST be calculated as follows:
+
+1. Serialise `did`, `payload`, and `metadata` (without `recordHash` itself) as canonical JSON ([[RFC8785]])
+2. Calculate SHA-256 over the result
+
+```
+recordHash = SHA-256( canonicalize({did, payload, metadata}) )
+```
+
+```json
+{
+  "did": "did:rwp:bern.ch:f47ac10b-58cc-4372-a567-0e02b2c3d479",
+  "payload": [ ... ],
+  "metadata": { ... },
+  "recordHash": "sha256:9f8e7d6c5b4a3928170695a4b3c2d1e0f9e8d7c6b5a4938271605948372615"
+}
+```
+
+## Verification ## {#section-record-integrity-verification}
+
+An implementation retrieving or storing a [=Record=] MUST be able to recompute the `recordHash` and compare it against the stored value.
+
+An implementation MAY choose to persist `recordHash` alongside the Record, or to compute it on demand; this specification does not mandate a storage strategy. Where `metadata` changes without a corresponding `payload` change, the `recordHash` MUST be recalculated to reflect the new state.
+
+If the recomputed hash does not match the stored `recordHash`, the implementation MUST treat the Record as `integrity-warning` in accordance with [Snapshot Integrity](#section-crypto-procedures-snapshot-integrity), which applies analogously at the Record level.
+

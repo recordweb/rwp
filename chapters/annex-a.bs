@@ -1,0 +1,162 @@
+Annex A: Normative JSON Schemas {#annex-a}
+==========================================
+
+## A.1 Record, Snapshot, and Metadata Schemas ## {#schema-snapshot}
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://recordweb.github.io/rwp/schemas/record.json",
+  "title": "RWP Record",
+  "type": "object",
+  "required": ["did", "payload", "metadata", "recordHash"],
+  "properties": {
+    "did":        { "type": "string", "pattern": "^did:rwp:[^:]+:[^:]+$" },
+    "payload":    { "type": "array", "items": { "$ref": "#/$defs/snapshot" } },
+    "metadata":   { "$ref": "#/$defs/metadata" },
+    "recordHash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+  },
+  "$defs": {
+    "snapshot": {
+      "type": "object",
+      "required": ["snapshot", "state", "parents", "createdAt", "modifiedAt", "representations"],
+      "properties": {
+        "snapshot":        { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+        "state":           { "type": "string", "enum": ["draft", "finalized"] },
+        "parents":         { "type": "array", "items": { "type": "string",
+                             "pattern": "^sha256:[0-9a-f]{64}$" } },
+        "createdAt":       { "type": "string", "format": "date-time" },
+        "modifiedAt":      { "type": "string", "format": "date-time" },
+        "signature":       { "type": "string" },
+        "representations": { "type": "array", "minItems": 1,
+                             "items": { "$ref": "#/$defs/representation" } }
+      }
+    },
+    "representation": {
+      "type": "object",
+      "required": ["format", "hash", "primary"],
+      "properties": {
+        "format":  { "type": "string" },
+        "hash":    { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+        "primary": { "type": "boolean" },
+        "role":    { "type": "string", "enum": ["source", "publication", "preview", "archive"] }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["core"],
+      "properties": {
+        "core": {
+          "type": "object",
+          "required": ["recordType", "schemaVersion"],
+          "properties": {
+            "recordType":    { "type": "string", "pattern": "^did:rwp:" },
+            "schemaVersion": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+          }
+        },
+        "governance": {
+          "type": "object",
+          "properties": {
+            "owner":           { "type": "string", "pattern": "^did:rwp:" },
+            "classification":  { "type": "string" },
+            "retentionPolicy": { "type": "string", "pattern": "^did:rwp:" },
+            "tags":            { "type": "array", "items": { "type": "string" } },
+            "deletionRegime":  { "type": "string",
+                                 "enum": ["payload-only", "full-delete", "exempt"] }
+          }
+        },
+        "extensions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["type"],
+            "properties": {
+              "type": { "type": "string", "pattern": "^did:rwp:" }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+## A.2 CaseRecord Payload Schema ## {#schema-case}
+
+This schema defines structural validation only. State-dependent finalisation requirements, including the required presence of all five Case element fields, the prohibition of soft links and the minimum cardinality of `result`, are defined in [Case Elements](#section-case-elements) and [Hard and Soft Links](#section-links).
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://recordweb.github.io/rwp/schemas/case-record.json",
+  "title": "RWP CaseRecord Payload",
+  "type": "object",
+  "required": ["recordDid","caseType","title","trigger","context","process","decision","result","merkleRoot"],
+  "properties": {
+    "recordDid":  { "type": "string", "pattern": "^did:rwp:" },
+    "caseType":   { "type": "string", "pattern": "^did:rwp:" },
+    "title":      { "type": "string" },
+    "trigger":    { "$ref": "#/$defs/hardLink" },
+    "context":    { "type": "array", "items": { "$ref": "#/$defs/link" } },
+    "process":    { "type": "array", "items": { "$ref": "#/$defs/link" } },
+    "decision":   { "oneOf": [{ "$ref": "#/$defs/hardLink" }, { "type": "null" }] },
+    "result":     { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/hardLink" } },
+    "merkleRoot": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+  },
+  "$defs": {
+    "hardLink": {
+      "type": "object",
+      "required": ["type","recordDid","snapshot"],
+      "properties": {
+        "type":         { "const": "hard" },
+        "recordDid":    { "type": "string", "pattern": "^did:rwp:" },
+        "snapshot":     { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+        "role":         { "type": "string" }
+      }
+    },
+    "link": {
+      "type": "object",
+      "required": ["type","recordDid"],
+      "properties": {
+        "type":         { "type": "string", "enum": ["hard","soft"] },
+        "recordDid":    { "type": "string", "pattern": "^did:rwp:" },
+        "snapshot":     { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+        "role":         { "type": "string" }
+      }
+    }
+  }
+}
+```
+
+## A.3 DeletionRecord Payload Schema ## {#schema-deletion}
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://recordweb.github.io/rwp/schemas/deletion-record.json",
+  "title": "RWP DeletionRecord Payload",
+  "type": "object",
+  "required": ["deletionRecord"],
+  "properties": {
+    "deletionRecord": {
+      "type": "object",
+      "required": ["targetDid","targetSnapshot","deletionRegime",
+                   "legalBasis","requestedBy","approvedBy","deletedAt"],
+      "properties": {
+        "targetDid":          { "type": "string", "pattern": "^did:rwp:" },
+        "targetSnapshot":     { "type": "string",
+                                "pattern": "^sha256:[0-9a-f]{64}$" },
+        "deletionRegime":     { "type": "string",
+                                "enum": ["payload-only","full-delete","exempt"] },
+        "legalBasis":         { "type": "string" },
+        "requestedBy":        { "type": "string", "pattern": "^did:rwp:" },
+        "approvedBy":         { "type": "string", "pattern": "^did:rwp:" },
+        "deletedAt":          { "type": "string", "format": "date-time" },
+        "retainedFields":     { "type": "array",
+                                "items": { "type": "string" } }
+      }
+    }
+  }
+}
+```
+

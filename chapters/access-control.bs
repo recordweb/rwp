@@ -1,0 +1,57 @@
+Access Control (Delegation Framework) {#chapter-access-control}
+============================================================
+
+## Scope and Principles ## {#section-access-principles}
+
+RWP deliberately defines no mandatory authorisation model. Data security and information protection are delegated to the implementing systems. This chapter defines an **optional, interoperable delegation framework** that compliant systems MAY implement.
+
+The core principle: access control in RWP is **attribute-based** (ABAC) and **delegatable**. Rights are not assigned to roles in a fixed hierarchy, but expressed as verifiable claims attached to DIDs.
+
+## Access Policy Block ## {#section-access-policy}
+
+An implementation claiming this optional capability MAY carry the `accessPolicy` block as an entry in the [=Record=]'s `metadata.extensions` array (see [metadata.extensions](#section-metadata-extensions)), using the reserved type identifier `did:rwp:recordweb.org:extension-access-policy`:
+
+```json
+{
+  "type": "did:rwp:recordweb.org:extension-access-policy",
+  "accessPolicy": {
+    "visibility": "restricted",
+    "readAccess": [
+      "did:rwp:bern.ch:unit-legal",
+      "did:rwp:bern.ch:unit-planning"
+    ],
+    "writeAccess": [
+      "did:rwp:bern.ch:user-petra-muster"
+    ],
+    "delegationAllowed": true,
+    "expiresAt": null
+  }
+}
+```
+
+<table class="data">
+  <thead>
+    <tr><th>Field</th><th>Required</th><th>Description</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>visibility</code></td><td>SHOULD</td><td><code>public</code>, <code>restricted</code>, or <code>confidential</code></td></tr>
+    <tr><td><code>readAccess</code></td><td>MAY</td><td>Array of DIDs with read permission</td></tr>
+    <tr><td><code>writeAccess</code></td><td>MAY</td><td>Array of DIDs with write permission (draft state only)</td></tr>
+    <tr><td><code>delegationAllowed</code></td><td>MAY</td><td>Whether listed DIDs may further delegate access</td></tr>
+    <tr><td><code>expiresAt</code></td><td>MAY</td><td>ISO 8601 timestamp after which access policy expires</td></tr>
+  </tbody>
+</table>
+
+An implementation MUST NOT require another implementation to support this extension unless both claim the applicable access-control capability.
+
+## Delegation Chain ## {#section-delegation-chain}
+
+When `delegationAllowed: true`, a listed DID MAY issue a signed delegation token granting access to a third DID. The delegation token MUST:
+
+- be signed by the delegating DID's verification key
+- reference the original Record DID
+- specify the access level being delegated (`read` or `write`)
+- include an expiry timestamp
+
+Implementing systems MAY enforce delegation chains and MUST validate delegation token signatures before granting access.
+

@@ -1,0 +1,87 @@
+AssertionRecord Specification {#chapter-assertionrecord}
+=======================================
+
+## Purpose and scope ## {#section-assertionrecord-purpose}
+
+An <dfn>AssertionRecord</dfn> is a [=RelationRecord=] that preserves an attributable assertion that a subject resource stands in a specified relationship to an object resource.
+
+An AssertionRecord is itself a [=Record=]. It has its own identity, state, version history, schema association, metadata and integrity evidence. It does not modify, finalise, merge, delete, or otherwise change either the subject or the object to which it refers.
+
+An AssertionRecord MAY refer to Records in the same namespace or in another namespace. Referencing a Record in another namespace MUST NOT imply acceptance, storage, reciprocity, modification, or any other obligation for the custodian of the referenced Record.
+
+## Assertion model ## {#section-assertionrecord-model}
+
+An AssertionRecord expresses one directed relationship:
+
+```text
+subject -- predicate --> object
+```
+
+The `subject` identifies the resource from which the relationship is asserted. The `predicate` identifies the semantics of the relationship. The `object` identifies the resource to which the relationship is asserted.
+
+The subject and object MUST be resource reference objects containing an `id` field.
+
+The `id` field MUST identify the referenced resource. It MAY contain an RWP DID, another DID, or an absolute IRI, subject to the constraints of the applicable predicate declaration.
+
+A resource reference identifying an RWP Record MAY additionally contain a `snapshot` field.
+
+Where `snapshot` is present:
+
+- `id` MUST be the DID of an RWP Record;
+- `snapshot` MUST identify a snapshot of that Record (per [Snapshot Fields](#section-payload-snapshot-definition));
+- the AssertionRecord refers to that specific immutable snapshot; and
+- a validating implementation MUST verify that the resolved snapshot belongs to the identified Record where the snapshot is resolvable.
+
+Where `snapshot` is absent, the AssertionRecord refers to the identified Record or other resource independently of a specific version.
+
+An AssertionRecord MUST NOT be interpreted as modifying the subject or object. It preserves only the assertion made by its asserting Agent.
+
+## Relationship predicate ## {#section-assertionrecord-predicate}
+
+An AssertionRecord MUST contain a `predicate` field.
+
+The value of `predicate` MUST be an absolute IRI conforming to [[!RFC3987]]. The predicate IRI MUST identify a relationship term permitted by the [Relationship Vocabulary](#chapter-relationship-vocabulary).
+
+The meaning of an asserted relationship MUST NOT be carried solely by unconstrained natural-language text. A human-readable predicate label MAY be provided as optional, localised presentation metadata. Such a label MUST NOT replace the `predicate` IRI and MUST NOT be used as the sole basis for semantic interpretation or validation.
+
+The applicable predicate declaration MUST define the predicate's semantics, direction, permitted subject kinds, permitted object kinds, version, and validation requirements.
+
+## Assertion payload ## {#section-assertionrecord-payload}
+
+The payload of an AssertionRecord MUST contain `subject`, `predicate`, `object`, `assertedBy`, and `assertedAt`.
+
+The value of `assertedBy` MUST identify the Agent responsible for the assertion. The applicable SchemaRecord MUST define the relationship between `assertedBy`, the Record owner, and the verification method used to finalise the AssertionRecord.
+
+```json
+{
+  "subject": {
+    "id": "did:rwp:record-A",
+    "snapshot": "sha256:..."
+  },
+  "predicate": "https://www.w3.org/ns/prov#wasDerivedFrom",
+  "object": {
+    "id": "did:rwp:record-B"
+  },
+  "assertedBy": "did:rwp:agent-...",
+  "assertedAt": "2026-08-13T11:00:00Z"
+}
+```
+
+The `subject` and `object` values MUST be identifiers that can be interpreted according to the applicable predicate and SchemaRecord.
+
+## Validation ## {#section-assertionrecord-validation}
+
+An AssertionRecord MUST be validated against its SchemaRecord before it is finalised.
+
+Validation MUST verify at least that:
+
+1. the `predicate` value is an absolute IRI;
+2. `subject`, `predicate`, and `object` are present;
+3. the subject and object satisfy the constraints declared for the predicate;
+4. the asserting Agent and time of assertion are available; and
+5. the AssertionRecord satisfies the normal Record integrity and finalisation requirements.
+
+Where the target namespace exposes an LDN inbox, the asserting party MAY notify the target custodian that a new AssertionRecord refers to one of its Records. Such a notification is informational only. It MUST NOT create an obligation to store, mirror, accept or reciprocate the relationship.
+
+An AssertionRecord MAY valid as an assertion even where a referenced external resource cannot be resolved, provided that the assertion identifies that resource unambiguously and the applicable SchemaRecord permits unresolved references. A failure to resolve a referenced resource MUST NOT be interpreted as a modification of, or rejection by, that resource's custodian.
+

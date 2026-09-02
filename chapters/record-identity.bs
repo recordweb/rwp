@@ -1,0 +1,106 @@
+Record Identity (DID) {#chapter-record-identity}
+=====================================
+
+## Requirements for Record Identity ## {#section-identity-requirements}
+
+Every [=Record=] MUST possess a globally unique, permanent <dfn>identity</dfn>.
+
+This identity:
+
+- MUST be independent of the physical storage location of the [=Record=]
+- MUST be independent of the organisation managing the [=Record=]
+- MUST NOT be changed after the [=Record=] has been created
+- MUST remain valid without change even after a system migration
+- MUST be machine-resolvable (a resolver MUST be able to retrieve the DID document from the identity)
+
+## DID Format ## {#section-did-format}
+
+The identity of a [=Record=] MUST be expressed as a Decentralized Identifier (DID) in accordance with [[DID-CORE]].
+
+**Normative format:**
+`did:rwp:{namespace}:{unique-id}`
+
+
+<table class="data">
+  <thead>
+    <tr><th>Component</th><th>Requirement</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>did</code></td>
+      <td>Literal; immutable</td>
+    </tr>
+    <tr>
+      <td><code>rwp</code></td>
+      <td>DID method for RecordWeb Protocol; immutable</td>
+    </tr>
+    <tr>
+      <td><code>&lt;namespace&gt;</code></td>
+      <td>Identifier of the organisation or system; MUST be uniquely registered. During the transition phase, a namespace MAY be formed on the basis of the DNS domain name of the organisation (e.g. <code>did:rwp:bern.ch:&lt;uuid&gt;</code>).</td>
+    </tr>
+    <tr>
+      <td><code>&lt;unique-id&gt;</code></td>
+      <td>Unique identifier of the [=Record=] within the namespace; MUST be a UUID v4 or a cryptographically equivalent random value</td>
+    </tr>
+  </tbody>
+</table>
+
+**Example:**
+did:rwp:bern.ch:f47ac10b-58cc-4372-a567-0e02b2c3d479
+
+## DID Document ## {#section-did-document}
+
+For every Record DID, a DID document MUST exist containing the following fields:
+
+```json
+{
+  "@context": "https://www.w3.org/ns/did/v1",
+  "id": "did:rwp:bern.ch:f47ac10b-58cc-4372-a567-0e02b2c3d479",
+  "recordEndpoint": "https://records.bern.ch/api/v1/records/f47ac10b",
+  "created": "2026-05-31T14:00:00Z",
+  "updated": "2026-05-31T14:00:00Z",
+  "currentVersion": "sha256:e3b0c44298fc1c149afb...",
+  "controller": "did:rwp:bern.ch:controller-001",
+  "verificationMethod": [
+    {
+      "id": "did:rwp:bern.ch:f47ac10b#key-1",
+      "type": "Ed25519VerificationKey2020",
+      "controller": "did:rwp:bern.ch:controller-001",
+      "publicKeyMultibase": "z6MkhaXgBZDvotDkL..."
+    }
+  ]
+}
+```
+
+<table class="data">
+  <thead>
+    <tr><th>Field</th><th>Required</th><th>Description</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>@context</code></td><td>MUST</td><td>W3C DID Context URI</td></tr>
+    <tr><td><code>id</code></td><td>MUST</td><td>DID of the [=Record=]; identical to the Record DID</td></tr>
+    <tr><td><code>recordEndpoint</code></td><td>MUST</td><td>URL at which the [=Record=] can be retrieved</td></tr>
+    <tr><td><code>created</code></td><td>MUST</td><td>ISO 8601 timestamp of DID creation</td></tr>
+    <tr><td><code>updated</code></td><td>MUST</td><td>ISO 8601 timestamp of last DID document update</td></tr>
+    <tr><td><code>currentVersion</code></td><td>MUST</td><td>Content hash of the current finalised version (empty for pure draft)</td></tr>
+    <tr><td><code>controller</code></td><td>MUST</td><td>DID of the controlling entity (organisation or person)</td></tr>
+    <tr><td><code>verificationMethod</code></td><td>MUST</td><td>At least one verification method for signature validation</td></tr>
+  </tbody>
+</table>
+
+The DID document MUST be updated when the physical storage location changes (`recordEndpoint`, `updated`, `currentVersion`). All other fields MUST NOT be changed.
+
+## DID Resolver Requirements ## {#section-did-resolver}
+
+An implementation claiming the `resolver` role MUST provide a DID resolver that:
+
+- Resolves DIDs of the method `rwp` and returns the associated DID document
+- Delivers the DID document as JSON-LD in accordance with [[DID-CORE]]
+- Returns HTTP 200 when the DID is known
+- Returns HTTP 404 when the DID is unknown
+- Returns HTTP 410 when the DID is known but the [=Record=] has been deleted (payload deletion per [Payload Deletion](#chapter-deletion))
+
+An implementation claiming another RWP profile or role MAY rely on a resolver operated by another conformant implementation. It is not required to operate a DID resolver itself unless it claims the `resolver` role.
+
+A producer or custodian that creates or manages RWP Records MUST ensure that the associated Record DIDs remain resolvable in accordance with this specification.
+

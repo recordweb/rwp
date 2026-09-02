@@ -1,0 +1,35 @@
+Annex B: Reference Implementation Notes (non-normative) {#annex-b}
+====================================================================
+
+This annex is non-normative. It provides guidance for implementers and does not impose additional requirements.
+
+## B.1 Technology Choices ## {#impl-tech}
+
+The following technology choices are recommended for a first RWP implementation:
+
+<table class="data">
+  <thead>
+    <tr><th>Component</th><th>Recommended</th><th>Notes</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>DID method</td><td><code>did:web</code> or <code>did:key</code> during pilot</td><td>Full <code>did:rwp</code> method requires resolver deployment</td></tr>
+    <tr><td>Storage</td><td>PostgreSQL + object store (S3-compatible)</td><td>Metadata in relational DB; payloads in object store</td></tr>
+    <tr><td>Hashing</td><td>Node.js <code>crypto.createHash(&#39;sha256&#39;)</code></td><td>Standard library; no external dependency</td></tr>
+    <tr><td>Canonical JSON</td><td><code>canonicalize</code> npm package</td><td>Implements RFC 8785</td></tr>
+    <tr><td>Signatures</td><td><code>@noble/ed25519</code></td><td>Audited Ed25519 implementation</td></tr>
+    <tr><td>Schema validation</td><td>AJV (JSON Schema validator)</td><td>Supports JSON Schema 2020-12</td></tr>
+  </tbody>
+</table>
+
+## B.2 Pilot Scope Recommendation ## {#impl-pilot}
+
+For a first pilot, the following Level 1 subset is recommended:
+
+1. Implement DID generation and the [DID Format](#section-did-format) and [DID Document](#section-did-document) requirements
+2. Implement snapshot creation with the [Metadata](#chapter-metadata)
+3. Implement [Snapshot Hash Calculation](#section-payload-snapshot-hash)
+4. Implement the `draft` → `finalized` state transition with [Finalisation Requirements](#subsection-finalisation-requirements)
+5. Implement [Graph Structure](#subsection-graph-structure) without branch detection initially
+
+This covers the critical path: a Record can be created, finalised, and its integrity verified. Cases and federation can be added in a subsequent iteration.
+

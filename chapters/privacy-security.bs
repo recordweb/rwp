@@ -1,0 +1,17 @@
+Privacy and Security Considerations {#chapter-privacy-security}
+=========================================================
+
+RWP defines integrity, provenance, and interoperability requirements for Records. It does not define a general authorisation, confidentiality, key management, transport-security, retention, or data-protection regime. Implementations MUST apply the legal, organisational, and technical safeguards applicable to their deployment.
+
+## Privacy ## {#section-privacy-considerations}
+
+A `did:rwp` identifier MUST NOT contain personal data or other information whose disclosure is restricted by the applicable rules.
+
+The `payload-only` deletion regime removes payload bytes but retains the DID, metadata, and version graph. An implementation MUST NOT represent a `payload-only` deletion as full deletion of the Record.
+
+## Security ## {#section-security-considerations}
+
+The integrity and signature procedures defined in [Cryptographic Procedures](#chapter-crypto-procedures) provide evidence of the integrity of a snapshot and, where applicable, of the verification method used to sign it. They do not by themselves establish confidentiality, authorisation, or the substantive correctness of a Record.
+
+A notification or other externally received signal that refers to an RWP Record or snapshot is non-authoritative. Before creating, finalising, modifying, deleting, linking to, or otherwise acting on the referenced Record or snapshot, an implementation MUST independently resolve and validate it according to the applicable requirements of this specification.
+

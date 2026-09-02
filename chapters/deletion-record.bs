@@ -1,0 +1,5 @@
+DeletionRecord {#chapter-deletion-record}
+=================================================
+
+See [Payload Deletion](#chapter-deletion)
+

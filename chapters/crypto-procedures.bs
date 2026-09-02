@@ -1,0 +1,80 @@
+Cryptographic Procedures {#chapter-crypto-procedures}
+=================================================
+
+## Hashing Procedure ## {#section-crypto-procedures-hashing}
+
+RWP uses exclusively **SHA-256** as the hashing procedure for:
+
+- Snapshot hashes (`snapshot`)
+- Representation hashes (`representations[].hash`)
+- Record-level hashes (`recordHash`)
+- Schema version hashes (`schemaVersion`)
+- Parent references (`parents`)
+- Merkle root calculations
+
+A system MUST NOT use any hashing procedure other than SHA-256 for normative integrity proofs.
+
+Note: A future version of RWP MAY permit SHA-3 or other procedures as an alternative if cryptographic weaknesses in SHA-256 become known. Until then, SHA-256 is the only permitted procedure.
+
+## Canonical JSON Serialisation ## {#section-crypto-procedures-canonical-json}
+
+For all hash calculations over JSON objects, **RFC 8785 (JSON Canonicalization Scheme, JCS)** [[RFC8785]] MUST be used.
+
+Requirements:
+
+- Keys MUST be sorted alphabetically
+- Unicode characters MUST be normalised (NFC)
+- No superfluous whitespace or line breaks
+- Numbers MUST be represented in their canonical form
+
+## Snapshot Integrity ## {#section-crypto-procedures-snapshot-integrity}
+
+A system MUST check the integrity of a [=snapshot=] on the following events:
+
+- Receipt of a [=snapshot=] from an external system
+- Retrieval of a [=snapshot=] for a linking operation
+- Periodic integrity check
+
+If the integrity check fails, the system MUST:
+
+1. Mark the [=snapshot=] as `compromised`
+2. Mark all dependent [=Records=] as `integrity-warning`
+3. Log the incident in the system log with timestamp and discrepancy
+4. Notify the responsible record owner via the DID (SHOULD)
+
+The system MUST NOT automatically attempt to reconstruct the original content.
+
+## Signature Procedure ## {#section-crypto-procedures-signature}
+
+If the schema prescribes a signature (`signaturePolicy: owner` or `signaturePolicy: system`), the snapshot hash MUST be cryptographically signed during the finalisation act.
+
+Requirements:
+
+- MUST be Ed25519 (EdDSA, [[RFC8037]]) or P-256 (ECDSA, NIST)
+- The signature MUST be calculated over the canonical `snapshot` hash value (as hex string)
+- The signature MUST be stored in the `signature` field of the snapshot entry as a multibase-encoded value
+- The key used MUST be published in the DID document of the record owner as a verification method
+
+## Merkle Tree Algorithm ## {#section-crypto-procedures-merkle-algorithm}
+
+For the calculation of the [=CaseRecord=] [=Merkle root=], the following algorithm MUST be used:
+
+```
+function merkleRoot(hashes: SHA256[]) -> SHA256:
+if hashes.length == 0: return SHA256("")
+if hashes.length == 1: return hashes [0]
+
+sorted = sort(hashes) // alphabetically by hex string
+
+while sorted.length > 1:
+nextLevel = []
+for i in range(0, sorted.length, 2):
+if i + 1 < sorted.length:
+nextLevel.append( SHA256( sorted[i] || sorted[i+1] ) )
+else:
+nextLevel.append( sorted[i] ) // odd element carried over unchanged
+sorted = nextLevel
+
+return sorted[0]
+```
+

@@ -1,0 +1,16 @@
+Optional Solid Pod Delivery {#chapter-solid}
+============================================================
+
+For [=Records=] whose primary subject is an individual citizen, RWP offers an optional delivery extension: delivery of finalised [=Records=] into a citizen's Solid Pod.
+
+When a system implements Solid Pod delivery, it MUST:
+
+- Obtain explicit, revocable write consent from the citizen via their Pod's access control mechanism
+- Deliver the complete [=snapshot=] (DID, [=metadata=], [=payload=]) to the Pod
+- Retain the canonical copy in its own RWP system, the Pod copy is an additional output, not a transfer of authority
+- Include a `deliveryTarget` field in the optional metadata extension block
+
+Typical use cases: driving licences, medical images, residence registration confirmations, diplomas, building permits (delivered to the applicant).
+
+The citizen MAY present the Pod-held [=Record=] to any third party, who can independently verify its authenticity via the DID and cryptographic hash without querying the issuing authority.
+

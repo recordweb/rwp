@@ -1,0 +1,336 @@
+Payload and Snapshots {#chapter-payload}
+=================================
+
+## Payload Structure ## {#section-payload-definition}
+
+The <dfn>payload</dfn> of a [=Record=] is an ordered array of <dfn>snapshots</dfn>. Each [=snapshot=] is one immutable, versioned representation of the [=Record=]'s content at a specific point in time.
+
+```json
+{
+  "payload": [
+    {
+      "snapshot": "sha256:e3b0c44298fc1c149afb4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "state": "finalized",
+      "parents": ["sha256:previousSnapshotHash0000000000000000000000000000000000000000"],
+      "createdAt": "2026-05-31T14:00:00Z",
+      "modifiedAt": "2026-05-31T15:30:00Z",
+      "signature": "z3FttV7VjukA1LhqSDgOxupHy...",
+      "representations": [
+        {
+          "format": "text/markdown",
+          "hash": "sha256:aabbcc0000000000000000000000000000000000000000000000000000000",
+          "primary": false,
+          "role": "source"
+        },
+        {
+          "format": "application/pdf;profile=PDF-A-2b",
+          "hash": "sha256:d2d2d2d2d2c3c3c3c3c3b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4",
+          "primary": true,
+          "role": "publication"
+        }
+      ]
+    }
+  ]
+}
+```
+
+Each [=payload=] entry:
+
+- MUST conform to the schema of the Record type in the referenced schema version
+- MUST be validated against the schema before finalisation
+- MUST NOT be changed after finalisation
+- MUST be uniquely identified by its `snapshot` field
+
+## Permitted Payload Content Types ## {#section-payload-types}
+
+RWP distinguishes three payload content categories:
+
+<table class="data">
+  <thead>
+    <tr><th>Category</th><th>Description</th><th>Examples</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Structured</td>
+      <td>Machine-readable, schema-validatable data</td>
+      <td>JSON, XML, YAML</td>
+    </tr>
+    <tr>
+      <td>Documentary</td>
+      <td>Human-readable documents with defined structure</td>
+      <td>PDF/A, DOCX, ODT, Markdown</td>
+    </tr>
+    <tr>
+      <td>Binary</td>
+      <td>Non-textual data with descriptive schema</td>
+      <td>TIFF, JPEG 2000, MP4, ZIP</td>
+    </tr>
+  </tbody>
+</table>
+
+## Multi-Representation ## {#section-payload-multi-representation}
+
+A [=snapshot=] MAY carry multiple `representations`. This is provided in particular for the transition from working format (draft) to long-term format (finalised). Representations express the same content in different formats at the same point in the version graph; they MUST NOT be used to express different versions over time — that is the purpose of separate snapshot entries linked via `parents`.
+
+If a [=snapshot=] contains multiple representations, ALL of the following MUST apply:
+
+- All representations MUST depict the same content
+- All representations MUST be individually hashed
+- Exactly one representation MUST be designated as primary (`primary: true`)
+
+<table class="data">
+  <thead>
+    <tr><th>Field</th><th>Required</th><th>Description</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>format</code></td><td>MUST</td><td>MIME type incl. profiles</td></tr>
+    <tr><td><code>hash</code></td><td>MUST</td><td>SHA-256 of this representation</td></tr>
+    <tr><td><code>primary</code></td><td>MUST</td><td>Exactly one representation MUST be <code>true</code></td></tr>
+    <tr><td><code>role</code></td><td>SHOULD</td><td>Semantic role: <code>source</code>, <code>publication</code>, <code>preview</code>, <code>archive</code></td></tr>
+  </tbody>
+</table>
+
+## Format Requirements per State ## {#section-payload-format-requirements}
+
+The schema of a Record type MUST define the permitted payload formats for each state. If a schema contains no explicit format requirements, the following defaults apply:
+
+<table class="data">
+  <thead>
+    <tr><th>State</th><th>Permitted formats (default)</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>draft</code></td>
+      <td>All MIME types not explicitly excluded in the schema of the Record type</td>
+    </tr>
+    <tr>
+      <td><code>finalized</code></td>
+      <td>Only formats listed under [RWP archival-grade formats](#section-payload-archival-formats)</td>
+    </tr>
+  </tbody>
+</table>
+
+## RWP archival-grade formats (normative) ## {#section-payload-archival-formats}
+
+<table class="data">
+  <thead>
+    <tr><th>MIME Type</th><th>Format</th><th>Suitability</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>application/pdf;profile=PDF-A-1b</code></td><td>PDF/A-1b</td><td>Documents without embedded multimedia</td></tr>
+    <tr><td><code>application/pdf;profile=PDF-A-2b</code></td><td>PDF/A-2b</td><td>Documents with embedded files</td></tr>
+    <tr><td><code>application/pdf;profile=PDF-A-3b</code></td><td>PDF/A-3b</td><td>Documents with arbitrary attachments</td></tr>
+    <tr><td><code>text/xml</code></td><td>XML (well-formed)</td><td>Structured data</td></tr>
+    <tr><td><code>application/json</code></td><td>JSON</td><td>Structured data (with schema reference)</td></tr>
+    <tr><td><code>image/tiff</code></td><td>TIFF</td><td>Raster images</td></tr>
+    <tr><td><code>image/jp2</code></td><td>JPEG 2000</td><td>Raster images (near-lossless)</td></tr>
+    <tr><td><code>text/plain;charset=UTF-8</code></td><td>Plain Text UTF-8</td><td>Pure text documents</td></tr>
+    <tr><td><code>text/markdown</code></td><td>CommonMark Markdown</td><td>Source format with publication representation</td></tr>
+  </tbody>
+</table>
+
+## Conversion During Finalisation ## {#section-payload-conversion}
+
+When a system transitions a [=Record=] from state `draft` to `finalized`, it MUST:
+
+1. Validate the payload against the finalised format of the schema
+2. If the current payload is not in archival-grade format: convert automatically or request conversion from the operator
+3. Store both formats as multi-representation in the snapshot (SHOULD)
+4. Document the conversion act as metadata (`conversionMethod`, `conversionTimestamp`)
+
+A system MUST NOT finalise a [=Record=] whose payload does not conform to the format defined for `finalized` and for which no archival-grade conversion is possible.
+
+## Snapshot Fields ## {#section-payload-snapshot-definition}
+
+Every [=snapshot=] entry in the `payload` array MUST fulfil the following properties:
+
+<table class="data">
+  <thead>
+    <tr><th>Field</th><th>Required</th><th>Type</th><th>Description</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>snapshot</code></td><td>MUST</td><td>SHA-256</td><td>Content hash of this snapshot (incl. representations); serves as its unique identifier. Referenceable via <code>did:rwp:&lt;namespace&gt;:&lt;record-id&gt;:&lt;snapshot&gt;</code>.</td></tr>
+    <tr><td><code>state</code></td><td>MUST</td><td>Enum</td><td><code>draft</code> or <code>finalized</code>; additional values permitted per type schema</td></tr>
+    <tr><td><code>parents</code></td><td>MUST</td><td>Array&lt;SHA-256&gt;</td><td>Hashes of predecessor snapshots; empty for the root snapshot</td></tr>
+    <tr><td><code>createdAt</code></td><td>MUST</td><td>ISO 8601</td><td>Timestamp of snapshot creation</td></tr>
+    <tr><td><code>modifiedAt</code></td><td>MUST</td><td>ISO 8601</td><td>Timestamp of the last change to this snapshot. For a <code>finalized</code> snapshot this is the finalisation timestamp, since a finalized snapshot cannot change thereafter.</td></tr>
+    <tr><td><code>signature</code></td><td>MUST (when finalized)</td><td>Multibase</td><td>Cryptographic signature of the record owner over the <code>snapshot</code> hash. See [Signature Procedure](#section-crypto-procedures-signature).</td></tr>
+    <tr><td><code>representations</code></td><td>MUST (min. 1)</td><td>Array</td><td>Format representations of this snapshot's content, per [Multi-Representation](#section-payload-multi-representation)</td></tr>
+  </tbody>
+</table>
+
+A [=snapshot=] MUST additionally fulfil the following properties:
+
+- It is immutable after its creation
+- It references exactly one version of the schema of its Record type
+- It is linked to its predecessor snapshots by directed edges in the version graph (see [Version Graph (DAG)](#section-payload-version-graph))
+
+## Snapshot Hash Calculation ## {#section-payload-snapshot-hash}
+
+The `snapshot` hash MUST be calculated as follows:
+
+1. Serialise the snapshot fields `state`, `parents`, `createdAt`, `modifiedAt`, and `representations` (without `snapshot` and `signature` themselves) as canonical JSON ([[RFC8785]])
+2. Calculate SHA-256 over the result
+
+```
+snapshot = SHA-256( canonicalize({state, parents, createdAt, modifiedAt, representations}) )
+```
+
+A system MUST verify the `snapshot` hash after every finalisation before the snapshot is accepted as valid. This hash is distinct from the Record-level `recordHash` defined in [Record Integrity](#chapter-record-integrity), which covers the entire Record including `metadata`.
+
+## Version Graph (DAG) ## {#section-payload-version-graph}
+
+### Graph Structure ### {#subsection-graph-structure}
+
+The totality of all snapshots of a [=Record=] and their parent-child relationships forms the <dfn>version graph</dfn>.
+
+The [=version graph=] MUST be a **Directed Acyclic Graph (DAG)**:
+
+- **Directed**: Edges point from child to parent (backward in time)
+- **Acyclic**: There MUST be NO cycles — a snapshot MUST NOT be directly or indirectly its own ancestor
+
+A system MUST check upon receipt of a new [=snapshot=] whether adding its parent references would create a cycle. If so, the [=snapshot=] MUST be rejected.
+
+### Nodes ### {#subsection-graph-nodes}
+
+Every node in the [=version graph=] is a [=snapshot=] entry in the `payload` array (see [Snapshot Fields](#section-payload-snapshot-definition)).
+
+<table class="data">
+  <thead>
+    <tr><th>Property</th><th>Requirement</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Unique identity</td><td>SHA-256 of the snapshot (<code>snapshot</code>); MUST be unique</td></tr>
+    <tr><td>Immutability</td><td>Finalised nodes MUST NOT be changed</td></tr>
+    <tr><td>Resolvability</td><td>Every node MUST be retrievable in the system via its <code>snapshot</code> hash</td></tr>
+  </tbody>
+</table>
+
+### Edges (Parent References) ### {#subsection-graph-edges}
+
+An edge connects a [=snapshot=] (child) with its predecessor [=snapshot=] (parent).
+
+- A [=snapshot=] MAY have zero, one, or multiple parent references
+- A [=snapshot=] without parents is the **root snapshot** (first snapshot of the [=Record=])
+- A [=snapshot=] with exactly one parent reference is a **linear continuation**
+- A [=snapshot=] with multiple parent references is a **merge snapshot**
+
+Edge requirements:
+
+- Every parent reference MUST be a valid `snapshot` hash of a known [=snapshot=] within the same `payload` array
+- Edges MUST NOT point to snapshots of other [=Records=]. Cross-Record connections are made via links in the [=payload=] of a [=CaseRecord=] or [=AssertionRecord=] ([CaseRecord Specification](#chapter-caserecord))
+
+### Branches ### {#subsection-graph-branches}
+
+A **branch** arises when two or more new [=draft=] snapshots with the same parent reference emerge from a [=finalized=] snapshot.
+
+- Branches are explicitly permitted in RecordWeb and MUST be made visible by the system
+- A system MUST return all active branches (draft snapshots without successors) when a [=Record=] is retrieved
+- Branches MAY exist simultaneously as long as they are in state [=draft=]
+
+### Merges ### {#subsection-graph-merges}
+
+A merge snapshot is a [=snapshot=] with two or more parent references. It consolidates two branches.
+
+Before a merge snapshot can be finalised, a `MergeRecord` MUST be created:
+
+```json
+{
+  "mergeRecord": {
+    "mergedSnapshots": [
+      "sha256:branch-a-snapshot-hash...",
+      "sha256:branch-b-snapshot-hash..."
+    ],
+    "mergeReason": "Consolidation after coordination between departments",
+    "mergedBy": "did:rwp:bern.ch:user-petra-muster",
+    "mergedAt": "2026-05-31T16:00:00Z",
+    "resultSnapshot": "sha256:merged-snapshot-hash..."
+  }
+}
+```
+
+The `MergeRecord` MUST be finalised before the merge snapshot can be finalised.
+
+### Cross-Record Merges ### {#subsection-cross-record-merges}
+
+When a new [=Record=] arises from two or more existing [=finalized=] Records (cross-Record merge), the following MUST apply:
+
+- The new [=Record=] MUST have a root snapshot with an empty `parents` array
+- The `MergeRecord` MUST reference the DIDs of the source Records (not their snapshot hashes)
+- The source Records MUST remain in state [=finalized=] and receive a metadata note `contributedTo` with the DID of the new [=Record=]
+
+## States and Transitions ## {#section-payload-states}
+
+### State Model ### {#subsection-state-model}
+
+Every [=Record=] snapshot has exactly one **state**. The state describes the validity and linkability status of the snapshot.
+
+**Core states (normative, for all Record types):**
+
+<table class="data">
+  <thead>
+    <tr><th>State</th><th>Linkable</th><th>Immutable</th><th>Description</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code><dfn>draft</dfn></code></td>
+      <td>NO</td>
+      <td>NO</td>
+      <td>Being processed; content may change</td>
+    </tr>
+    <tr>
+      <td><code><dfn>finalized</dfn></code></td>
+      <td>YES</td>
+      <td>YES</td>
+      <td>Complete; content cryptographically secured</td>
+    </tr>
+  </tbody>
+</table>
+
+Record types MAY define additional states. These MUST be specified in the [=SchemaRecord=] and MUST be reachable from one of the core states or lead into one.
+
+**Example of an extended state machine for type "contract":**
+
+```
+draft → in-review → finalized
+↓
+rejected (terminal state, not linkable)
+```
+
+### Linkability ### {#subsection-linkability}
+
+A [=Record=] MUST be in the [=finalized=] state to be used as the target of a hard link.
+
+A system MUST return an error when an attempt is made to set a hard link to a Record that is not in the [=finalized=] state.
+
+Exception: Soft links per [Hard and Soft Links](#section-links) MAY point to Records in any state, including [=draft=] Records.
+
+### Finalisation Requirements ### {#subsection-finalisation-requirements}
+
+A system MUST perform the following checks before finalising a [=snapshot=]:
+
+1. **Schema validation**: Payload conforms to the schema in the version defined for `finalized`
+2. **Format validation**: Payload format conforms to the `payloadFormats.finalized` requirements of the schema
+3. **Mandatory field check**: All MUST metadata fields are present and correctly typed
+4. **Owner signature**: If the schema defines `signaturePolicy: owner`, the record owner MUST have cryptographically signed the snapshot hash. For `signaturePolicy: system`, the signature MAY be generated by an authorised system key. For `signaturePolicy: none`, signature validation is omitted.
+5. **Parent integrity**: All referenced parent hashes are resolvable in the system
+
+If any of these checks fails, the system MUST NOT finalise the [=snapshot=] and MUST return an error with a validation code.
+
+### Irreversibility of Finalisation ### {#subsection-irreversibility}
+
+A [=finalized=] snapshot MUST NOT be reverted to the state [=draft=].
+
+Corrections, revisions, replacements, and other continuations of the same Record MUST be represented as a new [=snapshot=] of that Record.
+
+Such a snapshot MUST:
+
+- retain the DID of the Record;
+- reference the superseded or revised snapshot in its `parents` field;
+- include a `correctionReason` or equivalent schema-defined rationale where applicable; and
+- complete the normal finalisation process defined in [Finalisation Requirements](#subsection-finalisation-requirements).
+
+An implementation MUST NOT represent a correction, revision, replacement, or continuation of the same Record as a new Record that is related to the earlier Record only through an AssertionRecord or another cross-Record relationship.
+
+A new Record MAY be created where a new semantically autonomous information object arises. Such a Record MAY document derivation, source, or other relationships to an earlier Record through an AssertionRecord. It MUST NOT thereby be treated as a continuation in the version graph of that earlier Record.
+

@@ -1,0 +1,68 @@
+Payload Deletion {#chapter-deletion}
+=========================================
+
+## Deletion Principles ## {#section-deletion-principles}
+
+RecordWeb's immutability and data protection erasure obligations (GDPR, Swiss DSG) are in tension. RWP resolves this tension through a tiered deletion regime.
+
+The applicable regime is declared in the `deletionRegime` field of `metadata.governance` at the time of creation. This field is closely related to `retentionPolicy` (see [metadata.governance](#section-metadata-governance)): `retentionPolicy` references the applicable retention rule, while `deletionRegime` states the deletion behaviour required once that rule's retention period has elapsed or an erasure request is granted. Implementations MUST respect this field and MAY enforce it at the infrastructure level.
+
+## Deletion Regimes ## {#section-deletion-regimes}
+
+RWP defines three deletion regimes:
+
+<table class="data">
+  <thead>
+    <tr><th>Regime</th><th>Key</th><th>Description</th><th>When applicable</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Payload deletion</td>
+      <td><code>payload-only</code></td>
+      <td>The payload is deleted; DID, metadata, and version graph are retained. The Record continues to exist as a provable "empty shell".</td>
+      <td>Default. Where provenance continuity is legally required despite erasure (e.g. audit trails, public registers).</td>
+    </tr>
+    <tr>
+      <td>Full deletion</td>
+      <td><code>full-delete</code></td>
+      <td>The entire Record (including DID, metadata, and graph edges) is deleted.</td>
+      <td>Where no retention obligation exists and the right to erasure is absolute (e.g. erroneously captured personal data with no public interest basis).</td>
+    </tr>
+    <tr>
+      <td>Deletion exemption</td>
+      <td><code>exempt</code></td>
+      <td>No deletion occurs. The statutory retention obligation is documented as metadata.</td>
+      <td>Where a statutory retention obligation overrides the erasure claim (e.g. tax records, notarial acts, public register entries).</td>
+    </tr>
+  </tbody>
+</table>
+
+## DeletionRecord Protocol ## {#section-deletion-record}
+
+When a [=payload=] deletion is executed, a `DeletionRecord` MUST be created and finalised before the payload is removed.
+
+The `DeletionRecord` MUST contain:
+
+```json
+{
+  "deletionRecord": {
+    "targetDid": "did:rwp:bern.ch:f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "targetSnapshot": "sha256:snapshot-to-be-deleted...",
+    "deletionRegime": "payload-only",
+    "legalBasis": "GDPR Art. 17 — Right to erasure",
+    "requestedBy": "did:rwp:bern.ch:user-max-mustermann",
+    "approvedBy": "did:rwp:bern.ch:unit-legal",
+    "deletedAt": "2026-06-01T10:00:00Z",
+    "retainedFields": ["did", "metadata", "versionGraph"]
+  }
+}
+```
+
+After the `DeletionRecord` is finalised:
+
+1. The [=payload=] content bytes are securely overwritten
+2. The `hash` field of the affected `representations` entry in the [=snapshot=] is replaced with the string `"deleted:<DeletionRecord-DID>"`
+3. The Record's `recordHash` is recalculated to reflect the deletion
+4. The DID document's `currentVersion` field is updated
+5. The DID resolver MUST return HTTP 410 for `full-delete` regimes
+

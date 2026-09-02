@@ -1,0 +1,118 @@
+Relationship Vocabulary {#chapter-relationship-vocabulary}
+===================================================
+
+## Scope and conformance ## {#section-relationship-vocabulary-scope}
+
+This section defines the controlled relationship vocabulary used by [=AssertionRecord|AssertionRecords=].
+
+A conforming AssertionRecord MUST use a predicate IRI that is either:
+
+1. an applicable PROV-O predicate defined by this specification; or
+2. a predicate explicitly permitted by the SchemaRecord that defines the concrete AssertionRecord type.
+
+A Conformance Profile MAY require an implementation to create, validate, retain, or consume AssertionRecords using specified predicate vocabularies. A Conformance Profile MUST NOT itself define, broaden, reverse, or otherwise alter the semantics of a relationship predicate.
+
+For provenance and version-lineage relationships, the applicable PROV-O predicate MUST be used where PROV-O expresses the intended semantics.
+
+An AssertionRecord MUST NOT use a predicate whose semantics, direction, permitted subject and object kinds, version, and validation requirements are not declared by this specification or by an applicable conformance profile.
+
+The use of an IRI alone does not make a relationship predicate conformant.
+
+## Provenance and version-lineage predicates {#section-relationship-vocabulary-provenance}
+
+For provenance and version-lineage relationships, an AssertionRecord MUST use an applicable [[!PROVO]] predicate where a PROV-O predicate expresses the intended relationship semantics.
+
+The following PROV-O predicates are part of the RWP core relationship vocabulary:
+
+- `prov:wasAttributedTo`
+- `prov:wasGeneratedBy`
+- `prov:wasDerivedFrom`
+- `prov:wasRevisionOf`
+- `prov:actedOnBehalfOf`
+
+An AssertionRecord using a PROV-O predicate MUST satisfy the semantic domain and range constraints of that predicate.
+
+### Relationship to the RWP version graph {#subsection-assertionrecord-version-graph}
+
+The RWP version graph is the authoritative representation of version succession between snapshots of the same Record.
+
+A conforming implementation MUST determine RWP snapshot ancestry, direct parentage, branches, and merge relationships exclusively from the `parents` field and the rules defined in [Version Graph](#section-payload-version-graph).
+
+An AssertionRecord using `prov:wasRevisionOf`, `prov:wasDerivedFrom`, or another provenance predicate MUST NOT create, alter, replace, or repair a version-graph edge.
+
+Where an AssertionRecord documents a relationship between snapshots of the same Record, it MAY provide additional attributable documentary evidence. It MUST NOT be used to infer a parent relationship that is absent from the version graph.
+
+If an AssertionRecord and the version graph make incompatible statements about version succession, a conforming implementation MUST treat the version graph as authoritative for all RWP versioning, ancestry, finalisation, merge, and integrity decisions.
+
+An AssertionRecord that conflicts with the version graph remains an attributable assertion. Its conflict with the version graph MUST NOT alter the integrity or history of either referenced Record.
+
+In particular:
+
+- `prov:wasDerivedFrom` and `prov:wasRevisionOf` relate an Entity to an Entity;
+- `prov:wasGeneratedBy` relates an Entity to an Activity;
+- `prov:wasAttributedTo` relates an Entity to an Agent; and
+- `prov:actedOnBehalfOf` relates an Agent to an Agent.
+
+A Record is an Entity for the purposes of this section. A Record MUST NOT be used as the subject or object of a PROV-O predicate where the predicate's declared semantics require an Agent or an Activity.
+
+## Contextual relationships {#section-relationship-vocabulary-contextual-relationships}
+
+Institutional, functional, legal, subject-matter, and archival-context relationships are not necessarily provenance relationships. Such relationships MUST NOT be represented using a PROV-O predicate unless the PROV-O predicate expresses their intended semantics.
+
+A contextual relationship predicate MAY be used only where it is explicitly permitted by the SchemaRecord that defines the concrete AssertionRecord type.
+
+The applicable SchemaRecord MUST identify the permitted predicate IRIs, their applicable vocabulary versions, and the validation constraints that apply to them.
+
+A conformance profile that permits a contextual relationship predicate MUST declare the predicate's semantics, direction, permitted subject and object kinds, version, and validation requirements.
+
+A profile MAY declare a contextual relationship predicate defined by [[RICO]]. Where it does so, the profile MUST identify the exact RiC-O predicate IRI and the applicable RiC-O version. The profile MUST NOT redefine, broaden, or contradict the semantics of the declared RiC-O predicate.
+
+## RiC-O contextual predicates ## {#section-relationship-vocabulary-rico}
+
+[[RICO]] predicates MAY be used as `predicate` values in AssertionRecords only where they are explicitly permitted by an applicable conformance profile.
+
+The use of a RiC-O predicate does not require an implementation to store, exchange, or process Records as RDF or JSON-LD. In an AssertionRecord, the RiC-O IRI identifies the semantics of the asserted relationship.
+
+A conformance profile that permits a RiC-O predicate MUST declare:
+
+1. the exact predicate IRI;
+2. the RiC-O version to which the declaration applies;
+3. the semantics and direction of the predicate, with reference to the applicable RiC-O definition;
+4. the permitted subject kinds;
+5. the permitted object kinds;
+6. any additional RWP validation requirements; and
+7. the profile version in which the predicate is declared.
+
+A profile MUST NOT permit a RiC-O predicate where an applicable PROV-O predicate expresses the intended provenance or version-lineage semantics.
+
+A profile MAY impose constraints narrower than those of the declared RiC-O predicate. A profile MUST NOT broaden, reverse, or otherwise contradict the semantics or direction of the declared RiC-O predicate.
+
+## Schema predicate extensions ## {#section-relationship-vocabulary-schema-predicate-extensions}
+
+A conformance SchemaRecord MAY define additional relationship predicates or permit the use of specifically identified external relationship predicates.
+
+For each additional or externally permitted predicate, the SchemaRecord MUST declare:
+
+1. an absolute predicate IRI;
+2. a stable, versioned definition of its semantics;
+3. the relationship direction;
+4. the permitted subject kinds;
+5. the permitted object kinds;
+6. the required or permitted assertion metadata;
+7. the validation requirements; and
+8. the SchemaRecord version in which the predicate is declared.
+
+For an externally defined predicate, the SchemaRecord MUST additionally identify the external vocabulary and its applicable version.
+
+A SchemaRecord MUST NOT define or permit a predicate whose semantics duplicate an applicable PROV-O predicate. In that case, the applicable PROV-O predicate MUST be used.
+
+A SchemaRecord MAY constrain the use of an external predicate more narrowly than the defining vocabulary permits. A SchemaRecord MUST NOT broaden, reverse, or contradict the semantics or direction defined by that vocabulary.
+
+## Predicate declarations {#section-relationship-vocabulary-predicate-declarations}
+
+A predicate declaration MUST be versioned and resolvable through its IRI or through the applicable conformance profile.
+
+The declaration MUST provide a human-readable definition. It SHOULD provide machine-readable representations where available, including RDF, JSON-LD, SHACL, JSON Schema, or equivalent validation artefacts.
+
+A localised display label MAY accompany a predicate declaration. A display label is presentation metadata and MUST NOT replace the predicate IRI as the semantic identifier.
+

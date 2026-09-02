@@ -1,0 +1,52 @@
+SchemaRecord {#chapter-schema-record}
+=================================================
+
+A <dfn>SchemaRecord</dfn> is a specialised Record type that carries the definition of another Record type.
+
+A [=SchemaRecord=] MUST:
+
+- fulfil all requirements for a regular [=Record=] (DID, metadata, version graph)
+- contain a JSON Schema (Draft 2020-12 or later, [[JSON-SCHEMA]]) in the payload
+- contain the field `rwpSchemaVersion` in the payload with the RWP version for which it is valid
+- contain the field `allowedStates` in the payload with the permitted states and their transitions
+- contain the field `payloadFormats` in the payload with the permitted formats per state
+
+**Minimal SchemaRecord payload example:**
+
+```json
+{
+  "rwpSchemaVersion": "0.1",
+  "schemaId": "did:rwp:bern.ch:schema-building-permit-application",
+  "displayName": "Building Permit Application",
+  "allowedStates": ["draft", "finalized"],
+  "stateTransitions": [
+    { "from": "draft", "to": "finalized", "requiresOwnerSignature": true }
+  ],
+  "payloadFormats": {
+    "draft": ["application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+              "text/markdown"],
+    "finalized": ["application/pdf;profile=PDF-A-2b"]
+  },
+  "jsonSchema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "required": ["parcelNumber", "applicant", "constructionProject", "date"],
+    "properties": {
+      "parcelNumber": { "type": "string" },
+      "applicant": { "type": "string" },
+      "constructionProject": { "type": "string" },
+      "date": { "type": "string", "format": "date" }
+    }
+  }
+}
+```
+
+## Schema Versioning and Backward Compatibility ## {#section-schema-record-versioning}
+
+When a [=SchemaRecord=] is finalised in a new version, the following applies:
+
+- Existing snapshots referencing an earlier schema version REMAIN valid
+- The new schema MUST contain the field `previousSchemaVersion` in the payload with the hash of the predecessor schema
+- Systems MUST keep all schema versions referenced by existing [=Records=] permanently accessible
+- A system MUST NOT retroactively change an existing [=SchemaRecord=], corrections are made as a new version
+

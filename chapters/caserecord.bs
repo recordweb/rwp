@@ -1,0 +1,171 @@
+CaseRecord Specification {#chapter-caserecord}
+=======================================
+
+## Case as a specialised Record Type {#section-case-type}
+
+A <dfn>CaseRecord</dfn> is a [=RelationRecord=] and a concrete [Record type](#section-record-types-definition). It is subject to all requirements that apply to [=Records=] and supplements them with the Case-specific requirements defined in this section.
+
+A CaseRecord is a persisted, governed view of linked Records. It is itself a Record with its own identity, state, version history, schema association, metadata, and integrity evidence.
+
+A CaseRecord MUST NOT be interpreted as a container into which Records are placed. A Record linked by a CaseRecord remains an independent Record and is not embedded in the CaseRecord payload.
+
+## Case Schema (normative) ## {#section-case-schema}
+
+A `CaseRecord` payload MUST contain the following fields:
+
+```json
+{
+  "recordDid": "did:rwp:bern.ch:f47ac10b-case-001",
+  "caseType": "did:rwp:bern.ch:schema-building-permit-case",
+  "title": "Building Permit Musterstrasse 12, Parcel 451",
+  "trigger": {
+    "type": "hard",
+    "recordDid": "did:rwp:bern.ch:application-001",
+    "snapshot": "sha256:application-finalized-hash0000000000000000000000000000000000"
+  },
+  "context": [
+    {
+      "type": "hard",
+      "recordDid": "did:rwp:bern.ch:zoning-plan-2024",
+      "snapshot": "sha256:zoning-plan-hash0000000000000000000000000000000000000000000",
+      "role": "Legal basis"
+    },
+    {
+      "type": "hard",
+      "recordDid": "did:rwp:bern.ch:case-planning-approval-001",
+      "snapshot": "sha256:planning-approval-case-hash00000000000000000000000000000000",
+      "role": "Related administrative proceeding"
+    }
+  ],
+  "process": [
+    {
+      "type": "hard",
+      "recordDid": "did:rwp:bern.ch:minutes-site-inspection",
+      "snapshot": "sha256:minutes-hash00000000000000000000000000000000000000000000000",
+      "role": "Investigation"
+    }
+  ],
+  "decision": null,
+  "result": null,
+  "merkleRoot": "sha256:case-merkle-root..."
+}
+```
+
+## Case Elements (normative) ## {#section-case-elements}
+
+Before a [=CaseRecord=] is finalised, its payload MUST contain all five Case element fields: `trigger`, `context`, `process`, `decision`, and `result`. The finalisation constraints for each element are defined in the following table. An element that permits an empty value is considered present when it is represented in the CaseRecord payload, even if its value is an empty array or `null`, as applicable. A Record MAY fulfil multiple elements.
+
+A draft CaseRecord MAY omit one or more Case element fields. Before finalisation, the system MUST validate and, where necessary, require completion of the Case element fields in accordance with this section.
+
+Unless a CaseRecord schema defines more specific constraints, every Case element MAY link to any Record type, including another CaseRecord.
+
+<table class="data">
+  <thead>
+    <tr><th>Element</th><th>Required for finalisation</th><th>Description</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>trigger</code></td><td>MUST</td>
+      <td>Exactly one Record that triggered the Case; MUST be a hard link</td>
+    </tr>
+    <tr>
+      <td><code>context</code></td><td>SHOULD</td>
+      <td>Information relevant to understanding and processing</td>
+    </tr>
+    <tr>
+      <td><code>process</code></td><td>MAY (empty allowed)</td>
+      <td>Documentation of processing steps</td>
+    </tr>
+    <tr>
+      <td><code>decision</code></td><td>MAY (empty allowed)</td>
+      <td>Record(s) documenting the decision; MUST be a hard link</td>
+    </tr>
+    <tr>
+      <td><code>result</code></td><td>MUST (min. 1)</td>
+      <td>At least one Record documenting the outcome; MUST be a hard link</td>
+    </tr>
+  </tbody>
+</table>
+
+**Exception — ad-hoc Case**: A [=CaseRecord=] schema MAY be marked as `adhoc: true`. Ad-hoc Cases have no mandatory fields other than `trigger` and `recordDid`. They MUST be marked in the metadata object as `caseVariant: "adhoc"`.
+
+## Hard and Soft Links ## {#section-links}
+
+A Case link MAY target any [=Record=], including an [=InformationRecord=], a [=RelationRecord=] (including another [=CaseRecord=]), or a [=SystemRecord=].
+
+A <dfn>hard link</dfn> points to one identified [=finalized=] [=snapshot=] of a target Record. A hard link MUST contain the target `recordDid` and `snapshot` (the target snapshot's hash, per [Snapshot Fields](#section-payload-snapshot-definition)).
+
+A hard link is immutable after finalisation of the referencing [=CaseRecord=].
+
+A <dfn>soft link</dfn> is a working reference that points to a target `recordDid` without identifying a target snapshot. A soft link MAY point to a [=draft=] or [=finalized=] Record.
+
+A CaseRecord containing one or more soft links MUST NOT be finalised. Every soft link MUST be converted to a hard link before finalisation of the CaseRecord.
+
+A system MUST check during a CaseRecord finalisation attempt whether soft links are present. If soft links are present, the system MUST reject the finalisation and return the unresolved soft links.
+
+## CaseRecord-to-CaseRecord Links ## {#section-case-links}
+
+A [=CaseRecord=] MAY link to another CaseRecord through a [=soft link=] or a [=hard link=].
+
+A hard link to a CaseRecord MUST identify a [=finalized=] snapshot of the target CaseRecord through its `recordDid` and `snapshot`.
+
+During finalisation of a referencing CaseRecord, the system MUST resolve and validate every target CaseRecord snapshot referenced through a hard link, subject to the applicable federation and offline-validation rules.
+
+The `snapshot` value of a hard-linked target CaseRecord MUST be included in the [=Merkle root=] of the referencing CaseRecord.
+
+A soft link MAY refer to a draft or finalised CaseRecord during work. A soft link to a CaseRecord MUST be converted to a hard link before finalisation of the referencing CaseRecord.
+
+A link from CaseRecord A to CaseRecord B references only the identified snapshot of CaseRecord B.
+
+A CaseRecord-to-CaseRecord link MUST NOT include, copy, inherit, or otherwise treat Records linked by CaseRecord B as direct members of CaseRecord A.
+
+The referenced CaseRecord B snapshot and its Merkle root provide evidence of the Records directly linked by CaseRecord B at the time that snapshot was finalised. A Record is a direct member of CaseRecord A only if CaseRecord A links to that Record explicitly.
+
+## Case Merkle Root ## {#section-merkle-root-calc}
+
+The <dfn>Merkle root</dfn> of a [=CaseRecord=] provides a cryptographically verifiable representation of the set of snapshots directly hard-linked by that [=CaseRecord=].
+
+For the purposes of this section, a `snapshot` value and a `merkleRoot` MUST be represented in the canonical textual form `sha256:` followed by the lowercase hexadecimal encoding of exactly 32 octets.
+
+The Merkle root of a [=CaseRecord=] MUST be calculated as follows:
+
+1. An implementation MUST collect the `snapshot` value of every hard link in the [=CaseRecord=], including every hard link to another [=CaseRecord=].
+2. For each collected `snapshot` value, the implementation MUST remove the `sha256:` prefix and decode the remaining hexadecimal value into its 32-octet SHA-256 digest value.
+3. The implementation MUST sort the decoded digest values in ascending lexicographic order over unsigned octets.
+4. For each sorted digest value `d`, the implementation MUST calculate a leaf node value as follows:
+
+   <pre class="formula">
+   leaf = SHA-256(0x00 || d)
+   </pre>
+
+5. The implementation MUST construct successive tree levels by pairing adjacent node values from left to right. For each pair consisting of a left node value `l` and a right node value `r`, the implementation MUST calculate the parent node value as follows:
+
+   <pre class="formula">
+   parent = SHA-256(0x01 || l || r)
+   </pre>
+
+6. If a tree level contains an odd number of node values, the implementation MUST duplicate the final node value and use it as both the left and right input of the final pair at that level.
+7. The sole node value remaining after the construction of all tree levels is the Merkle root. The implementation MUST serialise this value as `sha256:` followed by its lowercase hexadecimal encoding.
+
+In this section, `||` denotes byte concatenation. The values `0x00` and `0x01` are single-octet domain-separation tags. They MUST be included exactly as specified. The `0x00` tag distinguishes leaf-node inputs from all internal-node inputs. The `0x01` tag distinguishes internal-node inputs from leaf-node inputs.
+
+A [=CaseRecord=] with no hard links MUST NOT be finalised. This specification therefore defines no Merkle root for an empty set of hard links.
+
+The Merkle root of a [=CaseRecord=] MUST include the hash of each directly hard-linked target snapshot. It MUST NOT recursively include the individual hard-link hashes or linked Record snapshots contained in a referenced [=CaseRecord=].
+
+The [=Merkle root=] MUST be recalculated every time a [=hard link=] is added or removed. A system MUST verify the [=Merkle root=] before finalising the [=CaseRecord=].
+
+## Case Completeness Check ## {#section-case-completeness}
+
+A system SHOULD perform a completeness check on a [=CaseRecord=] at any time upon request and return:
+
+```json
+{
+  "recordDid": "did:rwp:bern.ch:f47ac10b-case-001",
+  "complete": false,
+  "missingElements": ["decision", "result"],
+  "openWorkingReferences": ["did:rwp:bern.ch:expert-opinion-draft-001"],
+  "merkleRootValid": true
+}
+```
+

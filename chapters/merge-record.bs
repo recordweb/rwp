@@ -1,0 +1,5 @@
+MergeRecord {#chapter-merge-record}
+=================================================
+
+See [Merges](#subsection-graph-merges) and [Cross-Record Merges](#subsection-cross-record-merges).
+
