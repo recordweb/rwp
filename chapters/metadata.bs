@@ -46,7 +46,7 @@ A [=Record=] MAY contain the following <dfn>governance metadata</dfn> fields. Th
     <tr><th>Field</th><th>Required</th><th>Type</th><th>Description</th></tr>
   </thead>
   <tbody>
-    <tr><td><code>owner</code></td><td>SHOULD</td><td>DID</td><td>The person or organisational unit currently responsible for the [=Record=]. See note below on the relationship between <code>owner</code> and snapshot <code>signature</code>.</td></tr>
+    <tr><td><code>owner</code></td><td>SHOULD</td><td>DID</td><td>The person or organisational unit currently responsible for the [=Record=], identified by an [=AgentRecord=]. See note below on the relationship between <code>owner</code> and snapshot <code>signature</code>.</td></tr>
     <tr><td><code>classification</code></td><td>SHOULD</td><td>String</td><td>Protection level per the organisation's internal scheme</td></tr>
     <tr><td><code>retentionPolicy</code></td><td>SHOULD</td><td>DID</td><td>Reference to a retention rule. See [Payload Deletion](#chapter-deletion) for how this field interacts with the applicable deletion regime.</td></tr>
     <tr><td><code>tags</code></td><td>MAY</td><td>Array&lt;String&gt;</td><td>Free-text markers for search and filtering</td></tr>

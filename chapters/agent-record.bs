@@ -1,0 +1,30 @@
+AgentRecord Specification {#chapter-agentrecord}
+=====================================
+
+## Purpose and scope ## {#section-agentrecord-purpose}
+
+Every `did:rwp` identifying a responsible party MUST identify either:
+
+1. an [=AgentRecord=]; or
+2. an [=InformationRecord=] or [=AssertionRecord=], where the applicable SchemaRecord explicitly permits a Record to act as the responsible party (for example, a `source-adapter` implementation identified by its own Record).
+
+An implementation MUST NOT use a `did:rwp` identifier in such a field to identify an entity that is neither an AgentRecord, an InformationRecord nor an AssertionRecord. Where no such typed identity exists or is required, the field MUST use an identifier scheme other than `did:rwp`, or the applicable SchemaRecord MUST define an untyped-reference exception explicitly.
+
+**Examples:**
+<table class="data">
+  <thead>
+    <tr><th>Type</th><th>Agent</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>DID identified</td>
+      <td><code>did:rwp:57b69e22-c8ae-4d5e-8675-ff454ea20fcc:adb9e1e3-4a51-42b2-870b-7bf2c560325f</code></td>
+    </tr>
+    <tr>
+      <td>Other</td>
+      <td><code>sam.doe@example.com</code></td>
+    </tr>
+  </tbody>
+</table>
+
+Additional fields are defined entirely by `extensions` in the `metadata` of the [=SchemaRecord=]. RWP does not itself define any AgentRecord type.

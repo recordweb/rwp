@@ -168,7 +168,7 @@ For every Record DID, a DID document MUST exist containing the following fields:
     <tr><td><code>created</code></td><td>MUST</td><td>ISO 8601 timestamp of DID creation</td></tr>
     <tr><td><code>updated</code></td><td>MUST</td><td>ISO 8601 timestamp of last DID document update</td></tr>
     <tr><td><code>currentVersion</code></td><td>MUST</td><td>Content hash of the current finalised version (empty for pure draft)</td></tr>
-    <tr><td><code>controller</code></td><td>MUST</td><td>DID of the controlling entity (organisation or person)</td></tr>
+    <tr><td><code>controller</code></td><td>MUST</td><td>DID of the controlling entity (organisation or person), identified by an [=AgentRecord=]</td></tr>
     <tr><td><code>verificationMethod</code></td><td>MUST</td><td>At least one verification method for signature validation</td></tr>
   </tbody>
 </table>
