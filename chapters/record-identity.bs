@@ -56,7 +56,7 @@ The `<version-hash>` component MUST NOT be part of the identity a Record.
       <td>MAY (optional)</td>
       <td>64 lowercase hex characters</td>
       <td>References a specific version of the Record</td>
-      <td>MUST NOT carry an algorithm prefix (see also [Chapter Payload](#https://recordweb.github.io/rwp/#section-payload-definition)); MUST NOT be treated as part of DID identity; resolver behaviour undefined</td>
+      <td>MUST NOT carry an algorithm prefix (see also (Chapter Payload)[https://recordweb.github.io/rwp/#section-payload-definition]); MUST NOT be treated as part of DID identity; resolver behaviour undefined</td>
     </tr>
     <tr>
       <td>Further segments</td>
