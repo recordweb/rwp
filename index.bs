@@ -154,7 +154,7 @@ path: chapters/agent-record.bs
 </pre>
 
 
-<h2 class="no-num no-toc" id="part-4">Part V: System Records</h2>
+<h2 class="no-num no-toc" id="part-5">Part V: System Records</h2>
 
 
 <pre class=include>
@@ -178,7 +178,7 @@ path: chapters/migration-record.bs
 </pre>
 
 
-<h2 class="no-num no-toc" id="part-5">Part VI:  Security & Privacy</h2>
+<h2 class="no-num no-toc" id="part-6">Part VI:  Security & Privacy</h2>
 
 <pre class=include>
 path: chapters/crypto-procedures.bs
@@ -189,7 +189,7 @@ path: chapters/privacy-security.bs
 </pre>
 
 
-<h2 class="no-num no-toc" id="part-6">Part VII: Miscellaneous</h2>
+<h2 class="no-num no-toc" id="part-7">Part VII: Miscellaneous</h2>
 
 <pre class=include>
 path: chapters/federation.bs
@@ -208,7 +208,7 @@ path: chapters/solid.bs
 </pre>
 
 
-<h2 class="no-num no-toc" id="part-7">Part VIII: Annexes</h2>
+<h2 class="no-num no-toc" id="part-8">Part VIII: Annexes</h2>
 
 <pre class=include>
 path: chapters/annex-a.bs
