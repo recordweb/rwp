@@ -119,18 +119,18 @@ Resolution of a locally scoped RWP DID requires additional local knowledge, conf
 
 ### Version Hash component ### {#subsection-did-hash}
 
-A RWP DID MAY include a third, optional segment, the <version-hash> component.
+A RWP DID MAY include a third, optional segment, the `<version-hash>` component.
 
-The <version-hash> component, where present, MUST be encoded as a bare SHA-256 digest in lowercase hexadecimal representation, consisting of exactly 64 characters. It MUST NOT carry an algorithm prefix (such as sha256:) or any other decorator, to avoid introducing an additional colon-delimited substructure within a colon-delimited DID segment.
+The `<version-hash>` component, where present, MUST be encoded as a bare SHA-256 digest in lowercase hexadecimal representation, consisting of exactly 64 characters. It MUST NOT carry an algorithm prefix (such as sha256:) or any other decorator, to avoid introducing an additional colon-delimited substructure within a colon-delimited DID segment.
 
-The <version-hash> component is not part of the identity of the DID. The identity of an RWP DID is established exclusively by the <namespace> and <record-id> components. Two DIDs that differ only in the presence, absence, or value of a <version-hash> component MUST be treated as identifying the same Record.
+The `<version-hash>` component is not part of the identity of the DID. The identity of an RWP DID is established exclusively by the `<namespace>` and `<record-id>` components. Two DIDs that differ only in the presence, absence, or value of a `<version-hash>` component MUST be treated as identifying the same Record.
 
-Where present, <version-hash> MAY be used by a resolver as an optional aid when resolving the DID to a specific Record version. 
+Where present, `<version-hash>` MAY be used by a resolver as an optional aid when resolving the DID to a specific Record version. 
 
 
 ### Additional segments ### {#subsection-did-segments}
 
-For a locally scoped RWP DID, the structure of the DID beyond the <namespace>, <record-id>, and <version-hash> component, including the number, syntax, and semantics of any further colon-delimited segments, is entirely implementation-defined.
+For a locally scoped RWP DID, the structure of the DID beyond the `<namespace>`, `<record-id>`, and `<version-hash>` component, including the number, syntax, and semantics of any further colon-delimited segments, is entirely implementation-defined.
 
 
 ## DID Document ## {#section-did-document}
