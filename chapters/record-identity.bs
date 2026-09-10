@@ -18,35 +18,120 @@ This identity:
 The identity of a [=Record=] MUST be expressed as a Decentralized Identifier (DID) in accordance with [[DID-CORE]].
 
 **Normative format:**
-`did:rwp:{namespace}:{unique-id}`
+`did:rwp:<namespace>:<record-id>[:<version-hash>]`
+
+The `<namespace>` component identifies the resolution scope of the DID.
+The `<record-id>` component identifies a Record within that scope.
+The `<version-hash>` component MUST NOT be part of the identity a Record.
 
 
 <table class="data">
   <thead>
-    <tr><th>Component</th><th>Requirement</th></tr>
+    <tr><th>Component</th><th>Requirement Level</th><th>Encoding</th><th>Meaning</th><th>Constraints</th></tr>
   </thead>
   <tbody>
     <tr>
-      <td><code>did</code></td>
-      <td>Literal; immutable</td>
-    </tr>
-    <tr>
-      <td><code>rwp</code></td>
-      <td>DID method for RecordWeb Protocol; immutable</td>
+      <td><code>did:rwp:</code></td>
+      <td>MUST</td>
+      <td>fixed, lowercase</td>
+      <td>DID scheme and method</td>
+      <td>MUST be prefixed exactly as shown; no uppercase variants permitted</td>
     </tr>
     <tr>
       <td><code>&lt;namespace&gt;</code></td>
-      <td>Identifier of the organisation or system; MUST be uniquely registered. During the transition phase, a namespace MAY be formed on the basis of the DNS domain name of the organisation (e.g. <code>did:rwp:bern.ch:&lt;uuid&gt;</code>).</td>
+      <td>MUST</td>
+      <td>UUIDv4 (global) or implementation-defined (local)</td>
+      <td>Identifies the resolution scope of the DID</td>
+      <td>See below, globally or locally resolvable RWP DIDs</td>
     </tr>
     <tr>
-      <td><code>&lt;unique-id&gt;</code></td>
-      <td>Unique identifier of the [=Record=] within the namespace; MUST be a UUID v4 or a cryptographically equivalent random value</td>
+      <td><code>&lt;record-id&gt;</code></td>
+      <td>MUST</td>
+      <td>UUIDv4 (global) or implementation-defined (local)</td>
+      <td>Identifies a Record within the namespace scope</td>
+      <td>See below, globally or locally resolvable RWP DIDs</td>
+    </tr>
+    <tr>
+      <td><code>&lt;version-hash&gt;</code></td>
+      <td>MAY (optional)</td>
+      <td>64 lowercase hex characters</td>
+      <td>References a specific version of the Record</td>
+      <td>MUST NOT carry an algorithm prefix (see also [Chapter Payload](#https://recordweb.github.io/rwp/#section-payload-definition)); MUST NOT be treated as part of DID identity; resolver behaviour undefined</td>
+    </tr>
+    <tr>
+      <td>Further segments</td>
+      <td>MUST NOT (global); MAY (local)</td>
+      <td>---</td>
+      <td>Reserved for local extension</td>
+      <td>Global: implementations MUST assume that no additional segments exist. Local: entirely implementation-defined, no constraint by this specification</td>
     </tr>
   </tbody>
 </table>
 
-**Example:**
-did:rwp:bern.ch:f47ac10b-58cc-4372-a567-0e02b2c3d479
+**Examples:**
+<table class="data">
+  <thead>
+    <tr><th>Type</th><th>DID-Example</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Global</td>
+      <td><code>did:rwp:57b69e22-c8ae-4d5e-8675-ff454ea20fcc:f0168b06-3ac8-41c7-b529-1e548e2128bb</code></td>
+    </tr>
+    <tr>
+      <td>Global with version-hash</td>
+      <td><code>did:rwp:57b69e22-c8ae-4d5e-8675-ff454ea20fcc:f0168b06-3ac8-41c7-b529-1e548e2128bb:1df47289b6c8374fa9d2d0399e3ccc88e2b0cd259b66fed96be6b92b69f3bbc2</code></td>
+    </tr>
+    <tr>
+      <td>Local</td>
+      <td><code>did:rwp:example.com:f47ac10b</code></td>
+    </tr>
+  </tbody>
+</table>
+
+
+### Globally resolvable RWP DIDs ### {#subsection-did-global}
+
+A globally resolvable RWP DID MUST use a Universally Unique Identifier as `<namespace>` and `<record-id>`, both encoded as UUID version 4 in canonical textual representation.
+
+The canonical UUIDv4 representation MUST:
+
+- consist of 36 characters;
+- use lowercase hexadecimal characters only;
+- use hyphens in the `8-4-4-4-12` form;
+- encode UUID version 4 and the RFC 4122 variant.
+
+`<namespace>` and `<record-id>` MUST be opaque. They MUST NOT encode organisational names, geographical identifiers, network locations, resolver endpoints, or other routing semantics.
+
+A DID conforming to this form is eligible for resolution through the `RecordWeb Global Namespace Registry (RW GNR)`. Eligibility for global resolution does not imply that the Record, its metadata, or a DID Document is publicly accessible (see also Chapter (Access Control)[https://recordweb.github.io/rwp/#chapter-access-control]).
+
+
+### Locally scoped RWP DIDs ### {#subsection-did-local}
+
+A DID whose `<namespace>` component does not conform to the canonical UUIDv4 syntax is a locally scoped RWP DID.
+
+A locally scoped RWP DID MUST NOT be submitted to, registered in, or resolved through the `RecordWeb Global Namespace Registry`.
+
+The `<record-id>` component of a locally scoped RWP DID is implementation-defined. It MAY use any syntax supported by the local resolution environment.
+
+Resolution of a locally scoped RWP DID requires additional local knowledge, configuration, credentials, or an applicable local resolver. A client that does not possess such information MUST treat the DID as not globally resolvable and MUST NOT infer a resolver endpoint from the DID value.
+
+
+### Version Hash component ### {#subsection-did-hash}
+
+A RWP DID MAY include a third, optional segment, the <version-hash> component.
+
+The <version-hash> component, where present, MUST be encoded as a bare SHA-256 digest in lowercase hexadecimal representation, consisting of exactly 64 characters. It MUST NOT carry an algorithm prefix (such as sha256:) or any other decorator, to avoid introducing an additional colon-delimited substructure within a colon-delimited DID segment.
+
+The <version-hash> component is not part of the identity of the DID. The identity of an RWP DID is established exclusively by the <namespace> and <record-id> components. Two DIDs that differ only in the presence, absence, or value of a <version-hash> component MUST be treated as identifying the same Record.
+
+Where present, <version-hash> MAY be used by a resolver as an optional aid when resolving the DID to a specific Record version. 
+
+
+### Additional segments ### {#subsection-did-segments}
+
+For a locally scoped RWP DID, the structure of the DID beyond the <namespace>, <record-id>, and <version-hash> component, including the number, syntax, and semantics of any further colon-delimited segments, is entirely implementation-defined.
+
 
 ## DID Document ## {#section-did-document}
 
