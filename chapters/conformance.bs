@@ -41,7 +41,46 @@ Depending on the applicable profile and Record type, validation MAY include:
 - Case-link and Merkle-root validation; and
 - AssertionRecord predicate and resource validation.
 
+A Record validation result MUST identify the tested Record or snapshot, the RWP version and validation rules applied, the time of validation, and whether validation succeeded or failed.
+
+Where validation fails, the result MUST identify the failed requirement or requirements sufficiently for an independent verifier to understand the basis of the failure.
+
 A Record validation result applies only to the tested Record or snapshot. A successful validation result MUST NOT be interpreted as an implementation assessment, attestation, or certification.
+
+
+### Implementation assessment ### {#subsection-implementation-assessment}
+
+Implementation assessment determines whether a named implementation version fulfils all requirements of one or more claimed RWP profiles and roles.
+
+An implementation assessment applies to the identified implementation version and claimed conformance scope. It does not establish the validity of every Record that the implementation has produced or may produce.
+
+An implementation assessment MUST include positive and negative test cases relevant to every claimed profile and role.
+
+The documented assessment method MUST identify the test cases, test data or test criteria, the assessment date, and the implementation version assessed.
+
+An assessment MAY use an official RecordWeb test suite, an independently developed test suite, or another documented assessment method.
+
+The result of an implementation assessment MAY be documented in a ConformanceRecord.
+
+
+### Attestation ### {#subsection-attestation}
+
+An attestation is a signed statement by an identifiable attester about an implementation assessment.
+
+An attestation MUST identify the assessed implementation version, the claimed profiles and roles, the applicable RWP version, the assessment method, and the attester.
+
+An attestation MAY be self-attested or independently assessed.
+
+A ConformanceRecord is the RWP SystemRecord used to express and preserve a durable, machine-readable attestation.
+
+
+### Certification ### {#subsection-certification}
+
+Certification is an institutional process outside the base RWP protocol.
+
+A certification scheme MAY use ConformanceRecords, test suites, and assessment reports as evidence. RWP does not define or require an accreditation authority, certification mark, liability regime, or certification revocation procedure.
+
+The presence of a ConformanceRecord MUST NOT by itself be interpreted as certification.
 
 ### Implementation assessment ### {#subsection-implementation-assessment}
 
@@ -375,6 +414,8 @@ A ConformanceRecord MAY contain an `assurance` field. If present, its value MUST
 - `self-attested`;
 - `independently-assessed`; or
 - `certified`.
+
+The `assurance` value describes the assurance context asserted for the claim. It is not an assessment method and does not replace the required `assessment.method` or evidence.
 
 The value `certified` is reserved for use by an external certification regime. Its use MUST NOT imply that RecordWeb operates, endorses, or recognises that regime.
 
