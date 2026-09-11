@@ -113,6 +113,16 @@ An implementation claiming `RWP Source Integration Conformant` MUST provide a so
 
 The source integration profile is independent of RWP Record production. A source-adapter MAY claim this profile without creating an RWP DID, Record, or snapshot.
 
+A source-adapter MAY provide source content and source-provenance information for a source object to a producer by any mechanism agreed by the involved implementations.
+
+The transfer mechanism, message format, transport, authentication, delivery semantics, retry behaviour, and operational workflow between a source-adapter and a producer are outside the scope of this specification. This scope boundary is deliberate and lasting; it is not intended to be narrowed by a future Source Integration binding without a dedicated specification change.
+
+The provision of source content or source-provenance information by a source-adapter MUST NOT, by itself, be represented as the creation, finalization, transfer, or validation of an RWP Record or RWP snapshot.
+
+A producer that creates or finalizes an RWP Record from source content supplied by a source-adapter MUST fulfil all requirements applicable to that Record, including applicable schema validation, payload-format validation, snapshot creation, integrity evidence, version-graph maintenance, and finalization requirements.
+
+A source-adapter MAY also exercise the producer role. Where it does so, it MUST fulfil all requirements applicable to that role and Record. A receiving implementation MUST apply the applicable consumer and custodian requirements to the resulting RWP Record or snapshot.
+
 For every source object within its claimed scope, a conforming source-adapter MUST make the corresponding source-provenance statement available to the receiving RWP implementation or include it in the exported representation. The statement MAY be represented as JSON. Where the source-adapter retains the statement after transfer, it MUST make the statement retrievable by the combination of `sourceSystem` and `sourceId`.
 
 If a source-adapter creates and finalises an RWP InformationRecord, it MUST additionally satisfy the applicable requirements of `RWP Information Record Conformant`.
@@ -160,7 +170,7 @@ RWP defines the following implementation roles:
 2. A <dfn>custodian</dfn> retains, manages, and makes Records or snapshots retrievable. For each Record representation within its claimed scope, a custodian MUST preserve the information required to verify its applicable RWP integrity and versioning requirements. A custodian is not required to create a new Record or snapshot solely by claiming the custodian role.
 3. A <dfn>consumer</dfn> retrieves and validates Records created or managed by another implementation. A consumer MUST validate all requirements applicable to its claimed profile and to the Record type being consumed. A consumer MUST NOT represent a Record as conformant when required validation fails.
 4. A <dfn>resolver</dfn> resolves <code>did:rwp</code> identifiers and returns the associated DID documents according to the applicable RWP DID-document requirements.
-5. A <dfn>source-adapter</dfn> obtains, normalises, and exposes source-provenance information from a non-RWP source system. A source-adapter MUST NOT represent a source-integrity statement as an RWP Record-integrity statement unless it has also created and validated the corresponding RWP Record representation.
+5. A <dfn>source-adapter</dfn> obtains, normalises, and exposes source-provenance information from a non-RWP source system. A source-adapter MAY provide source content to a producer through a mutually agreed mechanism. A source-adapter MUST NOT represent a source-integrity statement as an RWP Record-integrity statement unless it has also created and validated the corresponding RWP Record representation.
 6. An <dfn>attester</dfn> creates and finalises a ConformanceRecord concerning an implementation assessment.
 
 A role describes a responsibility. It does not imply that an implementation fulfils requirements outside its claimed profiles, roles, or exercised capabilities.
