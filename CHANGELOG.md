@@ -5,6 +5,26 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 Versioning follows [Semantic Versioning](https://semver.org/).
 
 ---
+## [0.0.7] – 2026-09-15
+
+Implemented CfC 4 outcomes. See 
+DID:
+- [RWP#23](https://github.com/recordweb/rwp/issues/23)
+- [RWP#27](https://github.com/recordweb/rwp/issues/27)
+
+GNR:
+- [RWP#24](https://github.com/recordweb/rwp/issues/24)
+- [RWP#25](https://github.com/recordweb/rwp/issues/25)
+- [RWP#26](https://github.com/recordweb/rwp/issues/26)
+
+SI:
+- [RWP#22](https://github.com/recordweb/rwp/issues/22)
+
+Conformance:
+- [RWP#17](https://github.com/recordweb/rwp/issues/17)
+
+Editorial:
+- Version update
 
 ## [0.0.6] – 2026-08-31
 
