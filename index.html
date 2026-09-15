@@ -8,7 +8,7 @@
   <meta content="Bikeshed version ac92c2f0d, updated Fri Aug 21 16:01:29 2026 -0700" name="generator">
   <link href="https://recordweb.github.io/rwp/" rel="canonical">
   <link href="https://www.w3.org/2008/site/images/favicon.ico" rel="icon">
-  <meta content="8761c7515bfc7f75b243e90d9c5b64c3e14b780a" name="revision">
+  <meta content="e99a16005372a7b33933dfafedbb9dcecce45607" name="revision">
   <meta content="dark light" name="color-scheme">
   <link href="https://www.w3.org/StyleSheets/TR/2021/dark.css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css">
 <style>/* Boilerplate: style-autolinks */
@@ -780,6 +780,9 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
         <li><a href="#subsection-implementation-assessment"><span class="secno">2.2.2</span> <span class="content">Implementation assessment</span></a>
         <li><a href="#subsection-attestation"><span class="secno">2.2.3</span> <span class="content">Attestation</span></a>
         <li><a href="#subsection-certification"><span class="secno">2.2.4</span> <span class="content">Certification</span></a>
+        <li><a href="#subsection-implementation-assessment①"><span class="secno">2.2.5</span> <span class="content">Implementation assessment</span></a>
+        <li><a href="#subsection-attestation①"><span class="secno">2.2.6</span> <span class="content">Attestation</span></a>
+        <li><a href="#subsection-certification①"><span class="secno">2.2.7</span> <span class="content">Certification</span></a>
        </ol>
       <li>
        <a href="#section-conformance-profiles"><span class="secno">2.3</span> <span class="content">Profiles</span></a>
@@ -1104,17 +1107,35 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li data-md>
      <p>AssertionRecord predicate and resource validation.</p>
    </ul>
+   <p>A Record validation result MUST identify the tested Record or snapshot, the RWP version and validation rules applied, the time of validation, and whether validation succeeded or failed.</p>
+   <p>Where validation fails, the result MUST identify the failed requirement or requirements sufficiently for an independent verifier to understand the basis of the failure.</p>
    <p>A Record validation result applies only to the tested Record or snapshot. A successful validation result MUST NOT be interpreted as an implementation assessment, attestation, or certification.</p>
    <h4 class="heading settled" data-level="2.2.2" id="subsection-implementation-assessment"><span class="secno">2.2.2. </span><span class="content">Implementation assessment</span><a class="self-link" href="#subsection-implementation-assessment"></a></h4>
    <p>Implementation assessment determines whether a named implementation version fulfils all requirements of one or more claimed RWP profiles and roles.</p>
+   <p>An implementation assessment applies to the identified implementation version and claimed conformance scope. It does not establish the validity of every Record that the implementation has produced or may produce.</p>
    <p>An implementation assessment MUST include positive and negative test cases relevant to every claimed profile and role.</p>
+   <p>The documented assessment method MUST identify the test cases, test data or test criteria, the assessment date, and the implementation version assessed.</p>
    <p>An assessment MAY use an official RecordWeb test suite, an independently developed test suite, or another documented assessment method.</p>
    <p>The result of an implementation assessment MAY be documented in a ConformanceRecord.</p>
    <h4 class="heading settled" data-level="2.2.3" id="subsection-attestation"><span class="secno">2.2.3. </span><span class="content">Attestation</span><a class="self-link" href="#subsection-attestation"></a></h4>
    <p>An attestation is a signed statement by an identifiable attester about an implementation assessment.</p>
+   <p>An attestation MUST identify the assessed implementation version, the claimed profiles and roles, the applicable RWP version, the assessment method, and the attester.</p>
+   <p>An attestation MAY be self-attested or independently assessed.</p>
+   <p>A ConformanceRecord is the RWP SystemRecord used to express and preserve a durable, machine-readable attestation.</p>
+   <h4 class="heading settled" data-level="2.2.4" id="subsection-certification"><span class="secno">2.2.4. </span><span class="content">Certification</span><a class="self-link" href="#subsection-certification"></a></h4>
+   <p>Certification is an institutional process outside the base RWP protocol.</p>
+   <p>A certification scheme MAY use ConformanceRecords, test suites, and assessment reports as evidence. RWP does not define or require an accreditation authority, certification mark, liability regime, or certification revocation procedure.</p>
+   <p>The presence of a ConformanceRecord MUST NOT by itself be interpreted as certification.</p>
+   <h4 class="heading settled" data-level="2.2.5" id="subsection-implementation-assessment①"><span class="secno">2.2.5. </span><span class="content">Implementation assessment</span><a class="self-link" href="#subsection-implementation-assessment①"></a></h4>
+   <p>Implementation assessment determines whether a named implementation version fulfils all requirements of one or more claimed RWP profiles and roles.</p>
+   <p>An implementation assessment MUST include positive and negative test cases relevant to every claimed profile and role.</p>
+   <p>An assessment MAY use an official RecordWeb test suite, an independently developed test suite, or another documented assessment method.</p>
+   <p>The result of an implementation assessment MAY be documented in a ConformanceRecord.</p>
+   <h4 class="heading settled" data-level="2.2.6" id="subsection-attestation①"><span class="secno">2.2.6. </span><span class="content">Attestation</span><a class="self-link" href="#subsection-attestation①"></a></h4>
+   <p>An attestation is a signed statement by an identifiable attester about an implementation assessment.</p>
    <p>An attestation MAY be self-attested or independently assessed.</p>
    <p>A ConformanceRecord is the RWP SystemRecord used to preserve such an attestation.</p>
-   <h4 class="heading settled" data-level="2.2.4" id="subsection-certification"><span class="secno">2.2.4. </span><span class="content">Certification</span><a class="self-link" href="#subsection-certification"></a></h4>
+   <h4 class="heading settled" data-level="2.2.7" id="subsection-certification①"><span class="secno">2.2.7. </span><span class="content">Certification</span><a class="self-link" href="#subsection-certification①"></a></h4>
    <p>Certification is an institutional process outside the base RWP protocol.</p>
    <p>A certification scheme MAY use ConformanceRecords, test suites, and assessment reports as evidence. RWP does not define or require an accreditation authority, certification mark, liability regime, or certification revocation procedure.</p>
    <p>The presence of a ConformanceRecord MUST NOT by itself be interpreted as certification.</p>
@@ -1396,6 +1417,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li data-md>
      <p><code>certified</code>.</p>
    </ul>
+   <p>The <code>assurance</code> value describes the assurance context asserted for the claim. It is not an assessment method and does not replace the required <code>assessment.method</code> or evidence.</p>
    <p>The value <code>certified</code> is reserved for use by an external certification regime. Its use MUST NOT imply that RecordWeb operates, endorses, or recognises that regime.</p>
    <p>Each evidence entry MUST identify its type. Each evidence entry that refers to externally retrievable evidence MUST include a resolvable <code>url</code> and a cryptographic <code>hash</code> of the referenced evidence bytes. An evidence entry without a <code>url</code> MUST include a cryptographic <code>hash</code> and sufficient embedded or separately identified content for an independent verifier to obtain the hashed evidence.</p>
    <p>A ConformanceRecord MAY include <code>expiresAt</code>.</p>
