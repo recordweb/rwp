@@ -103,6 +103,8 @@ A CaseRecord containing one or more soft links MUST NOT be finalised. Every soft
 
 A system MUST check during a CaseRecord finalisation attempt whether soft links are present. If soft links are present, the system MUST reject the finalisation and return the unresolved soft links.
 
+A notification, callback, or other message received through Source Integration MAY trigger a refresh, retry, or user-interface indication. It MUST NOT replace the target resolution and validation required before a producer finalizes a CaseRecord containing a hard link.
+
 ## CaseRecord-to-CaseRecord Links ## {#section-case-links}
 
 A [=CaseRecord=] MAY link to another CaseRecord through a [=soft link=] or a [=hard link=].
