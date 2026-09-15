@@ -5,40 +5,116 @@ Federation {#chapter-federation}
 
 RWP federation is modelled after the DNS architecture: a **decentralised, hierarchical namespace model** without a single point of failure.
 
-Every RWP namespace (the `<namespace>` component of a DID, e.g. `bern.ch`) is operated by the owning organisation. Namespace resolvers are federated: each resolver knows its own namespace and can route resolution requests for unknown namespaces to peer resolvers.
+Every RWP namespace (the `<namespace>` component of a DID, e.g. `57b69e22-c8ae-4d5e-8675-ff454ea20fcc`) is operated by the owning organisation. Namespace resolvers are federated: each resolver knows its own namespace and can route resolution requests for unknown namespaces to peer resolvers.
 
-## Namespace Registry ## {#section-federation-namespace-registry}
 
-The authoritative namespace registry is the subject of a future RWP extension. During the transition phase, the following applies:
+## Global Namespace Registry ## {#section-gnr}
 
-- A namespace SHOULD be formed on the basis of the DNS domain name of the organisation (e.g. `bern.ch`, `bag.admin.ch`, `usz.ch`)
-- DNS ownership of the domain implies namespace authority, no separate registration required during transition
-- Namespace conflicts are resolved by DNS priority
+### Purpose ### {#subsection-gnr-purpose}
 
-## Resolver Requirements ## {#section-federation-resolver-requirements}
+The Global Namespace Registry (GNR) is a distributed namespace directory for globally resolvable `did:rwp` identifiers. It maps a Global Namespace Identifier to the DID Resolver endpoint responsible for that namespace.
 
-An RWP federation resolver MUST:
+The GNR is not a DID Resolver. It does not resolve individual `did:rwp` identifiers, and it does not participate in Record access.
 
-- Accept DID resolution requests of the method `rwp`
-- Resolve DIDs within its own namespace directly
-- For unknown namespaces: query the DNS TXT record of the namespace domain for the `_rwp-resolver` entry
-- Cache resolver endpoints with a TTL of at least 300 seconds
-- Return a `404` response when neither the DID nor a resolver for its namespace can be found
 
-**DNS TXT record format for resolver discovery:**
+### Scope 3## {#subsection-gnr-scope}
 
-```
-_rwp-resolver.bern.ch. 300 IN TXT "v=rwp1;endpoint=https://resolver.bern.ch/api/v1"
-```
+For a Global Namespace Identifier, as defined in [Record Identity](#chapter-record-identity), the GNR MUST provide routing information identifying the DID Resolver responsible for resolving DIDs within that namespace.
+
+The GNR MUST NOT resolve or store any of the following:
+
+- DID Documents;
+- Records or Record content;
+- access-control decisions;
+- organisational directory information.
+
+A GNR deployment that stores or exposes any of the above is not conformant with RWP, irrespective of the underlying
+implementation technology.
+
+
+### Namespace Classification ### {#subsection-gnr-classification}
+
+A conforming GNR implementation MUST classify the namespace component of a `did:rwp` identifier, per [Record Identity](#chapter-record-identity), before attempting resolution.
+
+For a globally resolvable RWP DID, the GNR Resolver MUST obtain the DID Resolver endpoint through a configured GNR peer before attempting DID resolution.
+
+For a locally scoped RWP DID, the GNR Resolver MUST NOT submit the local namespace to the GNR network. It MAY use a local resolution mechanism only where the necessary local context is available.
+
+
+### Global Namespace Registry Response ### {#subsection-gnr-response}
+
+A GNR response MUST identify the namespace for which it was issued and MUST provide the currently applicable DID Resolver endpoint.
+
+A successful namespace resolution MUST NOT be interpreted as evidence that:
+
+- the DID exists;
+- its DID Document is publicly accessible; or
+- the associated Record can be accessed.
+
+
+### Resolution Obligation ### {#subsection-gnr-resolution}
+
+A system MUST resolve the complete DID against the DID Resolver identified by the GNR.
+
+A system MUST obtain RecordWeb service information from the resulting DID Document. A system MUST NOT infer a Record service endpoint directly from the namespace or DID value.
+
+
+### Platform ### {#subsection-gnr-platform}
+
+The GNR MUST be operated on Hyperledger Fabric. This requirement ensures interoperability between independently operated GNR nodes sharing a common ledger.
+
+### Registry Data Model ### {#subsection-gnr-datamodel}
+
+The GNR MUST accept registrations only for Global Namespace Identifiers, per [Record Identity](#chapter-record-identity), and MUST reject registrations of locally scoped namespaces.
+
+The Global Namespace Identifier MUST serve as the unique key for its current routing record. For every registered namespace, the current routing record MUST contain at least:
+
+- `namespace`;
+- `resolverEndpoint`;
+- `registeredBy`;
+- `registeredAt`;
+- `txId`.
+
+The `registeredBy` value MUST be derived from the registrant's authenticated network identity and MUST NOT be settable through transaction input.
+
+### Registry Operations ### {#subsection-gnr-operations}
+
+The GNR MUST provide an operation equivalent to `ResolveNamespace(namespace)` that returns the currently applicable routing record.
+
+The GNR MUST provide an operation equivalent to `GetNamespaceHistory(namespace)` for authorised audit, verification, or migration use cases. Historical resolution MUST NOT be required for the normal client resolution path defined in [[#subsection-gnr-resolution]].
+
+The transaction history underlying `GetNamespaceHistory` MUST be immutable.
+
+
+### Governance Requirements ### {#subsection-gnr-governance}
+
+The GNR network MUST have a named operating organisation: `RecordWeb Trust Association` (`recordweb.org`).
+
+The operating organisation MUST publish and maintain a governance framework applicable to the GNR network. The governance framework MUST define, at minimum:
+
+- eligibility, admission, suspension, withdrawal, and exclusion of participating organisations;
+- the process for registering, updating, suspending, and, where necessary, retiring Global Namespace Identifiers;
+- roles and authorisation requirements for network identities and namespace registrars;
+- endorsement and approval requirements for registry mutations and network configuration changes;
+- procedures for compromised keys, incorrect resolver endpoints, service outages, and other security incidents;
+- procedures for chaincode, platform configuration, and protocol-profile upgrades;
+- availability, monitoring, backup, recovery, and continuity requirements;
+- mechanisms for publishing trusted GNR peer entry points;
+- audit access and retention requirements for namespace-routing history.
+
+The governance framework MAY define additional operational, organisational, legal, financial, or jurisdiction-specific provisions.
+
+A conforming GNR deployment MUST implement its applicable governance decisions through network identities, endorsement policies, channel configuration, chaincode authorisation rules, or documented operational controls.
+
 
 ## Cross-Namespace Links ## {#section-federation-cross-namespace}
 
-A [=Record=] in namespace `bern.ch` MAY contain [=hard links=] to [=Records=] in other namespaces (e.g. `did:rwp:bag.admin.ch:guideline-001`).
+A [=Record=] in namespace `57b69e22-c8ae-4d5e-8675-ff454ea20fcc` MAY contain [=hard links=] to [=Records=] in other namespaces (e.g. `did:rwp:f32bcec3-b453-4cbb-b416-132117325dc3:d460adee-e574-4064-86c2-fd58e3f678ed`).
 
 When resolving cross-namespace links, a system MUST:
 
 1. Extract the namespace component from the linked DID
-2. Discover the resolver endpoint via DNS TXT lookup ([Resolver Requirements](#section-federation-resolver-requirements))
+2. Discover the resolver endpoint via GNR lookup
 3. Verify the [=snapshot=] hash of the linked [=Record=] after retrieval
 4. Cache the resolved [=snapshot=] locally with the original hash for integrity verification
 

@@ -295,7 +295,7 @@ Support for a SystemRecord capability MUST be required only where an implementat
   </tbody>
 </table>
 
-A resolver claiming the `resolver` role MUST satisfy the DID resolution requirements defined in [DID Resolver Requirements](#section-did-resolver) and, where applicable, [Resolver Requirements](#section-federation-resolver-requirements).
+A resolver claiming the `resolver` role MUST satisfy the DID resolution requirements defined in [DID Resolver Requirements](#section-did-resolver) and, where applicable, [Global Namespace Registry](#section-gnr).
 
 An implementation MUST NOT claim support for a profile or role unless it fulfils all requirements applicable to that claim.
 
