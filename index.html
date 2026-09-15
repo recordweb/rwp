@@ -8,7 +8,7 @@
   <meta content="Bikeshed version ac92c2f0d, updated Fri Aug 21 16:01:29 2026 -0700" name="generator">
   <link href="https://recordweb.github.io/rwp/" rel="canonical">
   <link href="https://www.w3.org/2008/site/images/favicon.ico" rel="icon">
-  <meta content="a064c4d631d53973a7fd48294e7e648a6fa8d930" name="revision">
+  <meta content="8761c7515bfc7f75b243e90d9c5b64c3e14b780a" name="revision">
   <meta content="dark light" name="color-scheme">
   <link href="https://www.w3.org/StyleSheets/TR/2021/dark.css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css">
 <style>/* Boilerplate: style-autolinks */
@@ -1140,6 +1140,11 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <h4 class="heading settled" data-level="2.3.5" id="subsection-source-integration-profile"><span class="secno">2.3.5. </span><span class="content">RWP Source Integration Conformant</span><a class="self-link" href="#subsection-source-integration-profile"></a></h4>
    <p>An implementation claiming <code>RWP Source Integration Conformant</code> MUST provide a source-provenance statement for every source object that it exposes to, captures for, or transfers into an RWP context.</p>
    <p>The source integration profile is independent of RWP Record production. A source-adapter MAY claim this profile without creating an RWP DID, Record, or snapshot.</p>
+   <p>A source-adapter MAY provide source content and source-provenance information for a source object to a producer by any mechanism agreed by the involved implementations.</p>
+   <p>The transfer mechanism, message format, transport, authentication, delivery semantics, retry behaviour, and operational workflow between a source-adapter and a producer are outside the scope of this specification. This scope boundary is deliberate and lasting; it is not intended to be narrowed by a future Source Integration binding without a dedicated specification change.</p>
+   <p>The provision of source content or source-provenance information by a source-adapter MUST NOT, by itself, be represented as the creation, finalization, transfer, or validation of an RWP Record or RWP snapshot.</p>
+   <p>A producer that creates or finalizes an RWP Record from source content supplied by a source-adapter MUST fulfil all requirements applicable to that Record, including applicable schema validation, payload-format validation, snapshot creation, integrity evidence, version-graph maintenance, and finalization requirements.</p>
+   <p>A source-adapter MAY also exercise the producer role. Where it does so, it MUST fulfil all requirements applicable to that role and Record. A receiving implementation MUST apply the applicable consumer and custodian requirements to the resulting RWP Record or snapshot.</p>
    <p>For every source object within its claimed scope, a conforming source-adapter MUST make the corresponding source-provenance statement available to the receiving RWP implementation or include it in the exported representation. The statement MAY be represented as JSON. Where the source-adapter retains the statement after transfer, it MUST make the statement retrievable by the combination of <code>sourceSystem</code> and <code>sourceId</code>.</p>
    <p>If a source-adapter creates and finalises an RWP InformationRecord, it MUST additionally satisfy the applicable requirements of <code>RWP Information Record Conformant</code>.</p>
    <p>A source-provenance statement MUST contain:</p>
@@ -1193,7 +1198,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li data-md>
      <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="resolver">resolver</dfn> resolves <code>did:rwp</code> identifiers and returns the associated DID documents according to the applicable RWP DID-document requirements.</p>
     <li data-md>
-     <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="source-adapter">source-adapter</dfn> obtains, normalises, and exposes source-provenance information from a non-RWP source system. A source-adapter MUST NOT represent a source-integrity statement as an RWP Record-integrity statement unless it has also created and validated the corresponding RWP Record representation.</p>
+     <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="source-adapter">source-adapter</dfn> obtains, normalises, and exposes source-provenance information from a non-RWP source system. A source-adapter MAY provide source content to a producer through a mutually agreed mechanism. A source-adapter MUST NOT represent a source-integrity statement as an RWP Record-integrity statement unless it has also created and validated the corresponding RWP Record representation.</p>
     <li data-md>
      <p>An <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="attester">attester</dfn> creates and finalises a ConformanceRecord concerning an implementation assessment.</p>
    </ol>
@@ -2363,6 +2368,7 @@ rejected (terminal state, not linkable)
    <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="soft-link">soft link</dfn> is a working reference that points to a target <code>recordDid</code> without identifying a target snapshot. A soft link MAY point to a <a data-link-type="dfn" href="#draft" id="ref-for-draft④">draft</a> or <a data-link-type="dfn" href="#finalized" id="ref-for-finalized⑦">finalized</a> Record.</p>
    <p>A CaseRecord containing one or more soft links MUST NOT be finalised. Every soft link MUST be converted to a hard link before finalisation of the CaseRecord.</p>
    <p>A system MUST check during a CaseRecord finalisation attempt whether soft links are present. If soft links are present, the system MUST reject the finalisation and return the unresolved soft links.</p>
+   <p>A notification, callback, or other message received through Source Integration MAY trigger a refresh, retry, or user-interface indication. It MUST NOT replace the target resolution and validation required before a producer finalizes a CaseRecord containing a hard link.</p>
    <h3 class="heading settled" data-level="10.5" id="section-case-links"><span class="secno">10.5. </span><span class="content">CaseRecord-to-CaseRecord Links</span><a class="self-link" href="#section-case-links"></a></h3>
    <p>A <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord⑥">CaseRecord</a> MAY link to another CaseRecord through a <a data-link-type="dfn" href="#soft-link" id="ref-for-soft-link">soft link</a> or a <a data-link-type="dfn" href="#hard-link" id="ref-for-hard-link">hard link</a>.</p>
    <p>A hard link to a CaseRecord MUST identify a <a data-link-type="dfn" href="#finalized" id="ref-for-finalized⑧">finalized</a> snapshot of the target CaseRecord through its <code>recordDid</code> and <code>snapshot</code>.</p>
