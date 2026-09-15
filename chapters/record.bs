@@ -61,11 +61,17 @@ rw:MigrationRecord
 
 rw:ConformanceRecord
   rdfs:subClassOf rw:SystemRecord .
+
+rw:Agent
+  rdfs:subClassOf prov:Agent .
+
+rw:AgentRecord
+  rdfs:subClassOf rw:Agent .
 ```
 
 ## Record taxonomy ## {#section-record-taxonomy}
 
-Every [=Record=] has one primary conceptual purpose. For the purposes of this specification, a Record is classified as an [=InformationRecord=], a [=RelationRecord=], or a [=SystemRecord=], as described in [[RWC]].
+Every [=Record=] has one primary conceptual purpose. For the purposes of this specification, a Record is classified as an [=InformationRecord=], a [=RelationRecord=], an [=AgentRecord=] or a [=SystemRecord=], as described in [[RWC]].
 
 Any concrete Record Type is defined by a SchemaRecord in accordance with [Record Type Definition](#section-record-types-definition).
 
@@ -81,8 +87,9 @@ A <dfn>SystemRecord</dfn> is a Record whose primary purpose is to define, docume
 
 A [=CaseRecord=] is a [=RelationRecord=]. It represents a persisted, governed view of linked Records. A CaseRecord MUST NOT be a container and MUST NOT contain the payload of the Records to which it relates. The protocol representation and validation requirements for CaseRecords are defined in [CaseRecord Specification](#chapter-caserecord).
 
-An [=AssertionRecord=] is a [=RelationRecord=]. It represents an attributable assertion that a subject resource stands in a specified relationship to an object resource. The protocol representation and validation requirements for
-AssertionRecords are defined in [AssertionRecord Specification](#chapter-assertionrecord).
+An [=AssertionRecord=] is a [=RelationRecord=]. It represents an attributable assertion that a subject resource stands in a specified relationship to an object resource. The protocol representation and validation requirements for AssertionRecords are defined in [AssertionRecord Specification](#chapter-assertionrecord).
+
+An <dfn>AgentRecord</dfn> is a Record whose primary purpose is to identifies an entity that bears responsibility for a [=Record=], in the sense of prov:Agent ([[PROVO]]). The protocol representation and validation requirements for AgentRecords are defined in [AgentRecord Specification](#chapter-agentrecord).
 
 A [=SchemaRecord=] is a [=SystemRecord=]. It defines a concrete Record Type and its associated schema and validation requirements.
 
