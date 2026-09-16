@@ -18,11 +18,12 @@ This identity:
 The identity of a [=Record=] MUST be expressed as a Decentralized Identifier (DID) in accordance with [[DID-CORE]].
 
 **Normative format:**
-`did:rwp:<namespace>:<record-id>[:<version-hash>]`
+`did:rwp:<namespace>:<record-id>[:<versionHash>][:<contentHash>]`
 
 The `<namespace>` component identifies the resolution scope of the DID.
 The `<record-id>` component identifies a Record within that scope.
-The `<version-hash>` component MUST NOT be part of the identity a Record.
+The `<versionHash>` component MUST NOT be part of the identity a Record.
+The `<contentHash>` component MUST NOT be part of the identity a Record.
 
 
 <table class="data">
@@ -52,10 +53,17 @@ The `<version-hash>` component MUST NOT be part of the identity a Record.
       <td>See below, globally or locally resolvable RWP DIDs</td>
     </tr>
     <tr>
-      <td><code>&lt;version-hash&gt;</code></td>
+      <td><code>&lt;versionHash&gt;</code></td>
       <td>MAY (optional)</td>
       <td>64 lowercase hex characters</td>
       <td>References a specific version of the Record</td>
+      <td>MUST NOT carry an algorithm prefix (see also (Chapter Payload)[https://recordweb.github.io/rwp/#section-payload-definition]); MUST NOT be treated as part of DID identity; resolver behaviour undefined</td>
+    </tr>
+    <tr>
+      <td><code>&lt;contentHash&gt;</code></td>
+      <td>MAY (optional)</td>
+      <td>64 lowercase hex characters</td>
+      <td>References a specific content of a Version of the Record</td>
       <td>MUST NOT carry an algorithm prefix (see also (Chapter Payload)[https://recordweb.github.io/rwp/#section-payload-definition]); MUST NOT be treated as part of DID identity; resolver behaviour undefined</td>
     </tr>
     <tr>
@@ -79,7 +87,7 @@ The `<version-hash>` component MUST NOT be part of the identity a Record.
       <td><code>did:rwp:57b69e22-c8ae-4d5e-8675-ff454ea20fcc:f0168b06-3ac8-41c7-b529-1e548e2128bb</code></td>
     </tr>
     <tr>
-      <td>Global with version-hash</td>
+      <td>Global with versionHash</td>
       <td><code>did:rwp:57b69e22-c8ae-4d5e-8675-ff454ea20fcc:f0168b06-3ac8-41c7-b529-1e548e2128bb:1df47289b6c8374fa9d2d0399e3ccc88e2b0cd259b66fed96be6b92b69f3bbc2</code></td>
     </tr>
     <tr>
@@ -117,20 +125,20 @@ The `<record-id>` component of a locally scoped RWP DID is implementation-define
 Resolution of a locally scoped RWP DID requires additional local knowledge, configuration, credentials, or an applicable local resolver. A client that does not possess such information MUST treat the DID as not globally resolvable and MUST NOT infer a resolver endpoint from the DID value.
 
 
-### Version Hash component ### {#subsection-did-hash}
+### Version and Content Hash component ### {#subsection-did-hash}
 
-A RWP DID MAY include a third, optional segment, the `<version-hash>` component.
+A RWP DID MAY include optional segments.
 
-The `<version-hash>` component, where present, MUST be encoded as a bare SHA-256 digest in lowercase hexadecimal representation, consisting of exactly 64 characters. It MUST NOT carry an algorithm prefix (such as sha256:) or any other decorator, to avoid introducing an additional colon-delimited substructure within a colon-delimited DID segment.
+The `<versionHash>` and `<contentHash>` component, where present, MUST be encoded as a bare SHA-256 digest in lowercase hexadecimal representation, consisting of exactly 64 characters. It MUST NOT carry an algorithm prefix (such as sha256:) or any other decorator, to avoid introducing an additional colon-delimited substructure within a colon-delimited DID segment.
 
-The `<version-hash>` component is not part of the identity of the DID. The identity of an RWP DID is established exclusively by the `<namespace>` and `<record-id>` components. Two DIDs that differ only in the presence, absence, or value of a `<version-hash>` component MUST be treated as identifying the same Record.
+The `<versionHash>` and the `<contentHash>`components are not part of the identity of the DID. The identity of an RWP DID is established exclusively by the `<namespace>` and `<record-id>` components. Two DIDs that differ only in the presence, absence, or value of a `<versionHash>` and `<contentHash>` component MUST be treated as identifying the same Record.
 
-Where present, `<version-hash>` MAY be used by a resolver as an optional aid when resolving the DID to a specific Record version. 
+Where present, `<versionHash>` and `<contentHash>` MAY be used by a resolver as an optional aid when resolving the DID to a specific Record version. 
 
 
 ### Additional segments ### {#subsection-did-segments}
 
-For a locally scoped RWP DID, the structure of the DID beyond the `<namespace>`, `<record-id>`, and `<version-hash>` component, including the number, syntax, and semantics of any further colon-delimited segments, is entirely implementation-defined.
+For a locally scoped RWP DID, the structure of the DID beyond the `<namespace>`, `<record-id>`, `<versionHash>` and `<contentHash>` component, including the number, syntax, and semantics of any further colon-delimited segments, is entirely implementation-defined.
 
 
 ## DID Document ## {#section-did-document}
@@ -174,6 +182,18 @@ For every Record DID, a DID document MUST exist containing the following fields:
 </table>
 
 The DID document MUST be updated when the physical storage location changes (`recordEndpoint`, `updated`, `currentVersion`). All other fields MUST NOT be changed.
+
+A `did:rwp` resolution result MAY include the DID Resolution metadata properties `versionId` and `versionTime`. 
+
+The `versionId` MUST be calculated as follows:
+
+1. Serialise the DID document fields `id`, `recordEndpoint`, `created`, `updated`, `currentVersion`, `controller` and `verificationMethod` (without `versionId` and `versionTime` themselves) as canonical JSON ([[RFC8785]])
+2. Calculate SHA-256 over the result
+
+```
+contentHash = SHA-256( canonicalize({id, recordEndpoint, created, updated, currentVersion, controller, verificationMethod}) )
+```
+
 
 ## DID Resolver Requirements ## {#section-did-resolver}
 

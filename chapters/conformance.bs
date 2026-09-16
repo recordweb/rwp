@@ -214,6 +214,9 @@ RWP defines the following implementation roles:
 
 A role describes a responsibility. It does not imply that an implementation fulfils requirements outside its claimed profiles, roles, or exercised capabilities.
 
+An implementation MAY perform more than one RWP role.
+
+
 ## Capability-bound requirements ## {#section-conformance-requirements}
 
 Support for a SystemRecord capability MUST be required only where an implementation claims or exercises that capability.
