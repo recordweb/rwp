@@ -8,7 +8,7 @@
   <meta content="Bikeshed version ea4009a02, updated Thu Sep 17 15:24:44 2026 -0700" name="generator">
   <link href="https://recordweb.github.io/rwp/" rel="canonical">
   <link href="https://www.w3.org/2008/site/images/favicon.ico" rel="icon">
-  <meta content="4463496504f29d04c829abce420e5cd2286fed0a" name="revision">
+  <meta content="cc076826e329a6481a4ee10100ff8bd58852be6e" name="revision">
   <meta content="dark light" name="color-scheme">
   <link href="https://www.w3.org/StyleSheets/TR/2021/dark.css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css">
 <style>/* Boilerplate: style-autolinks */
@@ -751,7 +751,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   </div>
   <div class="p-summary" data-fill-with="abstract">
    <h2 class="heading no-num no-ref no-toc settled" id="abstract"><span class="content">Abstract</span></h2>
-   <p>This is the input for the proposed Community Group. The RecordWeb Protocol (RWP) is the normative technical specification for the creation, identification, versioning, linking, and cryptographic proof of Records in RWP-compliant systems. It defines the requirements a system must fulfil in order to create, manage, link, and prove Records in the sense of the RecordWeb Concept (<a data-link-type="biblio" href="#biblio-rwc" title="RecordWeb Concept (RWC)">[RWC]</a>). RWP uses RFC 2119 compliance terminology and covers Record identity (DID), snapshot structure, payload validation, version graph (DAG), Case specification, integrity procedures, federation, and payload deletion across 14 chapters and three normative annexes.</p>
+   <p>This is the input for the proposed Community Group. The RecordWeb Protocol (RWP) is the normative technical specification for the creation, identification, versioning, linking, and cryptographic proof of Records in RWP-compliant systems. It defines the requirements a system must fulfil in order to create, manage, link, and prove Records in the sense of the RecordWeb Concept (<a data-link-type="biblio" href="#biblio-rwc" title="RecordWeb Concept (RWC)">[RWC]</a>). RWP uses RFC 2119 compliance terminology and covers Record identity (DID), version structure, payload validation, version graph (DAG), Case specification, integrity procedures, federation, and payload deletion across 14 chapters and three normative annexes.</p>
   </div>
   <h2 class="heading no-num no-ref no-toc settled" id="sotd"><span class="content">Status of this document</span></h2>
   <div data-fill-with="status">
@@ -937,7 +937,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
      <ol class="toc">
       <li><a href="#section-crypto-procedures-hashing"><span class="secno">19.1</span> <span class="content">Hashing Procedure</span></a>
       <li><a href="#section-crypto-procedures-canonical-json"><span class="secno">19.2</span> <span class="content">Canonical JSON Serialisation</span></a>
-      <li><a href="#section-crypto-procedures-snapshot-integrity"><span class="secno">19.3</span> <span class="content">Snapshot Integrity</span></a>
+      <li><a href="#section-crypto-procedures-version-integrity"><span class="secno">19.3</span> <span class="content">Version Integrity</span></a>
       <li><a href="#section-crypto-procedures-signature"><span class="secno">19.4</span> <span class="content">Signature Procedure</span></a>
       <li><a href="#section-crypto-procedures-merkle-algorithm"><span class="secno">19.5</span> <span class="content">Merkle Tree Algorithm</span></a>
      </ol>
@@ -985,7 +985,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li>
      <a href="#annex-a"><span class="secno">25</span> <span class="content">Annex A: Normative JSON Schemas</span></a>
      <ol class="toc">
-      <li><a href="#schema-snapshot"><span class="secno">25.1</span> <span class="content">A.1 Record, Snapshot, and Metadata Schemas</span></a>
+      <li><a href="#schema-version"><span class="secno">25.1</span> <span class="content">A.1 Record, Version, and Metadata Schemas</span></a>
       <li><a href="#schema-case"><span class="secno">25.2</span> <span class="content">A.2 CaseRecord Payload Schema</span></a>
       <li><a href="#schema-deletion"><span class="secno">25.3</span> <span class="content">A.3 DeletionRecord Payload Schema</span></a>
      </ol>
@@ -1015,7 +1015,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   </nav>
   <main>
    <div class="copyright">
-    <p>Copyright © 2026 the Contributors to the RecordWeb Protocol (RWP) v0.0.7, published by the <a href="https://www.w3.org/community/recordweb/">RecordWeb Community Group</a> under the <a href="https://www.w3.org/community/about/process/cla/">W3C Community Contributor License Agreement (CLA)</a>. A human-readable <a href="https://www.w3.org/community/about/process/cla-deed/">summary</a> is available.</p>
+    <p>Copyright © 2026 the Contributors to the RecordWeb Protocol (RWP) v0.0.8, published by the <a href="https://www.w3.org/community/recordweb/">RecordWeb Community Group</a> under the <a href="https://www.w3.org/community/about/process/cla/">W3C Community Contributor License Agreement (CLA)</a>. A human-readable <a href="https://www.w3.org/community/about/process/cla-deed/">summary</a> is available.</p>
    </div>
    <h2 class="heading no-num no-toc settled" id="part-1"><span class="content">Part I: Introduction &amp; Conformance</span></h2>
    <h2 class="heading settled" data-level="1" id="chapter-scope"><span class="secno">1. </span><span class="content">Introduction and Scope</span><a class="self-link" href="#chapter-scope"></a></h2>
@@ -1091,31 +1091,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <p>An implementation claiming the <code>resolver</code> role MAY make a role-only claim without claiming an RWP Record profile. A role-only resolver claim MUST identify the <code>resolver</code> role and MUST NOT include an RWP Record profile unless the implementation also claims the roles required for that profile.</p>
    <h3 class="heading settled" data-level="2.2" id="section-conformance-terminology"><span class="secno">2.2. </span><span class="content">Conformance terminology</span><a class="self-link" href="#section-conformance-terminology"></a></h3>
    <h4 class="heading settled" data-level="2.2.1" id="subsection-record-validation"><span class="secno">2.2.1. </span><span class="content">Record validation</span><a class="self-link" href="#subsection-record-validation"></a></h4>
-   <p>Record validation determines whether a specific Record or snapshot satisfies the applicable structural, semantic, and cryptographic requirements.</p>
-   <p>Depending on the applicable profile and Record type, validation MAY include:</p>
-   <ul>
-    <li data-md>
-     <p>DID and DID-document resolution;</p>
-    <li data-md>
-     <p>schema resolution and schema validation;</p>
-    <li data-md>
-     <p>metadata validation;</p>
-    <li data-md>
-     <p>payload and snapshot hash verification;</p>
-    <li data-md>
-     <p>signature verification;</p>
-    <li data-md>
-     <p>version-graph integrity;</p>
-    <li data-md>
-     <p>state and finalisation rules;</p>
-    <li data-md>
-     <p>Case-link and Merkle-root validation; and</p>
-    <li data-md>
-     <p>AssertionRecord predicate and resource validation.</p>
-   </ul>
-   <p>A Record validation result MUST identify the tested Record or snapshot, the RWP version and validation rules applied, the time of validation, and whether validation succeeded or failed.</p>
-   <p>Where validation fails, the result MUST identify the failed requirement or requirements sufficiently for an independent verifier to understand the basis of the failure.</p>
-   <p>A Record validation result applies only to the tested Record or snapshot. A successful validation result MUST NOT be interpreted as an implementation assessment, attestation, or certification.</p>
+   <p>See <a href="#subsection-record-validation">Record validation</a></p>
    <h4 class="heading settled" data-level="2.2.2" id="subsection-implementation-assessment"><span class="secno">2.2.2. </span><span class="content">Implementation assessment</span><a class="self-link" href="#subsection-implementation-assessment"></a></h4>
    <p>Implementation assessment determines whether a named implementation version fulfils all requirements of one or more claimed RWP profiles and roles.</p>
    <p>An implementation assessment applies to the identified implementation version and claimed conformance scope. It does not establish the validity of every Record that the implementation has produced or may produce.</p>
@@ -1149,7 +1125,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <h4 class="heading settled" data-level="2.3.1" id="subsection-information-record-profile"><span class="secno">2.3.1. </span><span class="content">RWP Information Record Conformant</span><a class="self-link" href="#subsection-information-record-profile"></a></h4>
    <p>An implementation claiming <code>RWP Information Record Conformant</code> MUST satisfy the applicable RWP requirements for InformationRecords according to its claimed roles.</p>
    <p>A producer claiming this profile MUST be able to create and finalise InformationRecords with the required identity, schema association, metadata, payload validation, integrity evidence, and version graph.</p>
-   <p>A custodian claiming this profile MUST retain and make retrievable the InformationRecord snapshots for which it acts as custodian.</p>
+   <p>A custodian claiming this profile MUST retain and make retrievable the InformationRecord versions for which it acts as custodian.</p>
    <p>A consumer claiming this profile MUST retrieve and validate InformationRecords in accordance with <a href="#subsection-record-validation">Record validation</a>.</p>
    <h4 class="heading settled" data-level="2.3.2" id="subsection-case-record-profile"><span class="secno">2.3.2. </span><span class="content">RWP Case Record Conformant</span><a class="self-link" href="#subsection-case-record-profile"></a></h4>
    <p>An implementation claiming <code>RWP Case Record Conformant</code> MUST satisfy the applicable RWP requirements for CaseRecords according to its claimed roles.</p>
@@ -1160,18 +1136,18 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <p>An implementation claiming <code>RWP Assertion Record Conformant</code> MUST satisfy the applicable RWP requirements for AssertionRecords according to its claimed roles.</p>
    <p>A producer claiming this profile MUST create AssertionRecords with a valid SchemaRecord, a permitted predicate IRI, valid subject and object references, an asserting Agent, a time of assertion, and the required Record integrity evidence.</p>
    <p>A consumer claiming this profile MUST validate AssertionRecords in accordance with <a href="#section-assertionrecord-validation">AssertionRecord validation</a> and <a href="#section-relationship-vocabulary-scope">Relationship Vocabulary scope</a>.</p>
-   <p>A custodian claiming this profile MUST retain and make retrievable the AssertionRecord snapshots for which it acts as custodian.</p>
+   <p>A custodian claiming this profile MUST retain and make retrievable the AssertionRecord versions for which it acts as custodian.</p>
    <h4 class="heading settled" data-level="2.3.4" id="subsection-relation-record-profile"><span class="secno">2.3.4. </span><span class="content">RWP Relation Record Conformant</span><a class="self-link" href="#subsection-relation-record-profile"></a></h4>
    <p>An implementation MAY claim <code>RWP Relation Record Conformant</code> only if it also claims both <code>RWP Case Record Conformant</code> and <code>RWP Assertion Record Conformant</code>.</p>
    <p><code>RWP Relation Record Conformant</code> introduces no requirements beyond the combined requirements of those two profiles.</p>
    <h4 class="heading settled" data-level="2.3.5" id="subsection-source-integration-profile"><span class="secno">2.3.5. </span><span class="content">RWP Source Integration Conformant</span><a class="self-link" href="#subsection-source-integration-profile"></a></h4>
    <p>An implementation claiming <code>RWP Source Integration Conformant</code> MUST provide a source-provenance statement for every source object that it exposes to, captures for, or transfers into an RWP context.</p>
-   <p>The source integration profile is independent of RWP Record production. A source-adapter MAY claim this profile without creating an RWP DID, Record, or snapshot.</p>
+   <p>The source integration profile is independent of RWP Record production. A source-adapter MAY claim this profile without creating an RWP DID, Record, or version.</p>
    <p>A source-adapter MAY provide source content and source-provenance information for a source object to a producer by any mechanism agreed by the involved implementations.</p>
    <p>The transfer mechanism, message format, transport, authentication, delivery semantics, retry behaviour, and operational workflow between a source-adapter and a producer are outside the scope of this specification. This scope boundary is deliberate and lasting; it is not intended to be narrowed by a future Source Integration binding without a dedicated specification change.</p>
-   <p>The provision of source content or source-provenance information by a source-adapter MUST NOT, by itself, be represented as the creation, finalization, transfer, or validation of an RWP Record or RWP snapshot.</p>
-   <p>A producer that creates or finalizes an RWP Record from source content supplied by a source-adapter MUST fulfil all requirements applicable to that Record, including applicable schema validation, payload-format validation, snapshot creation, integrity evidence, version-graph maintenance, and finalization requirements.</p>
-   <p>A source-adapter MAY also exercise the producer role. Where it does so, it MUST fulfil all requirements applicable to that role and Record. A receiving implementation MUST apply the applicable consumer and custodian requirements to the resulting RWP Record or snapshot.</p>
+   <p>The provision of source content or source-provenance information by a source-adapter MUST NOT, by itself, be represented as the creation, finalization, transfer, or validation of an RWP Record or RWP version.</p>
+   <p>A producer that creates or finalizes an RWP Record from source content supplied by a source-adapter MUST fulfil all requirements applicable to that Record, including applicable schema validation, payload-format validation, version creation, integrity evidence, version-graph maintenance, and finalization requirements.</p>
+   <p>A source-adapter MAY also exercise the producer role. Where it does so, it MUST fulfil all requirements applicable to that role and Record. A receiving implementation MUST apply the applicable consumer and custodian requirements to the resulting RWP Record or version.</p>
    <p>For every source object within its claimed scope, a conforming source-adapter MUST make the corresponding source-provenance statement available to the receiving RWP implementation or include it in the exported representation. The statement MAY be represented as JSON. Where the source-adapter retains the statement after transfer, it MUST make the statement retrievable by the combination of <code>sourceSystem</code> and <code>sourceId</code>.</p>
    <p>If a source-adapter creates and finalises an RWP InformationRecord, it MUST additionally satisfy the applicable requirements of <code>RWP Information Record Conformant</code>.</p>
    <p>A source-provenance statement MUST contain:</p>
@@ -1217,11 +1193,11 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <p>RWP defines the following implementation roles:</p>
    <ol>
     <li data-md>
-     <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="producer">producer</dfn> creates a new Record or a new snapshot, including its finalisation where applicable. A producer MUST fulfil all requirements applicable to the profile, Record type, and operation it performs when creating, modifying, or finalising a Record representation.</p>
+     <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="producer">producer</dfn> creates a new Record or a new version, including its finalisation where applicable. A producer MUST fulfil all requirements applicable to the profile, Record type, and operation it performs when creating, modifying, or finalising a Record representation.</p>
     <li data-md>
-     <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="custodian">custodian</dfn> retains, manages, and makes Records or snapshots retrievable. For each Record representation within its claimed scope, a custodian MUST preserve the information required to verify its applicable RWP integrity and versioning requirements. A custodian is not required to create a new Record or snapshot solely by claiming the custodian role.</p>
+     <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="custodian">custodian</dfn> retains, manages, and makes Records or versions retrievable. For each Record representation within its claimed scope, a custodian MUST preserve the information required to verify its applicable RWP integrity and versioning requirements. A custodian is not required to create a new Record or version solely by claiming the custodian role.</p>
     <li data-md>
-     <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="consumer">consumer</dfn> retrieves and validates Records created or managed by another implementation. A consumer MUST validate all requirements applicable to its claimed profile and to the Record type being consumed. A consumer MUST NOT represent a Record as conformant when required validation fails.</p>
+     <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="consumer">consumer</dfn> retrieves and validates Records created or managed by another implementation. A consumer MAY validate Records according to chapter <a href="#section-record-integrity-validation">Validation</a>. A consumer MUST NOT represent an object as successfully validated unless the validation response is 200.</p>
     <li data-md>
      <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="resolver">resolver</dfn> resolves <code>did:rwp</code> identifiers and returns the associated DID documents according to the applicable RWP DID-document requirements.</p>
     <li data-md>
@@ -1255,13 +1231,13 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
       <td>MUST for a producer
       <td>Not required
      <tr>
-      <td>Create immutable snapshots; retrieve and validate snapshots
-      <td>A producer MUST create immutable snapshots. A consumer MUST retrieve and validate snapshots in accordance with <a href="#subsection-record-validation">Record validation</a>.
-      <td>A producer MUST create immutable snapshots. A consumer MUST retrieve and validate snapshots in accordance with <a href="#subsection-record-validation">Record validation</a>.
-      <td>A producer MUST create immutable snapshots. A consumer MUST retrieve and validate snapshots in accordance with <a href="#subsection-record-validation">Record  validation</a>.
+      <td>Create immutable versions; retrieve and validate versions
+      <td>A producer MUST create immutable versions. A consumer MUST retrieve and validate versions in accordance with <a href="#subsection-record-validation">Record validation</a>.
+      <td>A producer MUST create immutable versions. A consumer MUST retrieve and validate versions in accordance with <a href="#subsection-record-validation">Record validation</a>.
+      <td>A producer MUST create immutable versions. A consumer MUST retrieve and validate versions in accordance with <a href="#subsection-record-validation">Record  validation</a>.
       <td>Not required
      <tr>
-      <td>Retain and retrieve snapshots
+      <td>Retain and retrieve versions
       <td>MUST for a custodian
       <td>MUST for a custodian
       <td>MUST for a custodian
@@ -1287,8 +1263,8 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
      <tr>
       <td>Validate external references
       <td>Not required
-      <td>MUST when finalising or validating a CaseRecord. The implementation MUST resolve each hard-link target and verify that the identified snapshot belongs to the identified Record, subject to the applicable federation and offline-validation rules.
-      <td>Where an AssertionRecord resource reference contains <code>snapshotHash</code> and the target snapshot is resolvable, MUST verify that the snapshot belongs to the identified Record. An unresolved external resource MUST be handled in accordance with the applicable AssertionRecord SchemaRecord.
+      <td>MUST when finalising or validating a CaseRecord. The implementation MUST resolve each hard-link target and verify that the identified version belongs to the identified Record, subject to the applicable federation and offline-validation rules.
+      <td>Where an AssertionRecord resource reference contains <code>versionHash</code> and the target version is resolvable, MUST verify that the version belongs to the identified Record. An unresolved external resource MUST be handled in accordance with the applicable AssertionRecord SchemaRecord.
       <td>Not required
      <tr>
       <td>Provide source provenance
@@ -1316,9 +1292,9 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
       <td>Not required
      <tr>
       <td>Support MergeRecord
-      <td>MUST only when creating a merge snapshot
-      <td>MUST only when creating a merge snapshot
-      <td>MUST only when creating a merge snapshot
+      <td>MUST only when creating a merge version
+      <td>MUST only when creating a merge version
+      <td>MUST only when creating a merge version
       <td>Not required
      <tr>
       <td>Support DeletionRecord
@@ -1343,7 +1319,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <p>An implementation MUST NOT claim support for a profile or role unless it fulfils all requirements applicable to that claim.</p>
    <h3 class="heading settled" data-level="2.6" id="section-conformance-record"><span class="secno">2.6. </span><span class="content">ConformanceRecord</span><a class="self-link" href="#section-conformance-record"></a></h3>
    <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="conformancerecord">ConformanceRecord</dfn> is a SystemRecord that preserves an attestation concerning an identifiable implementation version.</p>
-   <p>A ConformanceRecord MUST satisfy all normal Record requirements, including DID, schema association, snapshot integrity, finalisation, and the applicable signature requirements.</p>
+   <p>A ConformanceRecord MUST satisfy all normal Record requirements, including DID, schema association, version integrity, finalisation, and the applicable signature requirements.</p>
    <p>The owner of a finalised ConformanceRecord MUST be the attester identified in its payload.</p>
    <p>The SchemaRecord for a ConformanceRecord MUST require at least the following payload structure:</p>
 <pre class="highlight language-json"><c- p>{</c->
@@ -1445,7 +1421,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li data-md>
      <p>**<a data-link-type="dfn" href="#identity" id="ref-for-identity">Identity</a>** — the DID of the <a data-link-type="dfn" href="#record" id="ref-for-record④">Record</a> (<a href="#chapter-record-identity">Record Identity (DID)</a>)</p>
     <li data-md>
-     <p>**<a data-link-type="dfn" href="#payload" id="ref-for-payload">Payload</a>** — the content of the <a data-link-type="dfn" href="#record" id="ref-for-record⑤">Record</a> (<a href="#chapter-payload">Payload and Snapshots</a>)</p>
+     <p>**<a data-link-type="dfn" href="#payload" id="ref-for-payload">Payload</a>** — the content of the <a data-link-type="dfn" href="#record" id="ref-for-record⑤">Record</a> (<a href="#chapter-payload">Payload and Versions</a>)</p>
     <li data-md>
      <p>**<a data-link-type="dfn" href="#metadata" id="ref-for-metadata">Metadata</a>** — descriptive dimensions of the <a data-link-type="dfn" href="#record" id="ref-for-record⑥">Record</a> (<a href="#chapter-metadata">Metadata</a>)</p>
     <li data-md>
@@ -1714,6 +1690,8 @@ The <code>&lt;contentHash></code> component MUST NOT be part of the identity a R
     <li data-md>
      <p>Returns HTTP 200 when the DID is known</p>
     <li data-md>
+     <p>Returns HTTP 403 where the resolver’s applicable access policy does not permit the requester to obtain the DID document</p>
+    <li data-md>
      <p>Returns HTTP 404 when the DID is unknown</p>
     <li data-md>
      <p>Returns HTTP 410 when the DID is known but the <a data-link-type="dfn" href="#record" id="ref-for-record①⑦">Record</a> has been deleted (payload deletion per <a href="#chapter-deletion">Payload Deletion</a>)</p>
@@ -1951,7 +1929,7 @@ rejected (terminal state, not linkable)
      <p>Branches MAY exist simultaneously as long as they are in state <a data-link-type="dfn" href="#draft" id="ref-for-draft③">draft</a></p>
    </ul>
    <h4 class="heading settled" data-level="5.5.5" id="subsection-graph-merges"><span class="secno">5.5.5. </span><span class="content">Merges</span><a class="self-link" href="#subsection-graph-merges"></a></h4>
-   <p>A merge Version is a versionHash with two or more parent references. It consolidates two branches.</p>
+   <p>A merge Version is a version with two or more parent references. It consolidates two branches.</p>
    <p>Before a merge Version can be finalised, a <code>MergeRecord</code> MUST be created:</p>
 <pre class="highlight language-json"><c- p>{</c->
   <c- f>"mergeRecord"</c-><c- p>:</c-> <c- p>{</c->
@@ -2098,7 +2076,7 @@ rejected (terminal state, not linkable)
       <td>Source format with publication representation
    </table>
    <h2 class="heading settled" data-level="6" id="chapter-metadata"><span class="secno">6. </span><span class="content">Metadata</span><a class="self-link" href="#chapter-metadata"></a></h2>
-   <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="metadata">Metadata</dfn> is the descriptive and governing information attached to a <a data-link-type="dfn" href="#record" id="ref-for-record③①">Record</a>, independent of its <code>payload</code>. Unlike <code>payload</code> entries, <code>metadata</code> is not itself versioned as a sequence of snapshots; it MAY be updated in place. Metadata changes are nonetheless covered by the Record-level <code>recordHash</code> defined in <a href="#chapter-record-integrity">Record Integrity</a>, so that any change to <code>metadata</code> is detectable.</p>
+   <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="metadata">Metadata</dfn> is the descriptive and governing information attached to a <a data-link-type="dfn" href="#record" id="ref-for-record③①">Record</a>, independent of its <code>payload</code>. Unlike <code>payload</code> entries, <code>metadata</code> is not itself versioned as a sequence of versions; it MAY be updated in place. Metadata changes are nonetheless covered by the Record-level <code>recordHash</code> defined in <a href="#chapter-record-integrity">Record Integrity</a>, so that any change to <code>metadata</code> is detectable.</p>
    <p>Metadata is organised into three groups: <code>core</code>, <code>governance</code>, and <code>extensions</code>.</p>
 <pre class="highlight language-json"><c- p>{</c->
   <c- f>"metadata"</c-><c- p>:</c-> <c- p>{</c->
@@ -2135,7 +2113,7 @@ rejected (terminal state, not linkable)
       <td><code>schemaVersion</code>
       <td>MUST
       <td>SHA-256
-      <td>Hash of the schema version against which the <a data-link-type="dfn" href="#record" id="ref-for-record③③">Record</a>’s current snapshot was validated
+      <td>Hash of the schema version against which the <a data-link-type="dfn" href="#record" id="ref-for-record③③">Record</a>’s current version was validated
    </table>
    <h3 class="heading settled" data-level="6.2" id="section-metadata-governance"><span class="secno">6.2. </span><span class="content">metadata.governance</span><a class="self-link" href="#section-metadata-governance"></a></h3>
    <p>A <a data-link-type="dfn" href="#record" id="ref-for-record③④">Record</a> MAY contain the following <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="governance-metadata">governance metadata</dfn> fields. These fields express Records Management concerns (accountability, classification, retention, discoverability) as defined in <a data-link-type="biblio" href="#biblio-iso15489" title="Information and documentation — Records management, Part 1: Concepts and principles">[ISO15489]</a>.</p>
@@ -2151,7 +2129,7 @@ rejected (terminal state, not linkable)
       <td><code>owner</code>
       <td>SHOULD
       <td>DID
-      <td>The person or organisational unit currently responsible for the <a data-link-type="dfn" href="#record" id="ref-for-record③⑤">Record</a>, identified by an <a data-link-type="dfn" href="#agentrecord" id="ref-for-agentrecord②">AgentRecord</a>. See note below on the relationship between <code>owner</code> and snapshot <code>signature</code>.
+      <td>The person or organisational unit currently responsible for the <a data-link-type="dfn" href="#record" id="ref-for-record③⑤">Record</a>, identified by an <a data-link-type="dfn" href="#agentrecord" id="ref-for-agentrecord②">AgentRecord</a>. See note below on the relationship between <code>owner</code> and version <code>signature</code>.
      <tr>
       <td><code>classification</code>
       <td>SHOULD
@@ -2168,15 +2146,15 @@ rejected (terminal state, not linkable)
       <td>Array&lt;String>
       <td>Free-text markers for search and filtering
    </table>
-   <p>The <code>owner</code> field expresses organisational accountability and MAY change over the lifetime of a <a data-link-type="dfn" href="#record" id="ref-for-record③⑥">Record</a> (e.g. following a transfer of responsibility). It is independent of the cryptographic <code>signature</code> carried by an individual <u class="link-error" data-lt="snapshot" title="LINK ERROR: No &apos;dfn&apos; refs found for &apos;snapshot&apos;.">snapshot</u> (see <a href="#section-payload-definition">Snapshot Fields</a>):</p>
+   <p>The <code>owner</code> field expresses organisational accountability and MAY change over the lifetime of a <a data-link-type="dfn" href="#record" id="ref-for-record③⑥">Record</a> (e.g. following a transfer of responsibility). It is independent of the cryptographic <code>signature</code> carried by an individual <a data-link-type="dfn" href="#versions" id="ref-for-versions①">version</a> (see <a href="#section-payload-definition">versionHash</a>):</p>
    <ul>
     <li data-md>
-     <p><code>signature</code> provides cryptographic evidence of <em>who authorised a specific snapshot’s content</em> at finalisation, resolvable via the DID document’s <code>controller</code> field.</p>
+     <p><code>signature</code> provides cryptographic evidence of <em>who authorised a specific version’s content</em> at finalisation, resolvable via the DID document’s <code>controller</code> field.</p>
     <li data-md>
-     <p><code>owner</code> provides the current, human-readable statement of <em>organisational responsibility</em> for the Record as a whole, independent of which key signed the most recent snapshot.</p>
+     <p><code>owner</code> provides the current, human-readable statement of <em>organisational responsibility</em> for the Record as a whole, independent of which key signed the most recent version.</p>
    </ul>
    <p>Where a schema defines <code>signaturePolicy: system</code> (see <a href="#subsection-finalisation-requirements">Finalisation Requirements</a>), the signature identifies an authorised system key rather than a responsible person or unit. In this case, <code>owner</code> is the only field that expresses organisational accountability.</p>
-   <p>An implementation MUST NOT infer the current <code>owner</code> solely from the <code>controller</code> of the most recent snapshot’s signature.</p>
+   <p>An implementation MUST NOT infer the current <code>owner</code> solely from the <code>controller</code> of the most recent version’s signature.</p>
    <h3 class="heading settled" data-level="6.3" id="section-metadata-extensions"><span class="secno">6.3. </span><span class="content">metadata.extensions</span><a class="self-link" href="#section-metadata-extensions"></a></h3>
    <p>A <a data-link-type="dfn" href="#record" id="ref-for-record③⑦">Record</a> MAY contain an <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="extensions">extensions</dfn> array. Each entry is a self-describing object that extends <code>metadata</code> with schema- or profile-specific information not defined by this specification.</p>
    <p>Every extension entry MUST contain:</p>
@@ -2250,6 +2228,7 @@ rejected (terminal state, not linkable)
    </ul>
    <p>A Validation of one object MUST NOT be represented as a Validation of any related Record, Version, or Content object unless those objects have been validated separately.</p>
    <p>In particular, a Validation of a Record MUST NOT be represented as a Validation of all Versions of that Record. A Validation of a Version MUST NOT be represented as a Validation of all Representations or Content objects associated with that Version.</p>
+   <p>A Version identifier MAY additionally be validated by verifying <code>signature</code> over <code>versionHash</code> against a verification method of the DID document, in accordance with § 19.4.</p>
    <h4 class="heading settled" data-level="7.5.2" id="subsection-record-integrity-validation-result"><span class="secno">7.5.2. </span><span class="content">Validation Result</span><a class="self-link" href="#subsection-record-integrity-validation-result"></a></h4>
    <p>When a Consumer retains or exchanges the result of a Validation, the result MUST contain:</p>
    <ul>
@@ -2274,12 +2253,14 @@ rejected (terminal state, not linkable)
 | --- | --- | --- |
 | <code>200</code> | OK | The applicable hash calculation was performed and the calculated hash equals the declared <code>recordHash</code>, <code>versionHash</code>, or <code>contentHash</code>. |
 | <code>400</code> | Bad Request | The <code>validationObject</code> or the Validation request is syntactically or semantically invalid. |
-| <code>404</code> | Not Found | The identified object, or information required to calculate its applicable hash, could not be found. |
+| <code>403</code> | Forbidden | The identified object or information required to calculate its applicable hash exists or was identified, but the Consumer was not authorised to obtain it. |
+| <code>404</code> | Not Found | The identified object, or information required to calculate its applicable hash, could not be found or resolved. A system MAY use this outcome to conceal the existence of an object it does not permit the Consumer to access. |
 | <code>406</code> | Not Acceptable | The Consumer cannot process a required format, content type, representation, or other input required for the applicable calculation. |
 | <code>422</code> | Unprocessable Content | The required input was available and the applicable hash calculation was performed, but the calculated hash does not equal the declared hash. |
-| <code>424</code> | Failed Dependency | The Validation could not be completed because a required dependent resource or information was unavailable, incomplete, or could not be validated. |</p>
+| <code>424</code> | Failed Dependency | The Validation could not be completed because a required dependent resource or information was unavailable, incomplete, or could not be validated. Where the cause is a denied authorisation, 403 applies instead. |</p>
    <p>The codes defined in this section are Validation result codes. They do not define HTTP response semantics.</p>
    <p>When Validation is exposed through an HTTP API, server-side failures MAY be communicated using applicable HTTP 5xx response codes. Such API failures are not Validation result codes defined by RWP.</p>
+   <p>A Consumer MUST NOT represent the result 403, 404, 406, or 424 as evidence that the object is invalid or has been altered. Only 422 indicates that the applicable hash calculation was performed and the calculated hash does not equal the declared hash.</p>
    <h2 class="heading settled" data-level="8" id="chapter-deletion"><span class="secno">8. </span><span class="content">Payload Deletion</span><a class="self-link" href="#chapter-deletion"></a></h2>
    <h3 class="heading settled" data-level="8.1" id="section-deletion-principles"><span class="secno">8.1. </span><span class="content">Deletion Principles</span><a class="self-link" href="#section-deletion-principles"></a></h3>
    <p>RecordWeb’s immutability and data protection erasure obligations (GDPR, Swiss DSG) are in tension. RWP resolves this tension through a tiered deletion regime.</p>
@@ -2316,7 +2297,7 @@ rejected (terminal state, not linkable)
 <pre class="highlight language-json"><c- p>{</c->
   <c- f>"deletionRecord"</c-><c- p>:</c-> <c- p>{</c->
     <c- f>"targetDid"</c-><c- p>:</c-> <c- u>"did:rwp:bern.ch:f47ac10b-58cc-4372-a567-0e02b2c3d479"</c-><c- p>,</c->
-    <c- f>"targetSnapshot"</c-><c- p>:</c-> <c- u>"sha256:snapshot-to-be-deleted..."</c-><c- p>,</c->
+    <c- f>"targetVersion"</c-><c- p>:</c-> <c- u>"sha256:version-to-be-deleted..."</c-><c- p>,</c->
     <c- f>"deletionRegime"</c-><c- p>:</c-> <c- u>"payload-only"</c-><c- p>,</c->
     <c- f>"legalBasis"</c-><c- p>:</c-> <c- u>"GDPR Art. 17 — Right to erasure"</c-><c- p>,</c->
     <c- f>"requestedBy"</c-><c- p>:</c-> <c- u>"did:rwp:bern.ch:user-max-mustermann"</c-><c- p>,</c->
@@ -2331,7 +2312,7 @@ rejected (terminal state, not linkable)
     <li data-md>
      <p>The <a data-link-type="dfn" href="#payload" id="ref-for-payload④">payload</a> content bytes are securely overwritten</p>
     <li data-md>
-     <p>The <code>hash</code> field of the affected <code>representations</code> entry in the <u class="link-error" data-lt="snapshot" title="LINK ERROR: No &apos;dfn&apos; refs found for &apos;snapshot&apos;.">snapshot</u> is replaced with the string <code>"deleted:&lt;DeletionRecord-DID>"</code></p>
+     <p>The <code>hash</code> field of the affected <code>representations</code> entry in the <a data-link-type="dfn" href="#versions" id="ref-for-versions②">version</a> is replaced with the string <code>"deleted:&lt;DeletionRecord-DID>"</code></p>
     <li data-md>
      <p>The Record’s <code>recordHash</code> is recalculated to reflect the deletion</p>
     <li data-md>
@@ -2394,19 +2375,19 @@ rejected (terminal state, not linkable)
   <c- f>"trigger"</c-><c- p>:</c-> <c- p>{</c->
     <c- f>"type"</c-><c- p>:</c-> <c- u>"hard"</c-><c- p>,</c->
     <c- f>"recordDid"</c-><c- p>:</c-> <c- u>"did:rwp:bern.ch:application-001"</c-><c- p>,</c->
-    <c- f>"snapshot"</c-><c- p>:</c-> <c- u>"sha256:application-finalized-hash0000000000000000000000000000000000"</c->
+    <c- f>"versionHash"</c-><c- p>:</c-> <c- u>"sha256:application-finalized-hash0000000000000000000000000000000000"</c->
   <c- p>},</c->
   <c- f>"context"</c-><c- p>:</c-> <c- p>[</c->
     <c- p>{</c->
       <c- f>"type"</c-><c- p>:</c-> <c- u>"hard"</c-><c- p>,</c->
       <c- f>"recordDid"</c-><c- p>:</c-> <c- u>"did:rwp:bern.ch:zoning-plan-2024"</c-><c- p>,</c->
-      <c- f>"snapshot"</c-><c- p>:</c-> <c- u>"sha256:zoning-plan-hash0000000000000000000000000000000000000000000"</c-><c- p>,</c->
+      <c- f>"versionHash"</c-><c- p>:</c-> <c- u>"sha256:zoning-plan-hash0000000000000000000000000000000000000000000"</c-><c- p>,</c->
       <c- f>"role"</c-><c- p>:</c-> <c- u>"Legal basis"</c->
     <c- p>},</c->
     <c- p>{</c->
       <c- f>"type"</c-><c- p>:</c-> <c- u>"hard"</c-><c- p>,</c->
       <c- f>"recordDid"</c-><c- p>:</c-> <c- u>"did:rwp:bern.ch:case-planning-approval-001"</c-><c- p>,</c->
-      <c- f>"snapshot"</c-><c- p>:</c-> <c- u>"sha256:planning-approval-case-hash00000000000000000000000000000000"</c-><c- p>,</c->
+      <c- f>"versionHash"</c-><c- p>:</c-> <c- u>"sha256:planning-approval-case-hash00000000000000000000000000000000"</c-><c- p>,</c->
       <c- f>"role"</c-><c- p>:</c-> <c- u>"Related administrative proceeding"</c->
     <c- p>}</c->
   <c- p>],</c->
@@ -2414,7 +2395,7 @@ rejected (terminal state, not linkable)
     <c- p>{</c->
       <c- f>"type"</c-><c- p>:</c-> <c- u>"hard"</c-><c- p>,</c->
       <c- f>"recordDid"</c-><c- p>:</c-> <c- u>"did:rwp:bern.ch:minutes-site-inspection"</c-><c- p>,</c->
-      <c- f>"snapshot"</c-><c- p>:</c-> <c- u>"sha256:minutes-hash00000000000000000000000000000000000000000000000"</c-><c- p>,</c->
+      <c- f>"versionHash"</c-><c- p>:</c-> <c- u>"sha256:minutes-hash00000000000000000000000000000000000000000000000"</c-><c- p>,</c->
       <c- f>"role"</c-><c- p>:</c-> <c- u>"Investigation"</c->
     <c- p>}</c->
   <c- p>],</c->
@@ -2458,30 +2439,30 @@ rejected (terminal state, not linkable)
    <p><strong>Exception — ad-hoc Case</strong>: A <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord③">CaseRecord</a> schema MAY be marked as <code>adhoc: true</code>. Ad-hoc Cases have no mandatory fields other than <code>trigger</code> and <code>recordDid</code>. They MUST be marked in the metadata object as <code>caseVariant: "adhoc"</code>.</p>
    <h3 class="heading settled" data-level="10.4" id="section-links"><span class="secno">10.4. </span><span class="content">Hard and Soft Links</span><a class="self-link" href="#section-links"></a></h3>
    <p>A Case link MAY target any <a data-link-type="dfn" href="#record" id="ref-for-record④③">Record</a>, including an <a data-link-type="dfn" href="#informationrecord" id="ref-for-informationrecord①">InformationRecord</a>, a <a data-link-type="dfn" href="#relationrecord" id="ref-for-relationrecord④">RelationRecord</a> (including another <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord④">CaseRecord</a>), or a <a data-link-type="dfn" href="#systemrecord" id="ref-for-systemrecord⑥">SystemRecord</a>.</p>
-   <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="hard-link">hard link</dfn> points to one identified <a data-link-type="dfn" href="#finalized" id="ref-for-finalized⑥">finalized</a> <u class="link-error" data-lt="snapshot" title="LINK ERROR: No &apos;dfn&apos; refs found for &apos;snapshot&apos;.">snapshot</u> of a target Record. A hard link MUST contain the target <code>recordDid</code> and <code>snapshot</code> (the target snapshot’s hash, per <a href="#section-payload-definition">Snapshot Fields</a>).</p>
+   <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="hard-link">hard link</dfn> points to one identified <a data-link-type="dfn" href="#finalized" id="ref-for-finalized⑥">finalized</a> <a data-link-type="dfn" href="#versions" id="ref-for-versions③">version</a> of a target Record. A hard link MUST contain the target <code>recordDid</code> and <code>versionHash</code> (the target version’s hash, per <a href="#section-payload-definition">versionHash</a>).</p>
    <p>A hard link is immutable after finalisation of the referencing <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord⑤">CaseRecord</a>.</p>
-   <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="soft-link">soft link</dfn> is a working reference that points to a target <code>recordDid</code> without identifying a target snapshot. A soft link MAY point to a <a data-link-type="dfn" href="#draft" id="ref-for-draft④">draft</a> or <a data-link-type="dfn" href="#finalized" id="ref-for-finalized⑦">finalized</a> Record.</p>
+   <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="soft-link">soft link</dfn> is a working reference that points to a target <code>recordDid</code> without identifying a target version. A soft link MAY point to a <a data-link-type="dfn" href="#draft" id="ref-for-draft④">draft</a> or <a data-link-type="dfn" href="#finalized" id="ref-for-finalized⑦">finalized</a> Record.</p>
    <p>A CaseRecord containing one or more soft links MUST NOT be finalised. Every soft link MUST be converted to a hard link before finalisation of the CaseRecord.</p>
    <p>A system MUST check during a CaseRecord finalisation attempt whether soft links are present. If soft links are present, the system MUST reject the finalisation and return the unresolved soft links.</p>
    <p>A notification, callback, or other message received through Source Integration MAY trigger a refresh, retry, or user-interface indication. It MUST NOT replace the target resolution and validation required before a producer finalizes a CaseRecord containing a hard link.</p>
    <h3 class="heading settled" data-level="10.5" id="section-case-links"><span class="secno">10.5. </span><span class="content">CaseRecord-to-CaseRecord Links</span><a class="self-link" href="#section-case-links"></a></h3>
    <p>A <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord⑥">CaseRecord</a> MAY link to another CaseRecord through a <a data-link-type="dfn" href="#soft-link" id="ref-for-soft-link">soft link</a> or a <a data-link-type="dfn" href="#hard-link" id="ref-for-hard-link">hard link</a>.</p>
-   <p>A hard link to a CaseRecord MUST identify a <a data-link-type="dfn" href="#finalized" id="ref-for-finalized⑧">finalized</a> snapshot of the target CaseRecord through its <code>recordDid</code> and <code>snapshot</code>.</p>
-   <p>During finalisation of a referencing CaseRecord, the system MUST resolve and validate every target CaseRecord snapshot referenced through a hard link, subject to the applicable federation and offline-validation rules.</p>
-   <p>The <code>snapshot</code> value of a hard-linked target CaseRecord MUST be included in the <a data-link-type="dfn" href="#merkle-root" id="ref-for-merkle-root">Merkle root</a> of the referencing CaseRecord.</p>
+   <p>A hard link to a CaseRecord MUST identify a <a data-link-type="dfn" href="#finalized" id="ref-for-finalized⑧">finalized</a> version of the target CaseRecord through its <code>recordDid</code> and <code>versionHash</code>.</p>
+   <p>During finalisation of a referencing CaseRecord, the system MUST resolve and validate every target CaseRecord version referenced through a hard link, subject to the applicable federation and offline-validation rules.</p>
+   <p>The <code>versionHash</code> value of a hard-linked target CaseRecord MUST be included in the <a data-link-type="dfn" href="#merkle-root" id="ref-for-merkle-root">Merkle root</a> of the referencing CaseRecord.</p>
    <p>A soft link MAY refer to a draft or finalised CaseRecord during work. A soft link to a CaseRecord MUST be converted to a hard link before finalisation of the referencing CaseRecord.</p>
-   <p>A link from CaseRecord A to CaseRecord B references only the identified snapshot of CaseRecord B.</p>
+   <p>A link from CaseRecord A to CaseRecord B references only the identified version of CaseRecord B.</p>
    <p>A CaseRecord-to-CaseRecord link MUST NOT include, copy, inherit, or otherwise treat Records linked by CaseRecord B as direct members of CaseRecord A.</p>
-   <p>The referenced CaseRecord B snapshot and its Merkle root provide evidence of the Records directly linked by CaseRecord B at the time that snapshot was finalised. A Record is a direct member of CaseRecord A only if CaseRecord A links to that Record explicitly.</p>
+   <p>The referenced CaseRecord B version and its Merkle root provide evidence of the Records directly linked by CaseRecord B at the time that version was finalised. A Record is a direct member of CaseRecord A only if CaseRecord A links to that Record explicitly.</p>
    <h3 class="heading settled" data-level="10.6" id="section-merkle-root-calc"><span class="secno">10.6. </span><span class="content">Case Merkle Root</span><a class="self-link" href="#section-merkle-root-calc"></a></h3>
-   <p>The <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="merkle-root">Merkle root</dfn> of a <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord⑦">CaseRecord</a> provides a cryptographically verifiable representation of the set of snapshots directly hard-linked by that <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord⑧">CaseRecord</a>.</p>
-   <p>For the purposes of this section, a <code>snapshot</code> value and a <code>merkleRoot</code> MUST be represented in the canonical textual form <code>sha256:</code> followed by the lowercase hexadecimal encoding of exactly 32 octets.</p>
+   <p>The <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="merkle-root">Merkle root</dfn> of a <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord⑦">CaseRecord</a> provides a cryptographically verifiable representation of the set of versions directly hard-linked by that <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord⑧">CaseRecord</a>.</p>
+   <p>For the purposes of this section, a <code>versionHash</code> value and a <code>merkleRoot</code> MUST be represented in the canonical textual form <code>sha256:</code> followed by the lowercase hexadecimal encoding of exactly 32 octets.</p>
    <p>The Merkle root of a <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord⑨">CaseRecord</a> MUST be calculated as follows:</p>
    <ol>
     <li data-md>
-     <p>An implementation MUST collect the <code>snapshot</code> value of every hard link in the <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①⓪">CaseRecord</a>, including every hard link to another <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①①">CaseRecord</a>.</p>
+     <p>An implementation MUST collect the <code>versionHash</code> value of every hard link in the <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①⓪">CaseRecord</a>, including every hard link to another <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①①">CaseRecord</a>.</p>
     <li data-md>
-     <p>For each collected <code>snapshot</code> value, the implementation MUST remove the <code>sha256:</code> prefix and decode the remaining hexadecimal value into its 32-octet SHA-256 digest value.</p>
+     <p>For each collected <code>versionHash</code> value, the implementation MUST remove the <code>sha256:</code> prefix and decode the remaining hexadecimal value into its 32-octet SHA-256 digest value.</p>
     <li data-md>
      <p>The implementation MUST sort the decoded digest values in ascending lexicographic order over unsigned octets.</p>
     <li data-md>
@@ -2503,7 +2484,7 @@ rejected (terminal state, not linkable)
    </ol>
    <p>In this section, <code>||</code> denotes byte concatenation. The values <code>0x00</code> and <code>0x01</code> are single-octet domain-separation tags. They MUST be included exactly as specified. The <code>0x00</code> tag distinguishes leaf-node inputs from all internal-node inputs. The <code>0x01</code> tag distinguishes internal-node inputs from leaf-node inputs.</p>
    <p>A <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①②">CaseRecord</a> with no hard links MUST NOT be finalised. This specification therefore defines no Merkle root for an empty set of hard links.</p>
-   <p>The Merkle root of a <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①③">CaseRecord</a> MUST include the hash of each directly hard-linked target snapshot. It MUST NOT recursively include the individual hard-link hashes or linked Record snapshots contained in a referenced <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①④">CaseRecord</a>.</p>
+   <p>The Merkle root of a <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①③">CaseRecord</a> MUST include the hash of each directly hard-linked target version. It MUST NOT recursively include the individual hard-link hashes or linked Record versions contained in a referenced <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①④">CaseRecord</a>.</p>
    <p>The <a data-link-type="dfn" href="#merkle-root" id="ref-for-merkle-root①">Merkle root</a> MUST be recalculated every time a <a data-link-type="dfn" href="#hard-link" id="ref-for-hard-link①">hard link</a> is added or removed. A system MUST verify the <a data-link-type="dfn" href="#merkle-root" id="ref-for-merkle-root②">Merkle root</a> before finalising the <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①⑤">CaseRecord</a>.</p>
    <h3 class="heading settled" data-level="10.7" id="section-case-completeness"><span class="secno">10.7. </span><span class="content">Case Completeness Check</span><a class="self-link" href="#section-case-completeness"></a></h3>
    <p>A system SHOULD perform a completeness check on a <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①⑥">CaseRecord</a> at any time upon request and return:</p>
@@ -2527,19 +2508,19 @@ rejected (terminal state, not linkable)
    <p>The <code>subject</code> identifies the resource from which the relationship is asserted. The <code>predicate</code> identifies the semantics of the relationship. The <code>object</code> identifies the resource to which the relationship is asserted.</p>
    <p>The subject and object MUST be resource reference objects containing an <code>id</code> field.</p>
    <p>The <code>id</code> field MUST identify the referenced resource. It MAY contain an RWP DID, another DID, or an absolute IRI, subject to the constraints of the applicable predicate declaration.</p>
-   <p>A resource reference identifying an RWP Record MAY additionally contain a <code>snapshot</code> field.</p>
-   <p>Where <code>snapshot</code> is present:</p>
+   <p>A resource reference identifying an RWP Record MAY additionally contain a <code>versionHash</code> field.</p>
+   <p>Where <code>versionHash</code> is present:</p>
    <ul>
     <li data-md>
      <p><code>id</code> MUST be the DID of an RWP Record;</p>
     <li data-md>
-     <p><code>snapshot</code> MUST identify a snapshot of that Record (per <a href="#section-payload-definition">Snapshot Fields</a>);</p>
+     <p><code>versionHash</code> MUST identify a version of that Record (per <a href="#section-payload-definition">versionHash</a>);</p>
     <li data-md>
-     <p>the AssertionRecord refers to that specific immutable snapshot; and</p>
+     <p>the AssertionRecord refers to that specific immutable version; and</p>
     <li data-md>
-     <p>a validating implementation MUST verify that the resolved snapshot belongs to the identified Record where the snapshot is resolvable.</p>
+     <p>a validating implementation MUST verify that the resolved version belongs to the identified Record where the version is resolvable.</p>
    </ul>
-   <p>Where <code>snapshot</code> is absent, the AssertionRecord refers to the identified Record or other resource independently of a specific version.</p>
+   <p>Where <code>versionHash</code> is absent, the AssertionRecord refers to the identified Record or other resource independently of a specific version.</p>
    <p>An AssertionRecord MUST NOT be interpreted as modifying the subject or object. It preserves only the assertion made by its asserting Agent.</p>
    <h3 class="heading settled" data-level="11.3" id="section-assertionrecord-predicate"><span class="secno">11.3. </span><span class="content">Relationship predicate</span><a class="self-link" href="#section-assertionrecord-predicate"></a></h3>
    <p>An AssertionRecord MUST contain a <code>predicate</code> field.</p>
@@ -2552,7 +2533,7 @@ rejected (terminal state, not linkable)
 <pre class="highlight language-json"><c- p>{</c->
   <c- f>"subject"</c-><c- p>:</c-> <c- p>{</c->
     <c- f>"id"</c-><c- p>:</c-> <c- u>"did:rwp:record-A"</c-><c- p>,</c->
-    <c- f>"snapshot"</c-><c- p>:</c-> <c- u>"sha256:..."</c->
+    <c- f>"versionHash"</c-><c- p>:</c-> <c- u>"sha256:..."</c->
   <c- p>},</c->
   <c- f>"predicate"</c-><c- p>:</c-> <c- u>"https://www.w3.org/ns/prov#wasDerivedFrom"</c-><c- p>,</c->
   <c- f>"object"</c-><c- p>:</c-> <c- p>{</c->
@@ -2611,10 +2592,10 @@ rejected (terminal state, not linkable)
    </ul>
    <p>An AssertionRecord using a PROV-O predicate MUST satisfy the semantic domain and range constraints of that predicate.</p>
    <h4 class="heading settled" data-level="12.2.1" id="subsection-assertionrecord-version-graph"><span class="secno">12.2.1. </span><span class="content">Relationship to the RWP version graph {#subsection-assertionrecord-version-graph}</span><a class="self-link" href="#subsection-assertionrecord-version-graph"></a></h4>
-   <p>The RWP version graph is the authoritative representation of version succession between snapshots of the same Record.</p>
-   <p>A conforming implementation MUST determine RWP snapshot ancestry, direct parentage, branches, and merge relationships exclusively from the <code>parents</code> field and the rules defined in <a href="#section-payload-version-graph">Version Graph</a>.</p>
+   <p>The RWP version graph is the authoritative representation of version succession between versions of the same Record.</p>
+   <p>A conforming implementation MUST determine RWP version ancestry, direct parentage, branches, and merge relationships exclusively from the <code>parents</code> field and the rules defined in <a href="#section-payload-version-graph">Version Graph</a>.</p>
    <p>An AssertionRecord using <code>prov:wasRevisionOf</code>, <code>prov:wasDerivedFrom</code>, or another provenance predicate MUST NOT create, alter, replace, or repair a version-graph edge.</p>
-   <p>Where an AssertionRecord documents a relationship between snapshots of the same Record, it MAY provide additional attributable documentary evidence. It MUST NOT be used to infer a parent relationship that is absent from the version graph.</p>
+   <p>Where an AssertionRecord documents a relationship between versions of the same Record, it MAY provide additional attributable documentary evidence. It MUST NOT be used to infer a parent relationship that is absent from the version graph.</p>
    <p>If an AssertionRecord and the version graph make incompatible statements about version succession, a conforming implementation MUST treat the version graph as authoritative for all RWP versioning, ancestry, finalisation, merge, and integrity decisions.</p>
    <p>An AssertionRecord that conflicts with the version graph remains an attributable assertion. Its conflict with the version graph MUST NOT alter the integrity or history of either referenced Record.</p>
    <p>In particular:</p>
@@ -2758,7 +2739,7 @@ rejected (terminal state, not linkable)
    <p>When a <a data-link-type="dfn" href="#schemarecord" id="ref-for-schemarecord⑤">SchemaRecord</a> is finalised in a new version, the following applies:</p>
    <ul>
     <li data-md>
-     <p>Existing snapshots referencing an earlier schema version REMAIN valid</p>
+     <p>Existing versions referencing an earlier schema version REMAIN valid</p>
     <li data-md>
      <p>The new schema MUST contain the field <code>previousSchemaVersion</code> in the payload with the hash of the predecessor schema</p>
     <li data-md>
@@ -2787,7 +2768,7 @@ TBD
    <p>RWP uses exclusively <strong>SHA-256</strong> as the hashing procedure for:</p>
    <ul>
     <li data-md>
-     <p>Snapshot hashes (<code>snapshot</code>)</p>
+     <p>Version hashes (<code>versionHash</code>)</p>
     <li data-md>
      <p>Representation hashes (<code>representations[].hash</code>)</p>
     <li data-md>
@@ -2814,20 +2795,20 @@ TBD
     <li data-md>
      <p>Numbers MUST be represented in their canonical form</p>
    </ul>
-   <h3 class="heading settled" data-level="19.3" id="section-crypto-procedures-snapshot-integrity"><span class="secno">19.3. </span><span class="content">Snapshot Integrity</span><a class="self-link" href="#section-crypto-procedures-snapshot-integrity"></a></h3>
-   <p>A system MUST check the integrity of a <u class="link-error" data-lt="snapshot" title="LINK ERROR: No &apos;dfn&apos; refs found for &apos;snapshot&apos;.">snapshot</u> on the following events:</p>
+   <h3 class="heading settled" data-level="19.3" id="section-crypto-procedures-version-integrity"><span class="secno">19.3. </span><span class="content">Version Integrity</span><a class="self-link" href="#section-crypto-procedures-version-integrity"></a></h3>
+   <p>A system MUST check the integrity of a <a data-link-type="dfn" href="#versions" id="ref-for-versions④">version</a> on the following events:</p>
    <ul>
     <li data-md>
-     <p>Receipt of a <u class="link-error" data-lt="snapshot" title="LINK ERROR: No &apos;dfn&apos; refs found for &apos;snapshot&apos;.">snapshot</u> from an external system</p>
+     <p>Receipt of a <a data-link-type="dfn" href="#versions" id="ref-for-versions⑤">version</a> from an external system</p>
     <li data-md>
-     <p>Retrieval of a <u class="link-error" data-lt="snapshot" title="LINK ERROR: No &apos;dfn&apos; refs found for &apos;snapshot&apos;.">snapshot</u> for a linking operation</p>
+     <p>Retrieval of a <a data-link-type="dfn" href="#versions" id="ref-for-versions⑥">version</a> for a linking operation</p>
     <li data-md>
      <p>Periodic integrity check</p>
    </ul>
    <p>If the integrity check fails, the system MUST:</p>
    <ol>
     <li data-md>
-     <p>Mark the <u class="link-error" data-lt="snapshot" title="LINK ERROR: No &apos;dfn&apos; refs found for &apos;snapshot&apos;.">snapshot</u> as <code>compromised</code></p>
+     <p>Mark the <a data-link-type="dfn" href="#versions" id="ref-for-versions⑦">version</a> as <code>compromised</code></p>
     <li data-md>
      <p>Mark all dependent <a data-link-type="dfn" href="#record" id="ref-for-record④⑦">Records</a> as <code>integrity-warning</code></p>
     <li data-md>
@@ -2837,15 +2818,15 @@ TBD
    </ol>
    <p>The system MUST NOT automatically attempt to reconstruct the original content.</p>
    <h3 class="heading settled" data-level="19.4" id="section-crypto-procedures-signature"><span class="secno">19.4. </span><span class="content">Signature Procedure</span><a class="self-link" href="#section-crypto-procedures-signature"></a></h3>
-   <p>If the schema prescribes a signature (<code>signaturePolicy: owner</code> or <code>signaturePolicy: system</code>), the snapshot hash MUST be cryptographically signed during the finalisation act.</p>
+   <p>If the schema prescribes a signature (<code>signaturePolicy: owner</code> or <code>signaturePolicy: system</code>), the <code>versionHash</code> MUST be cryptographically signed during the finalisation act.</p>
    <p>Requirements:</p>
    <ul>
     <li data-md>
      <p>MUST be Ed25519 (EdDSA, <a data-link-type="biblio" href="#biblio-rfc8037" title="CFRG Elliptic Curves for JOSE and COSE (Ed25519)">[RFC8037]</a>) or P-256 (ECDSA, NIST)</p>
     <li data-md>
-     <p>The signature MUST be calculated over the canonical <code>snapshot</code> hash value (as hex string)</p>
+     <p>The signature MUST be calculated over the canonical <code>versionHash</code> hash value (as hex string)</p>
     <li data-md>
-     <p>The signature MUST be stored in the <code>signature</code> field of the snapshot entry as a multibase-encoded value</p>
+     <p>The signature MUST be stored in the <code>signature</code> field of the version entry as a multibase-encoded value</p>
     <li data-md>
      <p>The key used MUST be published in the DID document of the record owner as a verification method</p>
    </ul>
@@ -2874,8 +2855,8 @@ return sorted[0]
    <p>A <code>did:rwp</code> identifier MUST NOT contain personal data or other information whose disclosure is restricted by the applicable rules.</p>
    <p>The <code>payload-only</code> deletion regime removes payload bytes but retains the DID, metadata, and version graph. An implementation MUST NOT represent a <code>payload-only</code> deletion as full deletion of the Record.</p>
    <h3 class="heading settled" data-level="20.2" id="section-security-considerations"><span class="secno">20.2. </span><span class="content">Security</span><a class="self-link" href="#section-security-considerations"></a></h3>
-   <p>The integrity and signature procedures defined in <a href="#chapter-crypto-procedures">Cryptographic Procedures</a> provide evidence of the integrity of a snapshot and, where applicable, of the verification method used to sign it. They do not by themselves establish confidentiality, authorisation, or the substantive correctness of a Record.</p>
-   <p>A notification or other externally received signal that refers to an RWP Record or snapshot is non-authoritative. Before creating, finalising, modifying, deleting, linking to, or otherwise acting on the referenced Record or snapshot, an implementation MUST independently resolve and validate it according to the applicable requirements of this specification.</p>
+   <p>The integrity and signature procedures defined in <a href="#chapter-crypto-procedures">Cryptographic Procedures</a> provide evidence of the integrity of a version and, where applicable, of the verification method used to sign it. They do not by themselves establish confidentiality, authorisation, or the substantive correctness of a Record.</p>
+   <p>A notification or other externally received signal that refers to an RWP Record or version is non-authoritative. Before creating, finalising, modifying, deleting, linking to, or otherwise acting on the referenced Record or version, an implementation MUST independently resolve and validate it according to the applicable requirements of this specification.</p>
    <h2 class="heading no-num no-toc settled" id="part-7"><span class="content">Part VII: Miscellaneous</span><a class="self-link" href="#part-7"></a></h2>
    <h2 class="heading settled" data-level="21" id="chapter-federation"><span class="secno">21. </span><span class="content">Federation</span><a class="self-link" href="#chapter-federation"></a></h2>
    <p>This chapter specifies how a system locates the DID Resolver responsible for a namespace and obtains the information needed to access a Record (Logistics). It also specifies the governance requirements of the GNR network (Constitution), which determine the basis on which a Global Namespace Identifier is registered and maintained.</p>
@@ -2978,14 +2959,15 @@ implementation technology.</p>
     <li data-md>
      <p>Discover the resolver endpoint via GNR lookup</p>
     <li data-md>
-     <p>Verify the <u class="link-error" data-lt="snapshot" title="LINK ERROR: No &apos;dfn&apos; refs found for &apos;snapshot&apos;.">snapshot</u> hash of the linked <a data-link-type="dfn" href="#record" id="ref-for-record⑤⓪">Record</a> after retrieval</p>
+     <p>Verify the <a data-link-type="dfn" href="#versions" id="ref-for-versions⑧">version</a> hash of the linked <a data-link-type="dfn" href="#record" id="ref-for-record⑤⓪">Record</a> after retrieval</p>
     <li data-md>
-     <p>Cache the resolved <u class="link-error" data-lt="snapshot" title="LINK ERROR: No &apos;dfn&apos; refs found for &apos;snapshot&apos;.">snapshot</u> locally with the original hash for integrity verification</p>
+     <p>Cache the resolved <a data-link-type="dfn" href="#versions" id="ref-for-versions⑨">version</a> locally with the original hash for integrity verification</p>
    </ol>
    <h2 class="heading settled" data-level="22" id="chapter-access-control"><span class="secno">22. </span><span class="content">Access Control (Delegation Framework)</span><a class="self-link" href="#chapter-access-control"></a></h2>
    <h3 class="heading settled" data-level="22.1" id="section-access-principles"><span class="secno">22.1. </span><span class="content">Scope and Principles</span><a class="self-link" href="#section-access-principles"></a></h3>
    <p>RWP deliberately defines no mandatory authorisation model. Data security and information protection are delegated to the implementing systems. This chapter defines an <strong>optional, interoperable delegation framework</strong> that compliant systems MAY implement.</p>
    <p>The core principle: access control in RWP is <strong>attribute-based</strong> (ABAC) and <strong>delegatable</strong>. Rights are not assigned to roles in a fixed hierarchy, but expressed as verifiable claims attached to DIDs.</p>
+   <p>A denied access is not an integrity result. How a denial is communicated is defined in <a href="#subsection-record-integrity-validation-responsecode">Validation Response Codes</a>.</p>
    <h3 class="heading settled" data-level="22.2" id="section-access-policy"><span class="secno">22.2. </span><span class="content">Access Policy Block</span><a class="self-link" href="#section-access-policy"></a></h3>
    <p>An implementation claiming this optional capability MAY carry the <code>accessPolicy</code> block as an entry in the <a data-link-type="dfn" href="#record" id="ref-for-record⑤①">Record</a>’s <code>metadata.extensions</code> array (see <a href="#section-metadata-extensions">metadata.extensions</a>), using the reserved type identifier <code>did:rwp:recordweb.org:extension-access-policy</code>:</p>
 <pre class="highlight language-json"><c- p>{</c->
@@ -3071,7 +3053,7 @@ implementation technology.</p>
   <c- f>"rwpAnchor"</c-><c- p>:</c-> <c- p>{</c->
     <c- f>"version"</c-><c- p>:</c-> <c- u>"0.1"</c-><c- p>,</c->
     <c- f>"caseDid"</c-><c- p>:</c-> <c- u>"did:rwp:bern.ch:f47ac10b-case-001"</c-><c- p>,</c->
-    <c- f>"caseSnapshotHash"</c-><c- p>:</c-> <c- u>"sha256:case-finalized-snapshot-hash..."</c-><c- p>,</c->
+    <c- f>"caseVersionHash"</c-><c- p>:</c-> <c- u>"sha256:case-finalized-version-hash..."</c-><c- p>,</c->
     <c- f>"merkleRoot"</c-><c- p>:</c-> <c- u>"sha256:case-merkle-root..."</c-><c- p>,</c->
     <c- f>"anchoredAt"</c-><c- p>:</c-> <c- u>"2026-05-31T16:00:00Z"</c-><c- p>,</c->
     <c- f>"anchoredBy"</c-><c- p>:</c-> <c- u>"did:rwp:bern.ch:controller-001"</c-><c- p>,</c->
@@ -3081,7 +3063,7 @@ implementation technology.</p>
 </pre>
    <p>The ledger entry MUST NOT contain any payload content, personal data, or classified information. Only cryptographic hash values and identifiers are permitted.</p>
    <h3 class="heading settled" data-level="23.4" id="section-anchoring-reference"><span class="secno">23.4. </span><span class="content">Anchoring Reference in the Case</span><a class="self-link" href="#section-anchoring-reference"></a></h3>
-   <p>When a <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord②⓪">CaseRecord</a> has been anchored, the anchored CaseRecord snapshot MUST NOT be modified. The system MAY create a new CaseRecord snapshot that references the anchored predecessor through <code>parents</code> and contains an <code>anchorReference</code> field. The <code>caseSnapshotHash</code> in the ledger entry MUST always identify the immutable snapshot that was actually anchored.</p>
+   <p>When a <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord②⓪">CaseRecord</a> has been anchored, the anchored CaseRecord version MUST NOT be modified. The system MAY create a new CaseRecord version that references the anchored predecessor through <code>parents</code> and contains an <code>anchorReference</code> field. The <code>caseVersionHash</code> in the ledger entry MUST always identify the immutable version that was actually anchored.</p>
 <pre class="highlight language-json"><c- p>{</c->
   <c- f>"anchorReference"</c-><c- p>:</c-> <c- p>{</c->
     <c- f>"ledgerType"</c-><c- p>:</c-> <c- u>"hyperledger-fabric"</c-><c- p>,</c->
@@ -3098,7 +3080,7 @@ implementation technology.</p>
     <li data-md>
      <p>Obtain explicit, revocable write consent from the citizen via their Pod’s access control mechanism</p>
     <li data-md>
-     <p>Deliver the complete <u class="link-error" data-lt="snapshot" title="LINK ERROR: No &apos;dfn&apos; refs found for &apos;snapshot&apos;.">snapshot</u> (DID, <a data-link-type="dfn" href="#metadata" id="ref-for-metadata②">metadata</a>, <a data-link-type="dfn" href="#payload" id="ref-for-payload⑥">payload</a>) to the Pod</p>
+     <p>Deliver the complete <a data-link-type="dfn" href="#versions" id="ref-for-versions①⓪">version</a> (DID, <a data-link-type="dfn" href="#metadata" id="ref-for-metadata②">metadata</a>, <a data-link-type="dfn" href="#payload" id="ref-for-payload⑥">payload</a>) to the Pod</p>
     <li data-md>
      <p>Retain the canonical copy in its own RWP system, the Pod copy is an additional output, not a transfer of authority</p>
     <li data-md>
@@ -3108,7 +3090,7 @@ implementation technology.</p>
    <p>The citizen MAY present the Pod-held <a data-link-type="dfn" href="#record" id="ref-for-record⑤⑤">Record</a> to any third party, who can independently verify its authenticity via the DID and cryptographic hash without querying the issuing authority.</p>
    <h2 class="heading no-num no-toc settled" id="part-8"><span class="content">Part VIII: Annexes</span><a class="self-link" href="#part-8"></a></h2>
    <h2 class="heading settled" data-level="25" id="annex-a"><span class="secno">25. </span><span class="content">Annex A: Normative JSON Schemas</span><a class="self-link" href="#annex-a"></a></h2>
-   <h3 class="heading settled" data-level="25.1" id="schema-snapshot"><span class="secno">25.1. </span><span class="content">A.1 Record, Snapshot, and Metadata Schemas</span><a class="self-link" href="#schema-snapshot"></a></h3>
+   <h3 class="heading settled" data-level="25.1" id="schema-version"><span class="secno">25.1. </span><span class="content">A.1 Record, Version, and Metadata Schemas</span><a class="self-link" href="#schema-version"></a></h3>
 <pre class="highlight language-json"><c- p>{</c->
   <c- f>"$schema"</c-><c- p>:</c-> <c- u>"https://json-schema.org/draft/2020-12/schema"</c-><c- p>,</c->
   <c- f>"$id"</c-><c- p>:</c-> <c- u>"https://recordweb.github.io/rwp/schemas/record.json"</c-><c- p>,</c->
@@ -3117,16 +3099,16 @@ implementation technology.</p>
   <c- f>"required"</c-><c- p>:</c-> <c- p>[</c-><c- u>"did"</c-><c- p>,</c-> <c- u>"payload"</c-><c- p>,</c-> <c- u>"metadata"</c-><c- p>,</c-> <c- u>"recordHash"</c-><c- p>],</c->
   <c- f>"properties"</c-><c- p>:</c-> <c- p>{</c->
     <c- f>"did"</c-><c- p>:</c->        <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^did:rwp:[^:]+:[^:]+$"</c-> <c- p>},</c->
-    <c- f>"payload"</c-><c- p>:</c->    <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"array"</c-><c- p>,</c-> <c- f>"items"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"$ref"</c-><c- p>:</c-> <c- u>"#/$defs/snapshot"</c-> <c- p>}</c-> <c- p>},</c->
+    <c- f>"payload"</c-><c- p>:</c->    <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"array"</c-><c- p>,</c-> <c- f>"items"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"$ref"</c-><c- p>:</c-> <c- u>"#/$defs/version"</c-> <c- p>}</c-> <c- p>},</c->
     <c- f>"metadata"</c-><c- p>:</c->   <c- p>{</c-> <c- f>"$ref"</c-><c- p>:</c-> <c- u>"#/$defs/metadata"</c-> <c- p>},</c->
     <c- f>"recordHash"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^sha256:[0-9a-f]{64}$"</c-> <c- p>}</c->
   <c- p>},</c->
   <c- f>"$defs"</c-><c- p>:</c-> <c- p>{</c->
-    <c- f>"snapshot"</c-><c- p>:</c-> <c- p>{</c->
+    <c- f>"version"</c-><c- p>:</c-> <c- p>{</c->
       <c- f>"type"</c-><c- p>:</c-> <c- u>"object"</c-><c- p>,</c->
-      <c- f>"required"</c-><c- p>:</c-> <c- p>[</c-><c- u>"snapshot"</c-><c- p>,</c-> <c- u>"state"</c-><c- p>,</c-> <c- u>"parents"</c-><c- p>,</c-> <c- u>"createdAt"</c-><c- p>,</c-> <c- u>"modifiedAt"</c-><c- p>,</c-> <c- u>"representations"</c-><c- p>],</c->
+      <c- f>"required"</c-><c- p>:</c-> <c- p>[</c-><c- u>"version"</c-><c- p>,</c-> <c- u>"state"</c-><c- p>,</c-> <c- u>"parents"</c-><c- p>,</c-> <c- u>"createdAt"</c-><c- p>,</c-> <c- u>"modifiedAt"</c-><c- p>,</c-> <c- u>"representations"</c-><c- p>],</c->
       <c- f>"properties"</c-><c- p>:</c-> <c- p>{</c->
-        <c- f>"snapshot"</c-><c- p>:</c->        <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^sha256:[0-9a-f]{64}$"</c-> <c- p>},</c->
+        <c- f>"version"</c-><c- p>:</c->        <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^sha256:[0-9a-f]{64}$"</c-> <c- p>},</c->
         <c- f>"state"</c-><c- p>:</c->           <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"enum"</c-><c- p>:</c-> <c- p>[</c-><c- u>"draft"</c-><c- p>,</c-> <c- u>"finalized"</c-><c- p>]</c-> <c- p>},</c->
         <c- f>"parents"</c-><c- p>:</c->         <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"array"</c-><c- p>,</c-> <c- f>"items"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c->
                              <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^sha256:[0-9a-f]{64}$"</c-> <c- p>}</c-> <c- p>},</c->
@@ -3207,11 +3189,11 @@ implementation technology.</p>
   <c- f>"$defs"</c-><c- p>:</c-> <c- p>{</c->
     <c- f>"hardLink"</c-><c- p>:</c-> <c- p>{</c->
       <c- f>"type"</c-><c- p>:</c-> <c- u>"object"</c-><c- p>,</c->
-      <c- f>"required"</c-><c- p>:</c-> <c- p>[</c-><c- u>"type"</c-><c- p>,</c-><c- u>"recordDid"</c-><c- p>,</c-><c- u>"snapshot"</c-><c- p>],</c->
+      <c- f>"required"</c-><c- p>:</c-> <c- p>[</c-><c- u>"type"</c-><c- p>,</c-><c- u>"recordDid"</c-><c- p>,</c-><c- u>"version"</c-><c- p>],</c->
       <c- f>"properties"</c-><c- p>:</c-> <c- p>{</c->
         <c- f>"type"</c-><c- p>:</c->         <c- p>{</c-> <c- f>"const"</c-><c- p>:</c-> <c- u>"hard"</c-> <c- p>},</c->
         <c- f>"recordDid"</c-><c- p>:</c->    <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^did:rwp:"</c-> <c- p>},</c->
-        <c- f>"snapshot"</c-><c- p>:</c->     <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^sha256:[0-9a-f]{64}$"</c-> <c- p>},</c->
+        <c- f>"version"</c-><c- p>:</c->     <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^sha256:[0-9a-f]{64}$"</c-> <c- p>},</c->
         <c- f>"role"</c-><c- p>:</c->         <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-> <c- p>}</c->
       <c- p>}</c->
     <c- p>},</c->
@@ -3221,7 +3203,7 @@ implementation technology.</p>
       <c- f>"properties"</c-><c- p>:</c-> <c- p>{</c->
         <c- f>"type"</c-><c- p>:</c->         <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"enum"</c-><c- p>:</c-> <c- p>[</c-><c- u>"hard"</c-><c- p>,</c-><c- u>"soft"</c-><c- p>]</c-> <c- p>},</c->
         <c- f>"recordDid"</c-><c- p>:</c->    <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^did:rwp:"</c-> <c- p>},</c->
-        <c- f>"snapshot"</c-><c- p>:</c->     <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^sha256:[0-9a-f]{64}$"</c-> <c- p>},</c->
+        <c- f>"version"</c-><c- p>:</c->     <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^sha256:[0-9a-f]{64}$"</c-> <c- p>},</c->
         <c- f>"role"</c-><c- p>:</c->         <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-> <c- p>}</c->
       <c- p>}</c->
     <c- p>}</c->
@@ -3238,11 +3220,11 @@ implementation technology.</p>
   <c- f>"properties"</c-><c- p>:</c-> <c- p>{</c->
     <c- f>"deletionRecord"</c-><c- p>:</c-> <c- p>{</c->
       <c- f>"type"</c-><c- p>:</c-> <c- u>"object"</c-><c- p>,</c->
-      <c- f>"required"</c-><c- p>:</c-> <c- p>[</c-><c- u>"targetDid"</c-><c- p>,</c-><c- u>"targetSnapshot"</c-><c- p>,</c-><c- u>"deletionRegime"</c-><c- p>,</c->
+      <c- f>"required"</c-><c- p>:</c-> <c- p>[</c-><c- u>"targetDid"</c-><c- p>,</c-><c- u>"targetVersion"</c-><c- p>,</c-><c- u>"deletionRegime"</c-><c- p>,</c->
                    <c- u>"legalBasis"</c-><c- p>,</c-><c- u>"requestedBy"</c-><c- p>,</c-><c- u>"approvedBy"</c-><c- p>,</c-><c- u>"deletedAt"</c-><c- p>],</c->
       <c- f>"properties"</c-><c- p>:</c-> <c- p>{</c->
         <c- f>"targetDid"</c-><c- p>:</c->          <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^did:rwp:"</c-> <c- p>},</c->
-        <c- f>"targetSnapshot"</c-><c- p>:</c->     <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c->
+        <c- f>"targetVersion"</c-><c- p>:</c->     <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c->
                                 <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^sha256:[0-9a-f]{64}$"</c-> <c- p>},</c->
         <c- f>"deletionRegime"</c-><c- p>:</c->     <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c->
                                 <c- f>"enum"</c-><c- p>:</c-> <c- p>[</c-><c- u>"payload-only"</c-><c- p>,</c-><c- u>"full-delete"</c-><c- p>,</c-><c- u>"exempt"</c-><c- p>]</c-> <c- p>},</c->
@@ -3301,7 +3283,7 @@ implementation technology.</p>
     <li data-md>
      <p>Implement version creation with the <a href="#chapter-metadata">Metadata</a></p>
     <li data-md>
-     <p>Implement <a href="#chapter-crypto-procedures">Hash Calculation</a></p>
+     <p>Implement <a href="#chapter-crypto-procedures">Version Hash Calculation</a></p>
     <li data-md>
      <p>Implement the <code>draft</code> → <code>finalized</code> state transition with <a href="#subsection-finalisation-requirements">Finalisation Requirements</a></p>
     <li data-md>
@@ -3634,7 +3616,7 @@ let dfnPanelData = {
 "metadata": {"dfnID":"metadata","dfnText":"Metadata","external":false,"refSections":[{"refs":[{"id":"ref-for-metadata"}],"title":"3.1. Components"},{"refs":[{"id":"ref-for-metadata\u2460"}],"title":"9.1. Record Type Definition"},{"refs":[{"id":"ref-for-metadata\u2461"}],"title":"24. Optional Solid Pod Delivery"}],"url":"#metadata"},
 "payload": {"dfnID":"payload","dfnText":"payload","external":false,"refSections":[{"refs":[{"id":"ref-for-payload"}],"title":"3.1. Components"},{"refs":[{"id":"ref-for-payload\u2460"}],"title":"5.1. Payload Structure"},{"refs":[{"id":"ref-for-payload\u2461"}],"title":"5.5.3. Edges (Parent References)"},{"refs":[{"id":"ref-for-payload\u2462"},{"id":"ref-for-payload\u2463"}],"title":"8.3. DeletionRecord Protocol"},{"refs":[{"id":"ref-for-payload\u2464"}],"title":"9.1. Record Type Definition"},{"refs":[{"id":"ref-for-payload\u2465"}],"title":"24. Optional Solid Pod Delivery"}],"url":"#payload"},
 "producer": {"dfnID":"producer","dfnText":"producer","external":false,"refSections":[],"url":"#producer"},
-"record": {"dfnID":"record","dfnText":"Record","external":false,"refSections":[{"refs":[{"id":"ref-for-record"}],"title":"1.1. Purpose"},{"refs":[{"id":"ref-for-record\u2460"},{"id":"ref-for-record\u2461"}],"title":"1.2. Scope"},{"refs":[{"id":"ref-for-record\u2462"}],"title":"3. The Record"},{"refs":[{"id":"ref-for-record\u2463"},{"id":"ref-for-record\u2464"},{"id":"ref-for-record\u2465"},{"id":"ref-for-record\u2466"}],"title":"3.1. Components"},{"refs":[{"id":"ref-for-record\u2467"},{"id":"ref-for-record\u2468"}],"title":"3.3. Record taxonomy"},{"refs":[{"id":"ref-for-record\u2460\u24ea"},{"id":"ref-for-record\u2460\u2460"},{"id":"ref-for-record\u2460\u2461"},{"id":"ref-for-record\u2460\u2462"}],"title":"4.1. Requirements for Record Identity"},{"refs":[{"id":"ref-for-record\u2460\u2463"}],"title":"4.2. DID Format"},{"refs":[{"id":"ref-for-record\u2460\u2464"},{"id":"ref-for-record\u2460\u2465"}],"title":"4.3. DID Document"},{"refs":[{"id":"ref-for-record\u2460\u2466"}],"title":"4.4. DID Resolver Requirements"},{"refs":[{"id":"ref-for-record\u2460\u2467"},{"id":"ref-for-record\u2460\u2468"}],"title":"5.1. Payload Structure"},{"refs":[{"id":"ref-for-record\u2461\u24ea"},{"id":"ref-for-record\u2461\u2460"}],"title":"5.3. Conversion During Finalisation"},{"refs":[{"id":"ref-for-record\u2461\u2461"}],"title":"5.4.1. State Model"},{"refs":[{"id":"ref-for-record\u2461\u2462"}],"title":"5.4.2. Linkability"},{"refs":[{"id":"ref-for-record\u2461\u2463"}],"title":"5.5.1. Graph Structure"},{"refs":[{"id":"ref-for-record\u2461\u2464"},{"id":"ref-for-record\u2461\u2465"}],"title":"5.5.3. Edges (Parent References)"},{"refs":[{"id":"ref-for-record\u2461\u2466"}],"title":"5.5.4. Branches"},{"refs":[{"id":"ref-for-record\u2461\u2467"},{"id":"ref-for-record\u2461\u2468"},{"id":"ref-for-record\u2462\u24ea"}],"title":"5.5.6. Cross-Record Merges"},{"refs":[{"id":"ref-for-record\u2462\u2460"}],"title":"6. Metadata"},{"refs":[{"id":"ref-for-record\u2462\u2461"},{"id":"ref-for-record\u2462\u2462"}],"title":"6.1. metadata.core"},{"refs":[{"id":"ref-for-record\u2462\u2463"},{"id":"ref-for-record\u2462\u2464"},{"id":"ref-for-record\u2462\u2465"}],"title":"6.2. metadata.governance"},{"refs":[{"id":"ref-for-record\u2462\u2466"},{"id":"ref-for-record\u2462\u2467"}],"title":"6.3. metadata.extensions"},{"refs":[{"id":"ref-for-record\u2462\u2468"}],"title":"7.1. Purpose"},{"refs":[{"id":"ref-for-record\u2463\u24ea"},{"id":"ref-for-record\u2463\u2460"}],"title":"9.1. Record Type Definition"},{"refs":[{"id":"ref-for-record\u2463\u2461"}],"title":"10.1. Case as a specialised Record Type {#section-case-type}"},{"refs":[{"id":"ref-for-record\u2463\u2462"}],"title":"10.4. Hard and Soft Links"},{"refs":[{"id":"ref-for-record\u2463\u2463"}],"title":"11.1. Purpose and scope"},{"refs":[{"id":"ref-for-record\u2463\u2464"}],"title":"14. SchemaRecord"},{"refs":[{"id":"ref-for-record\u2463\u2465"}],"title":"14.1. Schema Versioning and Backward Compatibility"},{"refs":[{"id":"ref-for-record\u2463\u2466"}],"title":"19.3. Snapshot Integrity"},{"refs":[{"id":"ref-for-record\u2463\u2467"},{"id":"ref-for-record\u2463\u2468"},{"id":"ref-for-record\u2464\u24ea"}],"title":"21.3. Cross-Namespace Links"},{"refs":[{"id":"ref-for-record\u2464\u2460"}],"title":"22.2. Access Policy Block"},{"refs":[{"id":"ref-for-record\u2464\u2461"}],"title":"23.2. Requirements for the Ledger"},{"refs":[{"id":"ref-for-record\u2464\u2462"},{"id":"ref-for-record\u2464\u2463"},{"id":"ref-for-record\u2464\u2464"}],"title":"24. Optional Solid Pod Delivery"}],"url":"#record"},
+"record": {"dfnID":"record","dfnText":"Record","external":false,"refSections":[{"refs":[{"id":"ref-for-record"}],"title":"1.1. Purpose"},{"refs":[{"id":"ref-for-record\u2460"},{"id":"ref-for-record\u2461"}],"title":"1.2. Scope"},{"refs":[{"id":"ref-for-record\u2462"}],"title":"3. The Record"},{"refs":[{"id":"ref-for-record\u2463"},{"id":"ref-for-record\u2464"},{"id":"ref-for-record\u2465"},{"id":"ref-for-record\u2466"}],"title":"3.1. Components"},{"refs":[{"id":"ref-for-record\u2467"},{"id":"ref-for-record\u2468"}],"title":"3.3. Record taxonomy"},{"refs":[{"id":"ref-for-record\u2460\u24ea"},{"id":"ref-for-record\u2460\u2460"},{"id":"ref-for-record\u2460\u2461"},{"id":"ref-for-record\u2460\u2462"}],"title":"4.1. Requirements for Record Identity"},{"refs":[{"id":"ref-for-record\u2460\u2463"}],"title":"4.2. DID Format"},{"refs":[{"id":"ref-for-record\u2460\u2464"},{"id":"ref-for-record\u2460\u2465"}],"title":"4.3. DID Document"},{"refs":[{"id":"ref-for-record\u2460\u2466"}],"title":"4.4. DID Resolver Requirements"},{"refs":[{"id":"ref-for-record\u2460\u2467"},{"id":"ref-for-record\u2460\u2468"}],"title":"5.1. Payload Structure"},{"refs":[{"id":"ref-for-record\u2461\u24ea"},{"id":"ref-for-record\u2461\u2460"}],"title":"5.3. Conversion During Finalisation"},{"refs":[{"id":"ref-for-record\u2461\u2461"}],"title":"5.4.1. State Model"},{"refs":[{"id":"ref-for-record\u2461\u2462"}],"title":"5.4.2. Linkability"},{"refs":[{"id":"ref-for-record\u2461\u2463"}],"title":"5.5.1. Graph Structure"},{"refs":[{"id":"ref-for-record\u2461\u2464"},{"id":"ref-for-record\u2461\u2465"}],"title":"5.5.3. Edges (Parent References)"},{"refs":[{"id":"ref-for-record\u2461\u2466"}],"title":"5.5.4. Branches"},{"refs":[{"id":"ref-for-record\u2461\u2467"},{"id":"ref-for-record\u2461\u2468"},{"id":"ref-for-record\u2462\u24ea"}],"title":"5.5.6. Cross-Record Merges"},{"refs":[{"id":"ref-for-record\u2462\u2460"}],"title":"6. Metadata"},{"refs":[{"id":"ref-for-record\u2462\u2461"},{"id":"ref-for-record\u2462\u2462"}],"title":"6.1. metadata.core"},{"refs":[{"id":"ref-for-record\u2462\u2463"},{"id":"ref-for-record\u2462\u2464"},{"id":"ref-for-record\u2462\u2465"}],"title":"6.2. metadata.governance"},{"refs":[{"id":"ref-for-record\u2462\u2466"},{"id":"ref-for-record\u2462\u2467"}],"title":"6.3. metadata.extensions"},{"refs":[{"id":"ref-for-record\u2462\u2468"}],"title":"7.1. Purpose"},{"refs":[{"id":"ref-for-record\u2463\u24ea"},{"id":"ref-for-record\u2463\u2460"}],"title":"9.1. Record Type Definition"},{"refs":[{"id":"ref-for-record\u2463\u2461"}],"title":"10.1. Case as a specialised Record Type {#section-case-type}"},{"refs":[{"id":"ref-for-record\u2463\u2462"}],"title":"10.4. Hard and Soft Links"},{"refs":[{"id":"ref-for-record\u2463\u2463"}],"title":"11.1. Purpose and scope"},{"refs":[{"id":"ref-for-record\u2463\u2464"}],"title":"14. SchemaRecord"},{"refs":[{"id":"ref-for-record\u2463\u2465"}],"title":"14.1. Schema Versioning and Backward Compatibility"},{"refs":[{"id":"ref-for-record\u2463\u2466"}],"title":"19.3. Version Integrity"},{"refs":[{"id":"ref-for-record\u2463\u2467"},{"id":"ref-for-record\u2463\u2468"},{"id":"ref-for-record\u2464\u24ea"}],"title":"21.3. Cross-Namespace Links"},{"refs":[{"id":"ref-for-record\u2464\u2460"}],"title":"22.2. Access Policy Block"},{"refs":[{"id":"ref-for-record\u2464\u2461"}],"title":"23.2. Requirements for the Ledger"},{"refs":[{"id":"ref-for-record\u2464\u2462"},{"id":"ref-for-record\u2464\u2463"},{"id":"ref-for-record\u2464\u2464"}],"title":"24. Optional Solid Pod Delivery"}],"url":"#record"},
 "recordhash": {"dfnID":"recordhash","dfnText":"recordHash","external":false,"refSections":[],"url":"#recordhash"},
 "relationrecord": {"dfnID":"relationrecord","dfnText":"RelationRecord","external":false,"refSections":[{"refs":[{"id":"ref-for-relationrecord"},{"id":"ref-for-relationrecord\u2460"},{"id":"ref-for-relationrecord\u2461"}],"title":"3.3. Record taxonomy"},{"refs":[{"id":"ref-for-relationrecord\u2462"}],"title":"10.1. Case as a specialised Record Type {#section-case-type}"},{"refs":[{"id":"ref-for-relationrecord\u2463"}],"title":"10.4. Hard and Soft Links"},{"refs":[{"id":"ref-for-relationrecord\u2464"}],"title":"11.1. Purpose and scope"}],"url":"#relationrecord"},
 "resolver": {"dfnID":"resolver","dfnText":"resolver","external":false,"refSections":[],"url":"#resolver"},
@@ -3643,7 +3625,7 @@ let dfnPanelData = {
 "source-adapter": {"dfnID":"source-adapter","dfnText":"source-adapter","external":false,"refSections":[],"url":"#source-adapter"},
 "systemrecord": {"dfnID":"systemrecord","dfnText":"SystemRecord","external":false,"refSections":[{"refs":[{"id":"ref-for-systemrecord"},{"id":"ref-for-systemrecord\u2460"},{"id":"ref-for-systemrecord\u2461"},{"id":"ref-for-systemrecord\u2462"},{"id":"ref-for-systemrecord\u2463"},{"id":"ref-for-systemrecord\u2464"}],"title":"3.3. Record taxonomy"},{"refs":[{"id":"ref-for-systemrecord\u2465"}],"title":"10.4. Hard and Soft Links"}],"url":"#systemrecord"},
 "version-graph": {"dfnID":"version-graph","dfnText":"version graph","external":false,"refSections":[{"refs":[{"id":"ref-for-version-graph"}],"title":"5.5.1. Graph Structure"},{"refs":[{"id":"ref-for-version-graph\u2460"}],"title":"5.5.2. Nodes"}],"url":"#version-graph"},
-"versions": {"dfnID":"versions","dfnText":"versions","external":false,"refSections":[{"refs":[{"id":"ref-for-versions"}],"title":"5.1. Payload Structure"}],"url":"#versions"},
+"versions": {"dfnID":"versions","dfnText":"versions","external":false,"refSections":[{"refs":[{"id":"ref-for-versions"}],"title":"5.1. Payload Structure"},{"refs":[{"id":"ref-for-versions\u2460"}],"title":"6.2. metadata.governance"},{"refs":[{"id":"ref-for-versions\u2461"}],"title":"8.3. DeletionRecord Protocol"},{"refs":[{"id":"ref-for-versions\u2462"}],"title":"10.4. Hard and Soft Links"},{"refs":[{"id":"ref-for-versions\u2463"},{"id":"ref-for-versions\u2464"},{"id":"ref-for-versions\u2465"},{"id":"ref-for-versions\u2466"}],"title":"19.3. Version Integrity"},{"refs":[{"id":"ref-for-versions\u2467"},{"id":"ref-for-versions\u2468"}],"title":"21.3. Cross-Namespace Links"},{"refs":[{"id":"ref-for-versions\u2460\u24ea"}],"title":"24. Optional Solid Pod Delivery"}],"url":"#versions"},
 };
 
 document.addEventListener("DOMContentLoaded", ()=>{
