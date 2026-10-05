@@ -34,13 +34,13 @@ An AssertionRecord using a PROV-O predicate MUST satisfy the semantic domain and
 
 ### Relationship to the RWP version graph {#subsection-assertionrecord-version-graph}
 
-The RWP version graph is the authoritative representation of version succession between snapshots of the same Record.
+The RWP version graph is the authoritative representation of version succession between versions of the same Record.
 
-A conforming implementation MUST determine RWP snapshot ancestry, direct parentage, branches, and merge relationships exclusively from the `parents` field and the rules defined in [Version Graph](#section-payload-version-graph).
+A conforming implementation MUST determine RWP version ancestry, direct parentage, branches, and merge relationships exclusively from the `parents` field and the rules defined in [Version Graph](#section-payload-version-graph).
 
 An AssertionRecord using `prov:wasRevisionOf`, `prov:wasDerivedFrom`, or another provenance predicate MUST NOT create, alter, replace, or repair a version-graph edge.
 
-Where an AssertionRecord documents a relationship between snapshots of the same Record, it MAY provide additional attributable documentary evidence. It MUST NOT be used to infer a parent relationship that is absent from the version graph.
+Where an AssertionRecord documents a relationship between versions of the same Record, it MAY provide additional attributable documentary evidence. It MUST NOT be used to infer a parent relationship that is absent from the version graph.
 
 If an AssertionRecord and the version graph make incompatible statements about version succession, a conforming implementation MUST treat the version graph as authoritative for all RWP versioning, ancestry, finalisation, merge, and integrity decisions.
 

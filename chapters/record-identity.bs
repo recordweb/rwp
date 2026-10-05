@@ -202,6 +202,7 @@ An implementation claiming the `resolver` role MUST provide a DID resolver that:
 - Resolves DIDs of the method `rwp` and returns the associated DID document
 - Delivers the DID document as JSON-LD in accordance with [[DID-CORE]]
 - Returns HTTP 200 when the DID is known
+- Returns HTTP 403 where the resolver's applicable access policy does not permit the requester to obtain the DID document
 - Returns HTTP 404 when the DID is unknown
 - Returns HTTP 410 when the DID is known but the [=Record=] has been deleted (payload deletion per [Payload Deletion](#chapter-deletion))
 

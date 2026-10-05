@@ -23,16 +23,16 @@ The subject and object MUST be resource reference objects containing an `id` fie
 
 The `id` field MUST identify the referenced resource. It MAY contain an RWP DID, another DID, or an absolute IRI, subject to the constraints of the applicable predicate declaration.
 
-A resource reference identifying an RWP Record MAY additionally contain a `snapshot` field.
+A resource reference identifying an RWP Record MAY additionally contain a `versionHash` field.
 
-Where `snapshot` is present:
+Where `versionHash` is present:
 
 - `id` MUST be the DID of an RWP Record;
-- `snapshot` MUST identify a snapshot of that Record (per [Snapshot Fields](#section-payload-definition));
-- the AssertionRecord refers to that specific immutable snapshot; and
-- a validating implementation MUST verify that the resolved snapshot belongs to the identified Record where the snapshot is resolvable.
+- `versionHash` MUST identify a version of that Record (per [versionHash](#section-payload-definition));
+- the AssertionRecord refers to that specific immutable version; and
+- a validating implementation MUST verify that the resolved version belongs to the identified Record where the version is resolvable.
 
-Where `snapshot` is absent, the AssertionRecord refers to the identified Record or other resource independently of a specific version.
+Where `versionHash` is absent, the AssertionRecord refers to the identified Record or other resource independently of a specific version.
 
 An AssertionRecord MUST NOT be interpreted as modifying the subject or object. It preserves only the assertion made by its asserting Agent.
 
@@ -56,7 +56,7 @@ The value of `assertedBy` MUST identify the Agent responsible for the assertion.
 {
   "subject": {
     "id": "did:rwp:record-A",
-    "snapshot": "sha256:..."
+    "versionHash": "sha256:..."
   },
   "predicate": "https://www.w3.org/ns/prov#wasDerivedFrom",
   "object": {

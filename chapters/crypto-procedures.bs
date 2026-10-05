@@ -5,7 +5,7 @@ Cryptographic Procedures {#chapter-crypto-procedures}
 
 RWP uses exclusively **SHA-256** as the hashing procedure for:
 
-- Snapshot hashes (`snapshot`)
+- Version hashes (`versionHash`)
 - Representation hashes (`representations[].hash`)
 - Record-level hashes (`recordHash`)
 - Schema version hashes (`schemaVersion`)
@@ -27,17 +27,17 @@ Requirements:
 - No superfluous whitespace or line breaks
 - Numbers MUST be represented in their canonical form
 
-## Snapshot Integrity ## {#section-crypto-procedures-snapshot-integrity}
+## Version Integrity ## {#section-crypto-procedures-version-integrity}
 
-A system MUST check the integrity of a [=snapshot=] on the following events:
+A system MUST check the integrity of a [=version=] on the following events:
 
-- Receipt of a [=snapshot=] from an external system
-- Retrieval of a [=snapshot=] for a linking operation
+- Receipt of a [=version=] from an external system
+- Retrieval of a [=version=] for a linking operation
 - Periodic integrity check
 
 If the integrity check fails, the system MUST:
 
-1. Mark the [=snapshot=] as `compromised`
+1. Mark the [=version=] as `compromised`
 2. Mark all dependent [=Records=] as `integrity-warning`
 3. Log the incident in the system log with timestamp and discrepancy
 4. Notify the responsible record owner via the DID (SHOULD)
@@ -46,13 +46,13 @@ The system MUST NOT automatically attempt to reconstruct the original content.
 
 ## Signature Procedure ## {#section-crypto-procedures-signature}
 
-If the schema prescribes a signature (`signaturePolicy: owner` or `signaturePolicy: system`), the snapshot hash MUST be cryptographically signed during the finalisation act.
+If the schema prescribes a signature (`signaturePolicy: owner` or `signaturePolicy: system`), the `versionHash` MUST be cryptographically signed during the finalisation act.
 
 Requirements:
 
 - MUST be Ed25519 (EdDSA, [[RFC8037]]) or P-256 (ECDSA, NIST)
-- The signature MUST be calculated over the canonical `snapshot` hash value (as hex string)
-- The signature MUST be stored in the `signature` field of the snapshot entry as a multibase-encoded value
+- The signature MUST be calculated over the canonical `versionHash` hash value (as hex string)
+- The signature MUST be stored in the `signature` field of the version entry as a multibase-encoded value
 - The key used MUST be published in the DID document of the record owner as a verification method
 
 ## Merkle Tree Algorithm ## {#section-crypto-procedures-merkle-algorithm}

@@ -6,7 +6,7 @@ Every [=Record=] MUST consist of exactly four components:
 ## Components ## {#section-record-components}
 
 1. **[=Identity=]** — the DID of the [=Record=] ([Record Identity (DID)](#chapter-record-identity))
-2. **[=Payload=]** — the content of the [=Record=] ([Payload and Snapshots](#chapter-payload))
+2. **[=Payload=]** — the content of the [=Record=] ([Payload and Versions](#chapter-payload))
 3. **[=Metadata=]** — descriptive dimensions of the [=Record=] ([Metadata](#chapter-metadata))
 4. **[=Integrity=]** — the hash of the [=Record=] ([Record Integrity](#chapter-record-integrity))
 

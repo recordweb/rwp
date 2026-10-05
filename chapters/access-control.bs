@@ -7,6 +7,9 @@ RWP deliberately defines no mandatory authorisation model. Data security and inf
 
 The core principle: access control in RWP is **attribute-based** (ABAC) and **delegatable**. Rights are not assigned to roles in a fixed hierarchy, but expressed as verifiable claims attached to DIDs.
 
+A denied access is not an integrity result. How a denial is communicated is defined in [Validation Response Codes](#subsection-record-integrity-validation-responsecode).
+
+
 ## Access Policy Block ## {#section-access-policy}
 
 An implementation claiming this optional capability MAY carry the `accessPolicy` block as an entry in the [=Record=]'s `metadata.extensions` array (see [metadata.extensions](#section-metadata-extensions)), using the reserved type identifier `did:rwp:recordweb.org:extension-access-policy`:

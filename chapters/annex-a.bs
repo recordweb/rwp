@@ -1,7 +1,7 @@
 Annex A: Normative JSON Schemas {#annex-a}
 ==========================================
 
-## A.1 Record, Snapshot, and Metadata Schemas ## {#schema-snapshot}
+## A.1 Record, Version, and Metadata Schemas ## {#schema-version}
 
 ```json
 {
@@ -12,16 +12,16 @@ Annex A: Normative JSON Schemas {#annex-a}
   "required": ["did", "payload", "metadata", "recordHash"],
   "properties": {
     "did":        { "type": "string", "pattern": "^did:rwp:[^:]+:[^:]+$" },
-    "payload":    { "type": "array", "items": { "$ref": "#/$defs/snapshot" } },
+    "payload":    { "type": "array", "items": { "$ref": "#/$defs/version" } },
     "metadata":   { "$ref": "#/$defs/metadata" },
     "recordHash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
   },
   "$defs": {
-    "snapshot": {
+    "version": {
       "type": "object",
-      "required": ["snapshot", "state", "parents", "createdAt", "modifiedAt", "representations"],
+      "required": ["version", "state", "parents", "createdAt", "modifiedAt", "representations"],
       "properties": {
-        "snapshot":        { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+        "version":        { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
         "state":           { "type": "string", "enum": ["draft", "finalized"] },
         "parents":         { "type": "array", "items": { "type": "string",
                              "pattern": "^sha256:[0-9a-f]{64}$" } },
@@ -106,11 +106,11 @@ This schema defines structural validation only. State-dependent finalisation req
   "$defs": {
     "hardLink": {
       "type": "object",
-      "required": ["type","recordDid","snapshot"],
+      "required": ["type","recordDid","version"],
       "properties": {
         "type":         { "const": "hard" },
         "recordDid":    { "type": "string", "pattern": "^did:rwp:" },
-        "snapshot":     { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+        "version":     { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
         "role":         { "type": "string" }
       }
     },
@@ -120,7 +120,7 @@ This schema defines structural validation only. State-dependent finalisation req
       "properties": {
         "type":         { "type": "string", "enum": ["hard","soft"] },
         "recordDid":    { "type": "string", "pattern": "^did:rwp:" },
-        "snapshot":     { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+        "version":     { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
         "role":         { "type": "string" }
       }
     }
@@ -140,11 +140,11 @@ This schema defines structural validation only. State-dependent finalisation req
   "properties": {
     "deletionRecord": {
       "type": "object",
-      "required": ["targetDid","targetSnapshot","deletionRegime",
+      "required": ["targetDid","targetVersion","deletionRegime",
                    "legalBasis","requestedBy","approvedBy","deletedAt"],
       "properties": {
         "targetDid":          { "type": "string", "pattern": "^did:rwp:" },
-        "targetSnapshot":     { "type": "string",
+        "targetVersion":     { "type": "string",
                                 "pattern": "^sha256:[0-9a-f]{64}$" },
         "deletionRegime":     { "type": "string",
                                 "enum": ["payload-only","full-delete","exempt"] },

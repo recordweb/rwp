@@ -21,19 +21,19 @@ A `CaseRecord` payload MUST contain the following fields:
   "trigger": {
     "type": "hard",
     "recordDid": "did:rwp:bern.ch:application-001",
-    "snapshot": "sha256:application-finalized-hash0000000000000000000000000000000000"
+    "versionHash": "sha256:application-finalized-hash0000000000000000000000000000000000"
   },
   "context": [
     {
       "type": "hard",
       "recordDid": "did:rwp:bern.ch:zoning-plan-2024",
-      "snapshot": "sha256:zoning-plan-hash0000000000000000000000000000000000000000000",
+      "versionHash": "sha256:zoning-plan-hash0000000000000000000000000000000000000000000",
       "role": "Legal basis"
     },
     {
       "type": "hard",
       "recordDid": "did:rwp:bern.ch:case-planning-approval-001",
-      "snapshot": "sha256:planning-approval-case-hash00000000000000000000000000000000",
+      "versionHash": "sha256:planning-approval-case-hash00000000000000000000000000000000",
       "role": "Related administrative proceeding"
     }
   ],
@@ -41,7 +41,7 @@ A `CaseRecord` payload MUST contain the following fields:
     {
       "type": "hard",
       "recordDid": "did:rwp:bern.ch:minutes-site-inspection",
-      "snapshot": "sha256:minutes-hash00000000000000000000000000000000000000000000000",
+      "versionHash": "sha256:minutes-hash00000000000000000000000000000000000000000000000",
       "role": "Investigation"
     }
   ],
@@ -93,11 +93,11 @@ Unless a CaseRecord schema defines more specific constraints, every Case element
 
 A Case link MAY target any [=Record=], including an [=InformationRecord=], a [=RelationRecord=] (including another [=CaseRecord=]), or a [=SystemRecord=].
 
-A <dfn>hard link</dfn> points to one identified [=finalized=] [=snapshot=] of a target Record. A hard link MUST contain the target `recordDid` and `snapshot` (the target snapshot's hash, per [Snapshot Fields](#section-payload-definition)).
+A <dfn>hard link</dfn> points to one identified [=finalized=] [=version=] of a target Record. A hard link MUST contain the target `recordDid` and `versionHash` (the target version's hash, per [versionHash](#section-payload-definition)).
 
 A hard link is immutable after finalisation of the referencing [=CaseRecord=].
 
-A <dfn>soft link</dfn> is a working reference that points to a target `recordDid` without identifying a target snapshot. A soft link MAY point to a [=draft=] or [=finalized=] Record.
+A <dfn>soft link</dfn> is a working reference that points to a target `recordDid` without identifying a target version. A soft link MAY point to a [=draft=] or [=finalized=] Record.
 
 A CaseRecord containing one or more soft links MUST NOT be finalised. Every soft link MUST be converted to a hard link before finalisation of the CaseRecord.
 
@@ -109,30 +109,30 @@ A notification, callback, or other message received through Source Integration M
 
 A [=CaseRecord=] MAY link to another CaseRecord through a [=soft link=] or a [=hard link=].
 
-A hard link to a CaseRecord MUST identify a [=finalized=] snapshot of the target CaseRecord through its `recordDid` and `snapshot`.
+A hard link to a CaseRecord MUST identify a [=finalized=] version of the target CaseRecord through its `recordDid` and `versionHash`.
 
-During finalisation of a referencing CaseRecord, the system MUST resolve and validate every target CaseRecord snapshot referenced through a hard link, subject to the applicable federation and offline-validation rules.
+During finalisation of a referencing CaseRecord, the system MUST resolve and validate every target CaseRecord version referenced through a hard link, subject to the applicable federation and offline-validation rules.
 
-The `snapshot` value of a hard-linked target CaseRecord MUST be included in the [=Merkle root=] of the referencing CaseRecord.
+The `versionHash` value of a hard-linked target CaseRecord MUST be included in the [=Merkle root=] of the referencing CaseRecord.
 
 A soft link MAY refer to a draft or finalised CaseRecord during work. A soft link to a CaseRecord MUST be converted to a hard link before finalisation of the referencing CaseRecord.
 
-A link from CaseRecord A to CaseRecord B references only the identified snapshot of CaseRecord B.
+A link from CaseRecord A to CaseRecord B references only the identified version of CaseRecord B.
 
 A CaseRecord-to-CaseRecord link MUST NOT include, copy, inherit, or otherwise treat Records linked by CaseRecord B as direct members of CaseRecord A.
 
-The referenced CaseRecord B snapshot and its Merkle root provide evidence of the Records directly linked by CaseRecord B at the time that snapshot was finalised. A Record is a direct member of CaseRecord A only if CaseRecord A links to that Record explicitly.
+The referenced CaseRecord B version and its Merkle root provide evidence of the Records directly linked by CaseRecord B at the time that version was finalised. A Record is a direct member of CaseRecord A only if CaseRecord A links to that Record explicitly.
 
 ## Case Merkle Root ## {#section-merkle-root-calc}
 
-The <dfn>Merkle root</dfn> of a [=CaseRecord=] provides a cryptographically verifiable representation of the set of snapshots directly hard-linked by that [=CaseRecord=].
+The <dfn>Merkle root</dfn> of a [=CaseRecord=] provides a cryptographically verifiable representation of the set of versions directly hard-linked by that [=CaseRecord=].
 
-For the purposes of this section, a `snapshot` value and a `merkleRoot` MUST be represented in the canonical textual form `sha256:` followed by the lowercase hexadecimal encoding of exactly 32 octets.
+For the purposes of this section, a `versionHash` value and a `merkleRoot` MUST be represented in the canonical textual form `sha256:` followed by the lowercase hexadecimal encoding of exactly 32 octets.
 
 The Merkle root of a [=CaseRecord=] MUST be calculated as follows:
 
-1. An implementation MUST collect the `snapshot` value of every hard link in the [=CaseRecord=], including every hard link to another [=CaseRecord=].
-2. For each collected `snapshot` value, the implementation MUST remove the `sha256:` prefix and decode the remaining hexadecimal value into its 32-octet SHA-256 digest value.
+1. An implementation MUST collect the `versionHash` value of every hard link in the [=CaseRecord=], including every hard link to another [=CaseRecord=].
+2. For each collected `versionHash` value, the implementation MUST remove the `sha256:` prefix and decode the remaining hexadecimal value into its 32-octet SHA-256 digest value.
 3. The implementation MUST sort the decoded digest values in ascending lexicographic order over unsigned octets.
 4. For each sorted digest value `d`, the implementation MUST calculate a leaf node value as follows:
 
@@ -153,7 +153,7 @@ In this section, `||` denotes byte concatenation. The values `0x00` and `0x01` a
 
 A [=CaseRecord=] with no hard links MUST NOT be finalised. This specification therefore defines no Merkle root for an empty set of hard links.
 
-The Merkle root of a [=CaseRecord=] MUST include the hash of each directly hard-linked target snapshot. It MUST NOT recursively include the individual hard-link hashes or linked Record snapshots contained in a referenced [=CaseRecord=].
+The Merkle root of a [=CaseRecord=] MUST include the hash of each directly hard-linked target version. It MUST NOT recursively include the individual hard-link hashes or linked Record versions contained in a referenced [=CaseRecord=].
 
 The [=Merkle root=] MUST be recalculated every time a [=hard link=] is added or removed. A system MUST verify the [=Merkle root=] before finalising the [=CaseRecord=].
 

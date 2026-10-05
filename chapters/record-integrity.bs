@@ -71,6 +71,7 @@ A Validation of one object MUST NOT be represented as a Validation of any relate
 
 In particular, a Validation of a Record MUST NOT be represented as a Validation of all Versions of that Record. A Validation of a Version MUST NOT be represented as a Validation of all Representations or Content objects associated with that Version.
 
+A Version identifier MAY additionally be validated by verifying `signature` over `versionHash` against a verification method of the DID document, in accordance with § 19.4.
 
 ### Validation Result ### {#subsection-record-integrity-validation-result}
 
@@ -101,11 +102,15 @@ The `validationResponse` property communicates the result of a Validation for th
 | --- | --- | --- |
 | `200` | OK | The applicable hash calculation was performed and the calculated hash equals the declared `recordHash`, `versionHash`, or `contentHash`. |
 | `400` | Bad Request | The `validationObject` or the Validation request is syntactically or semantically invalid. |
-| `404` | Not Found | The identified object, or information required to calculate its applicable hash, could not be found. |
+| `403` | Forbidden | The identified object or information required to calculate its applicable hash exists or was identified, but the Consumer was not authorised to obtain it. |
+| `404` | Not Found | The identified object, or information required to calculate its applicable hash, could not be found or resolved. A system MAY use this outcome to conceal the existence of an object it does not permit the Consumer to access. |
 | `406` | Not Acceptable | The Consumer cannot process a required format, content type, representation, or other input required for the applicable calculation. |
 | `422` | Unprocessable Content | The required input was available and the applicable hash calculation was performed, but the calculated hash does not equal the declared hash. |
-| `424` | Failed Dependency | The Validation could not be completed because a required dependent resource or information was unavailable, incomplete, or could not be validated. |
+| `424` | Failed Dependency | The Validation could not be completed because a required dependent resource or information was unavailable, incomplete, or could not be validated. Where the cause is a denied authorisation, 403 applies instead. |
 
 The codes defined in this section are Validation result codes. They do not define HTTP response semantics.
 
 When Validation is exposed through an HTTP API, server-side failures MAY be communicated using applicable HTTP 5xx response codes. Such API failures are not Validation result codes defined by RWP.
+
+A Consumer MUST NOT represent the result 403, 404, 406, or 424 as evidence that the object is invalid or has been altered. Only 422 indicates that the applicable hash calculation was performed and the calculated hash does not equal the declared hash.
+

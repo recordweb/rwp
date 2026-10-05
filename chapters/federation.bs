@@ -120,6 +120,6 @@ When resolving cross-namespace links, a system MUST:
 
 1. Extract the namespace component from the linked DID
 2. Discover the resolver endpoint via GNR lookup
-3. Verify the [=snapshot=] hash of the linked [=Record=] after retrieval
-4. Cache the resolved [=snapshot=] locally with the original hash for integrity verification
+3. Verify the [=version=] hash of the linked [=Record=] after retrieval
+4. Cache the resolved [=version=] locally with the original hash for integrity verification
 

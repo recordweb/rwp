@@ -47,7 +47,7 @@ The `DeletionRecord` MUST contain:
 {
   "deletionRecord": {
     "targetDid": "did:rwp:bern.ch:f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    "targetSnapshot": "sha256:snapshot-to-be-deleted...",
+    "targetVersion": "sha256:version-to-be-deleted...",
     "deletionRegime": "payload-only",
     "legalBasis": "GDPR Art. 17 — Right to erasure",
     "requestedBy": "did:rwp:bern.ch:user-max-mustermann",
@@ -61,7 +61,7 @@ The `DeletionRecord` MUST contain:
 After the `DeletionRecord` is finalised:
 
 1. The [=payload=] content bytes are securely overwritten
-2. The `hash` field of the affected `representations` entry in the [=snapshot=] is replaced with the string `"deleted:<DeletionRecord-DID>"`
+2. The `hash` field of the affected `representations` entry in the [=version=] is replaced with the string `"deleted:<DeletionRecord-DID>"`
 3. The Record's `recordHash` is recalculated to reflect the deletion
 4. The DID document's `currentVersion` field is updated
 5. The DID resolver MUST return HTTP 410 for `full-delete` regimes

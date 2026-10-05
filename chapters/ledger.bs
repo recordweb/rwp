@@ -28,7 +28,7 @@ When a finalised [=CaseRecord=] is anchored, the ledger entry MUST contain the f
   "rwpAnchor": {
     "version": "0.1",
     "caseDid": "did:rwp:bern.ch:f47ac10b-case-001",
-    "caseSnapshotHash": "sha256:case-finalized-snapshot-hash...",
+    "caseVersionHash": "sha256:case-finalized-version-hash...",
     "merkleRoot": "sha256:case-merkle-root...",
     "anchoredAt": "2026-05-31T16:00:00Z",
     "anchoredBy": "did:rwp:bern.ch:controller-001",
@@ -41,7 +41,7 @@ The ledger entry MUST NOT contain any payload content, personal data, or classif
 
 ## Anchoring Reference in the Case ## {#section-anchoring-reference}
 
-When a [=CaseRecord=] has been anchored, the anchored CaseRecord snapshot MUST NOT be modified. The system MAY create a new CaseRecord snapshot that references the anchored predecessor through `parents` and contains an `anchorReference` field. The `caseSnapshotHash` in the ledger entry MUST always identify the immutable snapshot that was actually anchored.
+When a [=CaseRecord=] has been anchored, the anchored CaseRecord version MUST NOT be modified. The system MAY create a new CaseRecord version that references the anchored predecessor through `parents` and contains an `anchorReference` field. The `caseVersionHash` in the ledger entry MUST always identify the immutable version that was actually anchored.
 
 ```json
 {

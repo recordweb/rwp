@@ -45,7 +45,7 @@ A [=SchemaRecord=] MUST:
 
 When a [=SchemaRecord=] is finalised in a new version, the following applies:
 
-- Existing snapshots referencing an earlier schema version REMAIN valid
+- Existing versions referencing an earlier schema version REMAIN valid
 - The new schema MUST contain the field `previousSchemaVersion` in the payload with the hash of the predecessor schema
 - Systems MUST keep all schema versions referenced by existing [=Records=] permanently accessible
 - A system MUST NOT retroactively change an existing [=SchemaRecord=], corrections are made as a new version

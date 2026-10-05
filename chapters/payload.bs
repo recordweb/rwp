@@ -228,7 +228,7 @@ A **branch** arises when two or more new [=draft=] versions with the same parent
 
 ### Merges ### {#subsection-graph-merges}
 
-A merge Version is a versionHash with two or more parent references. It consolidates two branches.
+A merge Version is a version with two or more parent references. It consolidates two branches.
 
 Before a merge Version can be finalised, a `MergeRecord` MUST be created:
 

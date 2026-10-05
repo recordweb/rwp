@@ -27,25 +27,7 @@ An implementation claiming the `resolver` role MAY make a role-only claim withou
 
 ### Record validation ### {#subsection-record-validation}
 
-Record validation determines whether a specific Record or snapshot satisfies the applicable structural, semantic, and cryptographic requirements.
-
-Depending on the applicable profile and Record type, validation MAY include:
-
-- DID and DID-document resolution;
-- schema resolution and schema validation;
-- metadata validation;
-- payload and snapshot hash verification;
-- signature verification;
-- version-graph integrity;
-- state and finalisation rules;
-- Case-link and Merkle-root validation; and
-- AssertionRecord predicate and resource validation.
-
-A Record validation result MUST identify the tested Record or snapshot, the RWP version and validation rules applied, the time of validation, and whether validation succeeded or failed.
-
-Where validation fails, the result MUST identify the failed requirement or requirements sufficiently for an independent verifier to understand the basis of the failure.
-
-A Record validation result applies only to the tested Record or snapshot. A successful validation result MUST NOT be interpreted as an implementation assessment, attestation, or certification.
+See [Record validation](#subsection-record-validation)
 
 
 ### Implementation assessment ### {#subsection-implementation-assessment}
@@ -116,7 +98,7 @@ An implementation claiming `RWP Information Record Conformant` MUST satisfy the 
 
 A producer claiming this profile MUST be able to create and finalise InformationRecords with the required identity, schema association, metadata, payload validation, integrity evidence, and version graph.
 
-A custodian claiming this profile MUST retain and make retrievable the InformationRecord snapshots for which it acts as custodian.
+A custodian claiming this profile MUST retain and make retrievable the InformationRecord versions for which it acts as custodian.
 
 A consumer claiming this profile MUST retrieve and validate InformationRecords in accordance with [Record validation](#subsection-record-validation).
 
@@ -138,7 +120,7 @@ A producer claiming this profile MUST create AssertionRecords with a valid Schem
 
 A consumer claiming this profile MUST validate AssertionRecords in accordance with [AssertionRecord validation](#section-assertionrecord-validation) and [Relationship Vocabulary scope](#section-relationship-vocabulary-scope).
 
-A custodian claiming this profile MUST retain and make retrievable the AssertionRecord snapshots for which it acts as custodian.
+A custodian claiming this profile MUST retain and make retrievable the AssertionRecord versions for which it acts as custodian.
 
 ### RWP Relation Record Conformant ### {#subsection-relation-record-profile}
 
@@ -150,17 +132,17 @@ An implementation MAY claim `RWP Relation Record Conformant` only if it also cla
 
 An implementation claiming `RWP Source Integration Conformant` MUST provide a source-provenance statement for every source object that it exposes to, captures for, or transfers into an RWP context.
 
-The source integration profile is independent of RWP Record production. A source-adapter MAY claim this profile without creating an RWP DID, Record, or snapshot.
+The source integration profile is independent of RWP Record production. A source-adapter MAY claim this profile without creating an RWP DID, Record, or version.
 
 A source-adapter MAY provide source content and source-provenance information for a source object to a producer by any mechanism agreed by the involved implementations.
 
 The transfer mechanism, message format, transport, authentication, delivery semantics, retry behaviour, and operational workflow between a source-adapter and a producer are outside the scope of this specification. This scope boundary is deliberate and lasting; it is not intended to be narrowed by a future Source Integration binding without a dedicated specification change.
 
-The provision of source content or source-provenance information by a source-adapter MUST NOT, by itself, be represented as the creation, finalization, transfer, or validation of an RWP Record or RWP snapshot.
+The provision of source content or source-provenance information by a source-adapter MUST NOT, by itself, be represented as the creation, finalization, transfer, or validation of an RWP Record or RWP version.
 
-A producer that creates or finalizes an RWP Record from source content supplied by a source-adapter MUST fulfil all requirements applicable to that Record, including applicable schema validation, payload-format validation, snapshot creation, integrity evidence, version-graph maintenance, and finalization requirements.
+A producer that creates or finalizes an RWP Record from source content supplied by a source-adapter MUST fulfil all requirements applicable to that Record, including applicable schema validation, payload-format validation, version creation, integrity evidence, version-graph maintenance, and finalization requirements.
 
-A source-adapter MAY also exercise the producer role. Where it does so, it MUST fulfil all requirements applicable to that role and Record. A receiving implementation MUST apply the applicable consumer and custodian requirements to the resulting RWP Record or snapshot.
+A source-adapter MAY also exercise the producer role. Where it does so, it MUST fulfil all requirements applicable to that role and Record. A receiving implementation MUST apply the applicable consumer and custodian requirements to the resulting RWP Record or version.
 
 For every source object within its claimed scope, a conforming source-adapter MUST make the corresponding source-provenance statement available to the receiving RWP implementation or include it in the exported representation. The statement MAY be represented as JSON. Where the source-adapter retains the statement after transfer, it MUST make the statement retrievable by the combination of `sourceSystem` and `sourceId`.
 
@@ -205,9 +187,9 @@ A source-integrity value describes guarantees available about the source object 
 
 RWP defines the following implementation roles:
 
-1. A <dfn>producer</dfn> creates a new Record or a new snapshot, including its finalisation where applicable. A producer MUST fulfil all requirements applicable to the profile, Record type, and operation it performs when creating, modifying, or finalising a Record representation.
-2. A <dfn>custodian</dfn> retains, manages, and makes Records or snapshots retrievable. For each Record representation within its claimed scope, a custodian MUST preserve the information required to verify its applicable RWP integrity and versioning requirements. A custodian is not required to create a new Record or snapshot solely by claiming the custodian role.
-3. A <dfn>consumer</dfn> retrieves and validates Records created or managed by another implementation. A consumer MUST validate all requirements applicable to its claimed profile and to the Record type being consumed. A consumer MUST NOT represent a Record as conformant when required validation fails.
+1. A <dfn>producer</dfn> creates a new Record or a new version, including its finalisation where applicable. A producer MUST fulfil all requirements applicable to the profile, Record type, and operation it performs when creating, modifying, or finalising a Record representation.
+2. A <dfn>custodian</dfn> retains, manages, and makes Records or versions retrievable. For each Record representation within its claimed scope, a custodian MUST preserve the information required to verify its applicable RWP integrity and versioning requirements. A custodian is not required to create a new Record or version solely by claiming the custodian role.
+3. A <dfn>consumer</dfn> retrieves and validates Records created or managed by another implementation. A consumer MAY validate Records according to chapter [Validation](#section-record-integrity-validation). A consumer MUST NOT represent an object as successfully validated unless the validation response is 200.
 4. A <dfn>resolver</dfn> resolves <code>did:rwp</code> identifiers and returns the associated DID documents according to the applicable RWP DID-document requirements.
 5. A <dfn>source-adapter</dfn> obtains, normalises, and exposes source-provenance information from a non-RWP source system. A source-adapter MAY provide source content to a producer through a mutually agreed mechanism. A source-adapter MUST NOT represent a source-integrity statement as an RWP Record-integrity statement unless it has also created and validated the corresponding RWP Record representation.
 6. An <dfn>attester</dfn> creates and finalises a ConformanceRecord concerning an implementation assessment.
@@ -247,14 +229,14 @@ Support for a SystemRecord capability MUST be required only where an implementat
       <td>Not required</td>
     </tr>
     <tr>
-      <td>Create immutable snapshots; retrieve and validate snapshots</td>
-      <td>A producer MUST create immutable snapshots. A consumer MUST retrieve and validate snapshots in accordance with [Record validation](#subsection-record-validation).</td>
-      <td>A producer MUST create immutable snapshots. A consumer MUST retrieve and validate snapshots in accordance with [Record validation](#subsection-record-validation).</td>
-      <td>A producer MUST create immutable snapshots. A consumer MUST retrieve and validate snapshots in accordance with [Record  validation](#subsection-record-validation).</td>
+      <td>Create immutable versions; retrieve and validate versions</td>
+      <td>A producer MUST create immutable versions. A consumer MUST retrieve and validate versions in accordance with [Record validation](#subsection-record-validation).</td>
+      <td>A producer MUST create immutable versions. A consumer MUST retrieve and validate versions in accordance with [Record validation](#subsection-record-validation).</td>
+      <td>A producer MUST create immutable versions. A consumer MUST retrieve and validate versions in accordance with [Record  validation](#subsection-record-validation).</td>
       <td>Not required</td>
     </tr>
     <tr>
-      <td>Retain and retrieve snapshots</td>
+      <td>Retain and retrieve versions</td>
       <td>MUST for a custodian</td>
       <td>MUST for a custodian</td>
       <td>MUST for a custodian</td>
@@ -284,8 +266,8 @@ Support for a SystemRecord capability MUST be required only where an implementat
     <tr>
       <td>Validate external references</td>
       <td>Not required</td>
-      <td>MUST when finalising or validating a CaseRecord. The implementation MUST resolve each hard-link target and verify that the identified snapshot belongs to the identified Record, subject to the applicable federation and offline-validation rules.</td>
-      <td>Where an AssertionRecord resource reference contains <code>snapshotHash</code> and the target snapshot is resolvable, MUST verify that the snapshot belongs to the identified Record. An unresolved external resource MUST be handled in accordance with the applicable AssertionRecord SchemaRecord.</td>
+      <td>MUST when finalising or validating a CaseRecord. The implementation MUST resolve each hard-link target and verify that the identified version belongs to the identified Record, subject to the applicable federation and offline-validation rules.</td>
+      <td>Where an AssertionRecord resource reference contains <code>versionHash</code> and the target version is resolvable, MUST verify that the version belongs to the identified Record. An unresolved external resource MUST be handled in accordance with the applicable AssertionRecord SchemaRecord.</td>
       <td>Not required</td>
     </tr>
     <tr>
@@ -318,9 +300,9 @@ Support for a SystemRecord capability MUST be required only where an implementat
     </tr>
     <tr>
       <td>Support MergeRecord</td>
-      <td>MUST only when creating a merge snapshot</td>
-      <td>MUST only when creating a merge snapshot</td>
-      <td>MUST only when creating a merge snapshot</td>
+      <td>MUST only when creating a merge version</td>
+      <td>MUST only when creating a merge version</td>
+      <td>MUST only when creating a merge version</td>
       <td>Not required</td>
     </tr>
     <tr>
@@ -355,7 +337,7 @@ An implementation MUST NOT claim support for a profile or role unless it fulfils
 
 A <dfn>ConformanceRecord</dfn> is a SystemRecord that preserves an attestation concerning an identifiable implementation version.
 
-A ConformanceRecord MUST satisfy all normal Record requirements, including DID, schema association, snapshot integrity, finalisation, and the applicable signature requirements.
+A ConformanceRecord MUST satisfy all normal Record requirements, including DID, schema association, version integrity, finalisation, and the applicable signature requirements.
 
 The owner of a finalised ConformanceRecord MUST be the attester identified in its payload.
 
