@@ -5,6 +5,18 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 Versioning follows [Semantic Versioning](https://semver.org/).
 
 ---
+
+## [0.0.8] – 2026-10-05
+
+Implemented CfC 6 outcomes. See 
+Verifier Model:
+- [RWP#1](https://github.com/recordweb/rwp/issues/1)
+- [RWP#2](https://github.com/recordweb/rwp/issues/2)
+- [RWP#3](https://github.com/recordweb/rwp/issues/3)
+
+Editorial:
+- Version update, wording, syntax
+
 ## [0.0.7] – 2026-09-15
 
 Implemented CfC 4 outcomes. See 
