@@ -57,7 +57,7 @@ A Consumer MUST NOT represent the integrity of a RecordWeb object as successfull
 A Consumer MAY retain, exchange, display, or discard a Validation result. RWP does not require a Consumer to retain a Validation result or to create a RecordWeb Record for that purpose.
 
 
-### Validation Object ## {#subsection-record-integrity-validation-object}
+### Validation Object ### {#subsection-record-integrity-validation-object}
 
 A Validation applies to exactly one `validationObject` identified by a `did:rwp` identifier.
 
@@ -72,7 +72,7 @@ A Validation of one object MUST NOT be represented as a Validation of any relate
 In particular, a Validation of a Record MUST NOT be represented as a Validation of all Versions of that Record. A Validation of a Version MUST NOT be represented as a Validation of all Representations or Content objects associated with that Version.
 
 
-### Validation Result ## {#subsection-record-integrity-validation-result}
+### Validation Result ### {#subsection-record-integrity-validation-result}
 
 When a Consumer retains or exchanges the result of a Validation, the result MUST contain:
 
@@ -93,7 +93,7 @@ The following example records a successful Validation of one Version:
 </pre>
 
 
-### Validation Response Codes ## {#subsection-record-integrity-validation-responsecode}
+### Validation Response Codes ### {#subsection-record-integrity-validation-responsecode}
 
 The `validationResponse` property communicates the result of a Validation for the identified `validationObject`.
 

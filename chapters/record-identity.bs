@@ -191,7 +191,7 @@ The `versionId` MUST be calculated as follows:
 2. Calculate SHA-256 over the result
 
 ```
-contentHash = SHA-256( canonicalize({id, recordEndpoint, created, updated, currentVersion, controller, verificationMethod}) )
+versionId = SHA-256( canonicalize({id, recordEndpoint, created, updated, currentVersion, controller, verificationMethod}) )
 ```
 
 

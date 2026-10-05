@@ -284,9 +284,9 @@ If a Version contains multiple representations, ALL of the following MUST apply:
   </thead>
   <tbody>
     <tr><td><code>format</code></td><td>string</td><td>MUST</td><td>MIME type incl. profiles</td></tr>
-    <tr><td><code>content</code></td><td>value</td><td>blob</td><td> Contains the inline content of the Representation</td></tr>
-    <tr><td><code>contentHash</code></td><td></td><td>SHA-256</td><td>Contains the hash calculated in accordance with [[#section-content-hash-calculation]]</td></tr>
-    <tr><td><code>ref</code></td><td></td><td>string</td><td>Contains a reference to externally held, locally held, or physical content</td></tr>
+    <tr><td><code>content</code></td><td>blob</td><td>MUST WHEN no ref exists</td><td> Contains the inline content of the Representation</td></tr>
+    <tr><td><code>contentHash</code></td><td>SHA-256</td><td>MUST WHEN content exists</td><td>Contains the hash calculated in accordance with [[#section-content-hash-calculation]]</td></tr>
+    <tr><td><code>ref</code></td><td>string</td><td>MUST WHEN no content exists</td><td>Contains a reference to externally held, locally held, or physical content</td></tr>
     <tr><td><code>primary</code></td><td>boolean</td><td>MUST</td><td>Exactly one representation MUST be <code>true</code></td></tr>
     <tr><td><code>role</code></td><td>string</td><td>SHOULD</td><td>Semantic role: <code>source</code>, <code>publication</code>, <code>preview</code>, <code>archive</code></td></tr>
   </tbody>
