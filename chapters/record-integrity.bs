@@ -5,9 +5,10 @@ Record Integrity {#chapter-record-integrity}
 
 The <dfn>recordHash</dfn> is a Record-level <dfn>integrity</dfn> value that covers the entire [=Record=] (its `did`, `payload`, and `metadata`) at the time the hash was calculated. It provides evidence that a Record has not been altered since that point, independent of whether the alteration occurred in `payload` or in `metadata`.
 
-The `recordHash` is distinct from the `signature` carried by an individual [=snapshot=] (see [Signature Procedure](#section-crypto-procedures-signature)). A `signature` is an owner's cryptographic authorisation of one specific snapshot's content at finalisation. The `recordHash` is an unsigned, purely computational value; it does not require, and MUST NOT be interpreted as, an authorisation or attestation. It exists solely to make unauthorised or accidental modification of any part of the Record detectable.
+The `recordHash` is distinct from the `signature` carried by an individual Version (see [Signature Procedure](#section-crypto-procedures-signature)). A `signature` is an owner's cryptographic authorisation of one specific versions's content at finalisation. The `recordHash` is an unsigned, purely computational value; it does not require, and MUST NOT be interpreted as, an authorisation or attestation. It exists solely to make unauthorised or accidental modification of any part of the Record detectable.
 
-## Calculation ## {#section-record-integrity-calculation}
+
+## Record Hash Calculation ## {#section-record-hash-calculation}
 
 The `recordHash` MUST be calculated as follows:
 
@@ -18,20 +19,93 @@ The `recordHash` MUST be calculated as follows:
 recordHash = SHA-256( canonicalize({did, payload, metadata}) )
 ```
 
-```json
-{
-  "did": "did:rwp:bern.ch:f47ac10b-58cc-4372-a567-0e02b2c3d479",
-  "payload": [ ... ],
-  "metadata": { ... },
-  "recordHash": "sha256:9f8e7d6c5b4a3928170695a4b3c2d1e0f9e8d7c6b5a4938271605948372615"
-}
+
+## Version Hash Calculation ## {#section-version-hash-calculation}
+
+The `versionHash` hash MUST be calculated as follows:
+
+1. Serialise the version fields `state`, `parents`, `createdAt`, `modifiedAt`, and `representations` (without `versionHash` and `signature` themselves) as canonical JSON ([[RFC8785]])
+2. Calculate SHA-256 over the result
+
+```
+versionHash = SHA-256( canonicalize({state, parents, createdAt, modifiedAt, representations}) )
 ```
 
-## Verification ## {#section-record-integrity-verification}
 
-An implementation retrieving or storing a [=Record=] MUST be able to recompute the `recordHash` and compare it against the stored value.
+## Content Hash Calculation ## {#section-content-hash-calculation}
 
-An implementation MAY choose to persist `recordHash` alongside the Record, or to compute it on demand; this specification does not mandate a storage strategy. Where `metadata` changes without a corresponding `payload` change, the `recordHash` MUST be recalculated to reflect the new state.
+The `contentHash` hash MUST be calculated as follows:
 
-If the recomputed hash does not match the stored `recordHash`, the implementation MUST treat the Record as `integrity-warning` in accordance with [Snapshot Integrity](#section-crypto-procedures-snapshot-integrity), which applies analogously at the Record level.
+1. Serialise the version fields `format`, `content`, `primary`, and `role` (without `contentHash` itself) as canonical JSON ([[RFC8785]])
+2. Calculate SHA-256 over the result
 
+```
+contentHash = SHA-256( canonicalize({format, content, primary, role}) )
+```
+
+
+## Validation ## {#section-record-integrity-validation}
+
+RWP provides data structures and calculation rules that enable a Consumer to validate a RecordWeb object whenever the required information is available.
+
+RWP does not require a Consumer to perform a Validation, does not prescribe when a Consumer performs a Validation, and does not prescribe the business, legal, or operational consequence of a Validation result.
+
+A Consumer MAY perform a Validation at any time and MAY repeat a Validation.
+
+A Consumer MUST NOT represent the integrity of a RecordWeb object as successfully validated unless it has recalculated the applicable hash in accordance with [[#chapter-record-integrity]] and the calculated value equals the declared hash value.
+
+A Consumer MAY retain, exchange, display, or discard a Validation result. RWP does not require a Consumer to retain a Validation result or to create a RecordWeb Record for that purpose.
+
+
+### Validation Object ### {#subsection-record-integrity-validation-object}
+
+A Validation applies to exactly one `validationObject` identified by a `did:rwp` identifier.
+
+The type of the identified object determines the applicable integrity calculation:
+
+* A Record identifier determines `recordHash` calculation.
+* A Version identifier determines `versionHash` calculation.
+* A Content identifier determines `contentHash` calculation.
+
+A Validation of one object MUST NOT be represented as a Validation of any related Record, Version, or Content object unless those objects have been validated separately.
+
+In particular, a Validation of a Record MUST NOT be represented as a Validation of all Versions of that Record. A Validation of a Version MUST NOT be represented as a Validation of all Representations or Content objects associated with that Version.
+
+
+### Validation Result ### {#subsection-record-integrity-validation-result}
+
+When a Consumer retains or exchanges the result of a Validation, the result MUST contain:
+
+* `validationObject`, containing the `did:rwp` identifier of the validated object;
+* `validationTimestamp`, containing the date and time at which the Consumer performed the Validation; and
+* `validationResponse`, containing one of the Validation response codes defined in this Section.
+
+The result is a statement by the Consumer that performed the Validation at the stated time. It is not a new state of the validated object and does not by itself establish the truth, authority, legal effect, or current availability of the validated object.
+
+The following example records a successful Validation of one Version:
+
+<pre class='example json' title='Validation result'>
+{
+  "validationObject": "did:rwp:5264d2c3-d3b1-411c-829f-90e61165251a:f47ac10b-58cc-4372-a567-0e02b2c3d479:eef9dd41ca22103acab33303607139d2d39a9de0e8c5deb21373dd2184b7d57f",
+  "validationTimestamp": "2026-09-16T12:55:00Z",
+  "validationResponse": 200
+}
+</pre>
+
+
+### Validation Response Codes ### {#subsection-record-integrity-validation-responsecode}
+
+The `validationResponse` property communicates the result of a Validation for the identified `validationObject`.
+
+| Code | Name | Meaning |
+| --- | --- | --- |
+| `200` | OK | The applicable hash calculation was performed and the calculated hash equals the declared `recordHash`, `versionHash`, or `contentHash`. |
+| `400` | Bad Request | The `validationObject` or the Validation request is syntactically or semantically invalid. |
+| `404` | Not Found | The identified object, or information required to calculate its applicable hash, could not be found. |
+| `406` | Not Acceptable | The Consumer cannot process a required format, content type, representation, or other input required for the applicable calculation. |
+| `422` | Unprocessable Content | The required input was available and the applicable hash calculation was performed, but the calculated hash does not equal the declared hash. |
+| `424` | Failed Dependency | The Validation could not be completed because a required dependent resource or information was unavailable, incomplete, or could not be validated. |
+
+The codes defined in this section are Validation result codes. They do not define HTTP response semantics.
+
+When Validation is exposed through an HTTP API, server-side failures MAY be communicated using applicable HTTP 5xx response codes. Such API failures are not Validation result codes defined by RWP.

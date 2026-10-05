@@ -1,6 +1,10 @@
 Federation {#chapter-federation}
 =====================================
 
+This chapter specifies how a system locates the DID Resolver responsible for a namespace and obtains the information needed to access a Record (Logistics). It also specifies the governance requirements of the GNR network (Constitution), which determine the basis on which a Global Namespace Identifier is registered and maintained.
+
+A system MUST NOT treat successful resolution as evidence of trust. Whether a registration, a controller, or a resolver is accepted is a separate decision, see [Trust Assumptions](https://recordweb.github.io/rwc/#section-accountability-trust-assumptions) in [[RWC]].
+
 ## Federation Model ## {#section-federation-model}
 
 RWP federation is modelled after the DNS architecture: a **decentralised, hierarchical namespace model** without a single point of failure.
@@ -17,7 +21,7 @@ The Global Namespace Registry (GNR) is a distributed namespace directory for glo
 The GNR is not a DID Resolver. It does not resolve individual `did:rwp` identifiers, and it does not participate in Record access.
 
 
-### Scope 3## {#subsection-gnr-scope}
+### Scope 3 ### {#subsection-gnr-scope}
 
 For a Global Namespace Identifier, as defined in [Record Identity](#chapter-record-identity), the GNR MUST provide routing information identifying the DID Resolver responsible for resolving DIDs within that namespace.
 
@@ -48,8 +52,9 @@ A GNR response MUST identify the namespace for which it was issued and MUST prov
 A successful namespace resolution MUST NOT be interpreted as evidence that:
 
 - the DID exists;
-- its DID Document is publicly accessible; or
-- the associated Record can be accessed.
+- its DID Document is publicly accessible;
+- the associated Record can be accessed; or
+- the registrant of the namespace is the organisation it claims to be.
 
 
 ### Resolution Obligation ### {#subsection-gnr-resolution}

@@ -93,7 +93,7 @@ Unless a CaseRecord schema defines more specific constraints, every Case element
 
 A Case link MAY target any [=Record=], including an [=InformationRecord=], a [=RelationRecord=] (including another [=CaseRecord=]), or a [=SystemRecord=].
 
-A <dfn>hard link</dfn> points to one identified [=finalized=] [=snapshot=] of a target Record. A hard link MUST contain the target `recordDid` and `snapshot` (the target snapshot's hash, per [Snapshot Fields](#section-payload-snapshot-definition)).
+A <dfn>hard link</dfn> points to one identified [=finalized=] [=snapshot=] of a target Record. A hard link MUST contain the target `recordDid` and `snapshot` (the target snapshot's hash, per [Snapshot Fields](#section-payload-definition)).
 
 A hard link is immutable after finalisation of the referencing [=CaseRecord=].
 
