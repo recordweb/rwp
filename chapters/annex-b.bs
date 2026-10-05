@@ -27,7 +27,7 @@ For a first pilot, the following Level 1 subset is recommended:
 
 1. Implement DID generation and the [DID Format](#section-did-format) and [DID Document](#section-did-document) requirements
 2. Implement snapshot creation with the [Metadata](#chapter-metadata)
-3. Implement [Snapshot Hash Calculation](#section-payload-snapshot-hash)
+3. Implement [Snapshot Hash Calculation](#chapter-crypto-procedures)
 4. Implement the `draft` → `finalized` state transition with [Finalisation Requirements](#subsection-finalisation-requirements)
 5. Implement [Graph Structure](#subsection-graph-structure) without branch detection initially
 

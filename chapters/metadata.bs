@@ -53,7 +53,7 @@ A [=Record=] MAY contain the following <dfn>governance metadata</dfn> fields. Th
   </tbody>
 </table>
 
-The `owner` field expresses organisational accountability and MAY change over the lifetime of a [=Record=] (e.g. following a transfer of responsibility). It is independent of the cryptographic `signature` carried by an individual [=snapshot=] (see [Snapshot Fields](#section-payload-snapshot-definition)):
+The `owner` field expresses organisational accountability and MAY change over the lifetime of a [=Record=] (e.g. following a transfer of responsibility). It is independent of the cryptographic `signature` carried by an individual [=snapshot=] (see [Snapshot Fields](#section-payload-definition)):
 
 - `signature` provides cryptographic evidence of *who authorised a specific snapshot's content* at finalisation, resolvable via the DID document's `controller` field.
 - `owner` provides the current, human-readable statement of *organisational responsibility* for the Record as a whole, independent of which key signed the most recent snapshot.

@@ -9,7 +9,7 @@ When present, the `payload` property MUST contain one or more Version objects.
 
 Each Version object MUST contain one or more Representations.
 
-A Version object represents a specific materialised version of a Record. The `versionHash` property identifies that Version and provides its integrity value as defined in [[#version-hash-calculation]].
+A Version object represents a specific materialised version of a Record. The `versionHash` property identifies that Version and provides its integrity value as defined in [[#section-version-hash-calculation]].
 
 A payload entry that does not contain at least one valid Representation is not a Version and MUST NOT be used as a payload entry.
 
@@ -50,7 +50,7 @@ The <dfn>payload</dfn> of a [=Record=] is an ordered array of <dfn>versions</dfn
     <tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr>
   </thead>
   <tbody>
-    <tr><td><code>versionHash</code></td><td>SHA-256</td><td>MUST</td><td>Contains the hash calculated in accordance with [[#section-version-hash-calculation]]</code>.</td></tr>
+    <tr><td><code>versionHash</code></td><td>SHA-256</td><td>MUST</td><td>Contains the hash calculated in accordance with [[#section-version-hash-calculation]].</td></tr>
     <tr><td><code>state</code></td><td>Enum</td><td>MUST</td><td><code>draft</code> or <code>finalized</code>; additional values permitted per type schema</td></tr>
     <tr><td><code>parents</code></td><td>Array&lt;SHA-256&gt;</td><td>MUST</td><td>Hashes of predecessor Versions; empty for the root Version</td></tr>
     <tr><td><code>createdAt</code></td><td>ISO 8601</td><td>MUST</td><td>Timestamp of Version creation</td></tr>

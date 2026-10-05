@@ -28,7 +28,7 @@ A resource reference identifying an RWP Record MAY additionally contain a `snaps
 Where `snapshot` is present:
 
 - `id` MUST be the DID of an RWP Record;
-- `snapshot` MUST identify a snapshot of that Record (per [Snapshot Fields](#section-payload-snapshot-definition));
+- `snapshot` MUST identify a snapshot of that Record (per [Snapshot Fields](#section-payload-definition));
 - the AssertionRecord refers to that specific immutable snapshot; and
 - a validating implementation MUST verify that the resolved snapshot belongs to the identified Record where the snapshot is resolvable.
 
