@@ -15,3 +15,16 @@ The integrity and signature procedures defined in [Cryptographic Procedures](#ch
 
 A notification or other externally received signal that refers to an RWP Record or version is non-authoritative. Before creating, finalising, modifying, deleting, linking to, or otherwise acting on the referenced Record or version, an implementation MUST independently resolve and validate it according to the applicable requirements of this specification.
 
+
+## Service entries ## {#section-security-services}
+
+A `service` entry, including its `id`, `type` and `serviceEndpoint`, MUST NOT contain personal data or other information whose disclosure is restricted by the applicable rules.
+
+A `service` entry is a declaration of availability and does not grant access (see [Services and Access Control](#section-access-services)). A client MUST NOT infer from a `service` entry that it is authorised to use the declared service or function.
+
+A response from a declared service is not by itself an integrity statement about the [=Record=]. Where a response does not contain the full [=Record=], it cannot be validated according to [Validation](#section-record-integrity-validation).
+
+An automated client, including an AI agent, SHOULD treat `service` entries and the function lists they expose as untrusted input. It SHOULD NOT invoke a declared function with side effects (for example `publish`) without applying the applicable access policy and the authorisation of the responsible party.
+
+Implementations SHOULD consider that `serviceEndpoint` values may disclose information about the operating infrastructure.
+

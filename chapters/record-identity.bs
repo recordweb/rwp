@@ -178,21 +178,44 @@ For every Record DID, a DID document MUST exist containing the following fields:
     <tr><td><code>currentVersion</code></td><td>MUST</td><td>Content hash of the current finalised version (empty for pure draft)</td></tr>
     <tr><td><code>controller</code></td><td>MUST</td><td>DID of the controlling entity (organisation or person), identified by an [=AgentRecord=]</td></tr>
     <tr><td><code>verificationMethod</code></td><td>MUST</td><td>At least one verification method for signature validation</td></tr>
+    <tr><td><code>service</code></td><td>MAY</td><td>Array of service entries according to [[DID-CORE]] (<code>id</code>, <code>type</code>, <code>serviceEndpoint</code>) declaring additional, optional access channels (see [Service Entries](#subsection-did-document-service)</td></tr>
   </tbody>
 </table>
 
-The DID document MUST be updated when the physical storage location changes (`recordEndpoint`, `updated`, `currentVersion`). All other fields MUST NOT be changed.
+The DID document MUST be updated when the physical storage location changes (`recordEndpoint`, `updated`, `currentVersion`). The `service` property MAY be added, changed or removed at any time; each such change MUST update `updated`. A change to `service` does not affect the identity or the content of the [=Record=] and does not constitute a new Record version. All other fields MUST NOT be changed.
 
 A `did:rwp` resolution result MAY include the DID Resolution metadata properties `versionId` and `versionTime`. 
 
 The `versionId` MUST be calculated as follows:
 
-1. Serialise the DID document fields `id`, `recordEndpoint`, `created`, `updated`, `currentVersion`, `controller` and `verificationMethod` (without `versionId` and `versionTime` themselves) as canonical JSON ([[RFC8785]])
+1. Serialise the DID document fields `id`, `recordEndpoint`, `created`, `updated`, `currentVersion`, `controller`, `verificationMethod` and, where present, `service` (without `versionId` and `versionTime` themselves) as canonical JSON ([[RFC8785]])
 2. Calculate SHA-256 over the result
 
 ```
-versionId = SHA-256( canonicalize({id, recordEndpoint, created, updated, currentVersion, controller, verificationMethod}) )
+versionId = SHA-256( canonicalize({id, recordEndpoint, created, updated, currentVersion, controller, verificationMethod[, service]}) )
 ```
+
+### Service Entries ### {#subsection-did-document-service}
+
+A DID document MAY contain a `service` property. Each entry MUST follow the structure defined for `service` in [[DID-CORE]] and MUST have `id`, `type` and `serviceEndpoint`.
+
+The `recordEndpoint` remains the only mandatory access channel. An implementation is not required to offer any `service` entry.
+
+A `service` entry is a declaration of availability. It is not a grant of access. Authorisation for using a declared service remains subject to the applicable access policy (see [Access Control](#chapter-access-control)).
+
+This specification defines the following `type` values:
+
+<table class="data">
+  <thead><tr><th>type</th><th>Meaning</th></tr></thead>
+  <tbody>
+    <tr><td><code>RWPPublicRecordAccess</code></td><td>Endpoint returning a restricted or public view of the [=Record=] for requesters without full access rights</td></tr>
+    <tr><td><code>RWPFunctionRegistry</code></td><td>Endpoint returning a machine-readable list of the functions supported for the [=Record=], derived from the `capabilities` of its [=SchemaRecord=] (see [SchemaRecord](#chapter-schema-record))</td></tr>
+  </tbody>
+</table>
+
+Other `type` values, including protocol-specific ones (for example `DIDCommMessaging` or an MCP-based channel), MAY be used. Their semantics are defined by their respective specifications and are outside the scope of RWP.
+
+A cached DID document MUST NOT be treated as immutable with respect to `service` entries, since these MAY change without a new Record version.
 
 
 ## DID Resolver Requirements ## {#section-did-resolver}
@@ -201,6 +224,7 @@ An implementation claiming the `resolver` role MUST provide a DID resolver that:
 
 - Resolves DIDs of the method `rwp` and returns the associated DID document
 - Delivers the DID document as JSON-LD in accordance with [[DID-CORE]]
+- Where the DID document contains a `service` property, delivers it as part of the DID document.
 - Returns HTTP 200 when the DID is known
 - Returns HTTP 403 where the resolver's applicable access policy does not permit the requester to obtain the DID document
 - Returns HTTP 404 when the DID is unknown

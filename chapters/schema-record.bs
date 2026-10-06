@@ -11,6 +11,11 @@ A [=SchemaRecord=] MUST:
 - contain the field `allowedStates` in the payload with the permitted states and their transitions
 - contain the field `payloadFormats` in the payload with the permitted formats per state
 
+A [=SchemaRecord=] MAY:
+
+- contain the field `capabilities` in the payload, an array of operation identifiers (strings) declaring the functions applicable to [=Records=] of this type
+
+
 **Minimal SchemaRecord payload example:**
 
 ```json
@@ -27,6 +32,7 @@ A [=SchemaRecord=] MUST:
               "text/markdown"],
     "finalized": ["application/pdf;profile=PDF-A-2b"]
   },
+  "capabilities": ["retrieve", "compare", "validate", "publish"],
   "jsonSchema": {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "type": "object",
@@ -41,6 +47,7 @@ A [=SchemaRecord=] MUST:
 }
 ```
 
+
 ## Schema Versioning and Backward Compatibility ## {#section-schema-record-versioning}
 
 When a [=SchemaRecord=] is finalised in a new version, the following applies:
@@ -49,4 +56,15 @@ When a [=SchemaRecord=] is finalised in a new version, the following applies:
 - The new schema MUST contain the field `previousSchemaVersion` in the payload with the hash of the predecessor schema
 - Systems MUST keep all schema versions referenced by existing [=Records=] permanently accessible
 - A system MUST NOT retroactively change an existing [=SchemaRecord=], corrections are made as a new version
+
+
+## Capability Declaration ## {#section-schema-record-capabilities}
+
+The `capabilities` field declares which functions are applicable to [=Records=] of the type defined by this [=SchemaRecord=]. Each entry is an operation identifier, for example `retrieve`, `compare`, `validate`, `publish`, or a Record-Type-specific operation.
+
+The declaration is descriptive. It states that the Record Type supports an operation; it does not oblige a resolver to implement it, and it does not grant access (see [Access Control](#chapter-access-control)).
+
+A resolver MAY use the `capabilities` of the [=SchemaRecord=] to populate the `RWP-FunctionRegistry` service entry in the DID documents of [=Records=] of this type (see [Service Entries](#subsection-did-document-service)).
+
+A change to `capabilities` is a change to the [=SchemaRecord=] and MUST be made as a new version (see [Schema Versioning](#section-schema-record-versioning)).
 

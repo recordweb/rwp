@@ -47,6 +47,7 @@ An implementation claiming this optional capability MAY carry the `accessPolicy`
 
 An implementation MUST NOT require another implementation to support this extension unless both claim the applicable access-control capability.
 
+
 ## Delegation Chain ## {#section-delegation-chain}
 
 When `delegationAllowed: true`, a listed DID MAY issue a signed delegation token granting access to a third DID. The delegation token MUST:
@@ -57,4 +58,9 @@ When `delegationAllowed: true`, a listed DID MAY issue a signed delegation token
 - include an expiry timestamp
 
 Implementing systems MAY enforce delegation chains and MUST validate delegation token signatures before granting access.
+
+
+## Services and Access Control ## {#section-access-services}
+
+A `service` entry in a DID document (see [Service Entries](#subsection-did-document-service)), such as a restricted view or a function registry, is a declaration of availability. It does not grant access and does not bypass any access policy. Authorisation for using a declared service or function remains governed by this chapter and by the access policy of the implementing system.
 
