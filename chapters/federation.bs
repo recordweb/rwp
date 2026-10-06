@@ -61,7 +61,7 @@ A successful namespace resolution MUST NOT be interpreted as evidence that:
 
 A system MUST resolve the complete DID against the DID Resolver identified by the GNR.
 
-A system MUST obtain the `recordEndpoint` from the resulting DID Document in order to retrieve the [=Record=]. Where the DID Document contains `service` entries (see [Service Entries](#section-did-service)), a system MAY use them. A system MUST NOT infer a Record endpoint or a service endpoint directly from the namespace or DID value.
+A system MUST obtain the `recordEndpoint` from the resulting DID Document in order to retrieve the [=Record=]. Where the DID Document contains `service` entries (see [Service Entries](#subsection-did-document-service)), a system MAY use them. A system MUST NOT infer a Record endpoint or a service endpoint directly from the namespace or DID value.
 
 
 ### Platform ### {#subsection-gnr-platform}
