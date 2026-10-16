@@ -382,6 +382,8 @@ The issued Version continues the version graph of the Record like any other Vers
 
 Several issuances of the same content are permitted. Each issuance is a separate Version with its own `issuedAt`. An issuance that replaces an earlier one SHOULD state this in `reason`. A later issuance does not revoke an earlier one.
 
+Note: The issuer decides which Representation is issued. Where an issuance is intended for presentation in constrained situations, for example an offline check, the issuer MAY issue a compact Representation that contains only the information needed for that purpose. Such an issuance is created like any other issuance. The size of an Issued Copy depends on the content, the proof, and the `issuance` block. It is not constrained by this specification.
+
 ### Issued Copy ### {#subsection-payload-issuance-copy}
 
 An **Issued Copy** is the serialisation of exactly one issued Version, including its `proof` array, as a self-contained artifact. It can be verified without access to the issuing system.
