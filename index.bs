@@ -81,9 +81,27 @@ Previous Version: https://doi.org/10.5281/zenodo.20475345
       "authors": ["RecordWeb CG"],
       "href": "https://recordweb.github.io/rwc/",
       "status": "CG-DRAFT"
+  },
+  "VC-DATA-INTEGRITY": {
+    "title": "Verifiable Credential Data Integrity 1.0",
+    "href": "https://www.w3.org/TR/vc-data-integrity/",
+    "publisher": "W3C",
+    "date": "2025"
+  },
+  "VC-DI-EDDSA": {
+    "title": "Data Integrity EdDSA Cryptosuites v1.0",
+    "href": "https://www.w3.org/TR/vc-di-eddsa/",
+    "publisher": "W3C",
+    "date": "2025"
   }
 }
 </pre>
+
+
+- **VC-DATA-INTEGRITY**: Verifiable Credential Data Integrity 1.0. W3C. URL: https://www.w3.org/TR/vc-data-integrity/
+- **VC-DI-EDDSA**: Data Integrity EdDSA Cryptosuites v1.0. W3C. URL: https://www.w3.org/TR/vc-di-eddsa/
+
+
 
 <pre class=link-defaults>
 spec:infra; type:dfn; text:record
@@ -201,10 +219,6 @@ path: chapters/access-control.bs
 
 <pre class=include>
 path: chapters/ledger.bs
-</pre>
-
-<pre class=include>
-path: chapters/solid.bs
 </pre>
 
 

@@ -16,6 +16,7 @@ A system MUST NOT use any hashing procedure other than SHA-256 for normative int
 
 Note: A future version of RWP MAY permit SHA-3 or other procedures as an alternative if cryptographic weaknesses in SHA-256 become known. Until then, SHA-256 is the only permitted procedure.
 
+
 ## Canonical JSON Serialisation ## {#section-crypto-procedures-canonical-json}
 
 For all hash calculations over JSON objects, **RFC 8785 (JSON Canonicalization Scheme, JCS)** [[RFC8785]] MUST be used.
@@ -26,6 +27,7 @@ Requirements:
 - Unicode characters MUST be normalised (NFC)
 - No superfluous whitespace or line breaks
 - Numbers MUST be represented in their canonical form
+
 
 ## Version Integrity ## {#section-crypto-procedures-version-integrity}
 
@@ -44,16 +46,37 @@ If the integrity check fails, the system MUST:
 
 The system MUST NOT automatically attempt to reconstruct the original content.
 
-## Signature Procedure ## {#section-crypto-procedures-signature}
 
-If the schema prescribes a signature (`signaturePolicy: owner` or `signaturePolicy: system`), the `versionHash` MUST be cryptographically signed during the finalisation act.
+## Proof Procedure ## {#section-crypto-procedures-proof}
 
-Requirements:
+If the schema prescribes `signaturePolicy` `owner` or `signaturePolicy` `system`, the finalisation act MUST attach at least one proof to the Version. A Version without `proof` is not finalized under such a policy.
 
-- MUST be Ed25519 (EdDSA, [[RFC8037]]) or P-256 (ECDSA, NIST)
-- The signature MUST be calculated over the canonical `versionHash` hash value (as hex string)
-- The signature MUST be stored in the `signature` field of the version entry as a multibase-encoded value
-- The key used MUST be published in the DID document of the record owner as a verification method
+A proof MUST be a Data Integrity proof as defined by [[VC-DATA-INTEGRITY]] and MUST contain the following fields:
+
+<table class="data">
+  <thead>
+    <tr><th>Field</th><th>Requirement</th><th>Value</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>type</td><td>MUST</td><td>`DataIntegrityProof`</td></tr>
+    <tr><td>cryptosuite</td><td>MUST</td><td>`eddsa-jcs-2022` as defined by [[VC-DI-EDDSA]]</td></tr>
+    <tr><td>created</td><td>MUST</td><td>ISO 8601 timestamp. SHOULD equal the `modifiedAt` of the Version.</td></tr>
+    <tr><td>verificationMethod</td><td>MUST</td><td>DID URL of a verification method that is controlled by the signing party</td></tr>
+    <tr><td>proofPurpose</td><td>MUST</td><td>`assertionMethod`</td></tr>
+    <tr><td>proofValue</td><td>MUST</td><td>Multibase-encoded signature</td></tr>
+  </tbody>
+</table>
+
+**Creation.** The unsecured document is the Version object including `versionHash` and excluding `proof`. The proof MUST be created according to the algorithm of the cryptosuite `eddsa-jcs-2022`, using RFC 8785 JSON Canonicalization. The resulting proof object is added to the `proof` array.
+
+**Multiple proofs.** A Version MAY carry several proofs, for example from an institution and from a notary. Each proof is calculated independently over the unsecured document, never over another proof. Each proof MUST be verifiable on its own.
+
+**Verification.** A verifier MUST recalculate the `versionHash` according to [Version Hash Calculation](#section-version-hash-calculation). It MUST then verify at least one proof against the resolved verification method. A verifier decides according to its own trust policy which verification methods it accepts. A successful proof verification establishes that the holder of the verification method key signed this Version. It does not establish the authority of that holder.
+
+**Key requirements.** The key MUST be an Ed25519 key. The verification method MUST be published in the DID document of the signing party.
+
+**Other cryptosuites.** Only `eddsa-jcs-2022` is permitted in this version. Further cryptosuites MAY be added in a future version of this specification.
+
 
 ## Merkle Tree Algorithm ## {#section-crypto-procedures-merkle-algorithm}
 
