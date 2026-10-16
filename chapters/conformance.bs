@@ -318,6 +318,20 @@ Support for a SystemRecord capability MUST be required only where an implementat
       <td>MUST only for an attester</td>
       <td>MUST only for an attester</td>
     </tr>
+    <tr>
+      <td>Issue a Version (Issuance)</td>
+      <td>MUST only when issuing a Version</td>
+      <td>MUST only when issuing a Version</td>
+      <td>MUST only when issuing a Version</td>
+      <td>Not required</td>
+    </tr>
+    <tr>
+      <td>Verify an Issued Copy</td>
+      <td>MUST only when verifying an Issued Copy</td>
+      <td>MUST only when verifying an Issued Copy</td>
+      <td>MUST only when verifying an Issued Copy</td>
+      <td>Not required</td>
+    </tr>
   </tbody>
 </table>
 

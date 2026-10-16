@@ -36,6 +36,14 @@ This document does not apply to:
       <td>[[PROVO]]</td>
       <td>RWP lineage MAY be serialised as PROV-O. PROV-O serialisation is not required for RWP conformance.</td>
     </tr>
+    <tr>
+      <td>[[VC-DATA-INTEGRITY]]</td>
+      <td>The `proof` structure of RWP follows the Data Integrity proof structure; RWP does not require the Verifiable Credentials data model.</td>
+    </tr>
+    <tr>
+      <td>[[VC-DI-EDDSA]]</td>
+      <td>`eddsa-jcs-2022` is the only permitted cryptosuite.</td>
+    </tr>
   </tbody>
 </table>
 
