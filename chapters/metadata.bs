@@ -10,7 +10,8 @@ Metadata is organised into three groups: `core`, `governance`, and `extensions`.
   "metadata": {
     "core": {
       "recordType": "did:rwp:2fe14680-575a-4da4-aa65-6e72e0866e9b:5264d2c3-d3b1-411c-829f-90e61165251a",
-      "schemaVersion": "sha256:a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae"
+      "schemaVersion": "sha256:a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae",
+      "transit": "internal"
     },
     "governance": {
       "owner": "did:rwp:bern.ch:unit-baubewilligung",
@@ -23,6 +24,7 @@ Metadata is organised into three groups: `core`, `governance`, and `extensions`.
 }
 ```
 
+
 ## metadata.core ## {#section-metadata-core}
 
 Every [=Record=] MUST contain the following <dfn>core metadata</dfn> fields:
@@ -34,8 +36,54 @@ Every [=Record=] MUST contain the following <dfn>core metadata</dfn> fields:
   <tbody>
     <tr><td><code>recordType</code></td><td>MUST</td><td>DID</td><td>Reference to the SchemaRecord of the type</td></tr>
     <tr><td><code>schemaVersion</code></td><td>MUST</td><td>SHA-256</td><td>Hash of the schema version against which the [=Record=]'s current version was validated</td></tr>
+    <tr><td><code>transit</code></td><td>MUST</td><td>String</td><td>Direction of the Record relative to its namespace. One of `incoming`, `internal`, `outgoing`. See [Transit](#subsection-metadata-transit).</td></tr>
+    <tr><td><code>provenanceRef</code></td><td>MUST if `transit` is `incoming`, MUST NOT otherwise</td><td>Object</td><td>Statement about the origin of the information outside the namespace. See [Transit](#subsection-metadata-transit).</td></tr>
   </tbody>
 </table>
+
+
+### Transit ### {#subsection-metadata-transit}
+
+Transit describes the direction of a Record relative to the namespace in which it is created. It is independent of the Record type and of the state of a Version.
+
+<table class="data">
+  <thead>
+    <tr><th>Value</th><th>Meaning</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>incoming</code></td><td>The Record was created in this namespace upon receipt of information that originates outside the namespace. The Record is a copy of externally originated information.</td></tr>
+    <tr><td><code>internal</code></td><td>The Record is intended for use within the namespace and is not intended to be handed out or published outside it.</td></tr>
+    <tr><td><code>outgoing</code></td><td>The Record is intended to leave the namespace, for example by being handed out, sent, or published.</td></tr>
+  </tbody>
+</table>
+
+The value of `transit` reflects the circumstances of the origin of the Record. It is declared when the Record is created and SHOULD NOT be changed afterwards. 
+
+A SchemaRecord MAY restrict the permitted values of `transit` for its Record type.
+
+
+### Provenance reference ### {#subsection-metadata-provenance}
+
+A Record with `transit` `incoming` MUST contain a `provenanceRef`. A Record with any other `transit` value MUST NOT contain a `provenanceRef`.
+
+<table class="data">
+  <thead>
+    <tr><th>Field</th><th>Required</th><th>Type</th><th>Description</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>sourceDescription</code></td><td>MUST</td><td>string</td><td>Human-readable description of the origin.</td></tr>
+    <tr><td><code>capturedAt</code></td><td>MUST</td><td>string</td><td>ISO 8601 timestamp of the receipt or capture of the information.</td></tr>
+    <tr><td><code>capturedBy</code></td><td>MUST</td><td>string</td><td>Identifier of the party that received or captured the information.</td></tr>
+    <tr><td><code>sourceSystem</code></td><td>MAY</td><td>string</td><td>Identifier of the external source, as defined in [RWP Source Integration Conformant](#subsection-source-integration-profile).</td></tr>
+    <tr><td><code>sourceId</code></td><td>MAY</td><td>string</td><td>Identifier of the source object, as defined in [RWP Source Integration Conformant](#subsection-source-integration-profile).</td></tr>
+    <tr><td><code>sourceObjectType</code></td><td>MAY</td><td>string</td><td>Type of the source object, as defined in [RWP Source Integration Conformant](#subsection-source-integration-profile).</td></tr>
+    <tr><td><code>sourceIntegrity</code></td><td>MAY</td><td>string</td><td>Integrity statement about the source object, with the values and meaning defined in [RWP Source Integration Conformant](#subsection-source-integration-profile).</td></tr>
+
+  </tbody>
+</table>
+
+Note: A Version with an [Issuance block](#subsection-payload-issuance-block) is typically part of a Record with `transit` `outgoing`. This specification does not require this.
+
 
 ## metadata.governance ## {#section-metadata-governance}
 
@@ -61,6 +109,7 @@ The `owner` field expresses organisational accountability and MAY change over th
 Where a schema defines `signaturePolicy: system` (see [Finalisation Requirements](#subsection-finalisation-requirements)), the proof identifies an authorised system key rather than a responsible person or unit. In this case, `owner` is the only field that expresses organisational accountability.
 
 An implementation MUST NOT infer the current `owner` solely from the `controller` of the most recent version's proof.
+
 
 ## metadata.extensions ## {#section-metadata-extensions}
 

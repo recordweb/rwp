@@ -56,11 +56,29 @@ Annex A: Normative JSON Schemas {#annex-a}
       "properties": {
         "core": {
           "type": "object",
-          "required": ["recordType", "schemaVersion"],
+          "required": ["recordType", "schemaVersion", "transit"],
           "properties": {
             "recordType":    { "type": "string", "pattern": "^did:rwp:" },
-            "schemaVersion": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
-          }
+            "schemaVersion": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+            "transit": { "type": "string", "enum": ["incoming", "internal", "outgoing"] },
+            "provenanceRef": {
+              "type": "object",
+              "required": ["sourceDescription", "capturedAt", "capturedBy"],
+              "properties": {
+                "sourceDescription": { "type": "string" },
+                "capturedAt": { "type": "string", "format": "date-time" },
+                "capturedBy": { "type": "string" },
+                "sourceSystem": { "type": "string" },
+                "sourceId": { "type": "string" },
+                "sourceObjectType": { "type": "string" },
+                "sourceIntegrity": { "type": "string", "enum": ["none", "platform-versioned","source-signed", "externally-hashed"] }
+              },
+              "additionalProperties": false
+            }
+          },
+          "if": { "properties": { "transit": { "const": "incoming" } }, "required": ["transit"] },
+          "then": { "required": ["provenanceRef"] },
+          "else": { "not": { "required": ["provenanceRef"] } }
         },
         "governance": {
           "type": "object",
