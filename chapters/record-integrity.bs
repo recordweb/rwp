@@ -71,7 +71,7 @@ A Validation of one object MUST NOT be represented as a Validation of any relate
 
 In particular, a Validation of a Record MUST NOT be represented as a Validation of all Versions of that Record. A Validation of a Version MUST NOT be represented as a Validation of all Representations or Content objects associated with that Version.
 
-A Version identifier MAY additionally be validated by verifying `signature` over `versionHash` against a verification method of the DID document, in accordance with § 19.4.
+A Version identifier MAY additionally be validated by verifying `signature` over `versionHash` against a verification method of the DID document, in accordance with [Cryptographic Procedures](#section-crypto-procedures-signature).
 
 ### Validation Result ### {#subsection-record-integrity-validation-result}
 

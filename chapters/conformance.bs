@@ -23,11 +23,12 @@ An implementation claiming any conformance profile MUST claim at least one role,
 
 An implementation claiming the `resolver` role MAY make a role-only claim without claiming an RWP Record profile. A role-only resolver claim MUST identify the `resolver` role and MUST NOT include an RWP Record profile unless the implementation also claims the roles required for that profile.
 
+
 ## Conformance terminology ## {#section-conformance-terminology}
 
 ### Record validation ### {#subsection-record-validation}
 
-See [Record validation](#subsection-record-validation)
+See [validation](#section-record-integrity-validation)
 
 
 ### Implementation assessment ### {#subsection-implementation-assessment}
@@ -64,31 +65,6 @@ A certification scheme MAY use ConformanceRecords, test suites, and assessment r
 
 The presence of a ConformanceRecord MUST NOT by itself be interpreted as certification.
 
-### Implementation assessment ### {#subsection-implementation-assessment}
-
-Implementation assessment determines whether a named implementation version fulfils all requirements of one or more claimed RWP profiles and roles.
-
-An implementation assessment MUST include positive and negative test cases relevant to every claimed profile and role.
-
-An assessment MAY use an official RecordWeb test suite, an independently developed test suite, or another documented assessment method.
-
-The result of an implementation assessment MAY be documented in a ConformanceRecord.
-
-### Attestation ### {#subsection-attestation}
-
-An attestation is a signed statement by an identifiable attester about an implementation assessment.
-
-An attestation MAY be self-attested or independently assessed.
-
-A ConformanceRecord is the RWP SystemRecord used to preserve such an attestation.
-
-### Certification ### {#subsection-certification}
-
-Certification is an institutional process outside the base RWP protocol.
-
-A certification scheme MAY use ConformanceRecords, test suites, and assessment reports as evidence. RWP does not define or require an accreditation authority, certification mark, liability regime, or certification revocation procedure.
-
-The presence of a ConformanceRecord MUST NOT by itself be interpreted as certification.
 
 ## Profiles ## {#section-conformance-profiles}
 
@@ -121,6 +97,7 @@ A producer claiming this profile MUST create AssertionRecords with a valid Schem
 A consumer claiming this profile MUST validate AssertionRecords in accordance with [AssertionRecord validation](#section-assertionrecord-validation) and [Relationship Vocabulary scope](#section-relationship-vocabulary-scope).
 
 A custodian claiming this profile MUST retain and make retrievable the AssertionRecord versions for which it acts as custodian.
+
 
 ### RWP Relation Record Conformant ### {#subsection-relation-record-profile}
 
@@ -183,6 +160,7 @@ The `sourceIntegrity` value MUST be one of:
 
 A source-integrity value describes guarantees available about the source object before or at capture. It MUST NOT be interpreted as a statement about the integrity of a subsequently created RWP Record.
 
+
 ## Implementation roles ## {#section-conformance-roles}
 
 RWP defines the following implementation roles:
@@ -190,7 +168,7 @@ RWP defines the following implementation roles:
 1. A <dfn>producer</dfn> creates a new Record or a new version, including its finalisation where applicable. A producer MUST fulfil all requirements applicable to the profile, Record type, and operation it performs when creating, modifying, or finalising a Record representation.
 2. A <dfn>custodian</dfn> retains, manages, and makes Records or versions retrievable. For each Record representation within its claimed scope, a custodian MUST preserve the information required to verify its applicable RWP integrity and versioning requirements. A custodian is not required to create a new Record or version solely by claiming the custodian role.
 3. A <dfn>consumer</dfn> retrieves and validates Records created or managed by another implementation. A consumer MAY validate Records according to chapter [Validation](#section-record-integrity-validation). A consumer MUST NOT represent an object as successfully validated unless the validation response is 200.
-4. A <dfn>resolver</dfn> resolves <code>did:rwp</code> identifiers and returns the associated DID documents according to the applicable RWP DID-document requirements.
+4. A <dfn>resolver</dfn> resolves <code>did:rwp</code> identifiers and returns the associated DID documents according to the applicable RWP DID-document requirements. A resolver is not required to publish `service` entries (see [Service Entries](#subsection-did-document-service)).
 5. A <dfn>source-adapter</dfn> obtains, normalises, and exposes source-provenance information from a non-RWP source system. A source-adapter MAY provide source content to a producer through a mutually agreed mechanism. A source-adapter MUST NOT represent a source-integrity statement as an RWP Record-integrity statement unless it has also created and validated the corresponding RWP Record representation.
 6. An <dfn>attester</dfn> creates and finalises a ConformanceRecord concerning an implementation assessment.
 
@@ -278,6 +256,20 @@ Support for a SystemRecord capability MUST be required only where an implementat
       <td>MUST</td>
     </tr>
     <tr>
+      <td>Publish <code>service</code> entries in the DID document</td>
+      <td>MAY for a resolver</td>
+      <td>MAY for a resolver</td>
+      <td>MAY for a resolver</td>
+      <td>Not required</td>
+    </tr>
+    <tr>
+      <td>Declare <code>capabilities</code> in a SchemaRecord</td>
+      <td>MAY for a producer of the SchemaRecord</td>
+      <td>MAY for a producer of the SchemaRecord</td>
+      <td>MAY for a producer of the SchemaRecord</td>
+      <td>Not required</td>
+    </tr>
+    <tr>
       <td>Support SchemaRecord</td>
       <td>MUST where Records are created or validated against a schema</td>
       <td>MUST where CaseRecords are created or validated against a schema</td>
@@ -332,6 +324,7 @@ Support for a SystemRecord capability MUST be required only where an implementat
 A resolver claiming the `resolver` role MUST satisfy the DID resolution requirements defined in [DID Resolver Requirements](#section-did-resolver) and, where applicable, [Global Namespace Registry](#section-gnr).
 
 An implementation MUST NOT claim support for a profile or role unless it fulfils all requirements applicable to that claim.
+
 
 ## ConformanceRecord ## {#section-conformance-record}
 
@@ -420,6 +413,7 @@ A ConformanceRecord MAY include `expiresAt`.
 
 A newer ConformanceRecord MAY supersede an earlier ConformanceRecord. Supersession MUST NOT alter, invalidate, or remove the earlier attestation. A superseding ConformanceRecord MUST identify every superseded ConformanceRecord by DID.
 
+
 ## Conformance claims and evidence ## {#section-conformance-claims}
 
 An implementation MAY publish a ConformanceRecord.
@@ -430,7 +424,8 @@ A verifier or procuring organisation MUST evaluate a conformance claim according
 
 A verifier MUST NOT treat self-attestation, independent assessment, and certification as equivalent assurance levels.
 
-## Conformance Attestation {#section-conformance-attestation}
+
+## Conformance Attestation ## {#section-conformance-attestation}
 
 A <dfn>conformance attestation</dfn> is an inspectable statement about a claimed conformance scope and its assessment. A [=ConformanceRecord=] is the RWP SystemRecord used to express a durable, machine-readable conformance attestation.
 
