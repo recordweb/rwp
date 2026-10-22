@@ -177,7 +177,7 @@ For every Record DID, a DID document MUST exist containing the following fields:
     <tr><td><code>updated</code></td><td>MUST</td><td>ISO 8601 timestamp of last DID document update</td></tr>
     <tr><td><code>currentVersion</code></td><td>MUST</td><td>Content hash of the current finalised version (empty for pure draft)</td></tr>
     <tr><td><code>controller</code></td><td>MUST</td><td>DID of the controlling entity (organisation or person), identified by an [=AgentRecord=]</td></tr>
-    <tr><td><code>verificationMethod</code></td><td>MUST</td><td>At least one verification method for signature validation</td></tr>
+    <tr><td><code>verificationMethod</code></td><td>MUST</td><td>At least one verification method for proof validation</td></tr>
     <tr><td><code>service</code></td><td>MAY</td><td>Array of service entries according to [[DID-CORE]] (<code>id</code>, <code>type</code>, <code>serviceEndpoint</code>) declaring additional, optional access channels (see [Service Entries](#subsection-did-document-service)</td></tr>
   </tbody>
 </table>
