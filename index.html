@@ -8,7 +8,7 @@
   <meta content="Bikeshed version 49e9fdd4f, updated Tue Oct 13 14:27:53 2026 -0700" name="generator">
   <link href="https://recordweb.github.io/rwp/" rel="canonical">
   <link href="https://www.w3.org/2008/site/images/favicon.ico" rel="icon">
-  <meta content="5da11dc792b9265a3702ca927f3e8feaf5001ebe" name="revision">
+  <meta content="8df4594d71ed72876b6151d99b99bb5444b59fa9" name="revision">
   <meta content="dark light" name="color-scheme">
   <link href="https://www.w3.org/StyleSheets/TR/2021/dark.css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css">
 <style>/* Boilerplate: style-autolinks */
@@ -726,7 +726,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
 </p>
    <h1 class="no-ref p-name" id="title">RecordWeb Protocol (RWP)</h1>
    <p id="w3c-state"><a href="https://www.w3.org/standards/types/#CG-DRAFT">Draft Community Group Report</a>,
-    <time class="dt-updated" datetime="2026-10-20">20 October 2026</time></p>
+    <time class="dt-updated" datetime="2026-10-22">22 October 2026</time></p>
    <details open>
     <summary>More details about this document</summary>
     <div data-fill-with="spec-metadata">
@@ -849,11 +849,24 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
       <li><a href="#section-payload-representation"><span class="secno">5.6</span> <span class="content">Representations</span></a>
       <li><a href="#section-payload-types"><span class="secno">5.7</span> <span class="content">Permitted Payload Content Types</span></a>
       <li><a href="#section-payload-archival-formats"><span class="secno">5.8</span> <span class="content">RWP archival-grade formats (normative)</span></a>
+      <li>
+       <a href="#section-payload-issuance"><span class="secno">5.9</span> <span class="content">Issuance and Issued Copy</span></a>
+       <ol class="toc">
+        <li><a href="#subsection-payload-issuance-block"><span class="secno">5.9.1</span> <span class="content">Issuance block</span></a>
+        <li><a href="#subsection-payload-issuance-requirements"><span class="secno">5.9.2</span> <span class="content">Requirements for an issued Version</span></a>
+        <li><a href="#subsection-payload-issuance-copy"><span class="secno">5.9.3</span> <span class="content">Issued Copy</span></a>
+        <li><a href="#subsection-payload-issuance-verification"><span class="secno">5.9.4</span> <span class="content">Verification of an Issued Copy</span></a>
+       </ol>
      </ol>
     <li>
      <a href="#chapter-metadata"><span class="secno">6</span> <span class="content">Metadata</span></a>
      <ol class="toc">
-      <li><a href="#section-metadata-core"><span class="secno">6.1</span> <span class="content">metadata.core</span></a>
+      <li>
+       <a href="#section-metadata-core"><span class="secno">6.1</span> <span class="content">metadata.core</span></a>
+       <ol class="toc">
+        <li><a href="#subsection-metadata-transit"><span class="secno">6.1.1</span> <span class="content">Transit</span></a>
+        <li><a href="#subsection-metadata-provenance"><span class="secno">6.1.2</span> <span class="content">Provenance reference</span></a>
+       </ol>
       <li><a href="#section-metadata-governance"><span class="secno">6.2</span> <span class="content">metadata.governance</span></a>
       <li><a href="#section-metadata-extensions"><span class="secno">6.3</span> <span class="content">metadata.extensions</span></a>
      </ol>
@@ -940,7 +953,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
       <li><a href="#section-crypto-procedures-hashing"><span class="secno">19.1</span> <span class="content">Hashing Procedure</span></a>
       <li><a href="#section-crypto-procedures-canonical-json"><span class="secno">19.2</span> <span class="content">Canonical JSON Serialisation</span></a>
       <li><a href="#section-crypto-procedures-version-integrity"><span class="secno">19.3</span> <span class="content">Version Integrity</span></a>
-      <li><a href="#section-crypto-procedures-signature"><span class="secno">19.4</span> <span class="content">Signature Procedure</span></a>
+      <li><a href="#section-crypto-procedures-proof"><span class="secno">19.4</span> <span class="content">Proof Procedure</span></a>
       <li><a href="#section-crypto-procedures-merkle-algorithm"><span class="secno">19.5</span> <span class="content">Merkle Tree Algorithm</span></a>
      </ol>
     <li>
@@ -985,19 +998,18 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
       <li><a href="#section-anchoring-protocol"><span class="secno">23.3</span> <span class="content">Anchoring Protocol</span></a>
       <li><a href="#section-anchoring-reference"><span class="secno">23.4</span> <span class="content">Anchoring Reference in the Case</span></a>
      </ol>
-    <li><a href="#chapter-solid"><span class="secno">24</span> <span class="content">Optional Solid Pod Delivery</span></a>
     <li>
-     <a href="#annex-a"><span class="secno">25</span> <span class="content">Annex A: Normative JSON Schemas</span></a>
+     <a href="#annex-a"><span class="secno">24</span> <span class="content">Annex A: Normative JSON Schemas</span></a>
      <ol class="toc">
-      <li><a href="#schema-version"><span class="secno">25.1</span> <span class="content">A.1 Record, Version, and Metadata Schemas</span></a>
-      <li><a href="#schema-case"><span class="secno">25.2</span> <span class="content">A.2 CaseRecord Payload Schema</span></a>
-      <li><a href="#schema-deletion"><span class="secno">25.3</span> <span class="content">A.3 DeletionRecord Payload Schema</span></a>
+      <li><a href="#schema-version"><span class="secno">24.1</span> <span class="content">A.1 Record, Version, and Metadata Schemas</span></a>
+      <li><a href="#schema-case"><span class="secno">24.2</span> <span class="content">A.2 CaseRecord Payload Schema</span></a>
+      <li><a href="#schema-deletion"><span class="secno">24.3</span> <span class="content">A.3 DeletionRecord Payload Schema</span></a>
      </ol>
     <li>
-     <a href="#annex-b"><span class="secno">26</span> <span class="content">Annex B: Reference Implementation Notes (non-normative)</span></a>
+     <a href="#annex-b"><span class="secno">25</span> <span class="content">Annex B: Reference Implementation Notes (non-normative)</span></a>
      <ol class="toc">
-      <li><a href="#impl-tech"><span class="secno">26.1</span> <span class="content">B.1 Technology Choices</span></a>
-      <li><a href="#impl-pilot"><span class="secno">26.2</span> <span class="content">B.2 Pilot Scope Recommendation</span></a>
+      <li><a href="#impl-tech"><span class="secno">25.1</span> <span class="content">B.1 Technology Choices</span></a>
+      <li><a href="#impl-pilot"><span class="secno">25.2</span> <span class="content">B.2 Pilot Scope Recommendation</span></a>
      </ol>
     <li>
      <a href="#w3c-conformance"><span class="secno"></span> <span class="content">Conformance</span></a>
@@ -1021,6 +1033,12 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <div class="copyright">
     <p>Copyright © 2026 the Contributors to the RecordWeb Protocol (RWP) v0.0.9, published by the <a href="https://www.w3.org/community/recordweb/">RecordWeb Community Group</a> under the <a href="https://www.w3.org/community/about/process/cla/">W3C Community Contributor License Agreement (CLA)</a>. A human-readable <a href="https://www.w3.org/community/about/process/cla-deed/">summary</a> is available.</p>
    </div>
+   <ul>
+    <li data-md>
+     <p><strong>VC-DATA-INTEGRITY</strong>: Verifiable Credential Data Integrity 1.0. W3C. URL: https://www.w3.org/TR/vc-data-integrity/</p>
+    <li data-md>
+     <p><strong>VC-DI-EDDSA</strong>: Data Integrity EdDSA Cryptosuites v1.0. W3C. URL: https://www.w3.org/TR/vc-di-eddsa/</p>
+   </ul>
    <h2 class="heading no-num no-toc settled" id="part-1"><span class="content">Part I: Introduction &amp; Conformance</span></h2>
    <h2 class="heading settled" data-level="1" id="chapter-scope"><span class="secno">1. </span><span class="content">Introduction and Scope</span><a class="self-link" href="#chapter-scope"></a></h2>
    <h3 class="heading settled" data-level="1.1" id="section-purpose"><span class="secno">1.1. </span><span class="content">Purpose</span><a class="self-link" href="#section-purpose"></a></h3>
@@ -1058,6 +1076,12 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
      <tr>
       <td><a data-link-type="biblio" href="#biblio-provo" title="PROV-O: The PROV Ontology">[PROVO]</a>
       <td>RWP lineage MAY be serialised as PROV-O. PROV-O serialisation is not required for RWP conformance.
+     <tr>
+      <td><a data-link-type="biblio" href="#biblio-vc-data-integrity" title="Verifiable Credential Data Integrity 1.0">[VC-DATA-INTEGRITY]</a>
+      <td>The <code>proof</code> structure of RWP follows the Data Integrity proof structure; RWP does not require the Verifiable Credentials data model.
+     <tr>
+      <td><a data-link-type="biblio" href="#biblio-vc-di-eddsa" title="Data Integrity EdDSA Cryptosuites v1.0">[VC-DI-EDDSA]</a>
+      <td><code>eddsa-jcs-2022</code> is the only permitted cryptosuite.
    </table>
    <h3 class="heading settled" data-level="1.4" id="section-versioning"><span class="secno">1.4. </span><span class="content">Versioning of This Document</span><a class="self-link" href="#section-versioning"></a></h3>
    <p>This document uses semantic versioning (SemVer): <code>MAJOR.MINOR.PATCH</code>.</p>
@@ -1317,6 +1341,18 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
       <td>MUST only for an attester
       <td>MUST only for an attester
       <td>MUST only for an attester
+     <tr>
+      <td>Issue a Version (Issuance)
+      <td>MUST only when issuing a Version
+      <td>MUST only when issuing a Version
+      <td>MUST only when issuing a Version
+      <td>Not required
+     <tr>
+      <td>Verify an Issued Copy
+      <td>MUST only when verifying an Issued Copy
+      <td>MUST only when verifying an Issued Copy
+      <td>MUST only when verifying an Issued Copy
+      <td>Not required
    </table>
    <p>A resolver claiming the <code>resolver</code> role MUST satisfy the DID resolution requirements defined in <a href="#section-did-resolver">DID Resolver Requirements</a> and, where applicable, <a href="#section-gnr">Global Namespace Registry</a>.</p>
    <p>An implementation MUST NOT claim support for a profile or role unless it fulfils all requirements applicable to that claim.</p>
@@ -1670,7 +1706,7 @@ The <code>&lt;contentHash></code> component MUST NOT be part of the identity a R
      <tr>
       <td><code>verificationMethod</code>
       <td>MUST
-      <td>At least one verification method for signature validation
+      <td>At least one verification method for proof validation
      <tr>
       <td><code>service</code>
       <td>MAY
@@ -1743,7 +1779,7 @@ The <code>&lt;contentHash></code> component MUST NOT be part of the identity a R
       <c- f>"parents"</c-><c- p>:</c-> <c- p>[</c-><c- u>"sha256:6ce834139509cc20a5b1b0e0e8007f46fb14ef72532e87c4f33894d150e997c0"</c-><c- p>],</c->
       <c- f>"createdAt"</c-><c- p>:</c-> <c- u>"2026-05-31T14:00:00Z"</c-><c- p>,</c->
       <c- f>"modifiedAt"</c-><c- p>:</c-> <c- u>"2026-05-31T15:30:00Z"</c-><c- p>,</c->
-      <c- f>"signature"</c-><c- p>:</c-> <c- u>"z3FttV7VjukA1LhqSDgOxupHy..."</c-><c- p>,</c->
+      <c- f>"proof"</c-><c- p>:</c-> <c- p>[],</c->
       <c- f>"representations"</c-><c- p>:</c-> <c- p>[</c->
         <c- p>{</c->
           <c- f>"format"</c-><c- p>:</c-> <c- u>"text/markdown"</c-><c- p>,</c->
@@ -1797,10 +1833,10 @@ The <code>&lt;contentHash></code> component MUST NOT be part of the identity a R
       <td>MUST
       <td>Timestamp of the last change to this Version. For a <code>finalized</code> Version this is the finalisation timestamp, since a finalized version cannot change thereafter.
      <tr>
-      <td><code>signature</code>
-      <td>Multibase
-      <td>MUST (when finalized)
-      <td>Cryptographic signature of the record owner over the <code>versionHash</code>. See <a href="#section-crypto-procedures-signature">Signature Procedure</a>.
+      <td><code>proof</code>
+      <td>Array of Proof
+      <td>MUST (when finalized, unless the schema defines <code>signaturePolicy</code> <code>none</code>)
+      <td>One or more Data Integrity proofs over the finalized Version. See <a href="#section-crypto-procedures-proof">Proof Procedure</a>.
      <tr>
       <td><code>representations</code>
       <td>Array
@@ -1894,9 +1930,11 @@ rejected (terminal state, not linkable)
     <li data-md>
      <p><strong>Mandatory field check</strong>: All MUST metadata fields are present and correctly typed</p>
     <li data-md>
-     <p><strong>Owner signature</strong>: If the schema defines <code>signaturePolicy: owner</code>, the record owner MUST have cryptographically signed the versionHash. For <code>signaturePolicy: system</code>, the signature MAY be generated by an authorised system key. For <code>signaturePolicy: none</code>, signature validation is omitted.</p>
+     <p><strong>Proof</strong>: If the schema defines <code>signaturePolicy</code> <code>owner</code>, the Version MUST carry at least one proof whose verification method is controlled by the record owner. For <code>signaturePolicy</code> <code>system</code>, the proof MAY be generated with an authorised system key. For <code>signaturePolicy</code> <code>none</code>, proof validation is omitted.</p>
     <li data-md>
      <p><strong>Parent integrity</strong>: All referenced parent hashes are resolvable in the system</p>
+    <li data-md>
+     <p><strong>Issuance check</strong>: If the Version carries an <code>issuance</code> block, the system MUST verify the requirements of <a href="#subsection-payload-issuance-requirements">Requirements for an issued Version</a> before finalisation.</p>
    </ol>
    <p>If any of these checks fails, the system MUST NOT finalise the Version and MUST return an error with a validation code.</p>
    <h4 class="heading settled" data-level="5.4.4" id="subsection-irreversibility"><span class="secno">5.4.4. </span><span class="content">Irreversibility of Finalisation</span><a class="self-link" href="#subsection-irreversibility"></a></h4>
@@ -2104,6 +2142,86 @@ rejected (terminal state, not linkable)
       <td>CommonMark Markdown
       <td>Source format with publication representation
    </table>
+   <h3 class="heading settled" data-level="5.9" id="section-payload-issuance"><span class="secno">5.9. </span><span class="content">Issuance and Issued Copy</span><a class="self-link" href="#section-payload-issuance"></a></h3>
+   <p>Issuance is the act by which an issuer declares that a specific content is handed out to an addressee or to the public. Issuance is represented by a Version that carries an <code>issuance</code> block. This Version is created and finalized according to the normal requirements of this specification. Issuance introduces no additional state.</p>
+   <p>A Version carrying an <code>issuance</code> block is an <strong>issued Version</strong>.</p>
+   <h4 class="heading settled" data-level="5.9.1" id="subsection-payload-issuance-block"><span class="secno">5.9.1. </span><span class="content">Issuance block</span><a class="self-link" href="#subsection-payload-issuance-block"></a></h4>
+   <p>The <code>issuance</code> block is a field of the Version. It is part of the <a href="#section-version-hash-calculation">Version Hash Calculation</a> and is therefore covered by every proof of the Version.</p>
+   <table class="data">
+    <thead>
+     <tr>
+      <th>Field
+      <th>Type
+      <th>Requirement
+      <th>Description
+    <tbody>
+     <tr>
+      <td>issuedAt
+      <td>ISO 8601
+      <td>MUST
+      <td>Time of the issuing act. SHOULD equal <code>modifiedAt</code> of the Version.
+     <tr>
+      <td>issuedTo
+      <td>String
+      <td>MAY
+      <td>Identifier of the addressee. Any identifier scheme MAY be used, including a DID of any method. If absent, the issued Version is not bound to an addressee.
+     <tr>
+      <td>validUntil
+      <td>ISO 8601
+      <td>MAY
+      <td>End of the validity of the issuance.
+     <tr>
+      <td>reason
+      <td>String
+      <td>MAY
+      <td>Reason for the issuance, for example a replacement of an earlier issuance.
+   </table>
+   <p><code>validUntil</code> expresses the validity of the issuance. It does not express the validity of the content. Validity of the content is defined by the schema of the Record type.</p>
+   <h4 class="heading settled" data-level="5.9.2" id="subsection-payload-issuance-requirements"><span class="secno">5.9.2. </span><span class="content">Requirements for an issued Version</span><a class="self-link" href="#subsection-payload-issuance-requirements"></a></h4>
+   <p>An issued Version:</p>
+   <ul>
+    <li data-md>
+     <p>MUST contain exactly one Representation.</p>
+    <li data-md>
+     <p>MUST mark this Representation <code>primary</code> true.</p>
+    <li data-md>
+     <p>MUST contain this Representation with <code>content</code> and <code>contentHash</code>. A Representation with <code>ref</code> MUST NOT be used.</p>
+    <li data-md>
+     <p>MUST have exactly one parent, which MUST be the most recent finalized Version of the Record at the time of issuance.</p>
+    <li data-md>
+     <p>MUST satisfy the <a href="#subsection-finalisation-requirements">Finalisation Requirements</a>, including the payload format requirements for <code>finalized</code>.</p>
+   </ul>
+   <p>The issuer decides which content is issued. The issued Representation MAY originate from an earlier Version than its parent.</p>
+   <p>The issued Version continues the version graph of the Record like any other Version. The version graph is not a chain of issuances. Further work on the Record continues with new draft Versions, whose Representations MAY use other formats than the issued Version.</p>
+   <p>Several issuances of the same content are permitted. Each issuance is a separate Version with its own <code>issuedAt</code>. An issuance that replaces an earlier one SHOULD state this in <code>reason</code>. A later issuance does not revoke an earlier one.</p>
+   <p class="note" role="note"><span class="marker">Note:</span> The issuer decides which Representation is issued. Where an issuance is intended for presentation in constrained situations, for example an offline check, the issuer MAY issue a compact Representation that contains only the information needed for that purpose. Such an issuance is created like any other issuance. The size of an Issued Copy depends on the content, the proof, and the <code>issuance</code> block. It is not constrained by this specification.</p>
+   <h4 class="heading settled" data-level="5.9.3" id="subsection-payload-issuance-copy"><span class="secno">5.9.3. </span><span class="content">Issued Copy</span><a class="self-link" href="#subsection-payload-issuance-copy"></a></h4>
+   <p>An <strong>Issued Copy</strong> is the serialisation of exactly one issued Version, including its <code>proof</code> array, as a self-contained artifact. It can be verified without access to the issuing system.</p>
+   <p>An Issued Copy:</p>
+   <ul>
+    <li data-md>
+     <p>MUST contain the issued Version unchanged, including <code>versionHash</code>, <code>issuance</code>, <code>representations</code> and all <code>proof</code> entries.</p>
+    <li data-md>
+     <p>is not a Record. It has no DID, no version graph and no state.</p>
+    <li data-md>
+     <p>MAY carry, outside of the Version, the DID of the Record from which it was issued. This reference is not part of the signed content and MUST NOT be used as evidence of origin.</p>
+    <li data-md>
+     <p>MAY be published.</p>
+   </ul>
+   <p class="note" role="note"><span class="marker">Note:</span> The complete structure of the Issued Copy artifact, including the provision of verification key material, is subject to a later specification step.</p>
+   <h4 class="heading settled" data-level="5.9.4" id="subsection-payload-issuance-verification"><span class="secno">5.9.4. </span><span class="content">Verification of an Issued Copy</span><a class="self-link" href="#subsection-payload-issuance-verification"></a></h4>
+   <p>A verifier MUST:</p>
+   <ol>
+    <li data-md>
+     <p>Recalculate the <code>contentHash</code> of the Representation according to <a href="#section-content-hash-calculation">Content Hash Calculation</a>.</p>
+    <li data-md>
+     <p>Recalculate the <code>versionHash</code> including the <code>issuance</code> block according to <a href="#section-version-hash-calculation">Version Hash Calculation</a>.</p>
+    <li data-md>
+     <p>Verify at least one proof according to <a href="#section-crypto-procedures-proof">Proof Procedure</a>.</p>
+    <li data-md>
+     <p>Evaluate <code>validUntil</code>, if present, according to its own policy.</p>
+   </ol>
+   <p>A successful verification establishes that the signing party issued this content with this <code>issuance</code> block. It does not establish the identity of the person presenting the Issued Copy, that the issuance is still valid, or that no other issuance exists for the same content.</p>
    <h2 class="heading settled" data-level="6" id="chapter-metadata"><span class="secno">6. </span><span class="content">Metadata</span><a class="self-link" href="#chapter-metadata"></a></h2>
    <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="metadata">Metadata</dfn> is the descriptive and governing information attached to a <a data-link-type="dfn" href="#record" id="ref-for-record③④">Record</a>, independent of its <code>payload</code>. Unlike <code>payload</code> entries, <code>metadata</code> is not itself versioned as a sequence of versions; it MAY be updated in place. Metadata changes are nonetheless covered by the Record-level <code>recordHash</code> defined in <a href="#chapter-record-integrity">Record Integrity</a>, so that any change to <code>metadata</code> is detectable.</p>
    <p>Metadata is organised into three groups: <code>core</code>, <code>governance</code>, and <code>extensions</code>.</p>
@@ -2111,7 +2229,8 @@ rejected (terminal state, not linkable)
   <c- f>"metadata"</c-><c- p>:</c-> <c- p>{</c->
     <c- f>"core"</c-><c- p>:</c-> <c- p>{</c->
       <c- f>"recordType"</c-><c- p>:</c-> <c- u>"did:rwp:2fe14680-575a-4da4-aa65-6e72e0866e9b:5264d2c3-d3b1-411c-829f-90e61165251a"</c-><c- p>,</c->
-      <c- f>"schemaVersion"</c-><c- p>:</c-> <c- u>"sha256:a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae"</c->
+      <c- f>"schemaVersion"</c-><c- p>:</c-> <c- u>"sha256:a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae"</c-><c- p>,</c->
+      <c- f>"transit"</c-><c- p>:</c-> <c- u>"internal"</c->
     <c- p>},</c->
     <c- f>"governance"</c-><c- p>:</c-> <c- p>{</c->
       <c- f>"owner"</c-><c- p>:</c-> <c- u>"did:rwp:bern.ch:unit-baubewilligung"</c-><c- p>,</c->
@@ -2143,7 +2262,84 @@ rejected (terminal state, not linkable)
       <td>MUST
       <td>SHA-256
       <td>Hash of the schema version against which the <a data-link-type="dfn" href="#record" id="ref-for-record③⑥">Record</a>’s current version was validated
+     <tr>
+      <td><code>transit</code>
+      <td>MUST
+      <td>String
+      <td>Direction of the Record relative to its namespace. One of <code>incoming</code>, <code>internal</code>, <code>outgoing</code>. See <a href="#subsection-metadata-transit">Transit</a>.
+     <tr>
+      <td><code>provenanceRef</code>
+      <td>MUST if <code>transit</code> is <code>incoming</code>, MUST NOT otherwise
+      <td>Object
+      <td>Statement about the origin of the information outside the namespace. See <a href="#subsection-metadata-transit">Transit</a>.
    </table>
+   <h4 class="heading settled" data-level="6.1.1" id="subsection-metadata-transit"><span class="secno">6.1.1. </span><span class="content">Transit</span><a class="self-link" href="#subsection-metadata-transit"></a></h4>
+   <p>Transit describes the direction of a Record relative to the namespace in which it is created. It is independent of the Record type and of the state of a Version.</p>
+   <table class="data">
+    <thead>
+     <tr>
+      <th>Value
+      <th>Meaning
+    <tbody>
+     <tr>
+      <td><code>incoming</code>
+      <td>The Record was created in this namespace upon receipt of information that originates outside the namespace. The Record is a copy of externally originated information.
+     <tr>
+      <td><code>internal</code>
+      <td>The Record is intended for use within the namespace and is not intended to be handed out or published outside it.
+     <tr>
+      <td><code>outgoing</code>
+      <td>The Record is intended to leave the namespace, for example by being handed out, sent, or published.
+   </table>
+   <p>The value of <code>transit</code> reflects the circumstances of the origin of the Record. It is declared when the Record is created and SHOULD NOT be changed afterwards.</p>
+   <p>A SchemaRecord MAY restrict the permitted values of <code>transit</code> for its Record type.</p>
+   <h4 class="heading settled" data-level="6.1.2" id="subsection-metadata-provenance"><span class="secno">6.1.2. </span><span class="content">Provenance reference</span><a class="self-link" href="#subsection-metadata-provenance"></a></h4>
+   <p>A Record with <code>transit</code> <code>incoming</code> MUST contain a <code>provenanceRef</code>. A Record with any other <code>transit</code> value MUST NOT contain a <code>provenanceRef</code>.</p>
+   <table class="data">
+    <thead>
+     <tr>
+      <th>Field
+      <th>Required
+      <th>Type
+      <th>Description
+    <tbody>
+     <tr>
+      <td><code>sourceDescription</code>
+      <td>MUST
+      <td>string
+      <td>Human-readable description of the origin.
+     <tr>
+      <td><code>capturedAt</code>
+      <td>MUST
+      <td>string
+      <td>ISO 8601 timestamp of the receipt or capture of the information.
+     <tr>
+      <td><code>capturedBy</code>
+      <td>MUST
+      <td>string
+      <td>Identifier of the party that received or captured the information.
+     <tr>
+      <td><code>sourceSystem</code>
+      <td>MAY
+      <td>string
+      <td>Identifier of the external source, as defined in <a href="#subsection-source-integration-profile">RWP Source Integration Conformant</a>.
+     <tr>
+      <td><code>sourceId</code>
+      <td>MAY
+      <td>string
+      <td>Identifier of the source object, as defined in <a href="#subsection-source-integration-profile">RWP Source Integration Conformant</a>.
+     <tr>
+      <td><code>sourceObjectType</code>
+      <td>MAY
+      <td>string
+      <td>Type of the source object, as defined in <a href="#subsection-source-integration-profile">RWP Source Integration Conformant</a>.
+     <tr>
+      <td><code>sourceIntegrity</code>
+      <td>MAY
+      <td>string
+      <td>Integrity statement about the source object, with the values and meaning defined in <a href="#subsection-source-integration-profile">RWP Source Integration Conformant</a>.
+   </table>
+   <p class="note" role="note"><span class="marker">Note:</span> A Version with an <a href="#subsection-payload-issuance-block">Issuance block</a> is typically part of a Record with <code>transit</code> <code>outgoing</code>. This specification does not require this.</p>
    <h3 class="heading settled" data-level="6.2" id="section-metadata-governance"><span class="secno">6.2. </span><span class="content">metadata.governance</span><a class="self-link" href="#section-metadata-governance"></a></h3>
    <p>A <a data-link-type="dfn" href="#record" id="ref-for-record③⑦">Record</a> MAY contain the following <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="governance-metadata">governance metadata</dfn> fields. These fields express Records Management concerns (accountability, classification, retention, discoverability) as defined in <a data-link-type="biblio" href="#biblio-iso15489" title="Information and documentation — Records management, Part 1: Concepts and principles">[ISO15489]</a>.</p>
    <table class="data">
@@ -2158,7 +2354,7 @@ rejected (terminal state, not linkable)
       <td><code>owner</code>
       <td>SHOULD
       <td>DID
-      <td>The person or organisational unit currently responsible for the <a data-link-type="dfn" href="#record" id="ref-for-record③⑧">Record</a>, identified by an <a data-link-type="dfn" href="#agentrecord" id="ref-for-agentrecord②">AgentRecord</a>. See note below on the relationship between <code>owner</code> and version <code>signature</code>.
+      <td>The person or organisational unit currently responsible for the <a data-link-type="dfn" href="#record" id="ref-for-record③⑧">Record</a>, identified by an <a data-link-type="dfn" href="#agentrecord" id="ref-for-agentrecord②">AgentRecord</a>. See note below on the relationship between <code>owner</code> and version <code>proof</code>.
      <tr>
       <td><code>classification</code>
       <td>SHOULD
@@ -2175,15 +2371,15 @@ rejected (terminal state, not linkable)
       <td>Array&lt;String>
       <td>Free-text markers for search and filtering
    </table>
-   <p>The <code>owner</code> field expresses organisational accountability and MAY change over the lifetime of a <a data-link-type="dfn" href="#record" id="ref-for-record③⑨">Record</a> (e.g. following a transfer of responsibility). It is independent of the cryptographic <code>signature</code> carried by an individual <a data-link-type="dfn" href="#versions" id="ref-for-versions①">version</a> (see <a href="#section-payload-definition">versionHash</a>):</p>
+   <p>The <code>owner</code> field expresses organisational accountability and MAY change over the lifetime of a <a data-link-type="dfn" href="#record" id="ref-for-record③⑨">Record</a> (e.g. following a transfer of responsibility). It is independent of the cryptographic <code>proof</code> carried by an individual <a data-link-type="dfn" href="#versions" id="ref-for-versions①">version</a> (see <a href="#section-payload-definition">versionHash</a>):</p>
    <ul>
     <li data-md>
-     <p><code>signature</code> provides cryptographic evidence of <em>who authorised a specific version’s content</em> at finalisation, resolvable via the DID document’s <code>controller</code> field.</p>
+     <p><code>proof</code> provides cryptographic evidence of <em>who authorised a specific version’s content</em> at finalisation, resolvable via the DID document’s <code>controller</code> field.</p>
     <li data-md>
      <p><code>owner</code> provides the current, human-readable statement of <em>organisational responsibility</em> for the Record as a whole, independent of which key signed the most recent version.</p>
    </ul>
-   <p>Where a schema defines <code>signaturePolicy: system</code> (see <a href="#subsection-finalisation-requirements">Finalisation Requirements</a>), the signature identifies an authorised system key rather than a responsible person or unit. In this case, <code>owner</code> is the only field that expresses organisational accountability.</p>
-   <p>An implementation MUST NOT infer the current <code>owner</code> solely from the <code>controller</code> of the most recent version’s signature.</p>
+   <p>Where a schema defines <code>signaturePolicy: system</code> (see <a href="#subsection-finalisation-requirements">Finalisation Requirements</a>), the proof identifies an authorised system key rather than a responsible person or unit. In this case, <code>owner</code> is the only field that expresses organisational accountability.</p>
+   <p>An implementation MUST NOT infer the current <code>owner</code> solely from the <code>controller</code> of the most recent version’s proof.</p>
    <h3 class="heading settled" data-level="6.3" id="section-metadata-extensions"><span class="secno">6.3. </span><span class="content">metadata.extensions</span><a class="self-link" href="#section-metadata-extensions"></a></h3>
    <p>A <a data-link-type="dfn" href="#record" id="ref-for-record④⓪">Record</a> MAY contain an <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="extensions">extensions</dfn> array. Each entry is a self-describing object that extends <code>metadata</code> with schema- or profile-specific information not defined by this specification.</p>
    <p>Every extension entry MUST contain:</p>
@@ -2207,7 +2403,7 @@ rejected (terminal state, not linkable)
    <h2 class="heading settled" data-level="7" id="chapter-record-integrity"><span class="secno">7. </span><span class="content">Record Integrity</span><a class="self-link" href="#chapter-record-integrity"></a></h2>
    <h3 class="heading settled" data-level="7.1" id="section-record-integrity-purpose"><span class="secno">7.1. </span><span class="content">Purpose</span><a class="self-link" href="#section-record-integrity-purpose"></a></h3>
    <p>The <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="recordhash">recordHash</dfn> is a Record-level <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="integrity">integrity</dfn> value that covers the entire <a data-link-type="dfn" href="#record" id="ref-for-record④②">Record</a> (its <code>did</code>, <code>payload</code>, and <code>metadata</code>) at the time the hash was calculated. It provides evidence that a Record has not been altered since that point, independent of whether the alteration occurred in <code>payload</code> or in <code>metadata</code>.</p>
-   <p>The <code>recordHash</code> is distinct from the <code>signature</code> carried by an individual Version (see <a href="#section-crypto-procedures-signature">Signature Procedure</a>). A <code>signature</code> is an owner’s cryptographic authorisation of one specific versions’s content at finalisation. The <code>recordHash</code> is an unsigned, purely computational value; it does not require, and MUST NOT be interpreted as, an authorisation or attestation. It exists solely to make unauthorised or accidental modification of any part of the Record detectable.</p>
+   <p>The <code>recordHash</code> is distinct from the <code>proof</code> carried by an individual Version (see <a href="#section-crypto-procedures-proof">Proof Procedure</a>). A <code>proof</code> is an owner’s cryptographic authorisation of one specific versions’s content at finalisation. The <code>recordHash</code> is an unsigned, purely computational value; it does not require, and MUST NOT be interpreted as, an authorisation or attestation. It exists solely to make unauthorised or accidental modification of any part of the Record detectable.</p>
    <h3 class="heading settled" data-level="7.2" id="section-record-hash-calculation"><span class="secno">7.2. </span><span class="content">Record Hash Calculation</span><a class="self-link" href="#section-record-hash-calculation"></a></h3>
    <p>The <code>recordHash</code> MUST be calculated as follows:</p>
    <ol>
@@ -2222,11 +2418,11 @@ rejected (terminal state, not linkable)
    <p>The <code>versionHash</code> hash MUST be calculated as follows:</p>
    <ol>
     <li data-md>
-     <p>Serialise the version fields <code>state</code>, <code>parents</code>, <code>createdAt</code>, <code>modifiedAt</code>, and <code>representations</code> (without <code>versionHash</code> and <code>signature</code> themselves) as canonical JSON (<a data-link-type="biblio" href="#biblio-rfc8785" title="JSON Canonicalization Scheme (JCS)">[RFC8785]</a>)</p>
+     <p>Serialise the version fields <code>state</code>, <code>parents</code>, <code>createdAt</code>, <code>modifiedAt</code>, <code>representations</code> and, where present, <code>issuance</code>, without <code>versionHash</code> and <code>proof</code> themselves, as canonical JSON (<a data-link-type="biblio" href="#biblio-rfc8785" title="JSON Canonicalization Scheme (JCS)">[RFC8785]</a>)</p>
     <li data-md>
      <p>Calculate SHA-256 over the result</p>
    </ol>
-<pre>versionHash = SHA-256( canonicalize({state, parents, createdAt, modifiedAt, representations}) )
+<pre>versionHash = SHA-256( canonicalize({state, parents, createdAt, modifiedAt, representations[, issuance]}) )
 </pre>
    <h3 class="heading settled" data-level="7.4" id="section-content-hash-calculation"><span class="secno">7.4. </span><span class="content">Content Hash Calculation</span><a class="self-link" href="#section-content-hash-calculation"></a></h3>
    <p>The <code>contentHash</code> hash MUST be calculated as follows:</p>
@@ -2257,7 +2453,7 @@ rejected (terminal state, not linkable)
    </ul>
    <p>A Validation of one object MUST NOT be represented as a Validation of any related Record, Version, or Content object unless those objects have been validated separately.</p>
    <p>In particular, a Validation of a Record MUST NOT be represented as a Validation of all Versions of that Record. A Validation of a Version MUST NOT be represented as a Validation of all Representations or Content objects associated with that Version.</p>
-   <p>A Version identifier MAY additionally be validated by verifying <code>signature</code> over <code>versionHash</code> against a verification method of the DID document, in accordance with <a href="#section-crypto-procedures-signature">Cryptographic Procedures</a>.</p>
+   <p>A Version identifier MAY additionally be validated by verifying <code>proof</code> over <code>versionHash</code> against a verification method of the DID document, in accordance with <a href="#section-crypto-procedures-proof">Cryptographic Procedures</a>.</p>
    <h4 class="heading settled" data-level="7.5.2" id="subsection-record-integrity-validation-result"><span class="secno">7.5.2. </span><span class="content">Validation Result</span><a class="self-link" href="#subsection-record-integrity-validation-result"></a></h4>
    <p>When a Consumer retains or exchanges the result of a Validation, the result MUST contain:</p>
    <ul>
@@ -2857,19 +3053,46 @@ TBD
      <p>Notify the responsible record owner via the DID (SHOULD)</p>
    </ol>
    <p>The system MUST NOT automatically attempt to reconstruct the original content.</p>
-   <h3 class="heading settled" data-level="19.4" id="section-crypto-procedures-signature"><span class="secno">19.4. </span><span class="content">Signature Procedure</span><a class="self-link" href="#section-crypto-procedures-signature"></a></h3>
-   <p>If the schema prescribes a signature (<code>signaturePolicy: owner</code> or <code>signaturePolicy: system</code>), the <code>versionHash</code> MUST be cryptographically signed during the finalisation act.</p>
-   <p>Requirements:</p>
-   <ul>
-    <li data-md>
-     <p>MUST be Ed25519 (EdDSA, <a data-link-type="biblio" href="#biblio-rfc8037" title="CFRG Elliptic Curves for JOSE and COSE (Ed25519)">[RFC8037]</a>) or P-256 (ECDSA, NIST)</p>
-    <li data-md>
-     <p>The signature MUST be calculated over the canonical <code>versionHash</code> hash value (as hex string)</p>
-    <li data-md>
-     <p>The signature MUST be stored in the <code>signature</code> field of the version entry as a multibase-encoded value</p>
-    <li data-md>
-     <p>The key used MUST be published in the DID document of the record owner as a verification method</p>
-   </ul>
+   <h3 class="heading settled" data-level="19.4" id="section-crypto-procedures-proof"><span class="secno">19.4. </span><span class="content">Proof Procedure</span><a class="self-link" href="#section-crypto-procedures-proof"></a></h3>
+   <p>If the schema prescribes <code>signaturePolicy</code> <code>owner</code> or <code>signaturePolicy</code> <code>system</code>, the finalisation act MUST attach at least one proof to the Version. A Version without <code>proof</code> is not finalized under such a policy.</p>
+   <p>A proof MUST be a Data Integrity proof as defined by <a data-link-type="biblio" href="#biblio-vc-data-integrity" title="Verifiable Credential Data Integrity 1.0">[VC-DATA-INTEGRITY]</a> and MUST contain the following fields:</p>
+   <table class="data">
+    <thead>
+     <tr>
+      <th>Field
+      <th>Requirement
+      <th>Value
+    <tbody>
+     <tr>
+      <td>type
+      <td>MUST
+      <td><code>DataIntegrityProof</code>
+     <tr>
+      <td>cryptosuite
+      <td>MUST
+      <td><code>eddsa-jcs-2022</code> as defined by <a data-link-type="biblio" href="#biblio-vc-di-eddsa" title="Data Integrity EdDSA Cryptosuites v1.0">[VC-DI-EDDSA]</a>
+     <tr>
+      <td>created
+      <td>MUST
+      <td>ISO 8601 timestamp. SHOULD equal the <code>modifiedAt</code> of the Version.
+     <tr>
+      <td>verificationMethod
+      <td>MUST
+      <td>DID URL of a verification method that is controlled by the signing party
+     <tr>
+      <td>proofPurpose
+      <td>MUST
+      <td><code>assertionMethod</code>
+     <tr>
+      <td>proofValue
+      <td>MUST
+      <td>Multibase-encoded signature
+   </table>
+   <p><strong>Creation.</strong> The unsecured document is the Version object including <code>versionHash</code> and excluding <code>proof</code>. The proof MUST be created according to the algorithm of the cryptosuite <code>eddsa-jcs-2022</code>, using RFC 8785 JSON Canonicalization. The resulting proof object is added to the <code>proof</code> array.</p>
+   <p><strong>Multiple proofs.</strong> A Version MAY carry several proofs, for example from an institution and from a notary. Each proof is calculated independently over the unsecured document, never over another proof. Each proof MUST be verifiable on its own.</p>
+   <p><strong>Verification.</strong> A verifier MUST recalculate the <code>versionHash</code> according to <a href="#section-version-hash-calculation">Version Hash Calculation</a>. It MUST then verify at least one proof against the resolved verification method. A verifier decides according to its own trust policy which verification methods it accepts. A successful proof verification establishes that the holder of the verification method key signed this Version. It does not establish the authority of that holder.</p>
+   <p><strong>Key requirements.</strong> The key MUST be an Ed25519 key. The verification method MUST be published in the DID document of the signing party.</p>
+   <p><strong>Other cryptosuites.</strong> Only <code>eddsa-jcs-2022</code> is permitted in this version. Further cryptosuites MAY be added in a future version of this specification.</p>
    <h3 class="heading settled" data-level="19.5" id="section-crypto-procedures-merkle-algorithm"><span class="secno">19.5. </span><span class="content">Merkle Tree Algorithm</span><a class="self-link" href="#section-crypto-procedures-merkle-algorithm"></a></h3>
    <p>For the calculation of the <a data-link-type="dfn" href="#caserecord" id="ref-for-caserecord①⑦">CaseRecord</a> <a data-link-type="dfn" href="#merkle-root" id="ref-for-merkle-root③">Merkle root</a>, the following algorithm MUST be used:</p>
 <pre>function merkleRoot(hashes: SHA256[]) -> SHA256:
@@ -2895,7 +3118,7 @@ return sorted[0]
    <p>A <code>did:rwp</code> identifier MUST NOT contain personal data or other information whose disclosure is restricted by the applicable rules.</p>
    <p>The <code>payload-only</code> deletion regime removes payload bytes but retains the DID, metadata, and version graph. An implementation MUST NOT represent a <code>payload-only</code> deletion as full deletion of the Record.</p>
    <h3 class="heading settled" data-level="20.2" id="section-security-considerations"><span class="secno">20.2. </span><span class="content">Security</span><a class="self-link" href="#section-security-considerations"></a></h3>
-   <p>The integrity and signature procedures defined in <a href="#chapter-crypto-procedures">Cryptographic Procedures</a> provide evidence of the integrity of a version and, where applicable, of the verification method used to sign it. They do not by themselves establish confidentiality, authorisation, or the substantive correctness of a Record.</p>
+   <p>The integrity and proof procedures defined in <a href="#chapter-crypto-procedures">Cryptographic Procedures</a> provide evidence of the integrity of a version and, where applicable, of the verification method used to sign it. They do not by themselves establish confidentiality, authorisation, or the substantive correctness of a Record.</p>
    <p>A notification or other externally received signal that refers to an RWP Record or version is non-authoritative. Before creating, finalising, modifying, deleting, linking to, or otherwise acting on the referenced Record or version, an implementation MUST independently resolve and validate it according to the applicable requirements of this specification.</p>
    <h3 class="heading settled" data-level="20.3" id="section-security-services"><span class="secno">20.3. </span><span class="content">Service entries</span><a class="self-link" href="#section-security-services"></a></h3>
    <p>A <code>service</code> entry, including its <code>id</code>, <code>type</code> and <code>serviceEndpoint</code>, MUST NOT contain personal data or other information whose disclosure is restricted by the applicable rules.</p>
@@ -3121,24 +3344,9 @@ implementation technology.</p>
   <c- p>}</c->
 <c- p>}</c->
 </pre>
-   <h2 class="heading settled" data-level="24" id="chapter-solid"><span class="secno">24. </span><span class="content">Optional Solid Pod Delivery</span><a class="self-link" href="#chapter-solid"></a></h2>
-   <p>For <a data-link-type="dfn" href="#record" id="ref-for-record⑥②">Records</a> whose primary subject is an individual citizen, RWP offers an optional delivery extension: delivery of finalised <a data-link-type="dfn" href="#record" id="ref-for-record⑥③">Records</a> into a citizen’s Solid Pod.</p>
-   <p>When a system implements Solid Pod delivery, it MUST:</p>
-   <ul>
-    <li data-md>
-     <p>Obtain explicit, revocable write consent from the citizen via their Pod’s access control mechanism</p>
-    <li data-md>
-     <p>Deliver the complete <a data-link-type="dfn" href="#versions" id="ref-for-versions①⓪">version</a> (DID, <a data-link-type="dfn" href="#metadata" id="ref-for-metadata②">metadata</a>, <a data-link-type="dfn" href="#payload" id="ref-for-payload⑥">payload</a>) to the Pod</p>
-    <li data-md>
-     <p>Retain the canonical copy in its own RWP system, the Pod copy is an additional output, not a transfer of authority</p>
-    <li data-md>
-     <p>Include a <code>deliveryTarget</code> field in the optional metadata extension block</p>
-   </ul>
-   <p>Typical use cases: driving licences, medical images, residence registration confirmations, diplomas, building permits (delivered to the applicant).</p>
-   <p>The citizen MAY present the Pod-held <a data-link-type="dfn" href="#record" id="ref-for-record⑥④">Record</a> to any third party, who can independently verify its authenticity via the DID and cryptographic hash without querying the issuing authority.</p>
    <h2 class="heading no-num no-toc settled" id="part-8"><span class="content">Part VIII: Annexes</span><a class="self-link" href="#part-8"></a></h2>
-   <h2 class="heading settled" data-level="25" id="annex-a"><span class="secno">25. </span><span class="content">Annex A: Normative JSON Schemas</span><a class="self-link" href="#annex-a"></a></h2>
-   <h3 class="heading settled" data-level="25.1" id="schema-version"><span class="secno">25.1. </span><span class="content">A.1 Record, Version, and Metadata Schemas</span><a class="self-link" href="#schema-version"></a></h3>
+   <h2 class="heading settled" data-level="24" id="annex-a"><span class="secno">24. </span><span class="content">Annex A: Normative JSON Schemas</span><a class="self-link" href="#annex-a"></a></h2>
+   <h3 class="heading settled" data-level="24.1" id="schema-version"><span class="secno">24.1. </span><span class="content">A.1 Record, Version, and Metadata Schemas</span><a class="self-link" href="#schema-version"></a></h3>
 <pre class="highlight language-json"><c- p>{</c->
   <c- f>"$schema"</c-><c- p>:</c-> <c- u>"https://json-schema.org/draft/2020-12/schema"</c-><c- p>,</c->
   <c- f>"$id"</c-><c- p>:</c-> <c- u>"https://recordweb.github.io/rwp/schemas/record.json"</c-><c- p>,</c->
@@ -3156,25 +3364,33 @@ implementation technology.</p>
       <c- f>"type"</c-><c- p>:</c-> <c- u>"object"</c-><c- p>,</c->
       <c- f>"required"</c-><c- p>:</c-> <c- p>[</c-><c- u>"version"</c-><c- p>,</c-> <c- u>"state"</c-><c- p>,</c-> <c- u>"parents"</c-><c- p>,</c-> <c- u>"createdAt"</c-><c- p>,</c-> <c- u>"modifiedAt"</c-><c- p>,</c-> <c- u>"representations"</c-><c- p>],</c->
       <c- f>"properties"</c-><c- p>:</c-> <c- p>{</c->
-        <c- f>"version"</c-><c- p>:</c->        <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^sha256:[0-9a-f]{64}$"</c-> <c- p>},</c->
+        <c- f>"version"</c-><c- p>:</c->         <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^sha256:[0-9a-f]{64}$"</c-> <c- p>},</c->
         <c- f>"state"</c-><c- p>:</c->           <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"enum"</c-><c- p>:</c-> <c- p>[</c-><c- u>"draft"</c-><c- p>,</c-> <c- u>"finalized"</c-><c- p>]</c-> <c- p>},</c->
-        <c- f>"parents"</c-><c- p>:</c->         <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"array"</c-><c- p>,</c-> <c- f>"items"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c->
-                             <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^sha256:[0-9a-f]{64}$"</c-> <c- p>}</c-> <c- p>},</c->
+        <c- f>"parents"</c-><c- p>:</c->         <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"array"</c-><c- p>,</c-> <c- f>"items"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^sha256:[0-9a-f]{64}$"</c-> <c- p>}</c-> <c- p>},</c->
         <c- f>"createdAt"</c-><c- p>:</c->       <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"format"</c-><c- p>:</c-> <c- u>"date-time"</c-> <c- p>},</c->
         <c- f>"modifiedAt"</c-><c- p>:</c->      <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"format"</c-><c- p>:</c-> <c- u>"date-time"</c-> <c- p>},</c->
-        <c- f>"signature"</c-><c- p>:</c->       <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-> <c- p>},</c->
-        <c- f>"representations"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"array"</c-><c- p>,</c-> <c- f>"minItems"</c-><c- p>:</c-> <c- mi>1</c-><c- p>,</c->
-                             <c- f>"items"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"$ref"</c-><c- p>:</c-> <c- u>"#/$defs/representation"</c-> <c- p>}</c-> <c- p>}</c->
+        <c- f>"proof"</c-><c- p>:</c->           <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"array"</c-><c- p>,</c-> <c- f>"minItems"</c-><c- p>:</c-> <c- mi>1</c-><c- p>,</c-> <c- f>"items"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"$ref"</c-><c- p>:</c-> <c- u>"#/$defs/proof"</c-> <c- p>}</c-> <c- p>},</c->
+        <c- f>"issuance"</c-><c- p>:</c->        <c- p>{</c-> <c- f>"$ref"</c-><c- p>:</c-> <c- u>"#/$defs/issuance"</c-> <c- p>},</c->
+        <c- f>"representations"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"array"</c-><c- p>,</c-> <c- f>"minItems"</c-><c- p>:</c-> <c- mi>1</c-><c- p>,</c-> <c- f>"items"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"$ref"</c-><c- p>:</c-> <c- u>"#/$defs/representation"</c-> <c- p>}</c-> <c- p>}</c->
+      <c- p>}</c->
+      <c- f>"if"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"required"</c-><c- p>:</c-> <c- p>[</c-><c- u>"issuance"</c-><c- p>]</c-> <c- p>},</c->
+      <c- f>"then"</c-><c- p>:</c-> <c- p>{</c->
+        <c- f>"properties"</c-><c- p>:</c-> <c- p>{</c->
+          <c- f>"representations"</c-><c- p>:</c-> <c- p>{</c->
+            <c- f>"minItems"</c-><c- p>:</c-> <c- mi>1</c-><c- p>,</c-> <c- f>"maxItems"</c-><c- p>:</c-> <c- mi>1</c-><c- p>,</c->
+            <c- f>"items"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"required"</c-><c- p>:</c-> <c- p>[</c-><c- u>"content"</c-><c- p>,</c-> <c- u>"contentHash"</c-><c- p>],</c-> <c- f>"properties"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"primary"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"const"</c-><c- p>:</c-> <c- kc>true</c-> <c- p>}</c-> <c- p>}</c-> <c- p>}</c->
+          <c- p>}</c->
+        <c- p>}</c->
       <c- p>}</c->
     <c- p>},</c->
     <c- f>"representation"</c-><c- p>:</c-> <c- p>{</c->
       <c- f>"type"</c-><c- p>:</c-> <c- u>"object"</c-><c- p>,</c->
       <c- f>"required"</c-><c- p>:</c-> <c- p>[</c-><c- u>"format"</c-><c- p>,</c-> <c- u>"hash"</c-><c- p>,</c-> <c- u>"primary"</c-><c- p>],</c->
       <c- f>"properties"</c-><c- p>:</c-> <c- p>{</c->
-        <c- f>"format"</c-><c- p>:</c->  <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-> <c- p>},</c->
-        <c- f>"hash"</c-><c- p>:</c->    <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^sha256:[0-9a-f]{64}$"</c-> <c- p>},</c->
-        <c- f>"primary"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"boolean"</c-> <c- p>},</c->
-        <c- f>"role"</c-><c- p>:</c->    <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"enum"</c-><c- p>:</c-> <c- p>[</c-><c- u>"source"</c-><c- p>,</c-> <c- u>"publication"</c-><c- p>,</c-> <c- u>"preview"</c-><c- p>,</c-> <c- u>"archive"</c-><c- p>]</c-> <c- p>}</c->
+        <c- f>"format"</c-><c- p>:</c->      <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-> <c- p>},</c->
+        <c- f>"contentHash"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^sha256:[0-9a-f]{64}$"</c-> <c- p>},</c->
+        <c- f>"primary"</c-><c- p>:</c->     <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"boolean"</c-> <c- p>},</c->
+        <c- f>"role"</c-><c- p>:</c->        <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"enum"</c-><c- p>:</c-> <c- p>[</c-><c- u>"source"</c-><c- p>,</c-> <c- u>"publication"</c-><c- p>,</c-> <c- u>"preview"</c-><c- p>,</c-> <c- u>"archive"</c-><c- p>]</c-> <c- p>}</c->
       <c- p>}</c->
     <c- p>},</c->
     <c- f>"metadata"</c-><c- p>:</c-> <c- p>{</c->
@@ -3183,11 +3399,29 @@ implementation technology.</p>
       <c- f>"properties"</c-><c- p>:</c-> <c- p>{</c->
         <c- f>"core"</c-><c- p>:</c-> <c- p>{</c->
           <c- f>"type"</c-><c- p>:</c-> <c- u>"object"</c-><c- p>,</c->
-          <c- f>"required"</c-><c- p>:</c-> <c- p>[</c-><c- u>"recordType"</c-><c- p>,</c-> <c- u>"schemaVersion"</c-><c- p>],</c->
+          <c- f>"required"</c-><c- p>:</c-> <c- p>[</c-><c- u>"recordType"</c-><c- p>,</c-> <c- u>"schemaVersion"</c-><c- p>,</c-> <c- u>"transit"</c-><c- p>],</c->
           <c- f>"properties"</c-><c- p>:</c-> <c- p>{</c->
             <c- f>"recordType"</c-><c- p>:</c->    <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^did:rwp:"</c-> <c- p>},</c->
-            <c- f>"schemaVersion"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^sha256:[0-9a-f]{64}$"</c-> <c- p>}</c->
-          <c- p>}</c->
+            <c- f>"schemaVersion"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"pattern"</c-><c- p>:</c-> <c- u>"^sha256:[0-9a-f]{64}$"</c-> <c- p>},</c->
+            <c- f>"transit"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"enum"</c-><c- p>:</c-> <c- p>[</c-><c- u>"incoming"</c-><c- p>,</c-> <c- u>"internal"</c-><c- p>,</c-> <c- u>"outgoing"</c-><c- p>]</c-> <c- p>},</c->
+            <c- f>"provenanceRef"</c-><c- p>:</c-> <c- p>{</c->
+              <c- f>"type"</c-><c- p>:</c-> <c- u>"object"</c-><c- p>,</c->
+              <c- f>"required"</c-><c- p>:</c-> <c- p>[</c-><c- u>"sourceDescription"</c-><c- p>,</c-> <c- u>"capturedAt"</c-><c- p>,</c-> <c- u>"capturedBy"</c-><c- p>],</c->
+              <c- f>"properties"</c-><c- p>:</c-> <c- p>{</c->
+                <c- f>"sourceDescription"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-> <c- p>},</c->
+                <c- f>"capturedAt"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"format"</c-><c- p>:</c-> <c- u>"date-time"</c-> <c- p>},</c->
+                <c- f>"capturedBy"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-> <c- p>},</c->
+                <c- f>"sourceSystem"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-> <c- p>},</c->
+                <c- f>"sourceId"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-> <c- p>},</c->
+                <c- f>"sourceObjectType"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-> <c- p>},</c->
+                <c- f>"sourceIntegrity"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"enum"</c-><c- p>:</c-> <c- p>[</c-><c- u>"none"</c-><c- p>,</c-> <c- u>"platform-versioned"</c-><c- p>,</c-><c- u>"source-signed"</c-><c- p>,</c-> <c- u>"externally-hashed"</c-><c- p>]</c-> <c- p>}</c->
+              <c- p>},</c->
+              <c- f>"additionalProperties"</c-><c- p>:</c-> <c- kc>false</c->
+            <c- p>}</c->
+          <c- p>},</c->
+          <c- f>"if"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"properties"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"transit"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"const"</c-><c- p>:</c-> <c- u>"incoming"</c-> <c- p>}</c-> <c- p>},</c-> <c- f>"required"</c-><c- p>:</c-> <c- p>[</c-><c- u>"transit"</c-><c- p>]</c-> <c- p>},</c->
+          <c- f>"then"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"required"</c-><c- p>:</c-> <c- p>[</c-><c- u>"provenanceRef"</c-><c- p>]</c-> <c- p>},</c->
+          <c- f>"else"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"not"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"required"</c-><c- p>:</c-> <c- p>[</c-><c- u>"provenanceRef"</c-><c- p>]</c-> <c- p>}</c-> <c- p>}</c->
         <c- p>},</c->
         <c- f>"governance"</c-><c- p>:</c-> <c- p>{</c->
           <c- f>"type"</c-><c- p>:</c-> <c- u>"object"</c-><c- p>,</c->
@@ -3211,11 +3445,35 @@ implementation technology.</p>
           <c- p>}</c->
         <c- p>}</c->
       <c- p>}</c->
+    <c- p>},</c->
+    <c- f>"proof"</c-><c- p>:</c-> <c- p>{</c->
+      <c- f>"type"</c-><c- p>:</c-> <c- u>"object"</c-><c- p>,</c->
+      <c- f>"required"</c-><c- p>:</c-> <c- p>[</c-><c- u>"type"</c-><c- p>,</c-> <c- u>"cryptosuite"</c-><c- p>,</c-> <c- u>"created"</c-><c- p>,</c-> <c- u>"verificationMethod"</c-><c- p>,</c-> <c- u>"proofPurpose"</c-><c- p>,</c-> <c- u>"proofValue"</c-><c- p>],</c->
+      <c- f>"properties"</c-><c- p>:</c-> <c- p>{</c->
+        <c- f>"type"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"const"</c-><c- p>:</c-> <c- u>"DataIntegrityProof"</c-> <c- p>},</c->
+        <c- f>"cryptosuite"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"const"</c-><c- p>:</c-> <c- u>"eddsa-jcs-2022"</c-> <c- p>},</c->
+        <c- f>"created"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"format"</c-><c- p>:</c-> <c- u>"date-time"</c-> <c- p>},</c->
+        <c- f>"verificationMethod"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-> <c- p>},</c->
+        <c- f>"proofPurpose"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"const"</c-><c- p>:</c-> <c- u>"assertionMethod"</c-> <c- p>},</c->
+        <c- f>"proofValue"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-> <c- p>}</c->
+      <c- p>},</c->
+      <c- f>"additionalProperties"</c-><c- p>:</c-> <c- kc>false</c->
+    <c- p>},</c->
+    <c- f>"issuance"</c-><c- p>:</c-> <c- p>{</c->
+      <c- f>"type"</c-><c- p>:</c-> <c- u>"object"</c-><c- p>,</c->
+      <c- f>"required"</c-><c- p>:</c-> <c- p>[</c-><c- u>"issuedAt"</c-><c- p>],</c->
+      <c- f>"properties"</c-><c- p>:</c-> <c- p>{</c->
+        <c- f>"issuedAt"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"format"</c-><c- p>:</c-> <c- u>"date-time"</c-> <c- p>},</c->
+        <c- f>"issuedTo"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-> <c- p>},</c->
+        <c- f>"validUntil"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-><c- p>,</c-> <c- f>"format"</c-><c- p>:</c-> <c- u>"date-time"</c-> <c- p>},</c->
+        <c- f>"reason"</c-><c- p>:</c-> <c- p>{</c-> <c- f>"type"</c-><c- p>:</c-> <c- u>"string"</c-> <c- p>}</c->
+      <c- p>},</c->
+      <c- f>"additionalProperties"</c-><c- p>:</c-> <c- kc>false</c->
     <c- p>}</c->
   <c- p>}</c->
 <c- p>}</c->
 </pre>
-   <h3 class="heading settled" data-level="25.2" id="schema-case"><span class="secno">25.2. </span><span class="content">A.2 CaseRecord Payload Schema</span><a class="self-link" href="#schema-case"></a></h3>
+   <h3 class="heading settled" data-level="24.2" id="schema-case"><span class="secno">24.2. </span><span class="content">A.2 CaseRecord Payload Schema</span><a class="self-link" href="#schema-case"></a></h3>
    <p>This schema defines structural validation only. State-dependent finalisation requirements, including the required presence of all five Case element fields, the prohibition of soft links and the minimum cardinality of <code>result</code>, are defined in <a href="#section-case-elements">Case Elements</a> and <a href="#section-links">Hard and Soft Links</a>.</p>
 <pre class="highlight language-json"><c- p>{</c->
   <c- f>"$schema"</c-><c- p>:</c-> <c- u>"https://json-schema.org/draft/2020-12/schema"</c-><c- p>,</c->
@@ -3258,7 +3516,7 @@ implementation technology.</p>
   <c- p>}</c->
 <c- p>}</c->
 </pre>
-   <h3 class="heading settled" data-level="25.3" id="schema-deletion"><span class="secno">25.3. </span><span class="content">A.3 DeletionRecord Payload Schema</span><a class="self-link" href="#schema-deletion"></a></h3>
+   <h3 class="heading settled" data-level="24.3" id="schema-deletion"><span class="secno">24.3. </span><span class="content">A.3 DeletionRecord Payload Schema</span><a class="self-link" href="#schema-deletion"></a></h3>
 <pre class="highlight language-json"><c- p>{</c->
   <c- f>"$schema"</c-><c- p>:</c-> <c- u>"https://json-schema.org/draft/2020-12/schema"</c-><c- p>,</c->
   <c- f>"$id"</c-><c- p>:</c-> <c- u>"https://recordweb.github.io/rwp/schemas/deletion-record.json"</c-><c- p>,</c->
@@ -3287,9 +3545,9 @@ implementation technology.</p>
   <c- p>}</c->
 <c- p>}</c->
 </pre>
-   <h2 class="heading settled" data-level="26" id="annex-b"><span class="secno">26. </span><span class="content">Annex B: Reference Implementation Notes (non-normative)</span><a class="self-link" href="#annex-b"></a></h2>
+   <h2 class="heading settled" data-level="25" id="annex-b"><span class="secno">25. </span><span class="content">Annex B: Reference Implementation Notes (non-normative)</span><a class="self-link" href="#annex-b"></a></h2>
    <p>This annex is non-normative. It provides guidance for implementers and does not impose additional requirements.</p>
-   <h3 class="heading settled" data-level="26.1" id="impl-tech"><span class="secno">26.1. </span><span class="content">B.1 Technology Choices</span><a class="self-link" href="#impl-tech"></a></h3>
+   <h3 class="heading settled" data-level="25.1" id="impl-tech"><span class="secno">25.1. </span><span class="content">B.1 Technology Choices</span><a class="self-link" href="#impl-tech"></a></h3>
    <p>The following technology choices are recommended for a first RWP implementation:</p>
    <table class="data">
     <thead>
@@ -3323,7 +3581,7 @@ implementation technology.</p>
       <td>AJV (JSON Schema validator)
       <td>Supports JSON Schema 2020-12
    </table>
-   <h3 class="heading settled" data-level="26.2" id="impl-pilot"><span class="secno">26.2. </span><span class="content">B.2 Pilot Scope Recommendation</span><a class="self-link" href="#impl-pilot"></a></h3>
+   <h3 class="heading settled" data-level="25.2" id="impl-pilot"><span class="secno">25.2. </span><span class="content">B.2 Pilot Scope Recommendation</span><a class="self-link" href="#impl-pilot"></a></h3>
    <p>For a first pilot, the following Level 1 subset is recommended:</p>
    <ol>
     <li data-md>
@@ -3433,14 +3691,16 @@ implementation technology.</p>
    <dd><a href="https://www.iso.org/standard/62542.html"><cite>Information and documentation — Records management, Part 1: Concepts and principles</cite></a>. 2016. URL: <a href="https://www.iso.org/standard/62542.html">https://www.iso.org/standard/62542.html</a>
    <dt id="biblio-json-schema">[JSON-SCHEMA]
    <dd><a href="https://json-schema.org/draft/2020-12/json-schema-core"><cite>JSON Schema: A Media Type for Describing JSON Documents</cite></a>. 2020. URL: <a href="https://json-schema.org/draft/2020-12/json-schema-core">https://json-schema.org/draft/2020-12/json-schema-core</a>
-   <dt id="biblio-rfc8037">[RFC8037]
-   <dd><a href="https://www.rfc-editor.org/rfc/rfc8037"><cite>CFRG Elliptic Curves for JOSE and COSE (Ed25519)</cite></a>. 2017. URL: <a href="https://www.rfc-editor.org/rfc/rfc8037">https://www.rfc-editor.org/rfc/rfc8037</a>
    <dt id="biblio-rfc8785">[RFC8785]
    <dd><a href="https://www.rfc-editor.org/rfc/rfc8785"><cite>JSON Canonicalization Scheme (JCS)</cite></a>. 2020. URL: <a href="https://www.rfc-editor.org/rfc/rfc8785">https://www.rfc-editor.org/rfc/rfc8785</a>
    <dt id="biblio-rico">[RICO]
    <dd><a href="https://www.ica.org/standards/RiC/RiC-O_1-0-2.html"><cite>Records in Contexts Ontology (RiC-O)</cite></a>. 2024-09-04. URL: <a href="https://www.ica.org/standards/RiC/RiC-O_1-0-2.html">https://www.ica.org/standards/RiC/RiC-O_1-0-2.html</a>
    <dt id="biblio-rwc">[RWC]
    <dd>RecordWeb CG. <a href="https://recordweb.github.io/rwc/"><cite>RecordWeb Concept (RWC)</cite></a>. CG-DRAFT. URL: <a href="https://recordweb.github.io/rwc/">https://recordweb.github.io/rwc/</a>
+   <dt id="biblio-vc-data-integrity">[VC-DATA-INTEGRITY]
+   <dd><a href="https://www.w3.org/TR/vc-data-integrity/"><cite>Verifiable Credential Data Integrity 1.0</cite></a>. 2025. URL: <a href="https://www.w3.org/TR/vc-data-integrity/">https://www.w3.org/TR/vc-data-integrity/</a>
+   <dt id="biblio-vc-di-eddsa">[VC-DI-EDDSA]
+   <dd><a href="https://www.w3.org/TR/vc-di-eddsa/"><cite>Data Integrity EdDSA Cryptosuites v1.0</cite></a>. 2025. URL: <a href="https://www.w3.org/TR/vc-di-eddsa/">https://www.w3.org/TR/vc-di-eddsa/</a>
   </dl>
 <script>/* Boilerplate: script-dom-helper */
 "use strict";
@@ -3661,10 +3921,10 @@ let dfnPanelData = {
 "informationrecord": {"dfnID":"informationrecord","dfnText":"InformationRecord","external":false,"refSections":[{"refs":[{"id":"ref-for-informationrecord"}],"title":"3.3. Record taxonomy"},{"refs":[{"id":"ref-for-informationrecord\u2460"}],"title":"10.4. Hard and Soft Links"},{"refs":[{"id":"ref-for-informationrecord\u2461"}],"title":"13.1. Purpose and scope"}],"url":"#informationrecord"},
 "integrity": {"dfnID":"integrity","dfnText":"integrity","external":false,"refSections":[{"refs":[{"id":"ref-for-integrity"}],"title":"3.1. Components"}],"url":"#integrity"},
 "merkle-root": {"dfnID":"merkle-root","dfnText":"Merkle root","external":false,"refSections":[{"refs":[{"id":"ref-for-merkle-root"}],"title":"10.5. CaseRecord-to-CaseRecord Links"},{"refs":[{"id":"ref-for-merkle-root\u2460"},{"id":"ref-for-merkle-root\u2461"}],"title":"10.6. Case Merkle Root"},{"refs":[{"id":"ref-for-merkle-root\u2462"}],"title":"19.5. Merkle Tree Algorithm"},{"refs":[{"id":"ref-for-merkle-root\u2463"}],"title":"23.1. Purpose and Scope"}],"url":"#merkle-root"},
-"metadata": {"dfnID":"metadata","dfnText":"Metadata","external":false,"refSections":[{"refs":[{"id":"ref-for-metadata"}],"title":"3.1. Components"},{"refs":[{"id":"ref-for-metadata\u2460"}],"title":"9.1. Record Type Definition"},{"refs":[{"id":"ref-for-metadata\u2461"}],"title":"24. Optional Solid Pod Delivery"}],"url":"#metadata"},
-"payload": {"dfnID":"payload","dfnText":"payload","external":false,"refSections":[{"refs":[{"id":"ref-for-payload"}],"title":"3.1. Components"},{"refs":[{"id":"ref-for-payload\u2460"}],"title":"5.1. Payload Structure"},{"refs":[{"id":"ref-for-payload\u2461"}],"title":"5.5.3. Edges (Parent References)"},{"refs":[{"id":"ref-for-payload\u2462"},{"id":"ref-for-payload\u2463"}],"title":"8.3. DeletionRecord Protocol"},{"refs":[{"id":"ref-for-payload\u2464"}],"title":"9.1. Record Type Definition"},{"refs":[{"id":"ref-for-payload\u2465"}],"title":"24. Optional Solid Pod Delivery"}],"url":"#payload"},
+"metadata": {"dfnID":"metadata","dfnText":"Metadata","external":false,"refSections":[{"refs":[{"id":"ref-for-metadata"}],"title":"3.1. Components"},{"refs":[{"id":"ref-for-metadata\u2460"}],"title":"9.1. Record Type Definition"}],"url":"#metadata"},
+"payload": {"dfnID":"payload","dfnText":"payload","external":false,"refSections":[{"refs":[{"id":"ref-for-payload"}],"title":"3.1. Components"},{"refs":[{"id":"ref-for-payload\u2460"}],"title":"5.1. Payload Structure"},{"refs":[{"id":"ref-for-payload\u2461"}],"title":"5.5.3. Edges (Parent References)"},{"refs":[{"id":"ref-for-payload\u2462"},{"id":"ref-for-payload\u2463"}],"title":"8.3. DeletionRecord Protocol"},{"refs":[{"id":"ref-for-payload\u2464"}],"title":"9.1. Record Type Definition"}],"url":"#payload"},
 "producer": {"dfnID":"producer","dfnText":"producer","external":false,"refSections":[],"url":"#producer"},
-"record": {"dfnID":"record","dfnText":"Record","external":false,"refSections":[{"refs":[{"id":"ref-for-record"}],"title":"1.1. Purpose"},{"refs":[{"id":"ref-for-record\u2460"},{"id":"ref-for-record\u2461"}],"title":"1.2. Scope"},{"refs":[{"id":"ref-for-record\u2462"}],"title":"3. The Record"},{"refs":[{"id":"ref-for-record\u2463"},{"id":"ref-for-record\u2464"},{"id":"ref-for-record\u2465"},{"id":"ref-for-record\u2466"}],"title":"3.1. Components"},{"refs":[{"id":"ref-for-record\u2467"},{"id":"ref-for-record\u2468"}],"title":"3.3. Record taxonomy"},{"refs":[{"id":"ref-for-record\u2460\u24ea"},{"id":"ref-for-record\u2460\u2460"},{"id":"ref-for-record\u2460\u2461"},{"id":"ref-for-record\u2460\u2462"}],"title":"4.1. Requirements for Record Identity"},{"refs":[{"id":"ref-for-record\u2460\u2463"}],"title":"4.2. DID Format"},{"refs":[{"id":"ref-for-record\u2460\u2464"},{"id":"ref-for-record\u2460\u2465"},{"id":"ref-for-record\u2460\u2466"}],"title":"4.3. DID Document"},{"refs":[{"id":"ref-for-record\u2460\u2467"},{"id":"ref-for-record\u2460\u2468"}],"title":"4.3.1. Service Entries"},{"refs":[{"id":"ref-for-record\u2461\u24ea"}],"title":"4.4. DID Resolver Requirements"},{"refs":[{"id":"ref-for-record\u2461\u2460"},{"id":"ref-for-record\u2461\u2461"}],"title":"5.1. Payload Structure"},{"refs":[{"id":"ref-for-record\u2461\u2462"},{"id":"ref-for-record\u2461\u2463"}],"title":"5.3. Conversion During Finalisation"},{"refs":[{"id":"ref-for-record\u2461\u2464"}],"title":"5.4.1. State Model"},{"refs":[{"id":"ref-for-record\u2461\u2465"}],"title":"5.4.2. Linkability"},{"refs":[{"id":"ref-for-record\u2461\u2466"}],"title":"5.5.1. Graph Structure"},{"refs":[{"id":"ref-for-record\u2461\u2467"},{"id":"ref-for-record\u2461\u2468"}],"title":"5.5.3. Edges (Parent References)"},{"refs":[{"id":"ref-for-record\u2462\u24ea"}],"title":"5.5.4. Branches"},{"refs":[{"id":"ref-for-record\u2462\u2460"},{"id":"ref-for-record\u2462\u2461"},{"id":"ref-for-record\u2462\u2462"}],"title":"5.5.6. Cross-Record Merges"},{"refs":[{"id":"ref-for-record\u2462\u2463"}],"title":"6. Metadata"},{"refs":[{"id":"ref-for-record\u2462\u2464"},{"id":"ref-for-record\u2462\u2465"}],"title":"6.1. metadata.core"},{"refs":[{"id":"ref-for-record\u2462\u2466"},{"id":"ref-for-record\u2462\u2467"},{"id":"ref-for-record\u2462\u2468"}],"title":"6.2. metadata.governance"},{"refs":[{"id":"ref-for-record\u2463\u24ea"},{"id":"ref-for-record\u2463\u2460"}],"title":"6.3. metadata.extensions"},{"refs":[{"id":"ref-for-record\u2463\u2461"}],"title":"7.1. Purpose"},{"refs":[{"id":"ref-for-record\u2463\u2462"},{"id":"ref-for-record\u2463\u2463"}],"title":"9.1. Record Type Definition"},{"refs":[{"id":"ref-for-record\u2463\u2464"}],"title":"10.1. Case as a specialised Record Type {#section-case-type}"},{"refs":[{"id":"ref-for-record\u2463\u2465"}],"title":"10.4. Hard and Soft Links"},{"refs":[{"id":"ref-for-record\u2463\u2466"}],"title":"11.1. Purpose and scope"},{"refs":[{"id":"ref-for-record\u2463\u2467"},{"id":"ref-for-record\u2463\u2468"}],"title":"14. SchemaRecord"},{"refs":[{"id":"ref-for-record\u2464\u24ea"}],"title":"14.1. Schema Versioning and Backward Compatibility"},{"refs":[{"id":"ref-for-record\u2464\u2460"},{"id":"ref-for-record\u2464\u2461"}],"title":"14.2. Capability Declaration"},{"refs":[{"id":"ref-for-record\u2464\u2462"}],"title":"19.3. Version Integrity"},{"refs":[{"id":"ref-for-record\u2464\u2463"},{"id":"ref-for-record\u2464\u2464"}],"title":"20.3. Service entries"},{"refs":[{"id":"ref-for-record\u2464\u2465"}],"title":"21.2.5. Resolution Obligation"},{"refs":[{"id":"ref-for-record\u2464\u2466"},{"id":"ref-for-record\u2464\u2467"},{"id":"ref-for-record\u2464\u2468"}],"title":"21.3. Cross-Namespace Links"},{"refs":[{"id":"ref-for-record\u2465\u24ea"}],"title":"22.2. Access Policy Block"},{"refs":[{"id":"ref-for-record\u2465\u2460"}],"title":"23.2. Requirements for the Ledger"},{"refs":[{"id":"ref-for-record\u2465\u2461"},{"id":"ref-for-record\u2465\u2462"},{"id":"ref-for-record\u2465\u2463"}],"title":"24. Optional Solid Pod Delivery"}],"url":"#record"},
+"record": {"dfnID":"record","dfnText":"Record","external":false,"refSections":[{"refs":[{"id":"ref-for-record"}],"title":"1.1. Purpose"},{"refs":[{"id":"ref-for-record\u2460"},{"id":"ref-for-record\u2461"}],"title":"1.2. Scope"},{"refs":[{"id":"ref-for-record\u2462"}],"title":"3. The Record"},{"refs":[{"id":"ref-for-record\u2463"},{"id":"ref-for-record\u2464"},{"id":"ref-for-record\u2465"},{"id":"ref-for-record\u2466"}],"title":"3.1. Components"},{"refs":[{"id":"ref-for-record\u2467"},{"id":"ref-for-record\u2468"}],"title":"3.3. Record taxonomy"},{"refs":[{"id":"ref-for-record\u2460\u24ea"},{"id":"ref-for-record\u2460\u2460"},{"id":"ref-for-record\u2460\u2461"},{"id":"ref-for-record\u2460\u2462"}],"title":"4.1. Requirements for Record Identity"},{"refs":[{"id":"ref-for-record\u2460\u2463"}],"title":"4.2. DID Format"},{"refs":[{"id":"ref-for-record\u2460\u2464"},{"id":"ref-for-record\u2460\u2465"},{"id":"ref-for-record\u2460\u2466"}],"title":"4.3. DID Document"},{"refs":[{"id":"ref-for-record\u2460\u2467"},{"id":"ref-for-record\u2460\u2468"}],"title":"4.3.1. Service Entries"},{"refs":[{"id":"ref-for-record\u2461\u24ea"}],"title":"4.4. DID Resolver Requirements"},{"refs":[{"id":"ref-for-record\u2461\u2460"},{"id":"ref-for-record\u2461\u2461"}],"title":"5.1. Payload Structure"},{"refs":[{"id":"ref-for-record\u2461\u2462"},{"id":"ref-for-record\u2461\u2463"}],"title":"5.3. Conversion During Finalisation"},{"refs":[{"id":"ref-for-record\u2461\u2464"}],"title":"5.4.1. State Model"},{"refs":[{"id":"ref-for-record\u2461\u2465"}],"title":"5.4.2. Linkability"},{"refs":[{"id":"ref-for-record\u2461\u2466"}],"title":"5.5.1. Graph Structure"},{"refs":[{"id":"ref-for-record\u2461\u2467"},{"id":"ref-for-record\u2461\u2468"}],"title":"5.5.3. Edges (Parent References)"},{"refs":[{"id":"ref-for-record\u2462\u24ea"}],"title":"5.5.4. Branches"},{"refs":[{"id":"ref-for-record\u2462\u2460"},{"id":"ref-for-record\u2462\u2461"},{"id":"ref-for-record\u2462\u2462"}],"title":"5.5.6. Cross-Record Merges"},{"refs":[{"id":"ref-for-record\u2462\u2463"}],"title":"6. Metadata"},{"refs":[{"id":"ref-for-record\u2462\u2464"},{"id":"ref-for-record\u2462\u2465"}],"title":"6.1. metadata.core"},{"refs":[{"id":"ref-for-record\u2462\u2466"},{"id":"ref-for-record\u2462\u2467"},{"id":"ref-for-record\u2462\u2468"}],"title":"6.2. metadata.governance"},{"refs":[{"id":"ref-for-record\u2463\u24ea"},{"id":"ref-for-record\u2463\u2460"}],"title":"6.3. metadata.extensions"},{"refs":[{"id":"ref-for-record\u2463\u2461"}],"title":"7.1. Purpose"},{"refs":[{"id":"ref-for-record\u2463\u2462"},{"id":"ref-for-record\u2463\u2463"}],"title":"9.1. Record Type Definition"},{"refs":[{"id":"ref-for-record\u2463\u2464"}],"title":"10.1. Case as a specialised Record Type {#section-case-type}"},{"refs":[{"id":"ref-for-record\u2463\u2465"}],"title":"10.4. Hard and Soft Links"},{"refs":[{"id":"ref-for-record\u2463\u2466"}],"title":"11.1. Purpose and scope"},{"refs":[{"id":"ref-for-record\u2463\u2467"},{"id":"ref-for-record\u2463\u2468"}],"title":"14. SchemaRecord"},{"refs":[{"id":"ref-for-record\u2464\u24ea"}],"title":"14.1. Schema Versioning and Backward Compatibility"},{"refs":[{"id":"ref-for-record\u2464\u2460"},{"id":"ref-for-record\u2464\u2461"}],"title":"14.2. Capability Declaration"},{"refs":[{"id":"ref-for-record\u2464\u2462"}],"title":"19.3. Version Integrity"},{"refs":[{"id":"ref-for-record\u2464\u2463"},{"id":"ref-for-record\u2464\u2464"}],"title":"20.3. Service entries"},{"refs":[{"id":"ref-for-record\u2464\u2465"}],"title":"21.2.5. Resolution Obligation"},{"refs":[{"id":"ref-for-record\u2464\u2466"},{"id":"ref-for-record\u2464\u2467"},{"id":"ref-for-record\u2464\u2468"}],"title":"21.3. Cross-Namespace Links"},{"refs":[{"id":"ref-for-record\u2465\u24ea"}],"title":"22.2. Access Policy Block"},{"refs":[{"id":"ref-for-record\u2465\u2460"}],"title":"23.2. Requirements for the Ledger"}],"url":"#record"},
 "recordhash": {"dfnID":"recordhash","dfnText":"recordHash","external":false,"refSections":[],"url":"#recordhash"},
 "relationrecord": {"dfnID":"relationrecord","dfnText":"RelationRecord","external":false,"refSections":[{"refs":[{"id":"ref-for-relationrecord"},{"id":"ref-for-relationrecord\u2460"},{"id":"ref-for-relationrecord\u2461"}],"title":"3.3. Record taxonomy"},{"refs":[{"id":"ref-for-relationrecord\u2462"}],"title":"10.1. Case as a specialised Record Type {#section-case-type}"},{"refs":[{"id":"ref-for-relationrecord\u2463"}],"title":"10.4. Hard and Soft Links"},{"refs":[{"id":"ref-for-relationrecord\u2464"}],"title":"11.1. Purpose and scope"}],"url":"#relationrecord"},
 "resolver": {"dfnID":"resolver","dfnText":"resolver","external":false,"refSections":[],"url":"#resolver"},
@@ -3673,7 +3933,7 @@ let dfnPanelData = {
 "source-adapter": {"dfnID":"source-adapter","dfnText":"source-adapter","external":false,"refSections":[],"url":"#source-adapter"},
 "systemrecord": {"dfnID":"systemrecord","dfnText":"SystemRecord","external":false,"refSections":[{"refs":[{"id":"ref-for-systemrecord"},{"id":"ref-for-systemrecord\u2460"},{"id":"ref-for-systemrecord\u2461"},{"id":"ref-for-systemrecord\u2462"},{"id":"ref-for-systemrecord\u2463"},{"id":"ref-for-systemrecord\u2464"}],"title":"3.3. Record taxonomy"},{"refs":[{"id":"ref-for-systemrecord\u2465"}],"title":"10.4. Hard and Soft Links"}],"url":"#systemrecord"},
 "version-graph": {"dfnID":"version-graph","dfnText":"version graph","external":false,"refSections":[{"refs":[{"id":"ref-for-version-graph"}],"title":"5.5.1. Graph Structure"},{"refs":[{"id":"ref-for-version-graph\u2460"}],"title":"5.5.2. Nodes"}],"url":"#version-graph"},
-"versions": {"dfnID":"versions","dfnText":"versions","external":false,"refSections":[{"refs":[{"id":"ref-for-versions"}],"title":"5.1. Payload Structure"},{"refs":[{"id":"ref-for-versions\u2460"}],"title":"6.2. metadata.governance"},{"refs":[{"id":"ref-for-versions\u2461"}],"title":"8.3. DeletionRecord Protocol"},{"refs":[{"id":"ref-for-versions\u2462"}],"title":"10.4. Hard and Soft Links"},{"refs":[{"id":"ref-for-versions\u2463"},{"id":"ref-for-versions\u2464"},{"id":"ref-for-versions\u2465"},{"id":"ref-for-versions\u2466"}],"title":"19.3. Version Integrity"},{"refs":[{"id":"ref-for-versions\u2467"},{"id":"ref-for-versions\u2468"}],"title":"21.3. Cross-Namespace Links"},{"refs":[{"id":"ref-for-versions\u2460\u24ea"}],"title":"24. Optional Solid Pod Delivery"}],"url":"#versions"},
+"versions": {"dfnID":"versions","dfnText":"versions","external":false,"refSections":[{"refs":[{"id":"ref-for-versions"}],"title":"5.1. Payload Structure"},{"refs":[{"id":"ref-for-versions\u2460"}],"title":"6.2. metadata.governance"},{"refs":[{"id":"ref-for-versions\u2461"}],"title":"8.3. DeletionRecord Protocol"},{"refs":[{"id":"ref-for-versions\u2462"}],"title":"10.4. Hard and Soft Links"},{"refs":[{"id":"ref-for-versions\u2463"},{"id":"ref-for-versions\u2464"},{"id":"ref-for-versions\u2465"},{"id":"ref-for-versions\u2466"}],"title":"19.3. Version Integrity"},{"refs":[{"id":"ref-for-versions\u2467"},{"id":"ref-for-versions\u2468"}],"title":"21.3. Cross-Namespace Links"}],"url":"#versions"},
 };
 
 document.addEventListener("DOMContentLoaded", ()=>{
