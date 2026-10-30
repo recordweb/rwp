@@ -57,7 +57,7 @@ A system MUST perform the following checks before finalising a Version:
 3. **Mandatory field check**: All MUST metadata fields are present and correctly typed
 4. **Proof**: If the schema defines `signaturePolicy` `owner`, the Version MUST carry at least one proof whose verification method is controlled by the record owner. For `signaturePolicy` `system`, the proof MAY be generated with an authorised system key. For `signaturePolicy` `none`, proof validation is omitted.
 5. **Parent integrity**: All referenced parent hashes are resolvable in the system
-6. **Issuance check**: If the Version carries an `issuance` block, the system MUST verify the requirements of [Requirements for an issued Version](#subsection-payload-issuance-requirements) before finalisation.
+6. **Issuance check**: If the Version carries an `issuance` block, the system MUST verify the requirements of [Requirements for an issued Version](#section-issuance-requirements) before finalisation.
 
 If any of these checks fails, the system MUST NOT finalise the Version and MUST return an error with a validation code.
 

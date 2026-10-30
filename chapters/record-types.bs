@@ -22,10 +22,10 @@ RWP defines the following core Record types (with DID Suffix):
 
 **System Records:**
 - `SchemaRecord` (see [SchemaRecord](#chapter-schema-record))
-- `ConformanceRecord` (see [ConformanceRecord](#chapter-conformance-record))
-- `DeletionRecord` (see [DeletionRecord](#chapter-deletion-record))
-- `MergeRecord` (see [MergeRecord](#chapter-merge-record))
-- `MigrationRecord` (see [MigrationRecord](#chapter-migration-record))
+- `ConformanceRecord` (see [Conformance and Implementation Claims](#chapter-conformance))
+- `DeletionRecord` (see [Payload Deletion](#chapter-deletion))
+- `MergeRecord` (TBD)
+- `MigrationRecord` (TBD)
 
 The conformance requirements for these Record types are profile-, role-, and capability-specific. An implementation MUST support a core Record type only where this specification requires that support for a claimed profile, role, or exercised capability.
 
