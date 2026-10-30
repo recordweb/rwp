@@ -82,7 +82,7 @@ A Record with `transit` `incoming` MUST contain a `provenanceRef`. A Record with
   </tbody>
 </table>
 
-Note: A Version with an [Issuance block](#subsection-issuance-block) is typically part of a Record with `transit` `outgoing`. This specification does not require this.
+Note: A Version with an [Issuance block](#section-issuance-block) is typically part of a Record with `transit` `outgoing`. This specification does not require this.
 
 
 ## metadata.governance ## {#section-metadata-governance}
