@@ -232,7 +232,7 @@ Each DID document version MUST carry at least one `proof`. A proof MUST be a Dat
   "type": "DataIntegrityProof",
   "cryptosuite": "eddsa-jcs-2022",
   "created": "2026-05-31T15:30:00Z",
-  "verificationMethod": "did:rwp:<namespace>:<agent-id>#key-1",
+  "verificationMethod": "did:rwp:`<namespace>`:`<agent-id>`#key-1",
   "proofPurpose": "assertionMethod",
   "proofValue": "z..."
 }]
