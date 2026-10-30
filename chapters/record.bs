@@ -5,17 +5,17 @@ The Record {#chapter-record}
 
 Every <dfn>Record</dfn> has the meaning defined in [[ISO15489]] and MUST consist of exactly four components:
 
-1. **[=Identity=]** — the DID of the Record ([Record Identity (DID)](#chapter-record-identity))
-2. **[=Metadata=]** — descriptive dimensions of the Record ([Metadata](#chapter-metadata))
-3. **[=Payload=]** — the content of the Record ([Payload and Versions](#chapter-payload))
-4. **[=Integrity=]** — the hash of the Record ([Record Integrity](#chapter-record-integrity))
+1. [=Identity=]: the DID of the Record ([Record Identity (DID)](#chapter-record-identity))
+2. [=Metadata=]: descriptive dimensions of the Record ([Metadata](#chapter-metadata))
+3. [=Payload=]: the content of the Record ([Payload and Versions](#chapter-payload))
+4. [=Integrity=]: the hash of the Record ([Record Integrity](#chapter-record-integrity))
 
 <pre class='example json' title='Record components'>
 {
-  "did": "did:rwp:5264d2c3-d3b1-411c-829f-90e61165251a:f47ac10b-58cc-4372-a567-0e02b2c3d479",
+  "did": "did:rwp:d2d14675-50c9-463d-b564-1ea50644c836:a95437ee-25e4-469a-a2e1-c2b250b21e15",
   "metadata": {},
   "payload": [],
-  "recordHash": "sha256:9f8e7d6c5b4a3928170695a4b3c2d1e0f9e8d7c6b5a4938271605948372615"
+  "recordHash": "sha256:57715def0857e907168e5c74240e6e6d2e8679a66f8da7f1d2e7f09e1cf93b06"
 }
 </pre>
 
@@ -29,7 +29,6 @@ For semantic interoperability, a Record is a specialization of 'prov:Entity'. Th
 ```text
 @prefix prov: <http://www.w3.org/ns/prov#> .
 @prefix rw:   <https://w3id.org/recordweb/ontology#> .
-
 rw:Record
   rdfs:subClassOf prov:Entity .
 ```
