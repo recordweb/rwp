@@ -1,23 +1,24 @@
 The Record {#chapter-record}
 =====================================
 
-Every [=Record=] MUST consist of exactly four components:
-
 ## Components ## {#section-record-components}
 
+Every [=Record=] MUST consist of exactly four components:
+
 1. **[=Identity=]** — the DID of the [=Record=] ([Record Identity (DID)](#chapter-record-identity))
-2. **[=Payload=]** — the content of the [=Record=] ([Payload and Versions](#chapter-payload))
-3. **[=Metadata=]** — descriptive dimensions of the [=Record=] ([Metadata](#chapter-metadata))
+2. **[=Metadata=]** — descriptive dimensions of the [=Record=] ([Metadata](#chapter-metadata))
+3. **[=Payload=]** — the content of the [=Record=] ([Payload and Versions](#chapter-payload))
 4. **[=Integrity=]** — the hash of the [=Record=] ([Record Integrity](#chapter-record-integrity))
 
-```json
+<pre class='example json' title='Record components'>
 {
   "did": "did:rwp:5264d2c3-d3b1-411c-829f-90e61165251a:f47ac10b-58cc-4372-a567-0e02b2c3d479",
-  "payload": [],
   "metadata": {},
+  "payload": [],
   "recordHash": "sha256:9f8e7d6c5b4a3928170695a4b3c2d1e0f9e8d7c6b5a4938271605948372615"
 }
-```
+</pre>
+
 
 ## Definition ## {#section-record-definition}
 
@@ -68,6 +69,7 @@ rw:Agent
 rw:AgentRecord
   rdfs:subClassOf rw:Agent .
 ```
+
 
 ## Record taxonomy ## {#section-record-taxonomy}
 

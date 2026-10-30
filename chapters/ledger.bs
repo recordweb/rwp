@@ -19,11 +19,12 @@ If a system implements ledger anchoring, the ledger used MUST:
 
 **Recommended implementation**: Hyperledger Fabric [[HYPERLEDGER]]. Other permissioned distributed ledger technologies MAY be used if they fulfil the above requirements.
 
+
 ## Anchoring Protocol ## {#section-anchoring-protocol}
 
 When a finalised [=CaseRecord=] is anchored, the ledger entry MUST contain the following fields:
 
-```json
+<pre class='example json' title='Anchor'>
 {
   "rwpAnchor": {
     "version": "0.1",
@@ -35,15 +36,16 @@ When a finalised [=CaseRecord=] is anchored, the ledger entry MUST contain the f
     "ledgerTxId": "abc123..."
   }
 }
-```
+</pre>
 
 The ledger entry MUST NOT contain any payload content, personal data, or classified information. Only cryptographic hash values and identifiers are permitted.
+
 
 ## Anchoring Reference in the Case ## {#section-anchoring-reference}
 
 When a [=CaseRecord=] has been anchored, the anchored CaseRecord version MUST NOT be modified. The system MAY create a new CaseRecord version that references the anchored predecessor through `parents` and contains an `anchorReference` field. The `caseVersionHash` in the ledger entry MUST always identify the immutable version that was actually anchored.
 
-```json
+<pre class='example json' title='Anchor Reference'>
 {
   "anchorReference": {
     "ledgerType": "hyperledger-fabric",
@@ -52,5 +54,5 @@ When a [=CaseRecord=] has been anchored, the anchored CaseRecord version MUST NO
     "anchoredAt": "2026-05-31T16:00:00Z"
   }
 }
-```
+</pre>
 

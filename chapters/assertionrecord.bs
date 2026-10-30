@@ -9,6 +9,7 @@ An AssertionRecord is itself a [=Record=]. It has its own identity, state, versi
 
 An AssertionRecord MAY refer to Records in the same namespace or in another namespace. Referencing a Record in another namespace MUST NOT imply acceptance, storage, reciprocity, modification, or any other obligation for the custodian of the referenced Record.
 
+
 ## Assertion model ## {#section-assertionrecord-model}
 
 An AssertionRecord expresses one directed relationship:
@@ -36,6 +37,7 @@ Where `versionHash` is absent, the AssertionRecord refers to the identified Reco
 
 An AssertionRecord MUST NOT be interpreted as modifying the subject or object. It preserves only the assertion made by its asserting Agent.
 
+
 ## Relationship predicate ## {#section-assertionrecord-predicate}
 
 An AssertionRecord MUST contain a `predicate` field.
@@ -46,13 +48,16 @@ The meaning of an asserted relationship MUST NOT be carried solely by unconstrai
 
 The applicable predicate declaration MUST define the predicate's semantics, direction, permitted subject kinds, permitted object kinds, version, and validation requirements.
 
+
 ## Assertion payload ## {#section-assertionrecord-payload}
 
 The payload of an AssertionRecord MUST contain `subject`, `predicate`, `object`, `assertedBy`, and `assertedAt`.
 
 The value of `assertedBy` MUST identify the Agent responsible for the assertion. The applicable SchemaRecord MUST define the relationship between `assertedBy`, the Record owner, and the verification method used to finalise the AssertionRecord.
 
-```json
+`effectiveAt` is the time from which the asserted relationship holds. It MAY precede `assertedAt`. A predicate declaration may make it required, otherwise it is optional.
+
+<pre class='example json' title='Assertion payload'>
 {
   "subject": {
     "id": "did:rwp:record-A",
@@ -63,11 +68,13 @@ The value of `assertedBy` MUST identify the Agent responsible for the assertion.
     "id": "did:rwp:record-B"
   },
   "assertedBy": "did:rwp:agent-...",
-  "assertedAt": "2026-08-13T11:00:00Z"
+  "assertedAt": "2026-08-13T11:00:00Z",
+  "effectiveAt": "2026-08-13T11:00:00Z"
 }
-```
+</pre>
 
 The `subject` and `object` values MUST be identifiers that can be interpreted according to the applicable predicate and SchemaRecord.
+
 
 ## Validation ## {#section-assertionrecord-validation}
 

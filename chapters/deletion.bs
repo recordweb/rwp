@@ -63,6 +63,6 @@ After the `DeletionRecord` is finalised:
 1. The [=payload=] content bytes are securely overwritten
 2. The `hash` field of the affected `representations` entry in the [=version=] is replaced with the string `"deleted:<DeletionRecord-DID>"`
 3. The Record's `recordHash` is recalculated to reflect the deletion
-4. The DID document's `currentVersion` field is updated
+4. A new DID document version is created with an updated `currentVersion` and `updated` (see [DID Document History](#subsection-did-document-history)). The previous DID document versions are retained. The DID remains resolvable and the resolver returns HTTP 200.
 5. The DID resolver MUST return HTTP 410 for `full-delete` regimes
 

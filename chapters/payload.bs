@@ -15,7 +15,7 @@ A payload entry that does not contain at least one valid Representation is not a
 
 The <dfn>payload</dfn> of a [=Record=] is an ordered array of <dfn>versions</dfn>. Each [=version=] is one immutable, versioned representation of the [=Record=]'s content at a specific point in time.
 
-```json
+<pre class='example json' title='Payload'>
 {
   "payload": [
     {
@@ -43,7 +43,7 @@ The <dfn>payload</dfn> of a [=Record=] is an ordered array of <dfn>versions</dfn
     }
   ]
 }
-```
+</pre>
 
 <table class="data">
   <thead>
@@ -68,196 +68,6 @@ Each [=payload=] entry:
 - MUST be uniquely identified by its `versionHash` field
 - MUST be immutable after its creation
 - MUST link to its predecessor versions by directed edges in the version graph (see [Version Graph (DAG)](#section-payload-version-graph))
-
-
-## Format Requirements per State ## {#section-payload-format-requirements}
-
-The schema of a Record type MUST define the permitted payload formats for each state. If a schema contains no explicit format requirements, the following defaults apply:
-
-<table class="data">
-  <thead>
-    <tr><th>State</th><th>Permitted formats (default)</th></tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code>draft</code></td>
-      <td>All MIME types not explicitly excluded in the schema of the Record type</td>
-    </tr>
-    <tr>
-      <td><code>finalized</code></td>
-      <td>Only formats listed under [RWP archival-grade formats](#section-payload-archival-formats)</td>
-    </tr>
-  </tbody>
-</table>
-
-
-## Conversion During Finalisation ## {#section-payload-conversion}
-
-When a system transitions a [=Record=] from state `draft` to `finalized`, it MUST:
-
-1. Validate the payload against the finalised format of the schema
-2. If the current payload is not in archival-grade format: convert automatically or request conversion from the operator
-3. Store both formats as multi-representation in a Version (SHOULD)
-4. Document the conversion act as metadata (`conversionMethod`, `conversionTimestamp`)
-
-A system MUST NOT finalise a [=Record=] whose payload does not conform to the format defined for `finalized` and for which no archival-grade conversion is possible.
-
-A system MUST verify the `versionHash` after every finalisation before the Version is accepted as valid.
-
-
-## States and Transitions ## {#section-payload-states}
-
-### State Model ### {#subsection-state-model}
-
-Every [=Record=] Version has exactly one **state**. The state describes the validity and linkability status of the Version.
-
-**Core states (normative, for all Record types):**
-
-<table class="data">
-  <thead>
-    <tr><th>State</th><th>Linkable</th><th>Immutable</th><th>Description</th></tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code><dfn>draft</dfn></code></td>
-      <td>NO</td>
-      <td>NO</td>
-      <td>Being processed; content may change</td>
-    </tr>
-    <tr>
-      <td><code><dfn>finalized</dfn></code></td>
-      <td>YES</td>
-      <td>YES</td>
-      <td>Complete; content cryptographically secured</td>
-    </tr>
-  </tbody>
-</table>
-
-Record types MAY define additional states. These MUST be specified in the [=SchemaRecord=] and MUST be reachable from one of the core states or lead into one.
-
-**Example of an extended state machine for type "contract":**
-
-```
-draft → in-review → finalized
-↓
-rejected (terminal state, not linkable)
-```
-
-### Linkability ### {#subsection-linkability}
-
-A [=Record=] MUST be in the [=finalized=] state to be used as the target of a hard link.
-
-A system MUST return an error when an attempt is made to set a hard link to a Record that is not in the [=finalized=] state.
-
-Exception: Soft links per [Hard and Soft Links](#section-links) MAY point to Records in any state, including [=draft=] Records.
-
-
-### Finalisation Requirements ### {#subsection-finalisation-requirements}
-
-A system MUST perform the following checks before finalising a Version:
-
-1. **Schema validation**: Payload conforms to the schema in the version defined for `finalized`
-2. **Format validation**: Payload format conforms to the `payloadFormats.finalized` requirements of the schema
-3. **Mandatory field check**: All MUST metadata fields are present and correctly typed
-4. **Proof**: If the schema defines `signaturePolicy` `owner`, the Version MUST carry at least one proof whose verification method is controlled by the record owner. For `signaturePolicy` `system`, the proof MAY be generated with an authorised system key. For `signaturePolicy` `none`, proof validation is omitted.
-5. **Parent integrity**: All referenced parent hashes are resolvable in the system
-6. **Issuance check**: If the Version carries an `issuance` block, the system MUST verify the requirements of [Requirements for an issued Version](#subsection-payload-issuance-requirements) before finalisation.
-
-If any of these checks fails, the system MUST NOT finalise the Version and MUST return an error with a validation code.
-
-
-### Irreversibility of Finalisation ### {#subsection-irreversibility}
-
-A [=finalized=] Version MUST NOT be reverted to the state [=draft=].
-
-Corrections, revisions, replacements, and other continuations of the same Record MUST be represented as a new Version of that Record.
-
-Such a Version MUST:
-
-- retain the DID of the Record;
-- reference the superseded or revised versionHash in its `parents` field;
-- include a `correctionReason` or equivalent schema-defined rationale where applicable; and
-- complete the normal finalisation process defined in [Finalisation Requirements](#subsection-finalisation-requirements).
-
-An implementation MUST NOT represent a correction, revision, replacement, or continuation of the same Record as a new Record that is related to the earlier Record only through an AssertionRecord or another cross-Record relationship.
-
-A new Record MAY be created where a new semantically autonomous information object arises. Such a Record MAY document derivation, source, or other relationships to an earlier Record through an AssertionRecord. It MUST NOT thereby be treated as a continuation in the version graph of that earlier Record.
-
-
-## Version Graph (DAG) ## {#section-payload-version-graph}
-
-### Graph Structure ### {#subsection-graph-structure}
-
-The totality of all versions of a [=Record=] and their parent-child relationships forms the <dfn>version graph</dfn>.
-
-The [=version graph=] MUST be a **Directed Acyclic Graph (DAG)**:
-
-- **Directed**: Edges point from child to parent (backward in time)
-- **Acyclic**: There MUST be NO cycles — a Version MUST NOT be directly or indirectly its own ancestor
-
-A system MUST check upon receipt of a new Version whether adding its parent references would create a cycle. If so, the Version MUST be rejected.
-
-
-### Nodes ### {#subsection-graph-nodes}
-
-Every node in the [=version graph=] is a versionHash entry in the `payload` array (see [Version Fields](#section-payload-definition)).
-
-
-### Edges (Parent References) ### {#subsection-graph-edges}
-
-An edge connects a Version (child) with its predecessor Version (parent).
-
-- A Version MAY have zero, one, or multiple parent references
-- A Version without parents is the **root Version** (first Version of the [=Record=])
-- A Version with exactly one parent reference is a **linear continuation**
-- A Version with multiple parent references is a **merge Version**
-
-Edge requirements:
-
-- Every parent reference MUST be a valid `versionHash` of a known Version within the same `payload` array
-- Edges MUST NOT point to Versions of other [=Records=]. Cross-Record connections are made via links in the [=payload=] of a [=CaseRecord=] or [=AssertionRecord=] ([CaseRecord Specification](#chapter-caserecord))
-
-
-### Branches ### {#subsection-graph-branches}
-
-A **branch** arises when two or more new [=draft=] versions with the same parent reference emerge from a [=finalized=] Version.
-
-- Branches are explicitly permitted in RecordWeb and MUST be made visible by the system
-- A system MUST return all active branches (draft versions without successors) when a [=Record=] is retrieved
-- Branches MAY exist simultaneously as long as they are in state [=draft=]
-
-
-### Merges ### {#subsection-graph-merges}
-
-A merge Version is a version with two or more parent references. It consolidates two branches.
-
-Before a merge Version can be finalised, a `MergeRecord` MUST be created:
-
-```json
-{
-  "mergeRecord": {
-    "mergedVersions": [
-      "sha256:4b10e80a5c3e85acff145587d17a4a7561d517726dd1096d08eb30125d0bdf5f",
-      "sha256:5f42b3f3cb9330d01765552d5c612ac146738badb811f818a7f9318a9f762be8"
-    ],
-    "mergeReason": "Consolidation after coordination between departments",
-    "mergedBy": "did:rwp:5264d2c3-d3b1-411c-829f-90e61165251a:83fb7055-2779-45f6-a9db-98d1c852d3da",
-    "mergedAt": "2026-05-31T16:00:00Z",
-    "mergeHash": "sha256:4fdab47550acadcb5d60b9122848e11c78708859fe60b43e624537678d9b5a58"
-  }
-}
-```
-
-The `MergeRecord` MUST be finalised before the merge version can be finalised.
-
-
-### Cross-Record Merges ### {#subsection-cross-record-merges}
-
-When a new [=Record=] arises from two or more existing [=finalized=] Records (cross-Record merge), the following MUST apply:
-
-- The new [=Record=] MUST have a root version with an empty `parents` array
-- The `MergeRecord` MUST reference the DIDs of the source Records (not their version hashes)
-- The source Records MUST remain in state [=finalized=] and receive a metadata note `contributedTo` with the DID of the new [=Record=]
 
 
 ## Representations ## {#section-payload-representation}
@@ -342,68 +152,37 @@ RWP distinguishes three payload content categories:
 </table>
 
 
-## Issuance and Issued Copy ## {#section-payload-issuance}
+## Format Requirements per State ## {#section-payload-format-requirements}
 
-Issuance is the act by which an issuer declares that a specific content is handed out to an addressee or to the public. Issuance is represented by a Version that carries an `issuance` block. This Version is created and finalized according to the normal requirements of this specification. Issuance introduces no additional state.
-
-A Version carrying an `issuance` block is an **issued Version**.
-
-### Issuance block ### {#subsection-payload-issuance-block}
-
-The `issuance` block is a field of the Version. It is part of the [Version Hash Calculation](#section-version-hash-calculation) and is therefore covered by every proof of the Version.
+The schema of a Record type MUST define the permitted payload formats for each state. If a schema contains no explicit format requirements, the following defaults apply:
 
 <table class="data">
   <thead>
-    <tr><th>Field</th><th>Type</th><th>Requirement</th><th>Description</th></tr>
+    <tr><th>State</th><th>Permitted formats (default)</th></tr>
   </thead>
   <tbody>
-    <tr><td>issuedAt</td><td>ISO 8601</td><td>MUST</td><td>Time of the issuing act. SHOULD equal `modifiedAt` of the Version.</td></tr>
-    <tr><td>issuedTo</td><td>String</td><td>MAY</td><td>Identifier of the addressee. Any identifier scheme MAY be used, including a DID of any method. If absent, the issued Version is not bound to an addressee.</td></tr>
-    <tr><td>validUntil</td><td>ISO 8601</td><td>MAY</td><td>End of the validity of the issuance.</td></tr>
-    <tr><td>reason</td><td>String</td><td>MAY</td><td>Reason for the issuance, for example a replacement of an earlier issuance.</td></tr>
+    <tr>
+      <td><code>draft</code></td>
+      <td>All MIME types not explicitly excluded in the schema of the Record type</td>
+    </tr>
+    <tr>
+      <td><code>finalized</code></td>
+      <td>Only formats listed under [RWP archival-grade formats](#section-payload-archival-formats)</td>
+    </tr>
   </tbody>
 </table>
 
-`validUntil` expresses the validity of the issuance. It does not express the validity of the content. Validity of the content is defined by the schema of the Record type.
 
-### Requirements for an issued Version ### {#subsection-payload-issuance-requirements}
+## Conversion During Finalisation ## {#section-payload-conversion}
 
-An issued Version:
+When a system transitions a [=Record=] from state `draft` to `finalized`, it MUST:
 
-- MUST contain exactly one Representation.
-- MUST mark this Representation `primary` true.
-- MUST contain this Representation with `content` and `contentHash`. A Representation with `ref` MUST NOT be used.
-- MUST have exactly one parent, which MUST be the most recent finalized Version of the Record at the time of issuance.
-- MUST satisfy the [Finalisation Requirements](#subsection-finalisation-requirements), including the payload format requirements for `finalized`.
+1. Validate the payload against the finalised format of the schema
+2. If the current payload is not in archival-grade format: convert automatically or request conversion from the operator
+3. Store both formats as multi-representation in a Version (SHOULD)
+4. Document the conversion act as metadata (`conversionMethod`, `conversionTimestamp`)
 
-The issuer decides which content is issued. The issued Representation MAY originate from an earlier Version than its parent.
+A system MUST NOT finalise a [=Record=] whose payload does not conform to the format defined for `finalized` and for which no archival-grade conversion is possible.
 
-The issued Version continues the version graph of the Record like any other Version. The version graph is not a chain of issuances. Further work on the Record continues with new draft Versions, whose Representations MAY use other formats than the issued Version.
+A system MUST verify the `versionHash` after every finalisation before the Version is accepted as valid.
 
-Several issuances of the same content are permitted. Each issuance is a separate Version with its own `issuedAt`. An issuance that replaces an earlier one SHOULD state this in `reason`. A later issuance does not revoke an earlier one.
-
-Note: The issuer decides which Representation is issued. Where an issuance is intended for presentation in constrained situations, for example an offline check, the issuer MAY issue a compact Representation that contains only the information needed for that purpose. Such an issuance is created like any other issuance. The size of an Issued Copy depends on the content, the proof, and the `issuance` block. It is not constrained by this specification.
-
-### Issued Copy ### {#subsection-payload-issuance-copy}
-
-An **Issued Copy** is the serialisation of exactly one issued Version, including its `proof` array, as a self-contained artifact. It can be verified without access to the issuing system.
-
-An Issued Copy:
-
-- MUST contain the issued Version unchanged, including `versionHash`, `issuance`, `representations` and all `proof` entries.
-- is not a Record. It has no DID, no version graph and no state.
-- MAY carry, outside of the Version, the DID of the Record from which it was issued. This reference is not part of the signed content and MUST NOT be used as evidence of origin.
-- MAY be published.
-
-Note: The complete structure of the Issued Copy artifact, including the provision of verification key material, is subject to a later specification step.
-
-### Verification of an Issued Copy ### {#subsection-payload-issuance-verification}
-
-A verifier MUST:
-
-1. Recalculate the `contentHash` of the Representation according to [Content Hash Calculation](#section-content-hash-calculation).
-2. Recalculate the `versionHash` including the `issuance` block according to [Version Hash Calculation](#section-version-hash-calculation).
-3. Verify at least one proof according to [Proof Procedure](#section-crypto-procedures-proof).
-4. Evaluate `validUntil`, if present, according to its own policy.
-
-A successful verification establishes that the signing party issued this content with this `issuance` block. It does not establish the identity of the person presenting the Issued Copy, that the issuance is still valid, or that no other issuance exists for the same content.

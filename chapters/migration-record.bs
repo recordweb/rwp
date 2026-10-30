@@ -1,4 +1,0 @@
-MigrationRecord {#chapter-migration-record}
-=================================================
-TBD
-

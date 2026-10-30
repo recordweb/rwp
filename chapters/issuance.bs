@@ -1,0 +1,66 @@
+Issuance and Issued Copy {#chapter-issuance}
+=================================
+
+Issuance is the act by which an issuer declares that a specific content is handed out to an addressee or to the public. Issuance is represented by a Version that carries an `issuance` block. This Version is created and finalized according to the normal requirements of this specification. Issuance introduces no additional state.
+
+A Version carrying an `issuance` block is an **issued Version**.
+
+## Issuance block ## {#section-issuance-block}
+
+The `issuance` block is a field of the Version. It is part of the [Version Hash Calculation](#section-version-hash-calculation) and is therefore covered by every proof of the Version.
+
+<table class="data">
+  <thead>
+    <tr><th>Field</th><th>Type</th><th>Requirement</th><th>Description</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>issuedAt</td><td>ISO 8601</td><td>MUST</td><td>Time of the issuing act. SHOULD equal `modifiedAt` of the Version.</td></tr>
+    <tr><td>issuedTo</td><td>String</td><td>MAY</td><td>Identifier of the addressee. Any identifier scheme MAY be used, including a DID of any method. If absent, the issued Version is not bound to an addressee.</td></tr>
+    <tr><td>validUntil</td><td>ISO 8601</td><td>MAY</td><td>End of the validity of the issuance.</td></tr>
+    <tr><td>reason</td><td>String</td><td>MAY</td><td>Reason for the issuance, for example a replacement of an earlier issuance.</td></tr>
+  </tbody>
+</table>
+
+`validUntil` expresses the validity of the issuance. It does not express the validity of the content. Validity of the content is defined by the schema of the Record type.
+
+## Requirements for an issued Version ## {#section-issuance-requirements}
+
+An issued Version:
+
+- MUST contain exactly one Representation.
+- MUST mark this Representation `primary` true.
+- MUST contain this Representation with `content` and `contentHash`. A Representation with `ref` MUST NOT be used.
+- MUST have exactly one parent, which MUST be the most recent finalized Version of the Record at the time of issuance.
+- MUST satisfy the [Finalisation Requirements](#subsection-finalisation-requirements), including the payload format requirements for `finalized`.
+
+The issuer decides which content is issued. The issued Representation MAY originate from an earlier Version than its parent.
+
+The issued Version continues the version graph of the Record like any other Version. The version graph is not a chain of issuances. Further work on the Record continues with new draft Versions, whose Representations MAY use other formats than the issued Version.
+
+Several issuances of the same content are permitted. Each issuance is a separate Version with its own `issuedAt`. An issuance that replaces an earlier one SHOULD state this in `reason`. A later issuance does not revoke an earlier one.
+
+Note: The issuer decides which Representation is issued. Where an issuance is intended for presentation in constrained situations, for example an offline check, the issuer MAY issue a compact Representation that contains only the information needed for that purpose. Such an issuance is created like any other issuance. The size of an Issued Copy depends on the content, the proof, and the `issuance` block. It is not constrained by this specification.
+
+## Issued Copy ## {#section-issuance-copy}
+
+An **Issued Copy** is the serialisation of exactly one issued Version, including its `proof` array, as a self-contained artifact. It can be verified without access to the issuing system.
+
+An Issued Copy:
+
+- MUST contain the issued Version unchanged, including `versionHash`, `issuance`, `representations` and all `proof` entries.
+- is not a Record. It has no DID, no version graph and no state.
+- MAY carry, outside of the Version, the DID of the Record from which it was issued. This reference is not part of the signed content and MUST NOT be used as evidence of origin.
+- MAY be published.
+
+Note: The complete structure of the Issued Copy artifact, including the provision of verification key material, is subject to a later specification step.
+
+## Verification of an Issued Copy ## {#section-issuance-verification}
+
+A verifier MUST:
+
+1. Recalculate the `contentHash` of the Representation according to [Content Hash Calculation](#section-content-hash-calculation).
+2. Recalculate the `versionHash` including the `issuance` block according to [Version Hash Calculation](#section-version-hash-calculation).
+3. Verify at least one proof according to [Proof Procedure](#section-crypto-procedures-proof).
+4. Evaluate `validUntil`, if present, according to its own policy.
+
+A successful verification establishes that the signing party issued this content with this `issuance` block. It does not establish the identity of the person presenting the Issued Copy, that the issuance is still valid, or that no other issuance exists for the same content.

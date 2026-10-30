@@ -5,7 +5,7 @@ Metadata {#chapter-metadata}
 
 Metadata is organised into three groups: `core`, `governance`, and `extensions`.
 
-```json
+<pre class='example json' title='Metadata'>
 {
   "metadata": {
     "core": {
@@ -22,7 +22,7 @@ Metadata is organised into three groups: `core`, `governance`, and `extensions`.
     "extensions": []
   }
 }
-```
+</pre>
 
 
 ## metadata.core ## {#section-metadata-core}
@@ -82,7 +82,7 @@ A Record with `transit` `incoming` MUST contain a `provenanceRef`. A Record with
   </tbody>
 </table>
 
-Note: A Version with an [Issuance block](#subsection-payload-issuance-block) is typically part of a Record with `transit` `outgoing`. This specification does not require this.
+Note: A Version with an [Issuance block](#section-issuance-block) is typically part of a Record with `transit` `outgoing`. This specification does not require this.
 
 
 ## metadata.governance ## {#section-metadata-governance}
