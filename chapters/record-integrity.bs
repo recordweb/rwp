@@ -103,11 +103,11 @@ The following example records a Validation with a failed dependency:
 
 <pre class='example json' title='Validation result with error'>
 {
-  "validationObject": "did:rwp:<ns>:<record-id>:<versionHash>",
+  "validationObject": "did:rwp:`<ns>`:`<record-id>`:`<versionHash>`",
   "validationType": "signature",
   "validationTimestamp": "2026-10-07T10:00:00Z",
   "validationResponse": 424,
-  "dependency": "did:rwp:<ns>:<owner-id>#key-1",
+  "dependency": "did:rwp:`<ns>`:`<owner-id>`#key-1",
   "reason": "key-not-resolvable"
 }
 </pre>

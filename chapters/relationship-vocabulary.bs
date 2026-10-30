@@ -152,7 +152,7 @@ Profiles MAY declare further status IRIs.
 
 - Subject with `versionHash`: applies to that version only.
 - Subject without `versionHash`: applies to all versions of the Record.
-- Subject DID URL (e.g. did:rwp:<ns>:<id>#key-1): applies to that verification method.
+- Subject DID URL (e.g. did:rwp:`<ns>`:`<id>`#key-1): applies to that verification method.
 
 
 ### Normative schema ### {#subsection-relationship-vocabulary-predicate-hasstatus-schema}
@@ -184,9 +184,9 @@ Inputs: subject S (Record version or key), evaluation time T, knowledge time K.
 1. Collect status assertions for S in two scopes: version scope (subject id + versionHash of S) and record scope (subject id without versionHash). For keys: the DID URL.
 2. Keep those with assertedAt ≤ K that the verifier accepts under its trust policy.
 3. Per scope:
-   - If a revoked assertion with effectiveAt ≤ T exists, the scope status is revoked.
-   - Otherwise take the suspended / reinstated assertion with the greatest effectiveAt ≤ T (tie: greatest assertedAt). reinstated without a preceding suspended in the same scope is ignored. suspended → suspended; reinstated → none.
-   - No assertion → none.
+    - If a revoked assertion with effectiveAt ≤ T exists, the scope status is revoked.
+    - Otherwise take the suspended / reinstated assertion with the greatest effectiveAt ≤ T (tie: greatest assertedAt). reinstated without a preceding suspended in the same scope is ignored. suspended → suspended; reinstated → none.
+    - No assertion → none.
 4. Combine scopes restrictively: revoked, then suspended, then none.
 5. Result: revoked / suspended / "no status asserted", with references to the deciding assertions.
 
