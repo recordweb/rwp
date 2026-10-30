@@ -129,6 +129,7 @@ A merge Version is a version with two or more parent references. It consolidates
 
 Before a merge Version can be finalised, a `MergeRecord` MUST be created:
 
+<pre class='example json' title='MergeRecord'>
 ```json
 {
   "mergeRecord": {
@@ -143,6 +144,7 @@ Before a merge Version can be finalised, a `MergeRecord` MUST be created:
   }
 }
 ```
+</pre>
 
 The `MergeRecord` MUST be finalised before the merge version can be finalised.
 

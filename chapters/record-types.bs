@@ -53,6 +53,7 @@ A [=SchemaRecord=] MAY:
 
 **Minimal SchemaRecord payload example:**
 
+<pre class='example json' title='Minimal SchemaRecord'>
 ```json
 {
   "rwpSchemaVersion": "0.1",
@@ -81,6 +82,7 @@ A [=SchemaRecord=] MAY:
   }
 }
 ```
+</pre>
 
 
 ## Schema Versioning and Backward Compatibility ## {#section-schema-record-versioning}
