@@ -5,7 +5,7 @@ DID Document and Resolution {#chapter-did-doc}
 
 For every Record DID, a DID document MUST exist. A DID document is a chain of immutable DID document versions (see [DID Document History](#subsection-did-document-history)). Each version contains the following fields:
 
-```json
+<pre class='example json' title='Record components'>
 {
   "@context": "[https://www.w3.org/ns/did/v1](https://www.w3.org/ns/did/v1)",
   "id": "did:rwp:bern.ch:f47ac10b-58cc-4372-a567-0e02b2c3d479",
@@ -20,7 +20,7 @@ For every Record DID, a DID document MUST exist. A DID document is a chain of im
     "signature": "z3FttV7VjukA1LhqSDgOxupHy..."
   }
 }
-```
+</pre>
 
 <table class="data">
   <thead>

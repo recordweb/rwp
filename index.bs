@@ -120,11 +120,11 @@ path: chapters/record.bs
 </pre>
 
 <pre class=include>
-path: chapters/record-identity.bs
+path: chapters/did-doc.bs
 </pre>
 
 <pre class=include>
-path: chapters/did-doc.bs
+path: chapters/record-identity.bs
 </pre>
 
 <pre class=include>

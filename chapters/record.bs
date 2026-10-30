@@ -1,14 +1,14 @@
 The Record {#chapter-record}
 =====================================
 
-## Components ## {#section-record-components}
+## Definition ## {#section-record-definition}
 
-Every [=Record=] MUST consist of exactly four components:
+Every <dfn>Record</dfn> has the meaning defined in [[ISO15489]] and MUST consist of exactly four components:
 
-1. **[=Identity=]** — the DID of the [=Record=] ([Record Identity (DID)](#chapter-record-identity))
-2. **[=Metadata=]** — descriptive dimensions of the [=Record=] ([Metadata](#chapter-metadata))
-3. **[=Payload=]** — the content of the [=Record=] ([Payload and Versions](#chapter-payload))
-4. **[=Integrity=]** — the hash of the [=Record=] ([Record Integrity](#chapter-record-integrity))
+1. **[=Identity=]** — the DID of the Record ([Record Identity (DID)](#chapter-record-identity))
+2. **[=Metadata=]** — descriptive dimensions of the Record ([Metadata](#chapter-metadata))
+3. **[=Payload=]** — the content of the Record ([Payload and Versions](#chapter-payload))
+4. **[=Integrity=]** — the hash of the Record ([Record Integrity](#chapter-record-integrity))
 
 <pre class='example json' title='Record components'>
 {
@@ -19,10 +19,10 @@ Every [=Record=] MUST consist of exactly four components:
 }
 </pre>
 
+Any concrete Record is typed by `metadata.core.recordType` and `metadata.core.schemaVersion`, based on a [SchemaRecord](#chapter-schema-record).
 
-## Definition ## {#section-record-definition}
 
-For the purposes of this specification, <dfn>Record</dfn> has the meaning defined in [[ISO15489]], clause 3.14. A Record MUST have the identity, structure, payload, type, schema, state, version and integrity evidence required by this specification.
+## Taxonomy ## {#section-record-taxonomy}
 
 For semantic interoperability, a Record is a specialization of 'prov:Entity'. The term Record remains the primary term of this specification. The term 'prov:Entity' is used only for a [[!PROVO]]-compatible semantic representation.
 
@@ -32,74 +32,17 @@ For semantic interoperability, a Record is a specialization of 'prov:Entity'. Th
 
 rw:Record
   rdfs:subClassOf prov:Entity .
-
-rw:InformationRecord
-  rdfs:subClassOf rw:Record .
-
-rw:RelationRecord
-  rdfs:subClassOf rw:Record .
-
-rw:SystemRecord
-  rdfs:subClassOf rw:Record .
-
-rw:CaseRecord
-  rdfs:subClassOf rw:RelationRecord .
-
-rw:AssertionRecord
-  rdfs:subClassOf rw:RelationRecord .
-
-rw:SchemaRecord
-  rdfs:subClassOf rw:SystemRecord .
-
-rw:MergeRecord
-  rdfs:subClassOf rw:SystemRecord .
-
-rw:DeletionRecord
-  rdfs:subClassOf rw:SystemRecord .
-
-rw:MigrationRecord
-  rdfs:subClassOf rw:SystemRecord .
-
-rw:ConformanceRecord
-  rdfs:subClassOf rw:SystemRecord .
-
-rw:Agent
-  rdfs:subClassOf prov:Agent .
-
-rw:AgentRecord
-  rdfs:subClassOf rw:Agent .
 ```
 
 
-## Record taxonomy ## {#section-record-taxonomy}
+## Conceptual Purpose ## {#section-record-purpose}
 
-Every [=Record=] has one primary conceptual purpose. For the purposes of this specification, a Record is classified as an [=InformationRecord=], a [=RelationRecord=], an [=AgentRecord=] or a [=SystemRecord=], as described in [[RWC]].
+Every [=Record=] has one primary conceptual purpose (as described in [[RWC]]):
+- [=InformationRecord=]
+- [=RelationRecord=]
+- [=AgentRecord=]
+- [=SystemRecord=]
 
-Any concrete Record Type is defined by a SchemaRecord in accordance with [Record Type Definition](#section-record-types-definition).
+The conceptual purpose MUST NOT be interpreted as a mandatory implementation inheritance hierarchy, a mandatory JSON type hierarchy, or a replacement for concrete Record Types and their SchemaRecords.
 
-The taxonomy is normative for the interpretation of this specification. It MUST NOT be interpreted as a mandatory implementation inheritance hierarchy, a mandatory JSON type hierarchy, or a replacement for concrete Record Types and their SchemaRecords.
-
-An <dfn>InformationRecord</dfn> is a Record whose primary purpose is to carry semantically autonomous institutional or domain information.
-
-Every InformationRecord MUST conform to a concrete Record Type.  This specification does not provide a list of InformationRecord Types.
-
-A <dfn>RelationRecord</dfn> is a Record whose primary purpose is to establish, preserve, and make provable a meaningful relationship between Records.
-
-A <dfn>SystemRecord</dfn> is a Record whose primary purpose is to define, document, or prove a RecordWeb system rule, operation, or capability.
-
-A [=CaseRecord=] is a [=RelationRecord=]. It represents a persisted, governed view of linked Records. A CaseRecord MUST NOT be a container and MUST NOT contain the payload of the Records to which it relates. The protocol representation and validation requirements for CaseRecords are defined in [CaseRecord Specification](#chapter-caserecord).
-
-An [=AssertionRecord=] is a [=RelationRecord=]. It represents an attributable assertion that a subject resource stands in a specified relationship to an object resource. The protocol representation and validation requirements for AssertionRecords are defined in [AssertionRecord Specification](#chapter-assertionrecord).
-
-An <dfn>AgentRecord</dfn> is a Record whose primary purpose is to identifies an entity that bears responsibility for a [=Record=], in the sense of prov:Agent ([[PROVO]]). The protocol representation and validation requirements for AgentRecords are defined in [AgentRecord Specification](#chapter-agentrecord).
-
-A [=SchemaRecord=] is a [=SystemRecord=]. It defines a concrete Record Type and its associated schema and validation requirements.
-
-A MergeRecord is a [=SystemRecord=].
-
-A DeletionRecord is a [=SystemRecord=].
-
-A MigrationRecord is a [=SystemRecord=].
-
-A [=ConformanceRecord=] is a [=SystemRecord=].
 
