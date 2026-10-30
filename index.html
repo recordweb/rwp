@@ -8,7 +8,7 @@
   <meta content="Bikeshed version 49e9fdd4f, updated Tue Oct 13 14:27:53 2026 -0700" name="generator">
   <link href="https://recordweb.github.io/rwp/" rel="canonical">
   <link href="https://www.w3.org/2008/site/images/favicon.ico" rel="icon">
-  <meta content="ae03b0291a4d296c0d9062a65d27bc20b5e71a07" name="revision">
+  <meta content="6fc602de8ca17e0defde9b9c5fe758cb790e9b1f" name="revision">
   <meta content="dark light" name="color-scheme">
   <link href="https://www.w3.org/StyleSheets/TR/2021/dark.css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css">
 <style>/* Boilerplate: style-autolinks */
@@ -1130,19 +1130,19 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <p>Every <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="record">Record</dfn> has the meaning defined in <a data-link-type="biblio" href="#biblio-iso15489" title="Information and documentation — Records management, Part 1: Concepts and principles">[ISO15489]</a> and MUST consist of exactly four components:</p>
    <ol>
     <li data-md>
-     <p>**<a data-link-type="dfn" href="#identity" id="ref-for-identity">Identity</a>** — the DID of the Record (<a href="#chapter-record-identity">Record Identity (DID)</a>)</p>
+     <p><a data-link-type="dfn" href="#identity" id="ref-for-identity">Identity</a>: the DID of the Record (<a href="#chapter-record-identity">Record Identity (DID)</a>)</p>
     <li data-md>
-     <p>**<a data-link-type="dfn" href="#metadata" id="ref-for-metadata">Metadata</a>** — descriptive dimensions of the Record (<a href="#chapter-metadata">Metadata</a>)</p>
+     <p><a data-link-type="dfn" href="#metadata" id="ref-for-metadata">Metadata</a>: descriptive dimensions of the Record (<a href="#chapter-metadata">Metadata</a>)</p>
     <li data-md>
-     <p>**<a data-link-type="dfn" href="#payload" id="ref-for-payload">Payload</a>** — the content of the Record (<a href="#chapter-payload">Payload and Versions</a>)</p>
+     <p><a data-link-type="dfn" href="#payload" id="ref-for-payload">Payload</a>: the content of the Record (<a href="#chapter-payload">Payload and Versions</a>)</p>
     <li data-md>
-     <p>**<a data-link-type="dfn" href="#integrity" id="ref-for-integrity">Integrity</a>** — the hash of the Record (<a href="#chapter-record-integrity">Record Integrity</a>)</p>
+     <p><a data-link-type="dfn" href="#integrity" id="ref-for-integrity">Integrity</a>: the hash of the Record (<a href="#chapter-record-integrity">Record Integrity</a>)</p>
    </ol>
-<pre class="example json" id="example-af3602a7" title="Record components"><a class="self-link" href="#example-af3602a7"></a>{
-  "did": "did:rwp:5264d2c3-d3b1-411c-829f-90e61165251a:f47ac10b-58cc-4372-a567-0e02b2c3d479",
+<pre class="example json" id="example-5f0fbda1" title="Record components"><a class="self-link" href="#example-5f0fbda1"></a>{
+  "did": "did:rwp:d2d14675-50c9-463d-b564-1ea50644c836:a95437ee-25e4-469a-a2e1-c2b250b21e15",
   "metadata": {},
   "payload": [],
-  "recordHash": "sha256:9f8e7d6c5b4a3928170695a4b3c2d1e0f9e8d7c6b5a4938271605948372615"
+  "recordHash": "sha256:57715def0857e907168e5c74240e6e6d2e8679a66f8da7f1d2e7f09e1cf93b06"
 }
 </pre>
    <p>Any concrete Record is typed by <code>metadata.core.recordType</code> and <code>metadata.core.schemaVersion</code>, based on a <a href="#chapter-schema-record">SchemaRecord</a>.</p>
@@ -1150,7 +1150,6 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <p>For semantic interoperability, a Record is a specialization of 'prov:Entity'. The term Record remains the primary term of this specification. The term 'prov:Entity' is used only for a <a data-link-type="biblio" href="#biblio-provo" title="PROV-O: The PROV Ontology">[PROVO]</a>-compatible semantic representation.</p>
 <pre class="highlight language-text">@prefix prov: &lt;http://www.w3.org/ns/prov#> .
 @prefix rw:   &lt;https://w3id.org/recordweb/ontology#> .
-
 rw:Record
   rdfs:subClassOf prov:Entity .
 </pre>
