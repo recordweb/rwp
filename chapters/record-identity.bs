@@ -209,6 +209,7 @@ This specification defines the following `type` values:
   <thead><tr><th>type</th><th>Meaning</th></tr></thead>
   <tbody>
     <tr><td><code>RWPPublicRecordAccess</code></td><td>Endpoint returning a restricted or public view of the [=Record=] for requesters without full access rights</td></tr>
+    <tr><td><code>RWPRecordReferrers</code></td><td>Endpoint returning all finalised `RelationRecords` ([=CaseRecord=] and [=AssertionRecord=]) referring to this [=Record=] within the same namespace. The response contains a list of records with a list of finalised versions</td></tr>
     <tr><td><code>RWPFunctionRegistry</code></td><td>Endpoint returning a machine-readable list of the functions supported for the [=Record=], derived from the `capabilities` of its [=SchemaRecord=] (see [SchemaRecord](#chapter-schema-record))</td></tr>
   </tbody>
 </table>
