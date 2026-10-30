@@ -78,18 +78,37 @@ A Version identifier MAY additionally be validated by verifying `proof` over `ve
 When a Consumer retains or exchanges the result of a Validation, the result MUST contain:
 
 * `validationObject`, containing the `did:rwp` identifier of the validated object;
+* `validationType`, containing ether `integrity` or `signature`, depending on the kind of validation;
 * `validationTimestamp`, containing the date and time at which the Consumer performed the Validation; and
 * `validationResponse`, containing one of the Validation response codes defined in this Section.
 
 The result is a statement by the Consumer that performed the Validation at the stated time. It is not a new state of the validated object and does not by itself establish the truth, authority, legal effect, or current availability of the validated object.
+
+`signature` applies only to a Version identifier. Each result concerns exactly one validation object and one validation type. A `signature` result MUST NOT be represented as an `integrity` validation, and vice versa.
+
+For `signature`, the verification method is taken from the DID Document of the record owner as resolved at `validationTimestamp`. Key state at the time of signing is not evaluated.
 
 The following example records a successful Validation of one Version:
 
 <pre class='example json' title='Validation result'>
 {
   "validationObject": "did:rwp:5264d2c3-d3b1-411c-829f-90e61165251a:f47ac10b-58cc-4372-a567-0e02b2c3d479:eef9dd41ca22103acab33303607139d2d39a9de0e8c5deb21373dd2184b7d57f",
+  "validationType": "signature",
   "validationTimestamp": "2026-09-16T12:55:00Z",
   "validationResponse": 200
+}
+</pre>
+
+The following example records a Validation with a failed dependency:
+
+<pre class='example json' title='Validation result with error'>
+{
+  "validationObject": "did:rwp:<ns>:<record-id>:<versionHash>",
+  "validationType": "signature",
+  "validationTimestamp": "2026-10-07T10:00:00Z",
+  "validationResponse": 424,
+  "dependency": "did:rwp:<ns>:<owner-id>#key-1",
+  "reason": "key-not-resolvable"
 }
 </pre>
 
@@ -98,15 +117,22 @@ The following example records a successful Validation of one Version:
 
 The `validationResponse` property communicates the result of a Validation for the identified `validationObject`.
 
-| Code | Name | Meaning |
-| --- | --- | --- |
-| `200` | OK | The applicable hash calculation was performed and the calculated hash equals the declared `recordHash`, `versionHash`, or `contentHash`. |
-| `400` | Bad Request | The `validationObject` or the Validation request is syntactically or semantically invalid. |
-| `403` | Forbidden | The identified object or information required to calculate its applicable hash exists or was identified, but the Consumer was not authorised to obtain it. |
-| `404` | Not Found | The identified object, or information required to calculate its applicable hash, could not be found or resolved. A system MAY use this outcome to conceal the existence of an object it does not permit the Consumer to access. |
-| `406` | Not Acceptable | The Consumer cannot process a required format, content type, representation, or other input required for the applicable calculation. |
-| `422` | Unprocessable Content | The required input was available and the applicable hash calculation was performed, but the calculated hash does not equal the declared hash. |
-| `424` | Failed Dependency | The Validation could not be completed because a required dependent resource or information was unavailable, incomplete, or could not be validated. Where the cause is a denied authorisation, 403 applies instead. |
+<table class="data">
+  <thead><tr><th>Code</th><th>Name</th><th>Meaning</th></tr></thead>
+  <tbody>
+    <tr><td><code>200</code></td><td>OK</td><td>The applicable hash calculation was performed and the calculated hash equals the declared `recordHash`, `versionHash`, or `contentHash`.</td></tr>
+    <tr><td><code>400</code></td><td>Bad Request</td><td>The `validationObject` or the Validation request is syntactically or semantically invalid.</td></tr>
+    <tr><td><code>403</code></td><td>Forbidden</td><td>The identified object or information required to calculate its applicable hash exists or was identified, but the Consumer was not authorised to obtain it.</td></tr>
+    <tr><td><code>404</code></td><td>Not Found</td><td>The identified object, or information required to calculate its applicable hash, could not be found or resolved. A system MAY use this outcome to conceal the existence of an object it does not permit the Consumer to access.</td></tr>
+    <tr><td><code>406</code></td><td>Not Acceptable</td><td>The Consumer cannot process a required format, content type, representation, or other input required for the applicable calculation.</td></tr>
+    <tr><td><code>422</code></td><td>Unprocessable Content</td><td>The required input was available and the applicable hash calculation was performed, but the calculated hash does not equal the declared hash.</td></tr>
+    <tr><td><code>424</code></td><td>Failed Dependency</td><td>The Validation could not be completed because a required dependent resource or information was unavailable, incomplete, or could not be validated. Where the cause is a denied authorisation, 403 applies instead.</td></tr>
+  </tbody>
+</table>
+
+For results other than 200, two optional fields MAY be added:
+- `dependency`: DID or absolute IRI of the resource that was unavailable (424), e.g. the verification method or the SchemaRecord.
+- `reason`: short machine-readable text describing the cause, e.g. resolver-unreachable, key-not-resolvable, schema-not-found.
 
 The codes defined in this section are Validation result codes. They do not define HTTP response semantics.
 
