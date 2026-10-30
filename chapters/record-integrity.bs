@@ -1,4 +1,4 @@
-Record Integrity {#chapter-record-integrity}
+Integrity and Proofs {#chapter-record-integrity}
 =================================
 
 ## Purpose ## {#section-record-integrity-purpose}
@@ -140,3 +140,81 @@ When Validation is exposed through an HTTP API, server-side failures MAY be comm
 
 A Consumer MUST NOT represent the result 403, 404, 406, or 424 as evidence that the object is invalid or has been altered. Only 422 indicates that the applicable hash calculation was performed and the calculated hash does not equal the declared hash.
 
+
+## Hashing Procedure ## {#section-crypto-procedures-hashing}
+
+RWP uses exclusively **SHA-256** as the hashing procedure for:
+
+- Version hashes (`versionHash`)
+- Representation hashes (`representations[].hash`)
+- Record-level hashes (`recordHash`)
+- Schema version hashes (`schemaVersion`)
+- Parent references (`parents`)
+- Merkle root calculations
+
+A system MUST NOT use any hashing procedure other than SHA-256 for normative integrity proofs.
+
+Note: A future version of RWP MAY permit SHA-3 or other procedures as an alternative if cryptographic weaknesses in SHA-256 become known. Until then, SHA-256 is the only permitted procedure.
+
+
+## Canonical JSON Serialisation ## {#section-crypto-procedures-canonical-json}
+
+For all hash calculations over JSON objects, **RFC 8785 (JSON Canonicalization Scheme, JCS)** [[RFC8785]] MUST be used.
+
+Requirements:
+
+- Keys MUST be sorted alphabetically
+- Unicode characters MUST be normalised (NFC)
+- No superfluous whitespace or line breaks
+- Numbers MUST be represented in their canonical form
+
+
+## Version Integrity ## {#section-crypto-procedures-version-integrity}
+
+A system MUST check the integrity of a [=version=] on the following events:
+
+- Receipt of a [=version=] from an external system
+- Retrieval of a [=version=] for a linking operation
+- Periodic integrity check
+
+If the integrity check fails, the system MUST:
+
+1. Mark the [=version=] as `compromised`
+2. Mark all dependent [=Records=] as `integrity-warning`
+3. Log the incident in the system log with timestamp and discrepancy
+4. Notify the responsible record owner via the DID (SHOULD)
+
+The system MUST NOT automatically attempt to reconstruct the original content.
+
+
+## Proof Procedure ## {#section-crypto-procedures-proof}
+
+If the schema prescribes `signaturePolicy` `owner` or `signaturePolicy` `system`, the finalisation act MUST attach at least one proof to the Version. A Version without `proof` is not finalized under such a policy.
+
+A proof MUST be a Data Integrity proof as defined by [[VC-DATA-INTEGRITY]] and MUST contain the following fields:
+
+<table class="data">
+  <thead>
+    <tr><th>Field</th><th>Requirement</th><th>Value</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>type</td><td>MUST</td><td>`DataIntegrityProof`</td></tr>
+    <tr><td>cryptosuite</td><td>MUST</td><td>`eddsa-jcs-2022` as defined by [[VC-DI-EDDSA]]</td></tr>
+    <tr><td>created</td><td>MUST</td><td>ISO 8601 timestamp. SHOULD equal the `modifiedAt` of the Version.</td></tr>
+    <tr><td>verificationMethod</td><td>MUST</td><td>DID URL of a verification method that is controlled by the signing party</td></tr>
+    <tr><td>proofPurpose</td><td>MUST</td><td>`assertionMethod`</td></tr>
+    <tr><td>proofValue</td><td>MUST</td><td>Multibase-encoded signature</td></tr>
+  </tbody>
+</table>
+
+**Creation.** The unsecured document is the Version object including `versionHash` and excluding `proof`. The proof MUST be created according to the algorithm of the cryptosuite `eddsa-jcs-2022`, using RFC 8785 JSON Canonicalization. The resulting proof object is added to the `proof` array.
+
+**Multiple proofs.** A Version MAY carry several proofs, for example from an institution and from a notary. Each proof is calculated independently over the unsecured document, never over another proof. Each proof MUST be verifiable on its own.
+
+**DID document versions.** The same procedure applies to the proofs of DID document versions (see [Proof](#subsection-did-document-proof)). A DID document version MUST carry at least one proof, independent of `signaturePolicy`. The unsecured document is the DID document version excluding `proof`.
+
+**Verification.** A verifier MUST recalculate the `versionHash` according to [Version Hash Calculation](#section-version-hash-calculation). It MUST then verify at least one proof against the resolved verification method. A verifier decides according to its own trust policy which verification methods it accepts. A successful proof verification establishes that the holder of the verification method key signed this Version. It does not establish the authority of that holder. Evaluation of the key state at a given past time is outside the scope of this section.
+
+**Key requirements.** The key MUST be an Ed25519 key. The verification method MUST be published in the DID document of the signing party. The signing party MUST be an [=AgentRecord=]; a verification method is not published in the DID documents of other Records (see [Signing Keys](#subsection-did-document-keys)). The key MUST be present in the current DID document version of the signing party at the time of signing. A key that is no longer present in the current version MUST NOT be used for new proofs.
+
+**Other cryptosuites.** Only `eddsa-jcs-2022` is permitted in this version. Further cryptosuites MAY be added in a future version of this specification.

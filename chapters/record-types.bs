@@ -1,4 +1,4 @@
-Record Types {#chapter-record-types}
+Record Types and SchemaRecord {#chapter-record-types}
 =======================================
 
 ## Record Type Definition ## {#section-record-types-definition}
@@ -10,6 +10,7 @@ Every [=Record=] MUST be assigned to a Record type. A Record type:
 - defines the format requirements per state
 - defines mandatory and optional [=metadata=] fields beyond `metadata.core` (see [Metadata](#chapter-metadata))
 - is itself a [=Record=] of the type `SchemaRecord`
+
 
 ## Core Record Types ## {#section-record-types-core}
 
@@ -31,4 +32,75 @@ The conformance requirements for these Record types are profile-, role-, and cap
 The capability-bound requirements are defined in [Capability-bound requirements](#section-conformance-requirements).
 
 Additional Record types MAY be defined by organisations or standards bodies. They MUST be published as [=SchemaRecords=] and be resolvable via a DID.
+
+
+## SchemaRecord ## {#chapter-schema-record}
+
+A <dfn>SchemaRecord</dfn> is a specialised Record type that carries the definition of another Record type.
+
+A [=SchemaRecord=] MUST:
+
+- fulfil all requirements for a regular [=Record=] (DID, metadata, version graph)
+- contain a JSON Schema (Draft 2020-12 or later, [[JSON-SCHEMA]]) in the payload
+- contain the field `rwpSchemaVersion` in the payload with the RWP version for which it is valid
+- contain the field `allowedStates` in the payload with the permitted states and their transitions
+- contain the field `payloadFormats` in the payload with the permitted formats per state
+
+A [=SchemaRecord=] MAY:
+
+- contain the field `capabilities` in the payload, an array of operation identifiers (strings) declaring the functions applicable to [=Records=] of this type
+
+
+**Minimal SchemaRecord payload example:**
+
+```json
+{
+  "rwpSchemaVersion": "0.1",
+  "schemaId": "did:rwp:bern.ch:schema-building-permit-application",
+  "displayName": "Building Permit Application",
+  "allowedStates": ["draft", "finalized"],
+  "stateTransitions": [
+    { "from": "draft", "to": "finalized", "requiresOwnerSignature": true }
+  ],
+  "payloadFormats": {
+    "draft": ["application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+              "text/markdown"],
+    "finalized": ["application/pdf;profile=PDF-A-2b"]
+  },
+  "capabilities": ["retrieve", "compare", "validate", "publish"],
+  "jsonSchema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "required": ["parcelNumber", "applicant", "constructionProject", "date"],
+    "properties": {
+      "parcelNumber": { "type": "string" },
+      "applicant": { "type": "string" },
+      "constructionProject": { "type": "string" },
+      "date": { "type": "string", "format": "date" }
+    }
+  }
+}
+```
+
+
+## Schema Versioning and Backward Compatibility ## {#section-schema-record-versioning}
+
+When a [=SchemaRecord=] is finalised in a new version, the following applies:
+
+- Existing versions referencing an earlier schema version REMAIN valid
+- The new schema MUST contain the field `previousSchemaVersion` in the payload with the hash of the predecessor schema
+- Systems MUST keep all schema versions referenced by existing [=Records=] permanently accessible
+- A system MUST NOT retroactively change an existing [=SchemaRecord=], corrections are made as a new version
+
+
+## Capability Declaration ## {#section-schema-record-capabilities}
+
+The `capabilities` field declares which functions are applicable to [=Records=] of the type defined by this [=SchemaRecord=]. Each entry is an operation identifier, for example `retrieve`, `compare`, `validate`, `publish`, or a Record-Type-specific operation.
+
+The declaration is descriptive. It states that the Record Type supports an operation; it does not oblige a resolver to implement it, and it does not grant access (see [Access Control](#chapter-access-control)).
+
+A resolver MAY use the `capabilities` of the [=SchemaRecord=] to populate the `RWP-FunctionRegistry` service entry in the DID documents of [=Records=] of this type (see [Service Entries](#subsection-did-document-service)).
+
+A change to `capabilities` is a change to the [=SchemaRecord=] and MUST be made as a new version (see [Schema Versioning](#section-schema-record-versioning)).
+
 

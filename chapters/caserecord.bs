@@ -171,3 +171,27 @@ A system SHOULD perform a completeness check on a [=CaseRecord=] at any time upo
 }
 ```
 
+
+## Merkle Tree Algorithm ## {#section-crypto-procedures-merkle-algorithm}
+
+For the calculation of the [=CaseRecord=] [=Merkle root=], the following algorithm MUST be used:
+
+```
+function merkleRoot(hashes: SHA256[]) -> SHA256:
+if hashes.length == 0: return SHA256("")
+if hashes.length == 1: return hashes [0]
+
+sorted = sort(hashes) // alphabetically by hex string
+
+while sorted.length > 1:
+nextLevel = []
+for i in range(0, sorted.length, 2):
+if i + 1 < sorted.length:
+nextLevel.append( SHA256( sorted[i] || sorted[i+1] ) )
+else:
+nextLevel.append( sorted[i] ) // odd element carried over unchanged
+sorted = nextLevel
+
+return sorted[0]
+```
+

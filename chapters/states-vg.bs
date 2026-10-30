@@ -1,0 +1,157 @@
+States and Version Graph {#chapter-states-vg}
+=================================
+
+## States and Transitions ## {#section-payload-states}
+
+### State Model ### {#subsection-state-model}
+
+Every [=Record=] Version has exactly one **state**. The state describes the validity and linkability status of the Version.
+
+**Core states (normative, for all Record types):**
+
+<table class="data">
+  <thead>
+    <tr><th>State</th><th>Linkable</th><th>Immutable</th><th>Description</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code><dfn>draft</dfn></code></td>
+      <td>NO</td>
+      <td>NO</td>
+      <td>Being processed; content may change</td>
+    </tr>
+    <tr>
+      <td><code><dfn>finalized</dfn></code></td>
+      <td>YES</td>
+      <td>YES</td>
+      <td>Complete; content cryptographically secured</td>
+    </tr>
+  </tbody>
+</table>
+
+Record types MAY define additional states. These MUST be specified in the [=SchemaRecord=] and MUST be reachable from one of the core states or lead into one.
+
+**Example of an extended state machine for type "contract":**
+
+```
+draft → in-review → finalized
+↓
+rejected (terminal state, not linkable)
+```
+
+### Linkability ### {#subsection-linkability}
+
+A [=Record=] MUST be in the [=finalized=] state to be used as the target of a hard link.
+
+A system MUST return an error when an attempt is made to set a hard link to a Record that is not in the [=finalized=] state.
+
+Exception: Soft links per [Hard and Soft Links](#section-links) MAY point to Records in any state, including [=draft=] Records.
+
+
+### Finalisation Requirements ### {#subsection-finalisation-requirements}
+
+A system MUST perform the following checks before finalising a Version:
+
+1. **Schema validation**: Payload conforms to the schema in the version defined for `finalized`
+2. **Format validation**: Payload format conforms to the `payloadFormats.finalized` requirements of the schema
+3. **Mandatory field check**: All MUST metadata fields are present and correctly typed
+4. **Proof**: If the schema defines `signaturePolicy` `owner`, the Version MUST carry at least one proof whose verification method is controlled by the record owner. For `signaturePolicy` `system`, the proof MAY be generated with an authorised system key. For `signaturePolicy` `none`, proof validation is omitted.
+5. **Parent integrity**: All referenced parent hashes are resolvable in the system
+6. **Issuance check**: If the Version carries an `issuance` block, the system MUST verify the requirements of [Requirements for an issued Version](#subsection-payload-issuance-requirements) before finalisation.
+
+If any of these checks fails, the system MUST NOT finalise the Version and MUST return an error with a validation code.
+
+
+### Irreversibility of Finalisation ### {#subsection-irreversibility}
+
+A [=finalized=] Version MUST NOT be reverted to the state [=draft=].
+
+Corrections, revisions, replacements, and other continuations of the same Record MUST be represented as a new Version of that Record.
+
+Such a Version MUST:
+
+- retain the DID of the Record;
+- reference the superseded or revised versionHash in its `parents` field;
+- include a `correctionReason` or equivalent schema-defined rationale where applicable; and
+- complete the normal finalisation process defined in [Finalisation Requirements](#subsection-finalisation-requirements).
+
+An implementation MUST NOT represent a correction, revision, replacement, or continuation of the same Record as a new Record that is related to the earlier Record only through an AssertionRecord or another cross-Record relationship.
+
+A new Record MAY be created where a new semantically autonomous information object arises. Such a Record MAY document derivation, source, or other relationships to an earlier Record through an AssertionRecord. It MUST NOT thereby be treated as a continuation in the version graph of that earlier Record.
+
+
+## Version Graph (DAG) ## {#section-payload-version-graph}
+
+### Graph Structure ### {#subsection-graph-structure}
+
+The totality of all versions of a [=Record=] and their parent-child relationships forms the <dfn>version graph</dfn>.
+
+The [=version graph=] MUST be a **Directed Acyclic Graph (DAG)**:
+
+- **Directed**: Edges point from child to parent (backward in time)
+- **Acyclic**: There MUST be NO cycles — a Version MUST NOT be directly or indirectly its own ancestor
+
+A system MUST check upon receipt of a new Version whether adding its parent references would create a cycle. If so, the Version MUST be rejected.
+
+
+### Nodes ### {#subsection-graph-nodes}
+
+Every node in the [=version graph=] is a versionHash entry in the `payload` array (see [Version Fields](#section-payload-definition)).
+
+
+### Edges (Parent References) ### {#subsection-graph-edges}
+
+An edge connects a Version (child) with its predecessor Version (parent).
+
+- A Version MAY have zero, one, or multiple parent references
+- A Version without parents is the **root Version** (first Version of the [=Record=])
+- A Version with exactly one parent reference is a **linear continuation**
+- A Version with multiple parent references is a **merge Version**
+
+Edge requirements:
+
+- Every parent reference MUST be a valid `versionHash` of a known Version within the same `payload` array
+- Edges MUST NOT point to Versions of other [=Records=]. Cross-Record connections are made via links in the [=payload=] of a [=CaseRecord=] or [=AssertionRecord=] ([CaseRecord Specification](#chapter-caserecord))
+
+
+### Branches ### {#subsection-graph-branches}
+
+A **branch** arises when two or more new [=draft=] versions with the same parent reference emerge from a [=finalized=] Version.
+
+- Branches are explicitly permitted in RecordWeb and MUST be made visible by the system
+- A system MUST return all active branches (draft versions without successors) when a [=Record=] is retrieved
+- Branches MAY exist simultaneously as long as they are in state [=draft=]
+
+
+### Merges ### {#subsection-graph-merges}
+
+A merge Version is a version with two or more parent references. It consolidates two branches.
+
+Before a merge Version can be finalised, a `MergeRecord` MUST be created:
+
+```json
+{
+  "mergeRecord": {
+    "mergedVersions": [
+      "sha256:4b10e80a5c3e85acff145587d17a4a7561d517726dd1096d08eb30125d0bdf5f",
+      "sha256:5f42b3f3cb9330d01765552d5c612ac146738badb811f818a7f9318a9f762be8"
+    ],
+    "mergeReason": "Consolidation after coordination between departments",
+    "mergedBy": "did:rwp:5264d2c3-d3b1-411c-829f-90e61165251a:83fb7055-2779-45f6-a9db-98d1c852d3da",
+    "mergedAt": "2026-05-31T16:00:00Z",
+    "mergeHash": "sha256:4fdab47550acadcb5d60b9122848e11c78708859fe60b43e624537678d9b5a58"
+  }
+}
+```
+
+The `MergeRecord` MUST be finalised before the merge version can be finalised.
+
+
+### Cross-Record Merges ### {#subsection-cross-record-merges}
+
+When a new [=Record=] arises from two or more existing [=finalized=] Records (cross-Record merge), the following MUST apply:
+
+- The new [=Record=] MUST have a root version with an empty `parents` array
+- The `MergeRecord` MUST reference the DIDs of the source Records (not their version hashes)
+- The source Records MUST remain in state [=finalized=] and receive a metadata note `contributedTo` with the DID of the new [=Record=]
+

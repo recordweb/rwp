@@ -7,6 +7,7 @@ The RecordWeb Protocol (RWP) is the normative technical specification for the cr
 
 The RecordWeb Concept ([[RWC]]) is an informative conceptual document. This specification defines the normative terminology and requirements for RWP conformance.
 
+
 ## Scope ## {#section-scope}
 
 This document applies to:
@@ -20,6 +21,7 @@ This document does not apply to:
 - The internal storage architecture of a compliant system (database, file system, object store)
 - User interfaces and workflows built on top of an RWP-compliant system
 - The content of payloads, insofar as these are not standardised by the schema of the Record type
+
 
 ## Relationship to Other Standards ## {#section-related-standards}
 
@@ -47,6 +49,7 @@ This document does not apply to:
   </tbody>
 </table>
 
+
 ## Versioning of This Document ## {#section-versioning}
 
 This document uses semantic versioning (SemVer): `MAJOR.MINOR.PATCH`.
@@ -54,4 +57,21 @@ This document uses semantic versioning (SemVer): `MAJOR.MINOR.PATCH`.
 - **MAJOR**: Incompatible changes to existing standards
 - **MINOR**: Backward-compatible extensions
 - **PATCH**: Corrections without substantive change
+
+
+## Roles ## {#section-roles}
+
+RWP defines the following implementation roles:
+
+1. A <dfn>producer</dfn> creates a new Record or a new version, including its finalisation where applicable. A producer MUST fulfil all requirements applicable to the profile, Record type, and operation it performs when creating, modifying, or finalising a Record representation.
+2. A <dfn>custodian</dfn> retains, manages, and makes Records or versions retrievable. For each Record representation within its claimed scope, a custodian MUST preserve the information required to verify its applicable RWP integrity and versioning requirements. A custodian is not required to create a new Record or version solely by claiming the custodian role.
+3. A <dfn>consumer</dfn> retrieves and validates Records created or managed by another implementation. A consumer MAY validate Records according to chapter [Validation](#section-record-integrity-validation). A consumer MUST NOT represent an object as successfully validated unless the validation response is 200.
+4. A <dfn>resolver</dfn> resolves <code>did:rwp</code> identifiers and returns the associated DID documents according to the applicable RWP DID-document requirements. A resolver is not required to publish `service` entries (see [Service Entries](#subsection-did-document-service)).
+5. A <dfn>source-adapter</dfn> obtains, normalises, and exposes source-provenance information from a non-RWP source system. A source-adapter MAY provide source content to a producer through a mutually agreed mechanism. A source-adapter MUST NOT represent a source-integrity statement as an RWP Record-integrity statement unless it has also created and validated the corresponding RWP Record representation.
+6. An <dfn>attester</dfn> creates and finalises a ConformanceRecord concerning an implementation assessment.
+
+A role describes a responsibility. It does not imply that an implementation fulfils requirements outside its claimed profiles, roles, or exercised capabilities.
+
+An implementation MAY perform more than one RWP role.
+
 
