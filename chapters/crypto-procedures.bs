@@ -71,9 +71,11 @@ A proof MUST be a Data Integrity proof as defined by [[VC-DATA-INTEGRITY]] and M
 
 **Multiple proofs.** A Version MAY carry several proofs, for example from an institution and from a notary. Each proof is calculated independently over the unsecured document, never over another proof. Each proof MUST be verifiable on its own.
 
-**Verification.** A verifier MUST recalculate the `versionHash` according to [Version Hash Calculation](#section-version-hash-calculation). It MUST then verify at least one proof against the resolved verification method. A verifier decides according to its own trust policy which verification methods it accepts. A successful proof verification establishes that the holder of the verification method key signed this Version. It does not establish the authority of that holder.
+**DID document versions.** The same procedure applies to the proofs of DID document versions (see [Proof](#subsection-did-document-proof)). A DID document version MUST carry at least one proof, independent of `signaturePolicy`. The unsecured document is the DID document version excluding `proof`.
 
-**Key requirements.** The key MUST be an Ed25519 key. The verification method MUST be published in the DID document of the signing party.
+**Verification.** A verifier MUST recalculate the `versionHash` according to [Version Hash Calculation](#section-version-hash-calculation). It MUST then verify at least one proof against the resolved verification method. A verifier decides according to its own trust policy which verification methods it accepts. A successful proof verification establishes that the holder of the verification method key signed this Version. It does not establish the authority of that holder. Evaluation of the key state at a given past time is outside the scope of this section.
+
+**Key requirements.** The key MUST be an Ed25519 key. The verification method MUST be published in the DID document of the signing party. The signing party MUST be an [=AgentRecord=]; a verification method is not published in the DID documents of other Records (see [Signing Keys](#subsection-did-document-keys)). The key MUST be present in the current DID document version of the signing party at the time of signing. A key that is no longer present in the current version MUST NOT be used for new proofs.
 
 **Other cryptosuites.** Only `eddsa-jcs-2022` is permitted in this version. Further cryptosuites MAY be added in a future version of this specification.
 
