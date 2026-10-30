@@ -15,7 +15,6 @@ A denied access is not an integrity result. How a denial is communicated is defi
 An implementation claiming this optional capability MAY carry the `accessPolicy` block as an entry in the [=Record=]'s `metadata.extensions` array (see [metadata.extensions](#section-metadata-extensions)), using the reserved type identifier `did:rwp:recordweb.org:extension-access-policy`:
 
 <pre class='example json' title='accessPolicy'>
-```json
 {
   "type": "did:rwp:recordweb.org:extension-access-policy",
   "accessPolicy": {
@@ -31,7 +30,6 @@ An implementation claiming this optional capability MAY carry the `accessPolicy`
     "expiresAt": null
   }
 }
-```
 </pre>
 
 <table class="data">

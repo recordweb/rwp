@@ -16,7 +16,6 @@ A payload entry that does not contain at least one valid Representation is not a
 The <dfn>payload</dfn> of a [=Record=] is an ordered array of <dfn>versions</dfn>. Each [=version=] is one immutable, versioned representation of the [=Record=]'s content at a specific point in time.
 
 <pre class='example json' title='Payload'>
-```json
 {
   "payload": [
     {
@@ -44,7 +43,6 @@ The <dfn>payload</dfn> of a [=Record=] is an ordered array of <dfn>versions</dfn
     }
   ]
 }
-```
 </pre>
 
 <table class="data">

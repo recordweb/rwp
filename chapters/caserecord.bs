@@ -15,7 +15,6 @@ A CaseRecord MUST NOT be interpreted as a container into which Records are place
 A `CaseRecord` payload MUST contain the following fields:
 
 <pre class='example json' title='CaseRecord payload'>
-```json
 {
   "recordDid": "did:rwp:bern.ch:f47ac10b-case-001",
   "caseType": "did:rwp:bern.ch:schema-building-permit-case",
@@ -51,7 +50,6 @@ A `CaseRecord` payload MUST contain the following fields:
   "result": null,
   "merkleRoot": "sha256:case-merkle-root..."
 }
-```
 </pre>
 
 
@@ -169,7 +167,6 @@ The [=Merkle root=] MUST be recalculated every time a [=hard link=] is added or 
 A system SHOULD perform a completeness check on a [=CaseRecord=] at any time upon request and return:
 
 <pre class='example json' title='Case Completeness Check'>
-```json
 {
   "recordDid": "did:rwp:bern.ch:f47ac10b-case-001",
   "complete": false,
@@ -177,7 +174,6 @@ A system SHOULD perform a completeness check on a [=CaseRecord=] at any time upo
   "openWorkingReferences": ["did:rwp:bern.ch:expert-opinion-draft-001"],
   "merkleRootValid": true
 }
-```
 </pre>
 
 

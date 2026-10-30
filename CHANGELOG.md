@@ -6,6 +6,17 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [0.0.11] – 2026-10-30
+
+Implemented CfC 11 outcomes. See
+- [RWP#37](https://github.com/recordweb/rwp/issues/37)
+- [RWP#39](https://github.com/recordweb/rwp/issues/39)
+- [RWP#41](https://github.com/recordweb/rwp/issues/41)
+- [RWP#42](https://github.com/recordweb/rwp/issues/42)
+
+Editorial:
+- Restructure Chaptures
+
 ## [0.0.10] – 2026-10-22
 
 Implemented CfC 10 outcomes. See

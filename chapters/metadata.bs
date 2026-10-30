@@ -6,7 +6,6 @@ Metadata {#chapter-metadata}
 Metadata is organised into three groups: `core`, `governance`, and `extensions`.
 
 <pre class='example json' title='Metadata'>
-```json
 {
   "metadata": {
     "core": {
@@ -23,7 +22,6 @@ Metadata is organised into three groups: `core`, `governance`, and `extensions`.
     "extensions": []
   }
 }
-```
 </pre>
 
 

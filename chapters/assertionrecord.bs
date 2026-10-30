@@ -58,7 +58,6 @@ The value of `assertedBy` MUST identify the Agent responsible for the assertion.
 `effectiveAt` is the time from which the asserted relationship holds. It MAY precede `assertedAt`. A predicate declaration may make it required, otherwise it is optional.
 
 <pre class='example json' title='Assertion payload'>
-```json
 {
   "subject": {
     "id": "did:rwp:record-A",
@@ -72,7 +71,6 @@ The value of `assertedBy` MUST identify the Agent responsible for the assertion.
   "assertedAt": "2026-08-13T11:00:00Z",
   "effectiveAt": "2026-08-13T11:00:00Z"
 }
-```
 </pre>
 
 The `subject` and `object` values MUST be identifiers that can be interpreted according to the applicable predicate and SchemaRecord.

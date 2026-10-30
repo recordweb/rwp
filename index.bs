@@ -113,7 +113,7 @@ path: chapters/scope.bs
 </pre>
 
 
-<h2 class="no-num no-toc" id="part-2">Part II: The Record Model</h2>
+<h2 class="no-num no-toc" id="part-2">Part I: The Record Model</h2>
 
 <pre class=include>
 path: chapters/record.bs
@@ -157,7 +157,7 @@ path: chapters/deletion.bs
 
 
 
-<h2 class="no-num no-toc" id="part-3">Part III: Relation Records</h2>
+<h2 class="no-num no-toc" id="part-3">Part II: Relation Records</h2>
 
 <pre class=include>
 path: chapters/caserecord.bs
@@ -176,7 +176,7 @@ path: chapters/agent-record.bs
 </pre>
 
 
-<h2 class="no-num no-toc" id="part-7">Part VIII: Miscellaneous</h2>
+<h2 class="no-num no-toc" id="part-7">Part III: Miscellaneous</h2>
 
 <pre class=include>
 path: chapters/federation.bs
@@ -199,7 +199,7 @@ path: chapters/conformance.bs
 </pre>
 
 
-<h2 class="no-num no-toc" id="part-8">Part IX: Annexes</h2>
+<h2 class="no-num no-toc" id="part-8">Part IV: Annexes</h2>
 
 <pre class=include>
 path: chapters/annex-a.bs

@@ -85,7 +85,6 @@ Each DID document version MUST carry at least one `proof`. A proof MUST be a Dat
 - The unsecured document is the DID document version excluding `proof`.
 
 <pre class='example json' title='DID Proof'>
-```json
 { 
   "@context": [
     "https://www.w3.org/ns/did/v1",
@@ -102,7 +101,6 @@ Each DID document version MUST carry at least one `proof`. A proof MUST be a Dat
     "proofValue": "z..."
   }]
 }
-```
 </pre>
 
 At least one proof MUST be created with a verification method of the controller named in the **predecessor** version. For the first version, it MUST be a verification method of the controller named in that version itself.
