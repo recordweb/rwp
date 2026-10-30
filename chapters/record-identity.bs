@@ -216,7 +216,6 @@ Fields not present, including `service`, `currentVersion`, `previousVersionId` a
 
 ### Proof ### {#subsection-did-document-proof}
 
-
 Each DID document version MUST carry at least one `proof`. A proof MUST be a Data Integrity proof as defined in [Proof Procedure](#section-crypto-procedures-proof), with the following specifics:
 
 - `type` MUST be `DataIntegrityProof` and `cryptosuite` MUST be `eddsa-jcs-2022`.
@@ -229,7 +228,6 @@ Each DID document version MUST carry at least one `proof`. A proof MUST be a Dat
   "[https://www.w3.org/ns/did/v1](https://www.w3.org/ns/did/v1)",
   "[https://w3id.org/security/data-integrity/v2](https://w3id.org/security/data-integrity/v2)"
 ],
-...
 "proof": [{
   "type": "DataIntegrityProof",
   "cryptosuite": "eddsa-jcs-2022",
