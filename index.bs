@@ -136,10 +136,6 @@ path: chapters/record-payload.bs
 </pre>
 
 <pre class=include>
-path: chapters/states-vg.bs
-</pre>
-
-<pre class=include>
 path: chapters/record-integrity.bs
 </pre>
 
