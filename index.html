@@ -8,7 +8,7 @@
   <meta content="Bikeshed version 49e9fdd4f, updated Tue Oct 13 14:27:53 2026 -0700" name="generator">
   <link href="https://recordweb.github.io/rwp/" rel="canonical">
   <link href="https://www.w3.org/2008/site/images/favicon.ico" rel="icon">
-  <meta content="d214e3b6caa32e25ffcef907ee35da197d0f4669" name="revision">
+  <meta content="866537d21b887b0c995ad366f6eb917d72b205df" name="revision">
   <meta content="dark light" name="color-scheme">
   <link href="https://www.w3.org/StyleSheets/TR/2021/dark.css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css">
 <style>/* Boilerplate: style-autolinks */
@@ -1147,12 +1147,17 @@ rw:Record
 </pre>
    <h3 class="heading settled" data-level="2.3" id="section-record-purpose"><span class="secno">2.3. </span><span class="content">Conceptual Purpose</span><a class="self-link" href="#section-record-purpose"></a></h3>
    <p>The conceptual purpose MUST NOT be interpreted as a mandatory implementation inheritance hierarchy, a mandatory JSON type hierarchy, or a replacement for concrete Record Types and their SchemaRecords.</p>
-<pre class="note text" title="Conceptual Purpose">Every Record has one primary conceptual purpose (as described in RWC):
-- InformationRecord
-- RelationRecord
-- AgentRecord
-- SystemRecord
-</pre>
+   <p class="note" role="note"><span class="marker">Note:</span> Every Record has one primary conceptual purpose (as described in RWC):</p>
+   <ul>
+    <li data-md>
+     <p>InformationRecord</p>
+    <li data-md>
+     <p>RelationRecord</p>
+    <li data-md>
+     <p>AgentRecord</p>
+    <li data-md>
+     <p>SystemRecord</p>
+   </ul>
    <h2 class="heading settled" data-level="3" id="chapter-didoc"><span class="secno">3. </span><span class="content">The DID Document</span><a class="self-link" href="#chapter-didoc"></a></h2>
    <h3 class="heading settled" data-level="3.1" id="section-didoc-definition"><span class="secno">3.1. </span><span class="content">Definition</span><a class="self-link" href="#section-didoc-definition"></a></h3>
    <p>For every Record, a <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="did-document">DID Document</dfn> MUST exist. A DID document is a chain of immutable DID document versions (see <a href="#section-didoc-history">DID Document History</a>). Each version contains the following fields:</p>
@@ -1515,7 +1520,6 @@ did:rwp:example.com:f47ac10b
       <td>string
       <td>Integrity statement about the source object, with the values and meaning defined in <a href="#subsection-source-integration-profile">RWP Source Integration Conformant</a>.
    </table>
-   <p class="note" role="note"><span class="marker">Note:</span> A Version with an <a href="#section-issuance-block">Issuance block</a> is typically part of a Record with <code>transit</code> <code>outgoing</code>. This specification does not require this.</p>
    <h3 class="heading settled" data-level="5.2" id="section-metadata-governance"><span class="secno">5.2. </span><span class="content">metadata.governance</span><a class="self-link" href="#section-metadata-governance"></a></h3>
    <p>A <a data-link-type="dfn" href="#record" id="ref-for-record②①">Record</a> MAY contain the following <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="governance-metadata">governance metadata</dfn> fields. These fields express Records Management concerns (accountability, classification, retention, discoverability) as defined in <a data-link-type="biblio" href="#biblio-iso15489" title="Information and documentation — Records management, Part 1: Concepts and principles">[ISO15489]</a>.</p>
    <table class="data">
