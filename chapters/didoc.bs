@@ -1,0 +1,121 @@
+The DID Document {#chapter-didoc}
+=====================================
+
+## Definition ## {#section-didoc-definition}
+
+For every Record, a DID document MUST exist. A DID document is a chain of immutable DID document versions (see [DID Document History](#section-didoc-history)). Each version contains the following fields:
+
+<table class="data">
+  <thead>
+    <tr><th>Field</th><th>Required</th><th>Description</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>@context</code></td><td>MUST</td><td>W3C DID Context URI</td></tr>
+    <tr><td><code>id</code></td><td>MUST</td><td>DID of the [=Record=]; identical to the Record DID. MUST NOT change between versions</td></tr>
+    <tr><td><code>recordEndpoint</code></td><td>MUST</td><td>URL at which the [=Record=] can be retrieved. The <code>recordEndpoint</code> and the <code>id</code> together MUST form the full URL.</td></tr>
+    <tr><td><code>created</code></td><td>MUST</td><td>ISO 8601 timestamp of DID creation. MUST NOT change between versions</td></tr>
+    <tr><td><code>updated</code></td><td>MUST</td><td>ISO 8601 timestamp of this DID document version. Defines <code>versionTime</code> resolution</td></tr>
+    <tr><td><code>currentVersionHash</code></td><td>MUST</td><td><code>versionHash</code> of the current finalised [=Record=] version. Omitted if the [=Record=] has no finalised version</td></tr>
+    <tr><td><code>previousVersionHash</code></td><td>MUST</td><td><code>versionHash</code> of the preceding DID document version. Omitted in the first version</td></tr>
+    <tr><td><code>proof</code></td><td>MUST (when finalized, unless the schema defines signaturePolicy none)</td><td>One or more Data Integrity proofs over the DID document. See [Proof Procedure](#section-crypto-procedures-proof)</td></tr>
+    <tr><td><code>service</code></td><td>MAY</td><td>Array of service entries according to [[DID-CORE]] (<code>id</code>, <code>type</code>, <code>serviceEndpoint</code>) declaring additional, optional access channels (see [Service Entries](#section-didoc-service))</td></tr>
+  </tbody>
+</table>
+
+<pre class='example json' title='Record components'>
+{
+  "@context": "https://www.w3.org/ns/did/v1",
+  "id": "did:rwp:d2d14675-50c9-463d-b564-1ea50644c836:a95437ee-25e4-469a-a2e1-c2b250b21e15",
+  "recordEndpoint": "https://recordweb.org/resolver/records/",
+  "created": "2026-10-26T18:20:00Z",
+  "updated": "2026-10-26T18:20:00Z",
+  "currentVersionHash": "sha256:474425f9f1f2d1fe78bcec3f41a579c02d5261161c489ab22296980075f37895",
+  "proof": []
+}
+</pre>
+
+
+## History ## {#section-didoc-history}
+
+Every change of a DID document MUST create a new DID document version. A DID document version is immutable once published. Only `id` and `created` MUST NOT change; all other fields MAY change.
+
+A new DID document version MUST be created, and `currentVersionHash` and `updated` MUST be set accordingly, when:
+
+- a [=Record=] version is finalised;
+- the storage location (`recordEndpoint`) changes;
+- a payload deletion is executed (see [Payload Deletion](#chapter-deletion));
+- `service` or `proof` are added, changed or removed.
+
+A new version MUST reference the current latest version as `previousVersionHash`. A producer or custodian MUST reject a new version whose `previousVersionHash` is not the `versionHash` of the latest version.
+
+
+## versionHash ## {#bsection-didoc-versionhash}
+
+The `versionHash` identifies a DID document version and is calculated as follows:
+
+1. Serialise the DID document fields `id`, `recordEndpoint`, `service`, `created`, `updated`, `currentVersioHash`, `previousVersionHash`, and `proof` as canonical JSON ([[RFC8785]]). Fields not present are omitted.
+2. Calculate SHA-256 over the result.
+3. Encode the digest as `sha256:` followed by 64 lowercase hexadecimal characters.
+
+<pre class='example code' title='versionHash calculation'>
+versionHash = "sha256:" + hex( SHA-256( canonicalize({id, recordEndpoint, [service,] created, updated, [currentVersionHash], [previousVersionHash], [proof]}) ) )
+</pre>
+
+Fields not present are omitted.
+
+
+## History Verification ## {#section-didoc-verification}
+
+A verifier checking a DID document version MUST:
+
+1. recompute the `versionHash`;
+2. check that `previousVersionHash` equals the `versionHash` of the predecessor;
+3. verify at least one `proof` as defined in [Proof Procedure](#section-crypto-procedures-proof);
+4. check that `updated` is later than `updated` of the predecessor.
+
+
+## Service Entries ## {#section-didocu-service}
+
+A DID document MAY contain a `service` property. Each entry MUST follow the structure defined for `service` in [[DID-CORE]] and MUST have `id`, `type` and `serviceEndpoint`.
+
+The `recordEndpoint` remains the only mandatory access channel. An implementation is not required to offer any `service` entry.
+
+A `service` entry is a declaration of availability. It is not a grant of access. Authorisation for using a declared service MUST remain subject to the applicable access policy (see [Access Control](#chapter-access-control)).
+
+This specification defines the following `type` values:
+
+<table class="data">
+  <thead><tr><th>type</th><th>Meaning</th></tr></thead>
+  <tbody>
+    <tr><td><code>RWPPublicRecordAccess</code></td><td>Endpoint returning a restricted or public view of the [=Record=] for requesters without full access rights</td></tr>
+    <tr><td><code>RWPRecordReferrers</code></td><td>Endpoint returning all finalised `RelationRecords` ([=CaseRecord=] and [=AssertionRecord=]) referring to this [=Record=] within the same namespace. The response contains a list of records each with a list of finalised versions</td></tr>
+    <tr><td><code>RWPFunctionRegistry</code></td><td>Endpoint returning a machine-readable list of the functions supported for the [=Record=], derived from the `capabilities` of its [=SchemaRecord=] (see [SchemaRecord](#chapter-schema-record))</td></tr>
+  </tbody>
+</table>
+
+Other `type` values, including protocol-specific ones (for example `DIDCommMessaging` or an MCP-based channel), MAY be used. Their semantics are defined by their respective specifications and are outside the scope of RWP.
+
+A DID document MUST NOT be treated as immutable in the sense of a fixed resolution result, since a new version MAY be created at any time. A specific version, identified by `versionHash`, is immutable.
+
+
+## Resolver Requirements ## {#section-didoc-resolver}
+
+An implementation claiming the `resolver` role MUST provide a DID resolver that:
+
+- Resolves DIDs of the method `rwp` and returns the associated DID document
+- Delivers the DID document as JSON-LD in accordance with [[DID-CORE]]
+- Where the DID document contains a `service` property, delivers it as part of the DID document.
+- Supports the resolver options `versionHash` and `versionTime`
+- Returns HTTP 200 when the DID is known
+- Returns HTTP 400 when both `versionHash` and `versionTime` are given
+- Returns HTTP 403 where the resolver's applicable access policy does not permit the requester to obtain the DID document
+- Returns HTTP 404 when the DID is unknown, when `versionHash` is unknown, or when `versionTime` is earlier than `created`
+- Returns HTTP 410 when the DID is known but the [=Record=] has been deleted completely (see [Deletion](#section-deletion-regimes)). Payload deletion does NOT result in 410
+- Retains every DID document version for as long as the DID is resolvable. Payload deletion does not remove the history
+
+`versionHash` and `versionTime` are mutually exclusive. Without either, the resolver MUST return the latest version. With `versionHash`, it MUST return exactly that version. With `versionTime`, it MUST return the version with the greatest `updated` less than or equal to the given time.
+
+An implementation claiming another RWP profile or role MAY rely on a resolver operated by another conformant implementation. It is not required to operate a DID resolver itself unless it claims the `resolver` role.
+
+A producer or custodian that creates or manages RWP Records MUST ensure that the associated Record DIDs remain resolvable in accordance with this specification.
+

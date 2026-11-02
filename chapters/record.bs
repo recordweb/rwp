@@ -34,16 +34,15 @@ rw:Record
 ```
 
 
-** Conceptual Purpose **
-
-<pre class='note text' title='Conceptual Purpose'>
-Every [=Record=] has one primary conceptual purpose (as described in [[RWC]]):
-- [=InformationRecord=]
-- [=RelationRecord=]
-- [=AgentRecord=]
-- [=SystemRecord=]
+## Conceptual Purpose ## {#section-record-purpose}
 
 The conceptual purpose MUST NOT be interpreted as a mandatory implementation inheritance hierarchy, a mandatory JSON type hierarchy, or a replacement for concrete Record Types and their SchemaRecords.
-</pre>
 
+<pre class='note text' title='Conceptual Purpose'>
+Every Record has one primary conceptual purpose (as described in RWC):
+- InformationRecord
+- RelationRecord
+- AgentRecord
+- SystemRecord
+</pre>
 
