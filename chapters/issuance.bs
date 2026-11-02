@@ -31,7 +31,7 @@ An issued Version:
 - MUST mark this Representation `primary` true.
 - MUST contain this Representation with `content` and `contentHash`. A Representation with `ref` MUST NOT be used.
 - MUST have exactly one parent, which MUST be the most recent finalized Version of the Record at the time of issuance.
-- MUST satisfy the [Finalisation Requirements](#subsection-finalisation-requirements), including the payload format requirements for `finalized`.
+- MUST satisfy the [Finalisation Requirements](#subsection-paylaod-finalisation), including the payload format requirements for `finalized`.
 
 The issuer decides which content is issued. The issued Representation MAY originate from an earlier Version than its parent.
 

@@ -104,7 +104,7 @@ The `owner` field expresses organisational accountability and MAY change over th
 - `proof` provides cryptographic evidence of *who authorised a specific version's content* at finalisation, resolvable via the DID document's `controller` field.
 - `owner` provides the current, human-readable statement of *organisational responsibility* for the Record as a whole, independent of which key signed the most recent version.
 
-Where a schema defines `signaturePolicy: system` (see [Finalisation Requirements](#subsection-finalisation-requirements)), the proof identifies an authorised system key rather than a responsible person or unit. In this case, `owner` is the only field that expresses organisational accountability.
+Where a schema defines `signaturePolicy: system` (see [Finalisation Requirements](#subsection-payload-finalisation)), the proof identifies an authorised system key rather than a responsible person or unit. In this case, `owner` is the only field that expresses organisational accountability.
 
 An implementation MUST NOT infer the current `owner` solely from the `controller` of the most recent version's proof.
 

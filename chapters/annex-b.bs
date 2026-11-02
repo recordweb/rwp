@@ -28,8 +28,8 @@ For a first pilot, the following Level 1 subset is recommended:
 1. Implement DID generation and the [DID Format](#section-did-format) and [DID Document](#section-didoc-definition) requirements
 2. Implement version creation with the [Metadata](#chapter-metadata)
 3. Implement [Version Hash Calculation](#section-integrity-versionHash)
-4. Implement the `draft` → `finalized` state transition with [Finalisation Requirements](#subsection-finalisation-requirements)
-5. Implement [Graph Structure](#subsection-graph-structure) without branch detection initially
+4. Implement the `draft` → `finalized` state transition with [Finalisation Requirements](#subsection-paylaod-finalisation)
+5. Implement [Graph Structure](#subsection-payload-graph-structure) without branch detection initially
 
 This covers the critical path: a Record can be created, finalised, and its integrity verified. Cases and federation can be added in a subsequent iteration.
 
