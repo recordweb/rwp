@@ -1,28 +1,28 @@
-Integrity and Proofs {#chapter-record-integrity}
+Record Integrity {#chapter-integrity}
 =================================
 
-## Purpose ## {#section-record-integrity-purpose}
+## Definition ## {#section-integrity-definition}
 
-The <dfn>recordHash</dfn> is a Record-level <dfn>integrity</dfn> value that covers the entire [=Record=] (its `did`, `payload`, and `metadata`) at the time the hash was calculated. It provides evidence that a Record has not been altered since that point, independent of whether the alteration occurred in `payload` or in `metadata`.
+The <dfn>recordHash</dfn> is a Record-level <dfn>Integrity</dfn> value that covers the entire [=Record=] (its `did`, `metadata`, and `payload`) at the time the hash was calculated. It provides evidence that a [=Record=] has not been altered since that point, independent of whether the alteration occurred in `metadata` or in `payload`.
 
-The `recordHash` is distinct from the `proof` carried by an individual Version (see [Proof Procedure](#section-crypto-procedures-proof)). A `proof` is an owner's cryptographic authorisation of one specific versions's content at finalisation. The `recordHash` is an unsigned, purely computational value; it does not require, and MUST NOT be interpreted as, an authorisation or attestation. It exists solely to make unauthorised or accidental modification of any part of the Record detectable.
+The `recordHash` is distinct from the `proof` carried by an individual Version (see [Proof Procedure](#section-crypto-procedures-proof)). A `proof` is an owner's cryptographic authorisation of one specific versions's content at finalisation. The `recordHash` is an unsigned, purely computational value; it does not require, and MUST NOT be interpreted as, an authorisation or attestation. It exists solely to make unauthorised or accidental modification of any part of the [=Record=] detectable.
 
 
-## Record Hash Calculation ## {#section-record-hash-calculation}
+## Record Hash Calculation ## {#section-integrity-recordHash}
 
 The `recordHash` MUST be calculated as follows:
 
-1. Serialise `did`, `payload`, and `metadata` (without `recordHash` itself) as canonical JSON ([[RFC8785]])
+1. Serialise `did`, `metadata`, and `payload` (without `recordHash` itself) as canonical JSON ([[RFC8785]])
 2. Calculate SHA-256 over the result
 
 ```
-recordHash = SHA-256( canonicalize({did, payload, metadata}) )
+recordHash = SHA-256( canonicalize({did, metadata, paylaod}) )
 ```
 
 
-## Version Hash Calculation ## {#section-version-hash-calculation}
+## Version Hash Calculation ## {#section-integrity-versionHash}
 
-The `versionHash` hash MUST be calculated as follows:
+The <dfn>Version</dfn> is represented by the `versionHash` and MUST be calculated as follows:
 
 1. Serialise the version fields `state`, `parents`, `createdAt`, `modifiedAt`, `representations` and, where present, `issuance`, without `versionHash` and `proof` themselves, as canonical JSON ([[RFC8785]])
 2. Calculate SHA-256 over the result
@@ -32,9 +32,9 @@ versionHash = SHA-256( canonicalize({state, parents, createdAt, modifiedAt, repr
 ```
 
 
-## Content Hash Calculation ## {#section-content-hash-calculation}
+## Content Hash Calculation ## {#section-integrity-contentHash}
 
-The `contentHash` hash MUST be calculated as follows:
+The <dfn>Content</dfn> is represented by the `contentHash` and MUST be calculated as follows:
 
 1. Serialise the version fields `format`, `content`, `primary`, and `role` (without `contentHash` itself) as canonical JSON ([[RFC8785]])
 2. Calculate SHA-256 over the result
@@ -44,89 +44,92 @@ contentHash = SHA-256( canonicalize({format, content, primary, role}) )
 ```
 
 
-## Validation ## {#section-record-integrity-validation}
+## Validation ## {#section-integrity-validation}
 
-RWP provides data structures and calculation rules that enable a Consumer to validate a RecordWeb object whenever the required information is available.
+RWP <dfn>Validation</dfn> provides data structures and calculation rules that enable a [=Consumer=] to validate a RecordWeb object whenever the required information is available.
 
+A [=Consumer=] MAY perform a Validation at any time and MAY repeat a Validation.
+
+A [=Consumer=] MUST NOT represent the integrity of a RecordWeb object as successfully validated unless it has recalculated the applicable hash in accordance with [[#chapter-record-integrity]] and the calculated value equals the declared hash value.
+
+A [=Consumer=] MAY retain, exchange, display, or discard a Validation result. RWP does not require a [=Consumer=] to retain a Validation result or to create a RecordWeb [=Record=] for that purpose.
+
+<pre class='note' title='Validation'>
 RWP does not require a Consumer to perform a Validation, does not prescribe when a Consumer performs a Validation, and does not prescribe the business, legal, or operational consequence of a Validation result.
-
-A Consumer MAY perform a Validation at any time and MAY repeat a Validation.
-
-A Consumer MUST NOT represent the integrity of a RecordWeb object as successfully validated unless it has recalculated the applicable hash in accordance with [[#chapter-record-integrity]] and the calculated value equals the declared hash value.
-
-A Consumer MAY retain, exchange, display, or discard a Validation result. RWP does not require a Consumer to retain a Validation result or to create a RecordWeb Record for that purpose.
+</pre>
 
 
-### Validation Object ### {#subsection-record-integrity-validation-object}
+### Validation Object ### {#subsection-integrity-validation-object}
 
-A Validation applies to exactly one `validationObject` identified by a `did:rwp` identifier.
+A [=Validation=] applies to exactly one `validationObject` identified by a `did:rwp` identifier.
 
 The type of the identified object determines the applicable integrity calculation:
 
-* A Record identifier determines `recordHash` calculation.
-* A Version identifier determines `versionHash` calculation.
-* A Content identifier determines `contentHash` calculation.
+- A [=Record=] identifier determines `recordHash` calculation.
+- A [=Version=] identifier determines `versionHash` calculation.
+- A [=Content=] identifier determines `contentHash` calculation.
 
-A Validation of one object MUST NOT be represented as a Validation of any related Record, Version, or Content object unless those objects have been validated separately.
+A [=Validation=] of one object MUST NOT be represented as a [=Validation=] of any related [=Record=], [=Version=], or [=Content=] object unless those objects have been validated separately.
 
-In particular, a Validation of a Record MUST NOT be represented as a Validation of all Versions of that Record. A Validation of a Version MUST NOT be represented as a Validation of all Representations or Content objects associated with that Version.
+In particular, a [=Validation=] of a [=Record=] MUST NOT be represented as a [=Validation=] of all Versions of that [=Record=]. A [=Validation=] of a [=Version=] MUST NOT be represented as a [=Validation=] of all Representations or [=Content=] objects associated with that [=Version=].
 
-A Version identifier MAY additionally be validated by verifying `proof` over `versionHash` against a verification method of the DID document, in accordance with [Cryptographic Procedures](#section-crypto-procedures-proof).
+A [=Version=] identifier MAY additionally be validated by verifying `proof` over `versionHash` against a verification method of the DID document, in accordance with [Cryptographic Procedures](#section-crypto-procedures-proof).
 
-### Validation Result ### {#subsection-record-integrity-validation-result}
 
-When a Consumer retains or exchanges the result of a Validation, the result MUST contain:
+### Validation Result ### {#subsection-integrity-validation-result}
 
-* `validationObject`, containing the `did:rwp` identifier of the validated object;
-* `validationType`, containing ether `integrity` or `signature`, depending on the kind of validation;
-* `validationTimestamp`, containing the date and time at which the Consumer performed the Validation; and
-* `validationResponse`, containing one of the Validation response codes defined in this Section.
+When a [=Consumer=] retains or exchanges the result of a [=Validation=], the result MUST contain:
 
-The result is a statement by the Consumer that performed the Validation at the stated time. It is not a new state of the validated object and does not by itself establish the truth, authority, legal effect, or current availability of the validated object.
+- `validationObject`, containing the `did:rwp` identifier of the validated object;
+- `validationType`, containing ether `integrity` or `signature`, depending on the kind of validation;
+- `validationTimestamp`, containing the date and time at which the [=Consumer=] performed the [=Validation=]; and
+- `validationResponse`, containing one of the [=Validation=] response codes defined in this Section.
 
-`signature` applies only to a Version identifier. Each result concerns exactly one validation object and one validation type. A `signature` result MUST NOT be represented as an `integrity` validation, and vice versa.
+The result is a statement by the [=Consumer=] that performed the [=Validation=] at the stated time. It is not a new state of the validated object and does not by itself establish the truth, authority, legal effect, or current availability of the validated object.
+
+`signature` applies only to a [=Version=] identifier. Each result concerns exactly one validation object and one validation type. A `signature` result MUST NOT be represented as an `integrity` validation, and vice versa.
 
 For `signature`, the verification method is taken from the DID Document of the record owner as resolved at `validationTimestamp`. Key state at the time of signing is not evaluated.
 
-The following example records a successful Validation of one Version:
+The following example records a successful [=Validation=] of one [=Version=]:
 
 <pre class='example json' title='Validation result'>
 {
-  "validationObject": "did:rwp:5264d2c3-d3b1-411c-829f-90e61165251a:f47ac10b-58cc-4372-a567-0e02b2c3d479:eef9dd41ca22103acab33303607139d2d39a9de0e8c5deb21373dd2184b7d57f",
+  "validationObject": "did:rwp:d2d14675-50c9-463d-b564-1ea50644c836:efd09e7b-5f65-4637-b06c-404a9da97f0b:474425f9f1f2d1fe78bcec3f41a579c02d5261161c489ab22296980075f37895",
   "validationType": "signature",
   "validationTimestamp": "2026-09-16T12:55:00Z",
   "validationResponse": 200
 }
 </pre>
 
-The following example records a Validation with a failed dependency:
+The following example records a [=Validation=] with a failed dependency:
 
 <pre class='example json' title='Validation result with error'>
 {
-  "validationObject": "did:rwp:`<ns>`:`<record-id>`:`<versionHash>`",
+  "validationObject": "did:rwp:d2d14675-50c9-463d-b564-1ea50644c836:efd09e7b-5f65-4637-b06c-404a9da97f0b:474425f9f1f2d1fe78bcec3f41a579c02d5261161c489ab22296980075f37895",
   "validationType": "signature",
   "validationTimestamp": "2026-10-07T10:00:00Z",
   "validationResponse": 424,
-  "dependency": "did:rwp:`<ns>`:`<owner-id>`#key-1",
+  "dependency": "did:rwp:d2d14675-50c9-463d-b564-1ea50644c836:efd09e7b-5f65-4637-b06c-404a9da97f0b#key-2",
   "reason": "key-not-resolvable"
 }
 </pre>
 
 
-### Validation Response Codes ### {#subsection-record-integrity-validation-responsecode}
+### Validation Response Codes ### {#subsection-integrity-validation-responsecode}
 
-The `validationResponse` property communicates the result of a Validation for the identified `validationObject`.
+The `validationResponse` property communicates the result of a [=Validation=] for the identified `validationObject`.
 
 <table class="data">
   <thead><tr><th>Code</th><th>Name</th><th>Meaning</th></tr></thead>
   <tbody>
     <tr><td><code>200</code></td><td>OK</td><td>The applicable hash calculation was performed and the calculated hash equals the declared `recordHash`, `versionHash`, or `contentHash`.</td></tr>
-    <tr><td><code>400</code></td><td>Bad Request</td><td>The `validationObject` or the Validation request is syntactically or semantically invalid.</td></tr>
-    <tr><td><code>403</code></td><td>Forbidden</td><td>The identified object or information required to calculate its applicable hash exists or was identified, but the Consumer was not authorised to obtain it.</td></tr>
-    <tr><td><code>404</code></td><td>Not Found</td><td>The identified object, or information required to calculate its applicable hash, could not be found or resolved. A system MAY use this outcome to conceal the existence of an object it does not permit the Consumer to access.</td></tr>
-    <tr><td><code>406</code></td><td>Not Acceptable</td><td>The Consumer cannot process a required format, content type, representation, or other input required for the applicable calculation.</td></tr>
+    <tr><td><code>400</code></td><td>Bad Request</td><td>The `validationObject` or the [=Validation=] request is syntactically or semantically invalid.</td></tr>
+    <tr><td><code>403</code></td><td>Forbidden</td><td>The identified object or information required to calculate its applicable hash exists or was identified, but the [=Consumer=] was not authorised to obtain it.</td></tr>
+    <tr><td><code>404</code></td><td>Not Found</td><td>The identified object, or information required to calculate its applicable hash, could not be found or resolved. A system MAY use this outcome to conceal the existence of an object it does not permit the [=Consumer=] to access.</td></tr>
+    <tr><td><code>406</code></td><td>Not Acceptable</td><td>The [=Consumer=] cannot process a required format, content type, representation, or other input required for the applicable calculation.</td></tr>
     <tr><td><code>422</code></td><td>Unprocessable Content</td><td>The required input was available and the applicable hash calculation was performed, but the calculated hash does not equal the declared hash.</td></tr>
-    <tr><td><code>424</code></td><td>Failed Dependency</td><td>The Validation could not be completed because a required dependent resource or information was unavailable, incomplete, or could not be validated. Where the cause is a denied authorisation, 403 applies instead.</td></tr>
+    <tr><td><code>424</code></td><td>Failed Dependency</td><td>The [=Validation=] could not be completed because a required dependent resource or information was unavailable, incomplete, or could not be validated. Where the cause is a denied authorisation, 403 applies instead.</td></tr>
   </tbody>
 </table>
 
@@ -134,30 +137,25 @@ For results other than 200, two optional fields MAY be added:
 - `dependency`: DID or absolute IRI of the resource that was unavailable (424), e.g. the verification method or the SchemaRecord.
 - `reason`: short machine-readable text describing the cause, e.g. resolver-unreachable, key-not-resolvable, schema-not-found.
 
-The codes defined in this section are Validation result codes. They do not define HTTP response semantics.
+The codes defined in this section are [=Validation=] result codes. They do not define HTTP response semantics.
 
-When Validation is exposed through an HTTP API, server-side failures MAY be communicated using applicable HTTP 5xx response codes. Such API failures are not Validation result codes defined by RWP.
+When [=Validation=] is exposed through an HTTP API, server-side failures MAY be communicated using applicable HTTP 5xx response codes. Such API failures are not [=Validation=] result codes defined by RWP.
 
-A Consumer MUST NOT represent the result 403, 404, 406, or 424 as evidence that the object is invalid or has been altered. Only 422 indicates that the applicable hash calculation was performed and the calculated hash does not equal the declared hash.
+A [=Consumer=] MUST NOT represent the result 403, 404, 406, or 424 as evidence that the object is invalid or has been altered. Only 422 indicates that the applicable hash calculation was performed and the calculated hash does not equal the declared hash.
 
 
-## Hashing Procedure ## {#section-crypto-procedures-hashing}
+## Hashing Procedure ## {#section-integrity-hashing}
 
 RWP uses exclusively **SHA-256** as the hashing procedure for:
 
-- Version hashes (`versionHash`)
-- Representation hashes (`representations[].hash`)
+- [=Version=] hashes (`versionHash`)
+- [=Content=] hashes (`contentHash`)
 - Record-level hashes (`recordHash`)
 - Schema version hashes (`schemaVersion`)
 - Parent references (`parents`)
 - Merkle root calculations
 
 A system MUST NOT use any hashing procedure other than SHA-256 for normative integrity proofs.
-
-Note: A future version of RWP MAY permit SHA-3 or other procedures as an alternative if cryptographic weaknesses in SHA-256 become known. Until then, SHA-256 is the only permitted procedure.
-
-
-## Canonical JSON Serialisation ## {#section-crypto-procedures-canonical-json}
 
 For all hash calculations over JSON objects, **RFC 8785 (JSON Canonicalization Scheme, JCS)** [[RFC8785]] MUST be used.
 
@@ -169,27 +167,9 @@ Requirements:
 - Numbers MUST be represented in their canonical form
 
 
-## Version Integrity ## {#section-crypto-procedures-version-integrity}
+## Proof Procedure ## {#section-integriy-proof}
 
-A system MUST check the integrity of a [=version=] on the following events:
-
-- Receipt of a [=version=] from an external system
-- Retrieval of a [=version=] for a linking operation
-- Periodic integrity check
-
-If the integrity check fails, the system MUST:
-
-1. Mark the [=version=] as `compromised`
-2. Mark all dependent [=Records=] as `integrity-warning`
-3. Log the incident in the system log with timestamp and discrepancy
-4. Notify the responsible record owner via the DID (SHOULD)
-
-The system MUST NOT automatically attempt to reconstruct the original content.
-
-
-## Proof Procedure ## {#section-crypto-procedures-proof}
-
-If the schema prescribes `signaturePolicy` `owner` or `signaturePolicy` `system`, the finalisation act MUST attach at least one proof to the Version. A Version without `proof` is not finalized under such a policy.
+If the schema prescribes `signaturePolicy` `owner` or `signaturePolicy` `system`, the finalisation act MUST attach at least one <dfn>Proof</dfn> to the [=Version=]. A [=Version=] without `proof` is not finalized under such a policy.
 
 A proof MUST be a Data Integrity proof as defined by [[VC-DATA-INTEGRITY]] and MUST contain the following fields:
 
@@ -202,38 +182,31 @@ A proof MUST be a Data Integrity proof as defined by [[VC-DATA-INTEGRITY]] and M
     <tr><td>cryptosuite</td><td>MUST</td><td>`eddsa-jcs-2022` as defined by [[VC-DI-EDDSA]]</td></tr>
     <tr><td>created</td><td>MUST</td><td>ISO 8601 timestamp. SHOULD equal the `modifiedAt` of the Version.</td></tr>
     <tr><td>verificationMethod</td><td>MUST</td><td>DID URL of a verification method that is controlled by the signing party</td></tr>
-    <tr><td>proofPurpose</td><td>MUST</td><td>`assertionMethod`</td></tr>
-    <tr><td>proofValue</td><td>MUST</td><td>Multibase-encoded signature</td></tr>
+    <tr><td>purpose</td><td>MUST</td><td>`assertionMethod`</td></tr>
+    <tr><td>signature</td><td>MUST</td><td>Multibase-encoded signature</td></tr>
   </tbody>
 </table>
 
 <pre class='example json' title='DID Proof'>
 { 
-  "@context": [
-    "https://www.w3.org/ns/did/v1",
-    "https://w3id.org/security/data-integrity/v2"
-  ],
-  "id": "did:rwp:bern.ch:f47ac10b-58cc-4372-a567-0e02b2c3d479",
-  "updated": "2026-05-31T15:30:00Z",
   "proof": [{
     "type": "DataIntegrityProof",
     "cryptosuite": "eddsa-jcs-2022",
-    "created": "2026-05-31T15:30:00Z",
-    "verificationMethod": "did:rwp:`<namespace>`:`<agent-id>`#key-1",
-    "proofPurpose": "assertionMethod",
-    "proofValue": "z..."
+    "created": "2026-10-26T18:20:00Z",
+    "verificationMethod": "did:rwp:d2d14675-50c9-463d-b564-1ea50644c836:efd09e7b-5f65-4637-b06c-404a9da97f0b#key-1",
+    "purpose": "assertionMethod",
+    "signature": "zPkfn4jxbW8fYn84s3hDZ73nafs9tMgti3hQ5vm4RFpsYbDjf1ZrnzosLt66TrVEmtS5yiZMacVwx4MiNjyigUM7"
   }]
 }
 </pre>
 
-**Creation.** The unsecured document is the Version object including `versionHash` and excluding `proof`. The proof MUST be created according to the algorithm of the cryptosuite `eddsa-jcs-2022`, using RFC 8785 JSON Canonicalization. The resulting proof object is added to the `proof` array.
+**Creation.** The unsecured document is the [=Version=] object including `versionHash` and excluding `proof`. The proof MUST be created according to the algorithm of the cryptosuite `eddsa-jcs-2022`, using RFC 8785 JSON Canonicalization. The resulting proof object is added to the `proof` array.
 
-**Multiple proofs.** A Version MAY carry several proofs, for example from an institution and from a notary. Each proof is calculated independently over the unsecured document, never over another proof. Each proof MUST be verifiable on its own.
+**Multiple proofs.** A [=Version=] MAY carry several proofs, for example from an institution and from a notary. Each proof is calculated independently over the unsecured document, never over another proof. Each proof MUST be verifiable on its own.
 
-**DID document versions.** The same procedure applies to the proofs of DID document versions. A DID document version MUST carry at least one proof, independent of `signaturePolicy`. The unsecured document is the DID document version excluding `proof`.
+**DID document versions.** The same procedure applies to the proofs of DID document versions. A DID document version MUST carry at least one proof. The unsecured document is the DID document version excluding `proof`.
 
-**Verification.** A verifier MUST recalculate the `versionHash` according to [Version Hash Calculation](#section-version-hash-calculation). It MUST then verify at least one proof against the resolved verification method. A verifier decides according to its own trust policy which verification methods it accepts. A successful proof verification establishes that the holder of the verification method key signed this Version. It does not establish the authority of that holder. Evaluation of the key state at a given past time is outside the scope of this section.
+**Verification.** A [=Verifier=] MUST recalculate the `versionHash` according to [Version Hash Calculation](#section-integrity-versionHash). It MUST then verify at least one proof against the resolved verification method. A [=Verifier=] decides according to its own trust policy which verification methods it accepts. A successful proof verification establishes that the holder of the verification method key signed this [=Version=]. It does not establish the authority of that holder. Evaluation of the key state at a given past time is outside the scope of this section.
 
-**Key requirements.** The key MUST be an Ed25519 key. The verification method MUST be published in the DID document of the signing party. The signing party MUST be an [=AgentRecord=]; a verification method is not published in the DID documents of other Records. The key MUST be present in the current DID document version of the signing party at the time of signing. A key that is no longer present in the current version MUST NOT be used for new proofs.
+**Key requirements.** The key MUST be an Ed25519 key. The verification method MUST be published in the DID document of the signing party. The signing party MUST be an [=AgentRecord=]; a verification method is not published in the DID documents of other [=Records=]. The key MUST be present in the current DID document version of the signing party at the time of signing. A key that is no longer present in the current version MUST NOT be used for new proofs.
 
-**Other cryptosuites.** Only `eddsa-jcs-2022` is permitted in this version. Further cryptosuites MAY be added in a future version of this specification.

@@ -128,11 +128,11 @@ path: chapters/record-identity.bs
 </pre>
 
 <pre class=include>
-path: chapters/metadata.bs
+path: chapters/record-metadata.bs
 </pre>
 
 <pre class=include>
-path: chapters/payload.bs
+path: chapters/record-payload.bs
 </pre>
 
 <pre class=include>

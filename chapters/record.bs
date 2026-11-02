@@ -5,10 +5,10 @@ The Record {#chapter-record}
 
 Every <dfn>Record</dfn> has the meaning defined in [[ISO15489]] and MUST consist of exactly four components:
 
-1. [=Identity=]: the DID of the Record ([Record Identity (DID)](#chapter-record-identity))
-2. [=Metadata=]: descriptive dimensions of the Record ([Metadata](#chapter-metadata))
-3. [=Payload=]: the content of the Record ([Payload and Versions](#chapter-payload))
-4. [=Integrity=]: the hash of the Record ([Record Integrity](#chapter-record-integrity))
+1. [=Identity=]: the DID of the Record ([Record Identity (DID)](#chapter-identity))
+2. [=Metadata=]: descriptive dimensions of the Record ([Record Metadata](#chapter-metadata))
+3. [=Payload=]: the content of the Record ([Record Payload and Versions](#chapter-payload))
+4. [=Integrity=]: the hash of the Record ([Record Integrity](#chapter-integrity))
 
 <pre class='example json' title='Record components'>
 {
