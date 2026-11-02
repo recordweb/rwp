@@ -263,7 +263,7 @@ Such a [=Version=] MUST:
 - retain the DID of the [=Record=];
 - reference the superseded or revised [=versionHash=] in its `parents` field;
 - include a `correctionReason` or equivalent schema-defined rationale where applicable; and
-- complete the normal finalisation process defined in [Finalisation Requirements](#subsection-paylaod-finalisation).
+- complete the normal finalisation process defined in [Finalisation Requirements](#subsection-payload-finalisation).
 
 An implementation MUST NOT represent a correction, revision, replacement, or continuation of the same [=Record=] as a new [=Record=] that is related to the earlier [=Record=] only through an [=AssertionRecord=] or another cross-Record relationship.
 
