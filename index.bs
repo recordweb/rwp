@@ -25,11 +25,6 @@ Previous Version: https://doi.org/10.5281/zenodo.20475345
       "href": "https://www.w3.org/TR/did-core/",
       "publisher": "W3C"
   },
-  "HYPERLEDGER": {
-      "title": "Hyperledger Fabric",
-      "href": "https://www.hyperledger.org/projects/fabric",
-      "publisher": "Linux Foundation"
-  },
   "ISO15489": {
       "title": "Information and documentation — Records management, Part 1: Concepts and principles",
       "href": "https://www.iso.org/standard/62542.html",
@@ -57,12 +52,6 @@ Previous Version: https://doi.org/10.5281/zenodo.20475345
     "href": "https://www.rfc-editor.org/rfc/rfc3987",
     "publisher": "IETF",
     "date": "2005"
-  },
-  "RFC8037": {
-      "title": "CFRG Elliptic Curves for JOSE and COSE (Ed25519)",
-      "href": "https://www.rfc-editor.org/rfc/rfc8037",
-      "publisher": "IETF",
-      "date": "2017"
   },
   "RFC8785": {
       "title": "JSON Canonicalization Scheme (JCS)",

@@ -42,7 +42,7 @@ An AssertionRecord MUST NOT be interpreted as modifying the subject or object. I
 
 An AssertionRecord MUST contain a `predicate` field.
 
-The value of `predicate` MUST be an absolute IRI conforming to [[!RFC3987]]. The predicate IRI MUST identify a relationship term permitted by the [Relationship Vocabulary](#chapter-relationship-vocabulary).
+The value of `predicate` MUST be an absolute IRI conforming to [[!RFC3987]]. The predicate IRI MUST identify a relationship term permitted by the [Relationship Vocabulary](#section-assertionrecord-vocabulary).
 
 The meaning of an asserted relationship MUST NOT be carried solely by unconstrained natural-language text. A human-readable predicate label MAY be provided as optional, localised presentation metadata. Such a label MUST NOT replace the `predicate` IRI and MUST NOT be used as the sole basis for semantic interpretation or validation.
 

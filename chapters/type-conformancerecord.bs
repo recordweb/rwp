@@ -94,7 +94,7 @@ An implementation claiming `RWP Assertion Record Conformant` MUST satisfy the ap
 
 A producer claiming this profile MUST create AssertionRecords with a valid SchemaRecord, a permitted predicate IRI, valid subject and object references, an asserting Agent, a time of assertion, and the required Record integrity evidence.
 
-A consumer claiming this profile MUST validate AssertionRecords in accordance with [AssertionRecord validation](#section-assertionrecord-validation) and [Relationship Vocabulary scope](#section-relationship-vocabulary-scope).
+A consumer claiming this profile MUST validate AssertionRecords in accordance with [AssertionRecord validation](#section-assertionrecord-validation) and [Relationship Vocabulary scope](#section-assertionrecord-vocabulary).
 
 A custodian claiming this profile MUST retain and make retrievable the AssertionRecord versions for which it acts as custodian.
 
