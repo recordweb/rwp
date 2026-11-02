@@ -28,9 +28,9 @@ RWP defines the following core [=Record types=]:
 - Various (see [AgentRecord Specification](#chapter-agentrecord))
 
 **System Records:**
-- `SchemaRecord` (see [SchemaRecord](#chapter-schema-record))
-- `ConformanceRecord` (see [Conformance and Implementation Claims](#chapter-conformance))
-- `DeletionRecord` (see [Payload Deletion](#chapter-deletion))
+- `SchemaRecord` (see [SchemaRecord](#chapter-schemarecord))
+- `ConformanceRecord` (see [Conformance and Implementation Claims](#chapter-conformancerecord))
+- `DeletionRecord` (see [Payload Deletion](#chapter-deletionrecord))
 - `MergeRecord` (TBD)
 - `MigrationRecord` (TBD)
 
@@ -96,7 +96,7 @@ rw:ConformanceRecord
 
 Every [=Record=] has one primary conceptual purpose. For the purposes of this specification, a [=Record=] is classified as an [=InformationRecord=], a [=RelationRecord=], an [=AgentRecord=] or a [=SystemRecord=].
 
-Any concrete Record Type is defined by a SchemaRecord in accordance with [Record Type Definition](#section-record-types-definition).
+Any concrete Record Type is defined by a SchemaRecord in accordance with [Record Type Definition](#section-types-definition).
 
 The taxonomy is normative for the interpretation of this specification. It MUST NOT be interpreted as a mandatory implementation inheritance hierarchy, a mandatory JSON type hierarchy, or a replacement for concrete [=Record Types=] and their SchemaRecords.
 

@@ -1,4 +1,4 @@
-ConformanceRecord Specification {#chapter-conformance}
+ConformanceRecord Specification {#chapter-conformancerecord}
 =====================================================
 
 ## Scope of conformance ## {#section-conformance-scope}
@@ -326,7 +326,7 @@ An implementation MUST NOT claim support for a profile or role unless it fulfils
 
 ## ConformanceRecord ## {#section-conformance-record}
 
-A <dfn>ConformanceRecord</dfn> is a SystemRecord that preserves an attestation concerning an identifiable implementation version.
+A [=ConformanceRecord=] is a SystemRecord that preserves an attestation concerning an identifiable implementation version.
 
 A ConformanceRecord MUST satisfy all normal Record requirements, including DID, schema association, version integrity, finalisation, and the applicable signature requirements.
 

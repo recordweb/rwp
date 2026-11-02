@@ -3,7 +3,7 @@ AssertionRecord Specification {#chapter-assertionrecord}
 
 ## Purpose and scope ## {#section-assertionrecord-purpose}
 
-An <dfn>AssertionRecord</dfn> is a [=RelationRecord=] that preserves an attributable assertion that a subject resource stands in a specified relationship to an object resource.
+An [=AssertionRecord=] is a [=RelationRecord=] that preserves an attributable assertion that a subject resource stands in a specified relationship to an object resource.
 
 An AssertionRecord is itself a [=Record=]. It has its own identity, state, version history, schema association, metadata and integrity evidence. It does not modify, finalise, merge, delete, or otherwise change either the subject or the object to which it refers.
 

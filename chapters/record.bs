@@ -19,7 +19,7 @@ Every <dfn>Record</dfn> has the meaning defined in [[ISO15489]] and MUST consist
 }
 </pre>
 
-Any concrete Record is typed by `metadata.core.recordType` and `metadata.core.schemaVersion`, based on a [SchemaRecord](#chapter-schema-record).
+Any concrete Record is typed by `metadata.core.recordType` and `metadata.core.schemaVersion`, based on a [SchemaRecord](#chapter-schemarecord).
 
 
 ## Taxonomy ## {#section-record-taxonomy}

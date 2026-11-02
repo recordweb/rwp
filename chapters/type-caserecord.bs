@@ -3,7 +3,7 @@ CaseRecord Specification {#chapter-caserecord}
 
 ## Case as a specialised Record Type {#section-case-type}
 
-A <dfn>CaseRecord</dfn> is a [=RelationRecord=] and a concrete [Record type](#section-record-types-definition). It is subject to all requirements that apply to [=Records=] and supplements them with the Case-specific requirements defined in this section.
+A [=CaseRecord=] is a [=RelationRecord=] and a concrete [Record type](#section-types-definition). It is subject to all requirements that apply to [=Records=] and supplements them with the Case-specific requirements defined in this section.
 
 A CaseRecord is a persisted, governed view of linked Records. It is itself a Record with its own identity, state, version history, schema association, metadata, and integrity evidence.
 

@@ -43,7 +43,7 @@ A new DID document version MUST be created, and `currentVersionHash` and `update
 
 - a [=Record=] version is finalised;
 - the storage location (`recordEndpoint`) changes;
-- a payload deletion is executed (see [Payload Deletion](#chapter-deletion));
+- a payload deletion is executed (see [Payload Deletion](#chapter-deletionrecord));
 - `service` or `proof` are added, changed or removed.
 
 A new version MUST reference the current latest version as `previousVersionHash`. A [=producer=] or [=custodian=] MUST reject a new version whose `previousVersionHash` is not the `versionHash` of the latest version.
@@ -89,7 +89,7 @@ This specification defines the following `type` values:
   <tbody>
     <tr><td><code>RWPPublicRecordAccess</code></td><td>Endpoint returning a restricted or public view of the [=Record=] for requesters without full access rights</td></tr>
     <tr><td><code>RWPRecordReferrers</code></td><td>Endpoint returning all finalised `RelationRecords` ([=CaseRecord=] and [=AssertionRecord=]) referring to this [=Record=] within the same namespace. The response contains a list of records each with a list of finalised versions</td></tr>
-    <tr><td><code>RWPFunctionRegistry</code></td><td>Endpoint returning a machine-readable list of the functions supported for the [=Record=], derived from the `capabilities` of its [=SchemaRecord=] (see [SchemaRecord](#chapter-schema-record))</td></tr>
+    <tr><td><code>RWPFunctionRegistry</code></td><td>Endpoint returning a machine-readable list of the functions supported for the [=Record=], derived from the `capabilities` of its [=SchemaRecord=] (see [SchemaRecord](#chapter-schemarecord))</td></tr>
   </tbody>
 </table>
 
