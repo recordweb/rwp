@@ -128,12 +128,12 @@ path: chapters/record-payload.bs
 path: chapters/record-integrity.bs
 </pre>
 
+
+<h2 class="no-num no-toc" id="part-3">Part II: Typed Records</h2>
+
 <pre class=include>
 path: chapters/record-types.bs
 </pre>
-
-
-<h2 class="no-num no-toc" id="part-3">Part II: Typed Records</h2>
 
 <pre class=include>
 path: chapters/type-caserecord.bs
