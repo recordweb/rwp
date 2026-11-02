@@ -1,24 +1,31 @@
-Record Types and SchemaRecord {#chapter-record-types}
+Record Types {#chapter-types}
 =======================================
 
-## Record Type Definition ## {#section-record-types-definition}
+## Definition ## {#section-types-definition}
 
-Every [=Record=] MUST be assigned to a Record type. A Record type:
+Every [=Record=] MUST be assigned to a <dfn>Record Type</dfn>. A Record type:
 
-- defines the schema of the [=payload=]
+- defines the schema of the [=Payload=]
 - defines the permitted states and their transitions
 - defines the format requirements per state
-- defines mandatory and optional [=metadata=] fields beyond `metadata.core` (see [Metadata](#chapter-metadata))
+- defines mandatory and optional [=Metadata=] fields (see [Metadata](#chapter-metadata))
 - is itself a [=Record=] of the type `SchemaRecord`
 
 
 ## Core Record Types ## {#section-record-types-core}
 
-RWP defines the following core Record types (with DID Suffix):
+RWP defines the following core [=Record types=]:
+
+**Information Records:**
+- `ObjectRecord` (TBD)
+- `DocumentRecord` (TBD)
 
 **Relation Records:**
 - `CaseRecord` (see [CaseRecord Specification](#chapter-caserecord))
 - `AssertionRecord` (see [AssertionRecord  Specification](#chapter-assertionrecord))
+
+**Agent Records:**
+- Various (see [AgentRecord Specification](#chapter-agentrecord))
 
 **System Records:**
 - `SchemaRecord` (see [SchemaRecord](#chapter-schema-record))
@@ -27,18 +34,21 @@ RWP defines the following core Record types (with DID Suffix):
 - `MergeRecord` (TBD)
 - `MigrationRecord` (TBD)
 
-The conformance requirements for these Record types are profile-, role-, and capability-specific. An implementation MUST support a core Record type only where this specification requires that support for a claimed profile, role, or exercised capability.
+The conformance requirements for these [=Record types=] are profile-, role-, and capability-specific. An implementation MUST support a core [=Record type=] only where this specification requires that support for a claimed profile, role, or exercised capability.
 
 The capability-bound requirements are defined in [Capability-bound requirements](#section-conformance-requirements).
 
-Additional Record types MAY be defined by organisations or standards bodies. They MUST be published as [=SchemaRecords=] and be resolvable via a DID.
+Additional [=Record types=] MAY be defined by organisations or standards bodies. They MUST be published as [=SchemaRecords=] and be resolvable via a DID.
 
 
-## Record types taxonomy ## {#section-types-taxonomy}
+## Taxonomy ## {#section-types-taxonomy}
 
 ```text
 @prefix prov: <http://www.w3.org/ns/prov#> .
 @prefix rw:   <https://w3id.org/recordweb/ontology#> .
+
+rw:Record
+  rdfs:subClassOf prov:Entity .
 
 rw:InformationRecord
   rdfs:subClassOf rw:Record .
@@ -49,11 +59,23 @@ rw:RelationRecord
 rw:SystemRecord
   rdfs:subClassOf rw:Record .
 
+rw:ObjectRecord
+  rdfs:subClassOf rw:InformationRecord .
+
+rw:DocumentRecord
+  rdfs:subClassOf rw:InformationRecord .
+
 rw:CaseRecord
   rdfs:subClassOf rw:RelationRecord .
 
 rw:AssertionRecord
   rdfs:subClassOf rw:RelationRecord .
+
+rw:Agent
+  rdfs:subClassOf prov:Agent .
+
+rw:AgentRecord
+  rdfs:subClassOf rw:Agent .
 
 rw:SchemaRecord
   rdfs:subClassOf rw:SystemRecord .
@@ -70,111 +92,38 @@ rw:MigrationRecord
 rw:ConformanceRecord
   rdfs:subClassOf rw:SystemRecord .
 
-rw:Agent
-  rdfs:subClassOf prov:Agent .
-
-rw:AgentRecord
-  rdfs:subClassOf rw:Agent .
 ```
 
-Every [=Record=] has one primary conceptual purpose. For the purposes of this specification, a Record is classified as an [=InformationRecord=], a [=RelationRecord=], an [=AgentRecord=] or a [=SystemRecord=], as described in [[RWC]].
+Every [=Record=] has one primary conceptual purpose. For the purposes of this specification, a [=Record=] is classified as an [=InformationRecord=], a [=RelationRecord=], an [=AgentRecord=] or a [=SystemRecord=].
 
 Any concrete Record Type is defined by a SchemaRecord in accordance with [Record Type Definition](#section-record-types-definition).
 
-The taxonomy is normative for the interpretation of this specification. It MUST NOT be interpreted as a mandatory implementation inheritance hierarchy, a mandatory JSON type hierarchy, or a replacement for concrete Record Types and their SchemaRecords.
+The taxonomy is normative for the interpretation of this specification. It MUST NOT be interpreted as a mandatory implementation inheritance hierarchy, a mandatory JSON type hierarchy, or a replacement for concrete [=Record Types=] and their SchemaRecords.
 
 An <dfn>InformationRecord</dfn> is a Record whose primary purpose is to carry semantically autonomous institutional or domain information.
 
-Every InformationRecord MUST conform to a concrete Record Type.  This specification does not provide a list of InformationRecord Types.
+An <dfn>ObjectRecord</dfn> is an [=InformationRecord=]. TBD
+
+A <dfn>DocumentRecord</dfn> is an [=InformationRecord=]. TBD
 
 A <dfn>RelationRecord</dfn> is a Record whose primary purpose is to establish, preserve, and make provable a meaningful relationship between Records.
 
+A <dfn>CaseRecord</dfn> is a [=RelationRecord=]. It represents a persisted, governed view of linked Records. A CaseRecord MUST NOT be a container and MUST NOT contain the payload of the Records to which it relates. The protocol representation and validation requirements for CaseRecords are defined in [CaseRecord Specification](#chapter-caserecord).
+
+An <dfn>AssertionRecord</dfn> is a [=RelationRecord=]. It represents an attributable assertion that a subject resource stands in a specified relationship to an object resource. The protocol representation and validation requirements for AssertionRecords are defined in [AssertionRecord Specification](#chapter-assertionrecord).
+
+An <dfn>AgentRecord</dfn> is a Record whose primary purpose is to identifies an entity that bears responsibility for a [=Record=], in the sense of prov:Agent ([[PROVO]]).
+
 A <dfn>SystemRecord</dfn> is a Record whose primary purpose is to define, document, or prove a RecordWeb system rule, operation, or capability.
 
-A [=CaseRecord=] is a [=RelationRecord=]. It represents a persisted, governed view of linked Records. A CaseRecord MUST NOT be a container and MUST NOT contain the payload of the Records to which it relates. The protocol representation and validation requirements for CaseRecords are defined in [CaseRecord Specification](#chapter-caserecord).
+A <dfn>SchemaRecord</dfn> is a [=SystemRecord=]. It defines a concrete Record Type and its associated schema and validation requirements defined in [SchemaRecord Specification](#chapter-schemarecord).
 
-An [=AssertionRecord=] is a [=RelationRecord=]. It represents an attributable assertion that a subject resource stands in a specified relationship to an object resource. The protocol representation and validation requirements for AssertionRecords are defined in [AssertionRecord Specification](#chapter-assertionrecord).
+A <dfn>MergeRecord</dfn> is a [=SystemRecord=]. TBD
 
-An <dfn>AgentRecord</dfn> is a Record whose primary purpose is to identifies an entity that bears responsibility for a [=Record=], in the sense of prov:Agent ([[PROVO]]). The protocol representation and validation requirements for AgentRecords are defined in [AgentRecord Specification](#chapter-agentrecord).
+A <dfn>DeletionRecord</dfn> is a [=SystemRecord=]. See [DeletionRecord Specification](#chapter-deletionrecord).
 
-A [=SchemaRecord=] is a [=SystemRecord=]. It defines a concrete Record Type and its associated schema and validation requirements.
+A <dfn>MigrationRecord</dfn> is a [=SystemRecord=]. TBD
 
-A MergeRecord is a [=SystemRecord=].
-
-A DeletionRecord is a [=SystemRecord=].
-
-A MigrationRecord is a [=SystemRecord=].
-
-A [=ConformanceRecord=] is a [=SystemRecord=].
-
-
-## SchemaRecord ## {#chapter-schema-record}
-
-A <dfn>SchemaRecord</dfn> is a specialised Record type that carries the definition of another Record type.
-
-A [=SchemaRecord=] MUST:
-
-- fulfil all requirements for a regular [=Record=] (DID, metadata, version graph)
-- contain a JSON Schema (Draft 2020-12 or later, [[JSON-SCHEMA]]) in the payload
-- contain the field `rwpSchemaVersion` in the payload with the RWP version for which it is valid
-- contain the field `allowedStates` in the payload with the permitted states and their transitions
-- contain the field `payloadFormats` in the payload with the permitted formats per state
-
-A [=SchemaRecord=] MAY:
-
-- contain the field `capabilities` in the payload, an array of operation identifiers (strings) declaring the functions applicable to [=Records=] of this type
-
-
-**Minimal SchemaRecord payload example:**
-
-<pre class='example json' title='Minimal SchemaRecord'>
-{
-  "rwpSchemaVersion": "0.1",
-  "schemaId": "did:rwp:bern.ch:schema-building-permit-application",
-  "displayName": "Building Permit Application",
-  "allowedStates": ["draft", "finalized"],
-  "stateTransitions": [
-    { "from": "draft", "to": "finalized", "requiresOwnerSignature": true }
-  ],
-  "payloadFormats": {
-    "draft": ["application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-              "text/markdown"],
-    "finalized": ["application/pdf;profile=PDF-A-2b"]
-  },
-  "capabilities": ["retrieve", "compare", "validate", "publish"],
-  "jsonSchema": {
-    "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "type": "object",
-    "required": ["parcelNumber", "applicant", "constructionProject", "date"],
-    "properties": {
-      "parcelNumber": { "type": "string" },
-      "applicant": { "type": "string" },
-      "constructionProject": { "type": "string" },
-      "date": { "type": "string", "format": "date" }
-    }
-  }
-}
-</pre>
-
-
-## Schema Versioning and Backward Compatibility ## {#section-schema-record-versioning}
-
-When a [=SchemaRecord=] is finalised in a new version, the following applies:
-
-- Existing versions referencing an earlier schema version REMAIN valid
-- The new schema MUST contain the field `previousSchemaVersion` in the payload with the hash of the predecessor schema
-- Systems MUST keep all schema versions referenced by existing [=Records=] permanently accessible
-- A system MUST NOT retroactively change an existing [=SchemaRecord=], corrections are made as a new version
-
-
-## Capability Declaration ## {#section-schema-record-capabilities}
-
-The `capabilities` field declares which functions are applicable to [=Records=] of the type defined by this [=SchemaRecord=]. Each entry is an operation identifier, for example `retrieve`, `compare`, `validate`, `publish`, or a Record-Type-specific operation.
-
-The declaration is descriptive. It states that the Record Type supports an operation; it does not oblige a resolver to implement it, and it does not grant access (see [Access Control](#chapter-access-control)).
-
-A resolver MAY use the `capabilities` of the [=SchemaRecord=] to populate the `RWP-FunctionRegistry` service entry in the DID documents of [=Records=] of this type (see [Service Entries](#section-didoc-service)).
-
-A change to `capabilities` is a change to the [=SchemaRecord=] and MUST be made as a new version (see [Schema Versioning](#section-schema-record-versioning)).
+A <dfn>ConformanceRecord</dfn> is a [=SystemRecord=]. TBD
 
 

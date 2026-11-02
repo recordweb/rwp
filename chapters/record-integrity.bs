@@ -54,9 +54,7 @@ A [=Consumer=] MUST NOT represent the integrity of a RecordWeb object as success
 
 A [=Consumer=] MAY retain, exchange, display, or discard a Validation result. RWP does not require a [=Consumer=] to retain a Validation result or to create a RecordWeb [=Record=] for that purpose.
 
-<pre class='note' title='Validation'>
-RWP does not require a Consumer to perform a Validation, does not prescribe when a Consumer performs a Validation, and does not prescribe the business, legal, or operational consequence of a Validation result.
-</pre>
+Note: RWP does not require a Consumer to perform a Validation, does not prescribe when a Consumer performs a Validation, and does not prescribe the business, legal, or operational consequence of a Validation result.
 
 
 ### Validation Object ### {#subsection-integrity-validation-object}

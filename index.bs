@@ -113,7 +113,7 @@ path: chapters/scope.bs
 </pre>
 
 
-<h2 class="no-num no-toc" id="part-2">Part I: The Record Model</h2>
+<h2 class="no-num no-toc" id="part-2">Part I: Record Model</h2>
 
 <pre class=include>
 path: chapters/record.bs
@@ -147,20 +147,15 @@ path: chapters/record-types.bs
 path: chapters/issuance.bs
 </pre>
 
-<pre class=include>
-path: chapters/deletion.bs
-</pre>
 
-
-
-<h2 class="no-num no-toc" id="part-3">Part II: Relation Records</h2>
+<h2 class="no-num no-toc" id="part-3">Part II: Typed Records</h2>
 
 <pre class=include>
-path: chapters/caserecord.bs
+path: chapters/type-caserecord.bs
 </pre>
 
 <pre class=include>
-path: chapters/assertionrecord.bs
+path: chapters/type-assertionrecord.bs
 </pre>
 
 <pre class=include>
@@ -168,9 +163,20 @@ path: chapters/relationship-vocabulary.bs
 </pre>
 
 <pre class=include>
-path: chapters/agent-record.bs
+path: chapters/type-agentrecord.bs
 </pre>
 
+<pre class=include>
+path: chapters/type-schemarecord.bs
+</pre>
+
+<pre class=include>
+path: chapters/type-deletionrecord.bs
+</pre>
+
+<pre class=include>
+path: chapters/type-conformancerecord.bs
+</pre>
 
 <h2 class="no-num no-toc" id="part-7">Part III: Miscellaneous</h2>
 
@@ -190,9 +196,6 @@ path: chapters/ledger.bs
 path: chapters/privacy-security.bs
 </pre>
 
-<pre class=include>
-path: chapters/conformance.bs
-</pre>
 
 
 <h2 class="no-num no-toc" id="part-8">Part IV: Annexes</h2>

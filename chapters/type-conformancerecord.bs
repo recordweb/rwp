@@ -1,4 +1,4 @@
-Conformance and Implementation Claims {#chapter-conformance}
+ConformanceRecord Specification {#chapter-conformance}
 =====================================================
 
 ## Scope of conformance ## {#section-conformance-scope}

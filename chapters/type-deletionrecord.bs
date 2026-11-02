@@ -1,4 +1,4 @@
-Payload Deletion {#chapter-deletion}
+DeletionRecord Specification {#chapter-deletionrecord}
 =========================================
 
 ## Deletion Principles ## {#section-deletion-principles}
