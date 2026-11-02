@@ -143,10 +143,6 @@ path: chapters/record-integrity.bs
 path: chapters/record-types.bs
 </pre>
 
-<pre class=include>
-path: chapters/issuance.bs
-</pre>
-
 
 <h2 class="no-num no-toc" id="part-3">Part II: Typed Records</h2>
 
@@ -156,10 +152,6 @@ path: chapters/type-caserecord.bs
 
 <pre class=include>
 path: chapters/type-assertionrecord.bs
-</pre>
-
-<pre class=include>
-path: chapters/relationship-vocabulary.bs
 </pre>
 
 <pre class=include>
@@ -185,17 +177,20 @@ path: chapters/federation.bs
 </pre>
 
 <pre class=include>
-path: chapters/access-control.bs
+path: chapters/issuance.bs
 </pre>
 
 <pre class=include>
-path: chapters/ledger.bs
+path: chapters/access-control.bs
 </pre>
 
 <pre class=include>
 path: chapters/privacy-security.bs
 </pre>
 
+<pre class=include>
+path: chapters/ledger.bs
+</pre>
 
 
 <h2 class="no-num no-toc" id="part-8">Part IV: Annexes</h2>
