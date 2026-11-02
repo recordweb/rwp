@@ -34,7 +34,7 @@ The capability-bound requirements are defined in [Capability-bound requirements]
 Additional Record types MAY be defined by organisations or standards bodies. They MUST be published as [=SchemaRecords=] and be resolvable via a DID.
 
 
-## Record taxonomy ## {#section-record-taxonomy}
+## Record types taxonomy ## {#section-types-taxonomy}
 
 ```text
 @prefix prov: <http://www.w3.org/ns/prov#> .

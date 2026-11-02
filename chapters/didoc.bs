@@ -3,7 +3,7 @@ The DID Document {#chapter-didoc}
 
 ## Definition ## {#section-didoc-definition}
 
-For every Record, a DID document MUST exist. A DID document is a chain of immutable DID document versions (see [DID Document History](#section-didoc-history)). Each version contains the following fields:
+For every Record, a <dfn>DID Document</dfn> MUST exist. A DID document is a chain of immutable DID document versions (see [DID Document History](#section-didoc-history)). Each version contains the following fields:
 
 <table class="data">
   <thead>

@@ -167,7 +167,7 @@ Requirements:
 - Numbers MUST be represented in their canonical form
 
 
-## Proof Procedure ## {#section-integriy-proof}
+## Proof Procedure ## {#section-integrity-proof}
 
 If the schema prescribes `signaturePolicy` `owner` or `signaturePolicy` `system`, the finalisation act MUST attach at least one <dfn>Proof</dfn> to the [=Version=]. A [=Version=] without `proof` is not finalized under such a policy.
 
