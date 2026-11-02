@@ -25,7 +25,7 @@ The following technology choices are recommended for a first RWP implementation:
 
 For a first pilot, the following Level 1 subset is recommended:
 
-1. Implement DID generation and the [DID Format](#section-did-format) and [DID Document](#section-didoc) requirements
+1. Implement DID generation and the [DID Format](#section-did-format) and [DID Document](#section-didoc-definition) requirements
 2. Implement version creation with the [Metadata](#chapter-metadata)
 3. Implement [Version Hash Calculation](#section-version-hash-calculation)
 4. Implement the `draft` → `finalized` state transition with [Finalisation Requirements](#subsection-finalisation-requirements)
