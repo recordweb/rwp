@@ -188,10 +188,6 @@ path: chapters/access-control.bs
 path: chapters/privacy-security.bs
 </pre>
 
-<pre class=include>
-path: chapters/ledger.bs
-</pre>
-
 
 <h2 class="no-num no-toc" id="part-8">Part IV: Annexes</h2>
 
