@@ -70,6 +70,7 @@ RWP defines the following implementation roles:
 5. A <dfn>source-adapter</dfn> obtains, normalises, and exposes source-provenance information from a non-RWP source system. A source-adapter MAY provide source content to a producer through a mutually agreed mechanism. A source-adapter MUST NOT represent a source-integrity statement as an RWP Record-integrity statement unless it has also created and validated the corresponding RWP Record representation.
 6. An <dfn>attester</dfn> creates and finalises a ConformanceRecord concerning an implementation assessment.
 7. A <dfn>verifier</dfn> verifies a [=Record=], a [=Version=] a [=Content=] or a [=DID Document=]
+
 A role describes a responsibility. It does not imply that an implementation fulfils requirements outside its claimed profiles, roles, or exercised capabilities.
 
 An implementation MAY perform more than one RWP role.
