@@ -9,7 +9,7 @@ When present, the `payload` property MUST contain one or more Version objects.
 
 Each Version object MUST contain one or more Representations.
 
-A Version object represents a specific materialised version of a Record. The `versionHash` property identifies that Version and provides its integrity value as defined in [[#section-version-hash-calculation]].
+A Version object represents a specific materialised version of a Record. The `versionHash` property identifies that Version and provides its integrity value as defined in [[#section-integrity-versionHash]].
 
 A payload entry that does not contain at least one valid Representation is not a Version and MUST NOT be used as a payload entry.
 
@@ -50,12 +50,12 @@ The <dfn>payload</dfn> of a [=Record=] is an ordered array of <dfn>versions</dfn
     <tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr>
   </thead>
   <tbody>
-    <tr><td><code>versionHash</code></td><td>SHA-256</td><td>MUST</td><td>Contains the hash calculated in accordance with [[#section-version-hash-calculation]].</td></tr>
+    <tr><td><code>versionHash</code></td><td>SHA-256</td><td>MUST</td><td>Contains the hash calculated in accordance with [[#section-integrity-versionHash]].</td></tr>
     <tr><td><code>state</code></td><td>Enum</td><td>MUST</td><td><code>draft</code> or <code>finalized</code>; additional values permitted per type schema</td></tr>
     <tr><td><code>parents</code></td><td>Array&lt;SHA-256&gt;</td><td>MUST</td><td>Hashes of predecessor Versions; empty for the root Version</td></tr>
     <tr><td><code>createdAt</code></td><td>ISO 8601</td><td>MUST</td><td>Timestamp of Version creation</td></tr>
     <tr><td><code>modifiedAt</code></td><td>ISO 8601</td><td>MUST</td><td>Timestamp of the last change to this Version. For a <code>finalized</code> Version this is the finalisation timestamp, since a finalized version cannot change thereafter.</td></tr>
-    <tr><td><code>proof</code></td><td>Array of Proof</td><td>MUST (when finalized, unless the schema defines `signaturePolicy` `none`)</td><td>One or more Data Integrity proofs over the finalized Version. See [Proof Procedure](#section-crypto-procedures-proof).</td></tr>
+    <tr><td><code>proof</code></td><td>Array of Proof</td><td>MUST (when finalized, unless the schema defines `signaturePolicy` `none`)</td><td>One or more Data Integrity proofs over the finalized Version. See [Proof Procedure](#section-integrity-proof).</td></tr>
     <tr><td><code>representations</code></td><td>Array</td><td>MUST (min. 1)</td><td>Format representations of this versions's content, per [Representation](#section-payload-representation)</td></tr>
   </tbody>
 </table>
@@ -96,7 +96,7 @@ If a Version contains multiple representations, ALL of the following MUST apply:
   <tbody>
     <tr><td><code>format</code></td><td>string</td><td>MUST</td><td>MIME type incl. profiles</td></tr>
     <tr><td><code>content</code></td><td>blob</td><td>MUST WHEN no ref exists</td><td> Contains the inline content of the Representation</td></tr>
-    <tr><td><code>contentHash</code></td><td>SHA-256</td><td>MUST WHEN content exists</td><td>Contains the hash calculated in accordance with [[#section-content-hash-calculation]]</td></tr>
+    <tr><td><code>contentHash</code></td><td>SHA-256</td><td>MUST WHEN content exists</td><td>Contains the hash calculated in accordance with [[#section-integrity-contentHash]]</td></tr>
     <tr><td><code>ref</code></td><td>string</td><td>MUST WHEN no content exists</td><td>Contains a reference to externally held, locally held, or physical content</td></tr>
     <tr><td><code>primary</code></td><td>boolean</td><td>MUST</td><td>Exactly one representation MUST be <code>true</code></td></tr>
     <tr><td><code>role</code></td><td>string</td><td>SHOULD</td><td>Semantic role: <code>source</code>, <code>publication</code>, <code>preview</code>, <code>archive</code></td></tr>

@@ -1,7 +1,7 @@
 Metadata {#chapter-metadata}
 =================================
 
-<dfn>Metadata</dfn> is the descriptive and governing information attached to a [=Record=], independent of its `payload`. Unlike `payload` entries, `metadata` is not itself versioned as a sequence of versions; it MAY be updated in place. Metadata changes are nonetheless covered by the Record-level `recordHash` defined in [Record Integrity](#chapter-record-integrity), so that any change to `metadata` is detectable.
+<dfn>Metadata</dfn> is the descriptive and governing information attached to a [=Record=], independent of its `payload`. Unlike `payload` entries, `metadata` is not itself versioned as a sequence of versions; it MAY be updated in place. Metadata changes are nonetheless covered by the Record-level `recordHash` defined in [Record Integrity](#chapter-integrity), so that any change to `metadata` is detectable.
 
 Metadata is organised into three groups: `core`, `governance`, and `extensions`.
 

@@ -28,7 +28,7 @@ An implementation claiming the `resolver` role MAY make a role-only claim withou
 
 ### Record validation ### {#subsection-record-validation}
 
-See [validation](#section-record-integrity-validation)
+See [validation](#section-integrity-validation)
 
 
 ### Implementation assessment ### {#subsection-implementation-assessment}

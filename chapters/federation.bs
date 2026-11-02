@@ -23,7 +23,7 @@ The GNR is not a DID Resolver. It does not resolve individual `did:rwp` identifi
 
 ### Scope ### {#subsection-gnr-scope}
 
-For a Global Namespace Identifier, as defined in [Record Identity](#chapter-record-identity), the GNR MUST provide routing information identifying the DID Resolver responsible for resolving DIDs within that namespace.
+For a Global Namespace Identifier, as defined in [Record Identity](#chapter-identity), the GNR MUST provide routing information identifying the DID Resolver responsible for resolving DIDs within that namespace.
 
 The GNR MUST NOT resolve or store any of the following:
 
@@ -38,7 +38,7 @@ implementation technology.
 
 ### Namespace Classification ### {#subsection-gnr-classification}
 
-A conforming GNR implementation MUST classify the namespace component of a `did:rwp` identifier, per [Record Identity](#chapter-record-identity), before attempting resolution.
+A conforming GNR implementation MUST classify the namespace component of a `did:rwp` identifier, per [Record Identity](#chapter-identity), before attempting resolution.
 
 For a globally resolvable RWP DID, the GNR Resolver MUST obtain the DID Resolver endpoint through a configured GNR peer before attempting DID resolution.
 
@@ -70,7 +70,7 @@ The GNR MUST be operated on Hyperledger Fabric. This requirement ensures interop
 
 ### Registry Data Model ### {#subsection-gnr-datamodel}
 
-The GNR MUST accept registrations only for Global Namespace Identifiers, per [Record Identity](#chapter-record-identity), and MUST reject registrations of locally scoped namespaces.
+The GNR MUST accept registrations only for Global Namespace Identifiers, per [Record Identity](#chapter-identity), and MUST reject registrations of locally scoped namespaces.
 
 The Global Namespace Identifier MUST serve as the unique key for its current routing record. For every registered namespace, the current routing record MUST contain at least:
 

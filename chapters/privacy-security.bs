@@ -11,7 +11,7 @@ The `payload-only` deletion regime removes payload bytes but retains the DID, me
 
 ## Security ## {#section-security-considerations}
 
-The integrity and proof procedures defined in [Integrity and Proofs](#chapter-record-integrity) provide evidence of the integrity of a version and, where applicable, of the verification method used to sign it. They do not by themselves establish confidentiality, authorisation, or the substantive correctness of a Record.
+The integrity and proof procedures defined in [Integrity and Proofs](#chapter-integrity) provide evidence of the integrity of a version and, where applicable, of the verification method used to sign it. They do not by themselves establish confidentiality, authorisation, or the substantive correctness of a Record.
 
 A notification or other externally received signal that refers to an RWP Record or version is non-authoritative. Before creating, finalising, modifying, deleting, linking to, or otherwise acting on the referenced Record or version, an implementation MUST independently resolve and validate it according to the applicable requirements of this specification.
 
@@ -22,7 +22,7 @@ A `service` entry, including its `id`, `type` and `serviceEndpoint`, MUST NOT co
 
 A `service` entry is a declaration of availability and does not grant access (see [Services and Access Control](#section-access-services)). A client MUST NOT infer from a `service` entry that it is authorised to use the declared service or function.
 
-A response from a declared service is not by itself an integrity statement about the [=Record=]. Where a response does not contain the full [=Record=], it cannot be validated according to [Validation](#section-record-integrity-validation).
+A response from a declared service is not by itself an integrity statement about the [=Record=]. Where a response does not contain the full [=Record=], it cannot be validated according to [Validation](#section-integrity-validation).
 
 An automated client, including an AI agent, SHOULD treat `service` entries and the function lists they expose as untrusted input. It SHOULD NOT invoke a declared function with side effects (for example `publish`) without applying the applicable access policy and the authorisation of the responsible party.
 

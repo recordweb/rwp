@@ -17,7 +17,7 @@ For every Record, a DID document MUST exist. A DID document is a chain of immuta
     <tr><td><code>updated</code></td><td>MUST</td><td>ISO 8601 timestamp of this DID document version. Defines <code>versionTime</code> resolution</td></tr>
     <tr><td><code>currentVersionHash</code></td><td>MUST</td><td><code>versionHash</code> of the current finalised [=Record=] version. Omitted if the [=Record=] has no finalised version</td></tr>
     <tr><td><code>previousVersionHash</code></td><td>MUST</td><td><code>versionHash</code> of the preceding DID document version. Omitted in the first version</td></tr>
-    <tr><td><code>proof</code></td><td>MUST (when finalized, unless the schema defines signaturePolicy none)</td><td>One or more Data Integrity proofs over the DID document. See [Proof Procedure](#section-crypto-procedures-proof)</td></tr>
+    <tr><td><code>proof</code></td><td>MUST (when finalized, unless the schema defines signaturePolicy none)</td><td>One or more Data Integrity proofs over the DID document. See [Proof Procedure](#section-integrity-proof)</td></tr>
     <tr><td><code>service</code></td><td>MAY</td><td>Array of service entries according to [[DID-CORE]] (<code>id</code>, <code>type</code>, <code>serviceEndpoint</code>) declaring additional, optional access channels (see [Service Entries](#section-didoc-service))</td></tr>
   </tbody>
 </table>
@@ -70,7 +70,7 @@ A verifier checking a DID document version MUST:
 
 1. recompute the `versionHash`;
 2. check that `previousVersionHash` equals the `versionHash` of the predecessor;
-3. verify at least one `proof` as defined in [Proof Procedure](#section-crypto-procedures-proof);
+3. verify at least one `proof` as defined in [Proof Procedure](#section-integrity-proof);
 4. check that `updated` is later than `updated` of the predecessor.
 
 

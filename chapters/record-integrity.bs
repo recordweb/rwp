@@ -5,12 +5,12 @@ Record Integrity {#chapter-integrity}
 
 The <dfn>recordHash</dfn> is a Record-level <dfn>Integrity</dfn> value that covers the entire [=Record=] (its `did`, `metadata`, and `payload`) at the time the hash was calculated. It provides evidence that a [=Record=] has not been altered since that point, independent of whether the alteration occurred in `metadata` or in `payload`.
 
-The `recordHash` is distinct from the `proof` carried by an individual Version (see [Proof Procedure](#section-crypto-procedures-proof)). A `proof` is an owner's cryptographic authorisation of one specific versions's content at finalisation. The `recordHash` is an unsigned, purely computational value; it does not require, and MUST NOT be interpreted as, an authorisation or attestation. It exists solely to make unauthorised or accidental modification of any part of the [=Record=] detectable.
+The [=recordHash=] is distinct from the `proof` carried by an individual Version (see [Proof Procedure](#section-integrity-proof)). A `proof` is an owner's cryptographic authorisation of one specific versions's content at finalisation. The [=recordHash=] is an unsigned, purely computational value; it does not require, and MUST NOT be interpreted as, an authorisation or attestation. It exists solely to make unauthorised or accidental modification of any part of the [=Record=] detectable.
 
 
 ## Record Hash Calculation ## {#section-integrity-recordHash}
 
-The `recordHash` MUST be calculated as follows:
+The [=recordHash=] MUST be calculated as follows:
 
 1. Serialise `did`, `metadata`, and `payload` (without `recordHash` itself) as canonical JSON ([[RFC8785]])
 2. Calculate SHA-256 over the result
@@ -50,7 +50,7 @@ RWP <dfn>Validation</dfn> provides data structures and calculation rules that en
 
 A [=Consumer=] MAY perform a Validation at any time and MAY repeat a Validation.
 
-A [=Consumer=] MUST NOT represent the integrity of a RecordWeb object as successfully validated unless it has recalculated the applicable hash in accordance with [[#chapter-record-integrity]] and the calculated value equals the declared hash value.
+A [=Consumer=] MUST NOT represent the integrity of a RecordWeb object as successfully validated unless it has recalculated the applicable hash in accordance with this chapter and the calculated value equals the declared hash value.
 
 A [=Consumer=] MAY retain, exchange, display, or discard a Validation result. RWP does not require a [=Consumer=] to retain a Validation result or to create a RecordWeb [=Record=] for that purpose.
 
@@ -73,7 +73,7 @@ A [=Validation=] of one object MUST NOT be represented as a [=Validation=] of an
 
 In particular, a [=Validation=] of a [=Record=] MUST NOT be represented as a [=Validation=] of all Versions of that [=Record=]. A [=Validation=] of a [=Version=] MUST NOT be represented as a [=Validation=] of all Representations or [=Content=] objects associated with that [=Version=].
 
-A [=Version=] identifier MAY additionally be validated by verifying `proof` over `versionHash` against a verification method of the DID document, in accordance with [Cryptographic Procedures](#section-crypto-procedures-proof).
+A [=Version=] identifier MAY additionally be validated by verifying `proof` over `versionHash` against a verification method of the DID document, in accordance with [Cryptographic Procedures](#section-integrity-proof).
 
 
 ### Validation Result ### {#subsection-integrity-validation-result}
@@ -150,7 +150,7 @@ RWP uses exclusively **SHA-256** as the hashing procedure for:
 
 - [=Version=] hashes (`versionHash`)
 - [=Content=] hashes (`contentHash`)
-- Record-level hashes (`recordHash`)
+- [=Record=] hashes (`recordHash`)
 - Schema version hashes (`schemaVersion`)
 - Parent references (`parents`)
 - Merkle root calculations

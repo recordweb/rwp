@@ -7,7 +7,7 @@ A Version carrying an `issuance` block is an **issued Version**.
 
 ## Issuance block ## {#section-issuance-block}
 
-The `issuance` block is a field of the Version. It is part of the [Version Hash Calculation](#section-version-hash-calculation) and is therefore covered by every proof of the Version.
+The `issuance` block is a field of the Version. It is part of the [Version Hash Calculation](#section-integrity-versionHash) and is therefore covered by every proof of the Version.
 
 <table class="data">
   <thead>
@@ -58,9 +58,9 @@ Note: The complete structure of the Issued Copy artifact, including the provisio
 
 A verifier MUST:
 
-1. Recalculate the `contentHash` of the Representation according to [Content Hash Calculation](#section-content-hash-calculation).
-2. Recalculate the `versionHash` including the `issuance` block according to [Version Hash Calculation](#section-version-hash-calculation).
-3. Verify at least one proof according to [Proof Procedure](#section-crypto-procedures-proof).
+1. Recalculate the `contentHash` of the Representation according to [Content Hash Calculation](#section-integrity-versionHash).
+2. Recalculate the `versionHash` including the `issuance` block according to [Version Hash Calculation](#section-integrity-contentHash).
+3. Verify at least one proof according to [Proof Procedure](#section-integrity-proof).
 4. Evaluate `validUntil`, if present, according to its own policy.
 
 A successful verification establishes that the signing party issued this content with this `issuance` block. It does not establish the identity of the person presenting the Issued Copy, that the issuance is still valid, or that no other issuance exists for the same content.

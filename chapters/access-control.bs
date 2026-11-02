@@ -7,7 +7,7 @@ RWP deliberately defines no mandatory authorisation model. Data security and inf
 
 The core principle: access control in RWP is **attribute-based** (ABAC) and **delegatable**. Rights are not assigned to roles in a fixed hierarchy, but expressed as verifiable claims attached to DIDs.
 
-A denied access is not an integrity result. How a denial is communicated is defined in [Validation Response Codes](#subsection-record-integrity-validation-responsecode).
+A denied access is not an integrity result. How a denial is communicated is defined in [Validation Response Codes](#subsection-integrity-validation-responsecode).
 
 
 ## Access Policy Block ## {#section-access-policy}
