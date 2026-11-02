@@ -46,7 +46,7 @@ A new DID document version MUST be created, and `currentVersionHash` and `update
 - a payload deletion is executed (see [Payload Deletion](#chapter-deletion));
 - `service` or `proof` are added, changed or removed.
 
-A new version MUST reference the current latest version as `previousVersionHash`. A producer or custodian MUST reject a new version whose `previousVersionHash` is not the `versionHash` of the latest version.
+A new version MUST reference the current latest version as `previousVersionHash`. A [=producer=] or [=custodian=] MUST reject a new version whose `previousVersionHash` is not the `versionHash` of the latest version.
 
 
 ## versionHash ## {#bsection-didoc-versionhash}
@@ -74,7 +74,7 @@ A verifier checking a DID document version MUST:
 4. check that `updated` is later than `updated` of the predecessor.
 
 
-## Service Entries ## {#section-didocu-service}
+## Service Entries ## {#section-didoc-service}
 
 A DID document MAY contain a `service` property. Each entry MUST follow the structure defined for `service` in [[DID-CORE]] and MUST have `id`, `type` and `serviceEndpoint`.
 
@@ -100,7 +100,7 @@ A DID document MUST NOT be treated as immutable in the sense of a fixed resoluti
 
 ## Resolver Requirements ## {#section-didoc-resolver}
 
-An implementation claiming the `resolver` role MUST provide a DID resolver that:
+An implementation claiming the [=resolver=] role MUST provide a DID resolver that:
 
 - Resolves DIDs of the method `rwp` and returns the associated DID document
 - Delivers the DID document as JSON-LD in accordance with [[DID-CORE]]
@@ -113,9 +113,9 @@ An implementation claiming the `resolver` role MUST provide a DID resolver that:
 - Returns HTTP 410 when the DID is known but the [=Record=] has been deleted completely (see [Deletion](#section-deletion-regimes)). Payload deletion does NOT result in 410
 - Retains every DID document version for as long as the DID is resolvable. Payload deletion does not remove the history
 
-`versionHash` and `versionTime` are mutually exclusive. Without either, the resolver MUST return the latest version. With `versionHash`, it MUST return exactly that version. With `versionTime`, it MUST return the version with the greatest `updated` less than or equal to the given time.
+`versionHash` and `versionTime` are mutually exclusive. Without either, the [=resolver=] MUST return the latest version. With `versionHash`, it MUST return exactly that version. With `versionTime`, it MUST return the version with the greatest `updated` less than or equal to the given time.
 
-An implementation claiming another RWP profile or role MAY rely on a resolver operated by another conformant implementation. It is not required to operate a DID resolver itself unless it claims the `resolver` role.
+An implementation claiming another RWP profile or role MAY rely on a [=resolver=] operated by another conformant implementation. It is not required to operate a DID resolver itself unless it claims the [=resolver=] role.
 
-A producer or custodian that creates or manages RWP Records MUST ensure that the associated Record DIDs remain resolvable in accordance with this specification.
+A [=producer=] or [=custodian=] that creates or manages RWP Records MUST ensure that the associated Record DIDs remain resolvable in accordance with this specification.
 

@@ -62,5 +62,5 @@ Implementing systems MAY enforce delegation chains and MUST validate delegation 
 
 ## Services and Access Control ## {#section-access-services}
 
-A `service` entry in a DID document (see [Service Entries](#subsection-did-document-service)), such as a restricted view or a function registry, is a declaration of availability. It does not grant access and does not bypass any access policy. Authorisation for using a declared service or function remains governed by this chapter and by the access policy of the implementing system.
+A `service` entry in a DID document (see [Service Entries](#section-didoc-service)), such as a restricted view or a function registry, is a declaration of availability. It does not grant access and does not bypass any access policy. Authorisation for using a declared service or function remains governed by this chapter and by the access policy of the implementing system.
 
