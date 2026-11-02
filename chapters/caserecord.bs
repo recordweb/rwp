@@ -95,11 +95,11 @@ Unless a CaseRecord schema defines more specific constraints, every Case element
 
 A Case link MAY target any [=Record=], including an [=InformationRecord=], a [=RelationRecord=] (including another [=CaseRecord=]), or a [=SystemRecord=].
 
-A <dfn>hard link</dfn> points to one identified [=finalized=] [=version=] of a target Record. A hard link MUST contain the target `recordDid` and `versionHash` (the target version's hash, per [versionHash](#section-payload-definition)).
+A <dfn>Hard Link</dfn> points to one identified [=finalized=] [=version=] of a target Record. A hard link MUST contain the target `recordDid` and `versionHash` (the target version's hash, per [versionHash](#section-payload-definition)).
 
 A hard link is immutable after finalisation of the referencing [=CaseRecord=].
 
-A <dfn>soft link</dfn> is a working reference that points to a target `recordDid` without identifying a target version. A soft link MAY point to a [=draft=] or [=finalized=] Record.
+A <dfn>Soft Link</dfn> is a working reference that points to a target `recordDid` without identifying a target version. A soft link MAY point to a [=draft=] or [=finalized=] Record.
 
 A CaseRecord containing one or more soft links MUST NOT be finalised. Every soft link MUST be converted to a hard link before finalisation of the CaseRecord.
 

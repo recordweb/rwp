@@ -13,7 +13,7 @@ A [=Version=] object represents a specific materialised [=Version=] of a [=Recor
 
 A [=Payload=] entry that does not contain at least one valid [=Representation=] is not a [=Version=] and MUST NOT be used as a `payload` entry.
 
-The [=Payload=] of a [=Record=] is an ordered array of [=Versions=]. Each <dfn>Version</dfn> is one immutable, versioned [=Representation=] of the [=Record=]'s content at a specific point in time.
+The [=Payload=] of a [=Record=] is an ordered array of [=Versions=]. Each [=Version=] is one immutable, versioned [=Representation=] of the [=Record=]'s content at a specific point in time.
 
 <table class="data">
   <thead>
@@ -43,25 +43,31 @@ Each [=Payload=] entry:
 {
   "payload": [
     {
-      "versionHash": "sha256:eef9dd41ca22103acab33303607139d2d39a9de0e8c5deb21373dd2184b7d57f",
+      "versionHash": "sha256:a86a4b1e25a3b436522a5047e8bf6c485ca502dfeff65fe7a5783228d16fb3e2",
       "state": "finalized",
-      "parents": ["sha256:6ce834139509cc20a5b1b0e0e8007f46fb14ef72532e87c4f33894d150e997c0"],
-      "createdAt": "2026-05-31T14:00:00Z",
-      "modifiedAt": "2026-05-31T15:30:00Z",
-      "proof": [],
+      "parents": [],
+      "createdAt": "2026-10-28T10:29:00Z",
+      "modifiedAt": "2026-10-28T10:29:00Z",
+      "proof": [
+        {
+          "type": "DataIntegrityProof",
+          "cryptosuite": "eddsa-jcs-2022",
+          "created": "2026-10-28T10:29:00Z",
+          "verificationMethod": "did:rwp:d2d14675-50c9-463d-b564-1ea50644c836:efd09e7b-5f65-4637-b06c-404a9da97f0b#key-1",
+          "proofPurpose": "assertionMethod",
+          "proofValue": "zfLVYZBoebLUnYAHvno1KNdAQztgotFQV9AW1CKNEb2ueqH8xor3PXt971utE9WQyyXcZsEEA3q3VmL5sUi3MSNU"
+        }
+      ],
       "representations": [
         {
-          "format": "text/markdown",
-          "content": "sample text",
-          "contentHash": "sha256:3a84b2f508f5b93056e427aa67ad0c88d1b5366c6d423f59b61ece99286005d9",
+          "format": "application/json",
+          "content": {
+            "title": "Hello RecordWeb",
+            "description": "First instance of the SampleRecord type."
+          },
+          "contentHash": "sha256:30b186a5c492b14e2432419905b5343882eb9fc94940fd9e04cfcf7fd4fd058c",
           "primary": true,
           "role": "source"
-        },
-        {
-          "format": "application/pdf;profile=PDF-A-2b",
-          "ref": "sample reference",
-          "primary": false,
-          "role": "publication"
         }
       ]
     }
@@ -70,25 +76,21 @@ Each [=Payload=] entry:
 </pre>
 
 
-
 ## Representations ## {#section-payload-representation}
 
-A <dfn>Representation</dfn> describes one material form of the content of a Version.
+A <dfn>Representation</dfn> describes one material form of the [=Content=] of a [=Version=].
 
-Each Representation MUST contain exactly one of `content` or `ref`.
+- Each [=Representation=] MUST contain exactly one of `content` or `ref`.
+- A [=Representation=] that contains `content` MUST contain `contentHash`.
+- A [=Representation=] that contains `ref` MUST NOT contain `contentHash`.
+- A [=Representation=] MUST NOT contain both `content` and `ref`.
 
-A Representation that contains `content` MUST contain `contentHash`.
+A [=Version=] MAY carry multiple `representations`. This is provided in particular for the transition from working format (draft) to long-term format (finalised). [=Representations=] express the same content in different formats at the same point in the version graph; they MUST NOT be used to express different versions over time, that is the purpose of separate [=versionHash=] entries linked via `parents`.
 
-A Representation that contains `ref` MUST NOT contain `contentHash`.
+If a Version contains multiple [=Representations=], ALL of the following MUST apply:
 
-A Representation MUST NOT contain both `content` and `ref`.
-
-A Version MAY carry multiple `representations`. This is provided in particular for the transition from working format (draft) to long-term format (finalised). Representations express the same content in different formats at the same point in the version graph; they MUST NOT be used to express different versions over time — that is the purpose of separate versionHash entries linked via `parents`.
-
-If a Version contains multiple representations, ALL of the following MUST apply:
-
-- All representations MUST depict the same content
-- Exactly one representation MUST be designated as primary (`primary: true`), this content will be used for further work (new Versions).
+- All [=Representations=] MUST depict the same [=Content=]
+- Exactly one [=Representation=] MUST be designated as primary (`primary: true`), this content will be used for further work (new Versions).
 
 <table class="data">
   <thead>
@@ -190,9 +192,9 @@ A system MUST verify the `versionHash` after every finalisation before the Versi
 
 ## States and Transitions ## {#section-payload-states}
 
-### State Model ### {#subsection-state-model}
+### State Model ### {#subsection-payload-state-model}
 
-Every [=Record=] Version has exactly one **state**. The state describes the validity and linkability status of the Version.
+Every [=Record=] [=Version=] has exactly one <dfn>State</dfn>. The [=State=] describes the validity and linkability status of the Version.
 
 **Core states (normative, for all Record types):**
 
@@ -203,7 +205,7 @@ Every [=Record=] Version has exactly one **state**. The state describes the vali
   <tbody>
     <tr>
       <td><code><dfn>draft</dfn></code></td>
-      <td>NO</td>
+      <td>YES</td>
       <td>NO</td>
       <td>Being processed; content may change</td>
     </tr>
@@ -220,24 +222,25 @@ Record types MAY define additional states. These MUST be specified in the [=Sche
 
 **Example of an extended state machine for type "contract":**
 
-```
+<pre class='example text' title='State Machine'>
 draft → in-review → finalized
 ↓
 rejected (terminal state, not linkable)
-```
-
-### Linkability ### {#subsection-linkability}
-
-A [=Record=] MUST be in the [=finalized=] state to be used as the target of a hard link.
-
-A system MUST return an error when an attempt is made to set a hard link to a Record that is not in the [=finalized=] state.
-
-Exception: Soft links per [Hard and Soft Links](#section-links) MAY point to Records in any state, including [=draft=] Records.
+</pre>
 
 
-### Finalisation Requirements ### {#subsection-finalisation-requirements}
+### Linkability ### {#subsection-payload-linkability}
 
-A system MUST perform the following checks before finalising a Version:
+A [=Record=] MUST be in the [=finalized=] state to be used as the target of a [=Hard Link=].
+
+A system MUST return an error when an attempt is made to set a [=Hard Link=] to a [=Record=] that is not in the [=finalized=] state.
+
+Exception: [=Soft Links=] per [Hard and Soft Links](#section-links) MAY point to Records in any state, including [=draft=] [=Records=].
+
+
+### Finalisation Requirements ### {#subsection-payload-finalisation}
+
+A system MUST perform the following checks before finalising a [=Version=]:
 
 1. **Schema validation**: Payload conforms to the schema in the version defined for `finalized`
 2. **Format validation**: Payload format conforms to the `payloadFormats.finalized` requirements of the schema
@@ -249,70 +252,69 @@ A system MUST perform the following checks before finalising a Version:
 If any of these checks fails, the system MUST NOT finalise the Version and MUST return an error with a validation code.
 
 
-### Irreversibility of Finalisation ### {#subsection-irreversibility}
+### Irreversibility of Finalisation ### {#subsection-payload-irreversibility}
 
 A [=finalized=] Version MUST NOT be reverted to the state [=draft=].
 
-Corrections, revisions, replacements, and other continuations of the same Record MUST be represented as a new Version of that Record.
+Corrections, revisions, replacements, and other continuations of the same [=Record=] MUST be represented as a new [=Version=] of that [=Record=].
 
-Such a Version MUST:
+Such a [=Version=] MUST:
 
-- retain the DID of the Record;
-- reference the superseded or revised versionHash in its `parents` field;
+- retain the DID of the [=Record=];
+- reference the superseded or revised [=versionHash=] in its `parents` field;
 - include a `correctionReason` or equivalent schema-defined rationale where applicable; and
 - complete the normal finalisation process defined in [Finalisation Requirements](#subsection-finalisation-requirements).
 
-An implementation MUST NOT represent a correction, revision, replacement, or continuation of the same Record as a new Record that is related to the earlier Record only through an AssertionRecord or another cross-Record relationship.
+An implementation MUST NOT represent a correction, revision, replacement, or continuation of the same [=Record=] as a new [=Record=] that is related to the earlier [=Record=] only through an [=AssertionRecord=] or another cross-Record relationship.
 
-A new Record MAY be created where a new semantically autonomous information object arises. Such a Record MAY document derivation, source, or other relationships to an earlier Record through an AssertionRecord. It MUST NOT thereby be treated as a continuation in the version graph of that earlier Record.
+A new [=Record=] MAY be created where a new semantically autonomous information object arises. Such a [=Record=] MAY document derivation, source, or other relationships to an earlier [=Record=] through an [=AssertionRecord=]. It MUST NOT thereby be treated as a continuation in the version graph of that earlier [=Record=].
 
 
 ## Version Graph (DAG) ## {#section-payload-version-graph}
 
-### Graph Structure ### {#subsection-graph-structure}
+### Graph Structure ### {#subsection-payload-graph-structure}
 
 The totality of all versions of a [=Record=] and their parent-child relationships forms the <dfn>version graph</dfn>.
 
 The [=version graph=] MUST be a **Directed Acyclic Graph (DAG)**:
 
 - **Directed**: Edges point from child to parent (backward in time)
-- **Acyclic**: There MUST be NO cycles — a Version MUST NOT be directly or indirectly its own ancestor
+- **Acyclic**: There MUST be NO cycles - a Version MUST NOT be directly or indirectly its own ancestor
 
-A system MUST check upon receipt of a new Version whether adding its parent references would create a cycle. If so, the Version MUST be rejected.
-
-
-### Nodes ### {#subsection-graph-nodes}
-
-Every node in the [=version graph=] is a versionHash entry in the `payload` array (see [Version Fields](#section-payload-definition)).
+A system MUST check upon receipt of a new [=Version=] whether adding its parent references would create a cycle. If so, the [=Version=] MUST be rejected.
 
 
-### Edges (Parent References) ### {#subsection-graph-edges}
+### Nodes ### {#subsection-payload-graph-nodes}
 
-An edge connects a Version (child) with its predecessor Version (parent).
+Every node in the [=version graph=] is a [=versionHash=] entry in the `payload` array (see [Version Fields](#section-payload-definition)).
 
-- A Version MAY have zero, one, or multiple parent references
-- A Version without parents is the **root Version** (first Version of the [=Record=])
-- A Version with exactly one parent reference is a **linear continuation**
-- A Version with multiple parent references is a **merge Version**
+
+### Edges (Parent References) ### {#subsection-payload-graph-edges}
+
+An **edge** connects a [=Version=] (child) with its predecessor [=Version=] (parent).
+
+- A [=Version=] MAY have zero, one, or multiple parent references
+- A [=Version=] without parents is the **root Version** (first Version of the [=Record=])
+- A [=Version=] with exactly one parent reference is a **linear continuation**
+- A [=Version=] with multiple parent references is a **merge Version**
 
 Edge requirements:
 
-- Every parent reference MUST be a valid `versionHash` of a known Version within the same `payload` array
-- Edges MUST NOT point to Versions of other [=Records=]. Cross-Record connections are made via links in the [=payload=] of a [=CaseRecord=] or [=AssertionRecord=] ([CaseRecord Specification](#chapter-caserecord))
+- Every parent reference MUST be a valid [=versionHash=] of a known [=Version=] within the same `payload` array
+- Edges MUST NOT point to [=Versions=] of other [=Records=]. Cross-Record connections are made via links in the [=payload=] of a [=CaseRecord=] or [=AssertionRecord=] ([CaseRecord Specification](#chapter-caserecord))
 
 
-### Branches ### {#subsection-graph-branches}
+### Branches ### {#subsection-payload-graph-branches}
 
-A **branch** arises when two or more new [=draft=] versions with the same parent reference emerge from a [=finalized=] Version.
+A **branch** arises when two or more new [=draft=] versions with the same parent reference emerge from a [=Version=].
 
 - Branches are explicitly permitted in RecordWeb and MUST be made visible by the system
 - A system MUST return all active branches (draft versions without successors) when a [=Record=] is retrieved
-- Branches MAY exist simultaneously as long as they are in state [=draft=]
 
 
-### Merges ### {#subsection-graph-merges}
+### Merges ### {#subsection-payload-graph-merges}
 
-A merge Version is a version with two or more parent references. It consolidates two branches.
+A merge [=Version=] is a version with two or more parent references. It consolidates two or more branches.
 
 Before a merge Version can be finalised, a `MergeRecord` MUST be created:
 
@@ -334,9 +336,9 @@ Before a merge Version can be finalised, a `MergeRecord` MUST be created:
 The `MergeRecord` MUST be finalised before the merge version can be finalised.
 
 
-### Cross-Record Merges ### {#subsection-cross-record-merges}
+### Cross-Record Merges ### {#subsection-payload-cross-record-merges}
 
-When a new [=Record=] arises from two or more existing [=finalized=] Records (cross-Record merge), the following MUST apply:
+When a new [=Record=] arises from two or more existing Records (cross-Record merge), the following MUST apply:
 
 - The new [=Record=] MUST have a root version with an empty `parents` array
 - The `MergeRecord` MUST reference the DIDs of the source Records (not their version hashes)

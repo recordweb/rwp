@@ -22,7 +22,7 @@ recordHash = SHA-256( canonicalize({did, metadata, paylaod}) )
 
 ## Version Hash Calculation ## {#section-integrity-versionHash}
 
-The <dfn>Version</dfn> is represented by the `versionHash` and MUST be calculated as follows:
+The <dfn>Version</dfn> is represented by the <dfn>versionHash</dfn> and MUST be calculated as follows:
 
 1. Serialise the version fields `state`, `parents`, `createdAt`, `modifiedAt`, `representations` and, where present, `issuance`, without `versionHash` and `proof` themselves, as canonical JSON ([[RFC8785]])
 2. Calculate SHA-256 over the result
@@ -34,7 +34,7 @@ versionHash = SHA-256( canonicalize({state, parents, createdAt, modifiedAt, repr
 
 ## Content Hash Calculation ## {#section-integrity-contentHash}
 
-The <dfn>Content</dfn> is represented by the `contentHash` and MUST be calculated as follows:
+The <dfn>Content</dfn> is represented by the <dfn>contentHash</dfn> and MUST be calculated as follows:
 
 1. Serialise the version fields `format`, `content`, `primary`, and `role` (without `contentHash` itself) as canonical JSON ([[RFC8785]])
 2. Calculate SHA-256 over the result
