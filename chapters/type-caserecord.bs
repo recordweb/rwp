@@ -24,9 +24,9 @@ RWP assigns no semantics to the field names beyond the descriptions above. The r
 <pre class="example json" title="CaseRecord content">
 {
   "title": "Building permit Musterstrasse 12, parcel 451",
-  "trigger":  [ "did:rwp:<namespace>:<recordId>:<versionHash>" ],
-  "context":  [ "did:rwp:<namespace>:<recordId>:<versionHash>" ],
-  "process":  [ "did:rwp:<namespace>:<recordId>" ],
+  "trigger":  [ "did:rwp:&lt;namespace&gt;:&lt;recordId&gt;:&lt;versionHash&gt;" ],
+  "context":  [ "did:rwp:&lt;namespace&gt;:&lt;recordId&gt;:&lt;versionHash&gt;" ],
+  "process":  [ "did:rwp:&lt;namespace&gt;:&lt;recordId&gt;" ],
   "decision": [],
   "result":   []
 }

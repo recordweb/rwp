@@ -21,7 +21,7 @@ A <dfn>RelationRecord</dfn> is a Record whose primary purpose is to establish, p
 - `AssertionRecord` (see [AssertionRecord  Specification](#chapter-assertionrecord))
 
 **Agent Records:**
-An <dfn>AgentRecord</dfn> is a Record whose primary purpose is to identify an entity that bears responsibility for a [=Record=], (see [AgendRecord Specification](#chapter-agentrecord))
+An [=AgentRecord=] is a Record whose primary purpose is to identify an entity that bears responsibility for a [=Record=], (see [AgendRecord Specification](#chapter-agentrecord))
 - Various (see [AgentRecord Specification](#chapter-agentrecord))
 
 **System Records:**
@@ -50,12 +50,6 @@ rw:InformationRecord
 
 rw:RelationRecord
   rdfs:subClassOf rw:Record .
-
-rw:Agent
-  rdfs:subClassOf prov:Agent .
-
-rw:AgentRecord
-  rdfs:subClassOf rw:Agent .
 
 rw:SystemRecord
   rdfs:subClassOf rw:Record .

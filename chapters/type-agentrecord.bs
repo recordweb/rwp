@@ -19,7 +19,7 @@ The content of a Version of an AgentRecord is a JSON object in the primary repre
   "agentType": "person",
   "name": "Sam Doe",
   "identifiers": [ "mailto:sam.doe@example.com" ],
-  "actedOnBehalfOf": [ "did:rwp:<namespace>:<organizationAgentId>" ]
+  "actedOnBehalfOf": [ "did:rwp:&lt;namespace&gt;:&lt;organizationAgentId&gt;" ]
 }
 </pre>
 

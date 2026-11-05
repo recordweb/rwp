@@ -21,10 +21,10 @@ The content of a Version of an AssertionRecord is a JSON object in the primary r
 
 <pre class="example json" title="AssertionRecord content">
 {
-  "subject": "did:rwp:<namespace>:<recordA>:<versionHash>",
+  "subject": "did:rwp:&lt;namespace&gt;:&lt;recordA&gt;:&lt;versionHash&gt;",
   "predicate": "http://www.w3.org/ns/prov#wasDerivedFrom",
-  "object": "did:rwp:<namespace>:<recordB>",
-  "assertedBy": "did:rwp:<namespace>:<agentId>",
+  "object": "did:rwp:&lt;namespace&gt;:&lt;recordB&gt;",
+  "assertedBy": "did:rwp:&lt;namespace&gt;:&lt;agentId&gt;",
   "assertedAt": "2026-08-13T11:00:00Z",
   "effectiveAt": "2026-08-13T11:00:00Z"
 }
