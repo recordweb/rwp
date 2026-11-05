@@ -236,8 +236,6 @@ A Version MUST be in the [=finalized=] state to be the target of a [=Hard Link=]
 
 A system MUST return an error when an attempt is made to set a [=Hard Link=] to a [=Record=] that is not in the [=finalized=] state.
 
-Exception: [=Soft Links=] per [Hard and Soft Links](#section-links) MAY point to Records in any state, including [=draft=] [=Records=].
-
 
 ### Finalisation Requirements ### {#subsection-payload-finalisation}
 

@@ -16,7 +16,7 @@ The content of a Version of a SchemaRecord is a JSON object in the primary repre
 <tr><td><code>stateTransitions</code><td>MAY<td>Array&lt;Object&gt;<td>Permitted transitions between states
 <tr><td><code>signaturePolicy</code><td>MAY<td>String<td>One of <code>owner</code>, <code>system</code>, <code>none</code> (see [[#subsection-payload-finalisation]])
 <tr><td><code>payloadFormats</code><td>MUST<td>Object<td>Permitted formats per state (see [[#section-payload-format-requirements]])
-<tr><td><code>capabilities</code><td>MAY<td>Array&lt;String&gt;<td>Operations applicable to Records of this type (see [[#section-schema-record-capabilities]])
+<tr><td><code>capabilities</code><td>MAY<td>Array&lt;String&gt;<td>Operations applicable to Records of this type (see [[#section-schemarecord-capabilities]])
 <tr><td><code>jsonSchema</code><td>MUST<td>Object<td>JSON Schema (Draft 2020-12 or later) that validates the content of a Version of a Record of this type
 </table>
 

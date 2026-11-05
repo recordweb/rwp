@@ -133,7 +133,7 @@ Annex A: Normative JSON Schemas {#annex-a}
 
 ## A.2 CaseRecord Payload Schema ## {#schema-case}
 
-This schema defines structural validation only. State-dependent finalisation requirements, including the required presence of all five Case element fields, the prohibition of soft links and the minimum cardinality of `result`, are defined in [Case Elements](#section-case-elements) and [Hard and Soft Links](#section-links).
+This schema defines structural validation only. 
 
 ```json
 {
