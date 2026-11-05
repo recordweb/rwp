@@ -3,7 +3,7 @@ CaseRecord Specification {#chapter-caserecord}
 
 ## Definition ## {#section-caserecord-definition}
 
-A <dfn>CaseRecord</dfn> is a [=Record=] whose Record type is the Root CaseRecord Schema or a subclass of it (see [[#ssection-schemarecord-subclass]]). It links Records that belong together. A CaseRecord MUST NOT be a container and MUST NOT contain the content of the Records to which it relates. A Record linked by a CaseRecord remains an independent Record.
+A <dfn>CaseRecord</dfn> is a [=Record=] whose Record type is the Root CaseRecord Schema or a subclass of it (see [[#section-schemarecord-subclass]]). It links Records that belong together. A CaseRecord MUST NOT be a container and MUST NOT contain the content of the Records to which it relates. A Record linked by a CaseRecord remains an independent Record.
 
 The content of a Version of a CaseRecord is a JSON object in the primary representation (format `application/json`). It is defined by the Root CaseRecord Schema:
 
