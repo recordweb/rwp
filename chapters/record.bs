@@ -7,7 +7,7 @@ Every <dfn>Record</dfn> has the meaning defined in [[ISO15489]] and MUST consist
 
 1. [=Identity=]: the DID of the Record ([Record Identity (DID)](#chapter-identity))
 2. [=Metadata=]: descriptive dimensions of the Record ([Record Metadata](#chapter-metadata))
-3. [=Payload=]: the content of the Record ([Record Payload and Versions](#chapter-payload))
+3. [=Payload=]: the Versions of the Record and their Content ([Record Payload and Versions](#chapter-payload))
 4. [=Integrity=]: the hash of the Record ([Record Integrity](#chapter-integrity))
 
 <pre class='example json' title='Record components'>
@@ -36,7 +36,7 @@ rw:Record
 
 ## Conceptual Purpose ## {#section-record-purpose}
 
-The conceptual purpose MUST NOT be interpreted as a mandatory implementation inheritance hierarchy, a mandatory JSON type hierarchy, or a replacement for concrete Record Types and their SchemaRecords.
+The conceptual purpose classifies Records for the interpretation of this specification. It MUST NOT be interpreted as a mandatory implementation inheritance hierarchy or a mandatory JSON type hierarchy. The Record type of a concrete Record is defined by its SchemaRecord and the type chain of that SchemaRecord ([[#section-schemarecord-subclass]]).
 
 <pre class='note text' title='Conceptual Purpose'>
 Every Record has one primary conceptual purpose (as described in RWC):

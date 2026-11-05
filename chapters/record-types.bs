@@ -3,13 +3,7 @@ Record Types {#chapter-types}
 
 ## Definition ## {#section-types-definition}
 
-Every [=Record=] MUST be assigned to a <dfn>Record Type</dfn>. A Record type:
-
-- defines the schema of the [=Payload=]
-- defines the permitted states and their transitions
-- defines the format requirements per state
-- defines mandatory and optional [=Metadata=] fields (see [Metadata](#chapter-metadata))
-- is itself a [=Record=] of the type `SchemaRecord`
+Every [=Record=] MUST be assigned to a <dfn>Record Type</dfn>. A Record type is defined by a SchemaRecord ([[#chapter-schemarecord]]). It defines the schema of the Content of a Version, the permitted states and transitions, and the format requirements per state. A Record type MAY be a subclass of exactly one other Record type.
 
 
 ## Core Record Types ## {#section-record-types-core}
@@ -17,17 +11,21 @@ Every [=Record=] MUST be assigned to a <dfn>Record Type</dfn>. A Record type:
 RWP defines the following core [=Record types=]:
 
 **Information Records:**
+An <dfn>InformationRecord</dfn> is a Record whose primary purpose is to define or document a specific information object.
 - `ObjectRecord` (TBD)
 - `DocumentRecord` (TBD)
 
 **Relation Records:**
+A <dfn>RelationRecord</dfn> is a Record whose primary purpose is to establish, preserve, and make provable a meaningful relationship between Records.
 - `CaseRecord` (see [CaseRecord Specification](#chapter-caserecord))
 - `AssertionRecord` (see [AssertionRecord  Specification](#chapter-assertionrecord))
 
 **Agent Records:**
+An <dfn>AgentRecord</dfn> is a Record whose primary purpose is to identify an entity that bears responsibility for a [=Record=], (see [AgendRecord Specification](#chapter-agentrecord))
 - Various (see [AgentRecord Specification](#chapter-agentrecord))
 
 **System Records:**
+A <dfn>SystemRecord</dfn> is a Record whose primary purpose is to define, document, or prove a RecordWeb system rule, operation, or capability.
 - `SchemaRecord` (see [SchemaRecord](#chapter-schemarecord))
 - `ConformanceRecord` (see [Conformance and Implementation Claims](#chapter-conformancerecord))
 - `DeletionRecord` (see [Payload Deletion](#chapter-deletionrecord))
@@ -38,7 +36,7 @@ The conformance requirements for these [=Record types=] are profile-, role-, and
 
 The capability-bound requirements are defined in [Capability-bound requirements](#section-conformance-requirements).
 
-Additional [=Record types=] MAY be defined by organisations or standards bodies. They MUST be published as [=SchemaRecords=] and be resolvable via a DID.
+Additional [=Record types=] MAY be defined by organisations or standards bodies as [=SchemaRecords=] with a subClassOf, referring to the Root Schema of a core Record type or to another Record type.
 
 
 ## Taxonomy ## {#section-types-taxonomy}
@@ -47,29 +45,11 @@ Additional [=Record types=] MAY be defined by organisations or standards bodies.
 @prefix prov: <http://www.w3.org/ns/prov#> .
 @prefix rw:   <https://w3id.org/recordweb/ontology#> .
 
-rw:Record
-  rdfs:subClassOf prov:Entity .
-
 rw:InformationRecord
   rdfs:subClassOf rw:Record .
 
 rw:RelationRecord
   rdfs:subClassOf rw:Record .
-
-rw:SystemRecord
-  rdfs:subClassOf rw:Record .
-
-rw:ObjectRecord
-  rdfs:subClassOf rw:InformationRecord .
-
-rw:DocumentRecord
-  rdfs:subClassOf rw:InformationRecord .
-
-rw:CaseRecord
-  rdfs:subClassOf rw:RelationRecord .
-
-rw:AssertionRecord
-  rdfs:subClassOf rw:RelationRecord .
 
 rw:Agent
   rdfs:subClassOf prov:Agent .
@@ -77,53 +57,13 @@ rw:Agent
 rw:AgentRecord
   rdfs:subClassOf rw:Agent .
 
-rw:SchemaRecord
-  rdfs:subClassOf rw:SystemRecord .
-
-rw:MergeRecord
-  rdfs:subClassOf rw:SystemRecord .
-
-rw:DeletionRecord
-  rdfs:subClassOf rw:SystemRecord .
-
-rw:MigrationRecord
-  rdfs:subClassOf rw:SystemRecord .
-
-rw:ConformanceRecord
-  rdfs:subClassOf rw:SystemRecord .
-
+rw:SystemRecord
+  rdfs:subClassOf rw:Record .
 ```
 
 Every [=Record=] has one primary conceptual purpose. For the purposes of this specification, a [=Record=] is classified as an [=InformationRecord=], a [=RelationRecord=], an [=AgentRecord=] or a [=SystemRecord=].
 
 Any concrete Record Type is defined by a SchemaRecord in accordance with [Record Type Definition](#section-types-definition).
 
-The taxonomy is normative for the interpretation of this specification. It MUST NOT be interpreted as a mandatory implementation inheritance hierarchy, a mandatory JSON type hierarchy, or a replacement for concrete [=Record Types=] and their SchemaRecords.
-
-An <dfn>InformationRecord</dfn> is a Record whose primary purpose is to carry semantically autonomous institutional or domain information.
-
-An <dfn>ObjectRecord</dfn> is an [=InformationRecord=]. TBD
-
-A <dfn>DocumentRecord</dfn> is an [=InformationRecord=]. TBD
-
-A <dfn>RelationRecord</dfn> is a Record whose primary purpose is to establish, preserve, and make provable a meaningful relationship between Records.
-
-A <dfn>CaseRecord</dfn> is a [=RelationRecord=]. It represents a persisted, governed view of linked Records. A CaseRecord MUST NOT be a container and MUST NOT contain the payload of the Records to which it relates. The protocol representation and validation requirements for CaseRecords are defined in [CaseRecord Specification](#chapter-caserecord).
-
-An <dfn>AssertionRecord</dfn> is a [=RelationRecord=]. It represents an attributable assertion that a subject resource stands in a specified relationship to an object resource. The protocol representation and validation requirements for AssertionRecords are defined in [AssertionRecord Specification](#chapter-assertionrecord).
-
-An <dfn>AgentRecord</dfn> is a Record whose primary purpose is to identifies an entity that bears responsibility for a [=Record=], in the sense of prov:Agent ([[PROVO]]).
-
-A <dfn>SystemRecord</dfn> is a Record whose primary purpose is to define, document, or prove a RecordWeb system rule, operation, or capability.
-
-A <dfn>SchemaRecord</dfn> is a [=SystemRecord=]. It defines a concrete Record Type and its associated schema and validation requirements defined in [SchemaRecord Specification](#chapter-schemarecord).
-
-A <dfn>MergeRecord</dfn> is a [=SystemRecord=]. TBD
-
-A <dfn>DeletionRecord</dfn> is a [=SystemRecord=]. See [DeletionRecord Specification](#chapter-deletionrecord).
-
-A <dfn>MigrationRecord</dfn> is a [=SystemRecord=]. TBD
-
-A <dfn>ConformanceRecord</dfn> is a [=SystemRecord=]. TBD
-
+The taxonomy is normative for the interpretation of this specification. It MUST NOT be interpreted as a mandatory implementation inheritance hierarchy or a mandatory JSON type hierarchy. Concrete Record Types are defined by SchemaRecords ([[#chapter-schemarecord]]).
 

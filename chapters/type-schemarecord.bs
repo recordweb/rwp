@@ -3,71 +3,97 @@ SchemaRecord Specification {#chapter-schemarecord}
 
 ## Definition ## {#section-schemarecord-definition}
 
-A [=SchemaRecord=] is a specialised Record type that carries the definition of another Record type.
+A <dfn>SchemaRecord</dfn> is a [=Record=] that defines a [=Record type=]. A SchemaRecord MUST fulfil all requirements that apply to Records.
 
-A [=SchemaRecord=] MUST:
+The content of a Version of a SchemaRecord is a JSON object in the primary representation (format `application/json`) with the following fields:
 
-- fulfil all requirements for a regular [=Record=] (DID, metadata, version graph)
-- contain a JSON Schema (Draft 2020-12 or later, [[JSON-SCHEMA]]) in the payload
-- contain the field `rwpSchemaVersion` in the payload with the RWP version for which it is valid
-- contain the field `allowedStates` in the payload with the permitted states and their transitions
-- contain the field `payloadFormats` in the payload with the permitted formats per state
+<table class="data">
+<thead><tr><th>Field<th>Required<th>Type<th>Description</thead>
+<tr><td><code>rwpSchemaVersion</code><td>MUST<td>String<td>RWP version for which the schema is valid
+<tr><td><code>displayName</code><td>MAY<td>String<td>Human-readable name of the Record type
+<tr><td><code>subClassOf</code><td>MAY<td>DID<td>DID with versionHash of the SchemaRecord Version whose Record type this Record type is a subclass of (see [[#section-schemarecord-subclass]])
+<tr><td><code>allowedStates</code><td>MUST<td>Array&lt;String&gt;<td>Permitted states of a Version (see [[#subsection-payload-state-model]])
+<tr><td><code>stateTransitions</code><td>MAY<td>Array&lt;Object&gt;<td>Permitted transitions between states
+<tr><td><code>signaturePolicy</code><td>MAY<td>String<td>One of <code>owner</code>, <code>system</code>, <code>none</code> (see [[#subsection-payload-finalisation]])
+<tr><td><code>payloadFormats</code><td>MUST<td>Object<td>Permitted formats per state (see [[#section-payload-format-requirements]])
+<tr><td><code>capabilities</code><td>MAY<td>Array&lt;String&gt;<td>Operations applicable to Records of this type (see [[#section-schema-record-capabilities]])
+<tr><td><code>jsonSchema</code><td>MUST<td>Object<td>JSON Schema (Draft 2020-12 or later) that validates the content of a Version of a Record of this type
+</table>
 
-A [=SchemaRecord=] MAY:
+The `jsonSchema` validates the content of the primary representation of a Version if its format is `application/json`.
 
-- contain the field `capabilities` in the payload, an array of operation identifiers (strings) declaring the functions applicable to [=Records=] of this type
-
-
-**Minimal SchemaRecord payload example:**
-
-<pre class='example json' title='Minimal SchemaRecord'>
+<pre class="example json" title="SchemaRecord content (subclass of the Root CaseRecord)">
 {
   "rwpSchemaVersion": "0.1",
-  "schemaId": "did:rwp:bern.ch:schema-building-permit-application",
-  "displayName": "Building Permit Application",
+  "displayName": "Building Permit Case",
   "allowedStates": ["draft", "finalized"],
-  "stateTransitions": [
-    { "from": "draft", "to": "finalized", "requiresOwnerSignature": true }
-  ],
   "payloadFormats": {
-    "draft": ["application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-              "text/markdown"],
-    "finalized": ["application/pdf;profile=PDF-A-2b"]
+    "draft": ["application/json"],
+    "finalized": ["application/json"]
   },
-  "capabilities": ["retrieve", "compare", "validate", "publish"],
   "jsonSchema": {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "type": "object",
-    "required": ["parcelNumber", "applicant", "constructionProject", "date"],
+    "required": ["title", "trigger", "result"],
     "properties": {
-      "parcelNumber": { "type": "string" },
-      "applicant": { "type": "string" },
-      "constructionProject": { "type": "string" },
-      "date": { "type": "string", "format": "date" }
+      "trigger": { "minItems": 1, "maxItems": 1 },
+      "result":  { "minItems": 1 },
+      "parcelNumber": { "type": "string" }
     }
   }
 }
 </pre>
 
 
-## Schema Versioning and Backward Compatibility ## {#section-schema-record-versioning}
+## Taxonomy ## {#section-schemarecord-taxonomy}
 
-When a [=SchemaRecord=] is finalised in a new version, the following applies:
+<pre class="highlight language-text">
+@prefix rw: &lt;https://w3id.org/recordweb/ontology#&gt; .
+rw:SchemaRecord
+  rdfs:subClassOf rw:SystemRecord .
+</pre>
 
-- Existing versions referencing an earlier schema version REMAIN valid
-- The new schema MUST contain the field `previousSchemaVersion` in the payload with the hash of the predecessor schema
-- Systems MUST keep all schema versions referenced by existing [=Records=] permanently accessible
-- A system MUST NOT retroactively change an existing [=SchemaRecord=], corrections are made as a new version
+The Record type defined by a SchemaRecord with `subClassOf` is a subclass (`rdfs:subClassOf`) of the Record type defined by the referenced SchemaRecord.
 
 
-## Capability Declaration ## {#section-schema-record-capabilities}
+## Root SchemaRecord ## {#section-schemarecord-root}
 
-The `capabilities` field declares which functions are applicable to [=Records=] of the type defined by this [=SchemaRecord=]. Each entry is an operation identifier, for example `retrieve`, `compare`, `validate`, `publish`, or a Record-Type-specific operation.
+The <dfn>Root SchemaRecord</dfn> is the SchemaRecord whose `metadata.core.recordType` is its own DID and whose `metadata.core.schemaVersion` is the versionHash of its own Version. Every other SchemaRecord MUST reference the Root SchemaRecord in `metadata.core.recordType`.
 
-The declaration is descriptive. It states that the Record Type supports an operation; it does not oblige a resolver to implement it, and it does not grant access (see [Access Control](#chapter-access-control)).
+A <dfn>Root Schema</dfn> of a Record type is a SchemaRecord that has no `subClassOf`. The Root Schemas of the core Record types are published in [[#annex-a]].
 
-A resolver MAY use the `capabilities` of the [=SchemaRecord=] to populate the `RWP-FunctionRegistry` service entry in the DID documents of [=Records=] of this type (see [Service Entries](#section-didoc-service)).
 
-A change to `capabilities` is a change to the [=SchemaRecord=] and MUST be made as a new version (see [Schema Versioning](#section-schema-record-versioning)).
+## Subclass ## {#section-schemarecord-subclass}
 
+`subClassOf` MUST be a Hard Link ([[#section-identity-hash]]) to a finalised Version of a SchemaRecord. A SchemaRecord MUST NOT have more than one `subClassOf`.
+
+The sequence of SchemaRecords reached by following `subClassOf` is the <dfn>type chain</dfn> of a Record type. Because `subClassOf` identifies a specific Version by its hash, a type chain cannot contain a cycle.
+
+A Version of a Record MUST validate against the `jsonSchema` of its SchemaRecord and against the `jsonSchema` of every SchemaRecord in the type chain. A SchemaRecord therefore only contains additions to its parent.
+
+A Record is of a Record type T if its `metadata.core.recordType` identifies the SchemaRecord that defines T, or a SchemaRecord whose type chain contains it. SchemaRecords are compared by DID; the versionHash of a `subClassOf` is not part of the type identity ([[#section-identity-hash]]).
+
+Any Version valid under a subclass MUST be valid under its parent. Therefore a SchemaRecord with `subClassOf`
+
+1. MUST NOT remove a state or a transition of the parent, and MAY add states per [[#subsection-payload-state-model]];
+2. MUST NOT permit, for any state, a format that the parent does not permit;
+3. MUST NOT define a weaker `signaturePolicy` than the parent (`none` &lt; `system` &lt; `owner`);
+
+
+## Versioning ## {#section-schemarecord-versioning}
+
+When a SchemaRecord is finalised in a new Version:
+
+1. Existing Records that reference an earlier schema Version REMAIN valid.
+2. The new Version MUST reference its predecessor in `parents`.
+3. A system MUST keep every schema Version that is referenced by a Record or by a `subClassOf` permanently accessible.
+
+A new Version of a SchemaRecord does not change Record types that are subclasses of it, because `subClassOf` identifies a specific Version.
+
+
+## Capability Declaration ## {#section-schemarecord-capabilities}
+
+The `capabilities` field declares which operations are applicable to Records of the Record type. Each entry is an operation identifier, for example `retrieve`, `compare`, `validate`, `publish`, or a Record-type-specific operation.
+
+The declaration is descriptive. It does not oblige a resolver to implement the operation and does not grant access (see [[#chapter-access-control]]). A resolver MAY use the capabilities to populate the `RWPFunctionRegistry` service entry ([[#section-didoc-service]]). A change to `capabilities` is a change to the SchemaRecord and MUST be made as a new Version.
 

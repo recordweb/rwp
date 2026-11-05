@@ -1,7 +1,7 @@
 Payload and Versions {#chapter-payload}
 =================================
 
-## Payload Structure ## {#section-payload-definition}
+## Definition ## {#section-payload-definition}
 
 A Record MAY exist without a <dfn>Payload</dfn> property and therefore without a [=Version=].
 
@@ -30,13 +30,13 @@ The [=Payload=] of a [=Record=] is an ordered array of [=Versions=]. Each [=Vers
   </tbody>
 </table>
 
+
+Where the primary Representation of a Payload entry has the format application/json, its content MUST conform to the jsonSchema of the referenced schema Version and of every SchemaRecord in its type chain ([[#section-schemarecord-subclass]]). For other formats, the schema defines only the permitted states and formats.
+
 Each [=Payload=] entry:
 
-- MUST conform to the schema of the Record type in the referenced schema version
 - MUST be validated against the schema before finalisation
 - MUST NOT be changed after finalisation
-- MUST be uniquely identified by its `versionHash` field
-- MUST be immutable after its creation
 - MUST link to its predecessor versions by directed edges in the version graph (see [Version Graph (DAG)](#section-payload-version-graph))
 
 <pre class='example json' title='Payload'>
@@ -196,7 +196,7 @@ A system MUST verify the `versionHash` after every finalisation before the Versi
 
 Every [=Record=] [=Version=] has exactly one <dfn>State</dfn>. The [=State=] describes the validity and linkability status of the Version.
 
-**Core states (normative, for all Record types):**
+**Core states:**
 
 <table class="data">
   <thead>
@@ -218,7 +218,7 @@ Every [=Record=] [=Version=] has exactly one <dfn>State</dfn>. The [=State=] des
   </tbody>
 </table>
 
-Record types MAY define additional states. These MUST be specified in the [=SchemaRecord=] and MUST be reachable from one of the core states or lead into one.
+A Record type MUST permit the state finalized. It MAY permit draft. A Record type MAY define additional states. These MUST be specified in the [=SchemaRecord=] and MUST be reachable from one of the core states or lead into one.
 
 **Example of an extended state machine for type "contract":**
 
@@ -231,7 +231,8 @@ rejected (terminal state, not linkable)
 
 ### Linkability ### {#subsection-payload-linkability}
 
-A [=Record=] MUST be in the [=finalized=] state to be used as the target of a [=Hard Link=].
+A Version MUST be in the [=finalized=] state to be the target of a [=Hard Link=] ([[#section-identity-hash]]). A system MUST return an error when a Hard Link is set to a Version that is not finalized. Soft Links MAY point to Records in any state, including draft Records.
+
 
 A system MUST return an error when an attempt is made to set a [=Hard Link=] to a [=Record=] that is not in the [=finalized=] state.
 
@@ -301,7 +302,7 @@ An **edge** connects a [=Version=] (child) with its predecessor [=Version=] (par
 Edge requirements:
 
 - Every parent reference MUST be a valid [=versionHash=] of a known [=Version=] within the same `payload` array
-- Edges MUST NOT point to [=Versions=] of other [=Records=]. Cross-Record connections are made via links in the [=payload=] of a [=CaseRecord=] or [=AssertionRecord=] ([CaseRecord Specification](#chapter-caserecord))
+- Edges MUST NOT point to [=Versions=] of other [=Records=]. Cross-Record connections are made via links in the [=content=] of a [=CaseRecord=] or [=AssertionRecord=] ([CaseRecord Specification](#chapter-caserecord))
 
 
 ### Branches ### {#subsection-payload-graph-branches}

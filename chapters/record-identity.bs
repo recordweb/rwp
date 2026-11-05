@@ -104,7 +104,7 @@ A DID whose `<namespace>` component does not conform to the canonical UUIDv4 syn
 
 A locally scoped RWP DID MUST NOT be submitted to, registered in, or resolved through the `RecordWeb Global Namespace Registry (RW GNR)`.
 
-The `<recordId>` component of a locally scoped RWP DID is implementation-defined. It MAY use any syntax supported by the local resolution environment.
+The `<recordId>` component of a locally scoped RWP DID is implementation-defined. It MAY use any syntax supported by the local resolution environment, but MUST NOT use `:`.
 
 Resolution of a locally scoped RWP DID requires additional local knowledge, configuration, credentials, or an applicable local resolver. A client that does not possess such information MUST treat the DID as not globally resolvable and MUST NOT infer a resolver endpoint from the DID value.
 
@@ -119,6 +119,7 @@ The `<versionHash>` and the `<contentHash>`components are not part of the identi
 
 Where present, `<versionHash>` and `<contentHash>` MAY be used by a resolver as an optional aid when resolving the DID to a specific Record version. 
 
+A DID that contains a versionHash is a <dfn>Hard Link</dfn>. It refers to exactly one Version of the identified Record. The Version MUST be a Version in the payload of that Record. A DID without versionHash is a <dfn>Soft Link</dfn>. It refers to the Record independent of a specific Version.
 
 ## Additional segments ## {#section-identity-segments}
 

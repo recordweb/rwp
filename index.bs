@@ -144,6 +144,10 @@ path: chapters/type-assertionrecord.bs
 </pre>
 
 <pre class=include>
+path: chapters/type-statusAssertion.bs
+</pre>
+
+<pre class=include>
 path: chapters/type-agentrecord.bs
 </pre>
 

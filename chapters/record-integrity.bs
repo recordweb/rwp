@@ -151,7 +151,6 @@ RWP uses exclusively **SHA-256** as the hashing procedure for:
 - [=Record=] hashes (`recordHash`)
 - Schema version hashes (`schemaVersion`)
 - Parent references (`parents`)
-- Merkle root calculations
 
 A system MUST NOT use any hashing procedure other than SHA-256 for normative integrity proofs.
 

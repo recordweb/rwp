@@ -1,0 +1,81 @@
+StatusAssertion Specification {#chapter-statusassertion}
+=======================================
+
+
+## Definition ## {#section-statusassertion-definition}
+
+A <dfn>StatusAssertion</dfn> is an [=AssertionRecord=] whose Record type is the Root StatusAssertion Schema or a subclass of it. It asserts the status of a Record, a Version, or a verification method from a point in time.
+
+The Root StatusAssertion Schema is a subclass of the Root AssertionRecord Schema and adds the following constraints to its content:
+
+<table class="data">
+<thead><tr><th>Field<th>Required<th>Description</thead>
+<tr><td><code>subject</code><td>MUST<td>DID of a Record, with or without <code>versionHash</code>, or the DID URL of a verification method of an RWP DID
+<tr><td><code>predicate</code><td>MUST<td>Fixed: <code>rw:hasStatus</code>
+<tr><td><code>object</code><td>MUST<td>One of the status IRIs below
+<tr><td><code>assertedBy</code>, <code>assertedAt</code><td>MUST<td>As defined for AssertionRecords
+<tr><td><code>effectiveAt</code><td>MUST<td>Time from which the status holds
+<tr><td><code>reason</code><td>MAY<td>String
+</table>
+
+
+## Taxonomy ## {#section-statusassertion-taxonomy}
+
+<pre class="highlight language-text">
+@prefix rw: &lt;https://w3id.org/recordweb/ontology#&gt; .
+rw:StatusAssertion
+  rdfs:subClassOf rw:AssertionRecord .
+</pre>
+
+
+## Predicate hasStatus ## {#section-statusassertion-predicate}
+
+<table class="data">
+<tr><th>IRI<td><code>rw:hasStatus</code>
+<tr><th>Semantics<td>The subject has the status given by the object from <code>effectiveAt</code>
+<tr><th>Direction<td>subject → status
+<tr><th>Subject kinds<td>RWP Record with or without <code>versionHash</code>; DID URL of a verification method
+<tr><th>Object kinds<td>Status IRI from the status vocabulary
+</table>
+
+PROV-O offers no matching predicate: `prov:wasInvalidatedBy` relates an Entity to an Activity.
+
+
+## Status Vocabulary ## {#section-statusassertion-vocabulary}
+
+- `revoked`: the subject MUST NOT be relied upon from `effectiveAt`. Final within its scope.
+- `suspended`: the subject MUST NOT be relied upon from `effectiveAt` until reinstated.
+- `reinstated`: ends a suspension. Valid only if a `suspended` assertion with the same subject and scope exists, otherwise ignored.
+
+A SchemaRecord MAY declare further status IRIs.
+
+
+## Scope of the Subject ## {#section-statusassertion-scope}
+
+A subject with `versionHash` applies to that Version only. A subject without `versionHash` applies to all Versions of the Record. A subject that is the DID URL of a verification method applies to that verification method.
+
+
+## Single Version ## {#section-statusassertion-single-version}
+
+A finalised StatusAssertion has only its root Version and MUST NOT receive further Versions. A later statement is a new StatusAssertion. It is a new fact, not a correction of the earlier one. This keeps `revoked` final and avoids version selection.
+
+
+## Discovery and Authority ## {#section-statusassertion-discovery}
+
+StatusAssertions are found via the `RWPRecordReferrers` service, filtered by Record type. Completeness applies to the namespace of the target only.
+
+RWP does not define who may issue StatusAssertions. The verifier evaluates `assertedBy` under its own trust policy.
+
+
+## Status Determination ## {#section-statusassertion-determination}
+
+Inputs: a subject S (Record Version or key), an evaluation time T, and a knowledge time K.
+
+1. Collect the StatusAssertions for S in two scopes: version scope (subject is the DID of S with `versionHash`) and record scope (subject is the DID of S without `versionHash`). For keys, the DID URL is used. Keep those with `assertedAt` ≤ K that the verifier accepts under its trust policy.
+2. For each scope: if a `revoked` assertion with `effectiveAt` ≤ T exists, the scope status is `revoked`. Otherwise take the `suspended` or `reinstated` assertion with the greatest `effectiveAt` ≤ T (tie: the greatest `assertedAt`). A `reinstated` without a preceding `suspended` in the same scope is ignored. If the result is `suspended`, the scope status is `suspended`. If it is `reinstated` or there is no assertion, the scope status is none.
+3. Combine the scopes restrictively: `revoked`, then `suspended`, then none.
+
+The result is `revoked`, `suspended` or *no status asserted*, with references to the deciding assertions.
+
+K ≤ T answers what was knowable at T. K = now answers what is now established as effective at T. *No status asserted* does NOT mean valid; completeness depends on the custodian. The determination is not a validation result. Accepting or rejecting a Record is a decision of the relying party.
+

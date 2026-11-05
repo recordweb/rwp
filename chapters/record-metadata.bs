@@ -34,8 +34,8 @@ Every [=Record=] MUST contain the following <dfn>core metadata</dfn> fields:
     <tr><th>Field</th><th>Required</th><th>Type</th><th>Description</th></tr>
   </thead>
   <tbody>
-    <tr><td><code>recordType</code></td><td>MUST</td><td>DID</td><td>Reference to the SchemaRecord of the type</td></tr>
-    <tr><td><code>schemaVersion</code></td><td>MUST</td><td>SHA-256</td><td>Hash of the schema version against which the [=Record=]'s current version was validated</td></tr>
+    <tr><td><code>recordType</code></td><td>MUST</td><td>DID</td><td>DID of the [=SchemaRecord=] that defines the [=Record type=]</td></tr>
+    <tr><td><code>schemaVersion</code></td><td>MUST</td><td>SHA-256</td><td>[=versionHash=] of the [=SchemaRecord=] Version against which the current Version was validated</td></tr>
     <tr><td><code>transit</code></td><td>MUST</td><td>String</td><td>Direction of the Record relative to its namespace. One of `incoming`, `internal`, `outgoing`. See [Transit](#subsection-metadata-transit).</td></tr>
     <tr><td><code>provenanceRef</code></td><td>MUST if `transit` is `incoming`, MUST NOT otherwise</td><td>Object</td><td>Statement about the origin of the information outside the namespace. See [Transit](#subsection-metadata-transit).</td></tr>
   </tbody>

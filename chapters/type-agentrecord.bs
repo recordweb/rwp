@@ -1,30 +1,54 @@
 AgentRecord Specification {#chapter-agentrecord}
 =====================================
 
-## Purpose and scope ## {#section-agentrecord-purpose}
+## Definition ## {#section-agentrecord-definition}
 
-Every `did:rwp` identifying a responsible party MUST identify either:
+An <dfn>AgentRecord</dfn> is a [=Record=] whose Record type is the Root AgentRecord Schema or a subclass of it ([[#section-schemarecord-subclass]]). It identifies an entity that bears responsibility for a Record, in the sense of `prov:Agent` [[PROVO]].
 
-1. an [=AgentRecord=]; or
-2. an [=InformationRecord=] or [=AssertionRecord=], where the applicable SchemaRecord explicitly permits a Record to act as the responsible party (for example, a `source-adapter` implementation identified by its own Record).
+The content of a Version of an AgentRecord is a JSON object in the primary representation (format `application/json`), defined by the Root AgentRecord Schema ([[#annex-a]]).
 
-An implementation MUST NOT use a `did:rwp` identifier in such a field to identify an entity that is neither an AgentRecord, an InformationRecord nor an AssertionRecord. Where no such typed identity exists or is required, the field MUST use an identifier scheme other than `did:rwp`, or the applicable SchemaRecord MUST define an untyped-reference exception explicitly.
-
-**Examples:**
 <table class="data">
-  <thead>
-    <tr><th>Type</th><th>Agent</th></tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>DID identified</td>
-      <td><code>did:rwp:57b69e22-c8ae-4d5e-8675-ff454ea20fcc:adb9e1e3-4a51-42b2-870b-7bf2c560325f</code></td>
-    </tr>
-    <tr>
-      <td>Other</td>
-      <td><code>sam.doe@example.com</code></td>
-    </tr>
-  </tbody>
+<thead><tr><th>Field<th>Required<th>Type<th>Description</thead>
+<tr><td><code>agentType</code><td>MUST<td>String<td>One of <code>organization</code>, <code>person</code>, <code>softwareAgent</code>
+<tr><td><code>name</code><td>MUST<td>String<td>Name of the Agent
+<tr><td><code>identifiers</code><td>MAY<td>Array&lt;String&gt;<td>Further identifiers of the Agent
 </table>
 
-Additional fields are defined entirely by `extensions` in the `metadata` of the [=SchemaRecord=]. RWP does not itself define any AgentRecord type.
+<pre class="example json" title="AgentRecord content">
+{
+  "agentType": "person",
+  "name": "Sam Doe",
+  "identifiers": [ "mailto:sam.doe@example.com" ],
+  "actedOnBehalfOf": [ "did:rwp:<namespace>:<organizationAgentId>" ]
+}
+</pre>
+
+A SchemaRecord that is a subclass of the Root AgentRecord Schema MAY add fields to the content.
+
+
+## Taxonomy ## {#section-agentrecord-taxonomy}
+
+<pre class="highlight language-text">
+@prefix prov: &lt;http://www.w3.org/ns/prov#&gt; .
+@prefix rw:   &lt;https://w3id.org/recordweb/ontology#&gt; .
+rw:Agent
+  rdfs:subClassOf prov:Agent .
+rw:AgentRecord
+  rdfs:subClassOf rw:Record , rw:Agent .
+</pre>
+
+
+## Responsible Parties ## {#section-agentrecord-responsible}
+
+A `did:rwp` identifier in a field that identifies a responsible party, for example `assertedBy` or `owner`, MUST identify an AgentRecord. It MAY identify an InformationRecord or an AssertionRecord where the applicable SchemaRecord explicitly permits a Record to act as the responsible party, for example a source-adapter implementation identified by its own Record.
+
+An implementation MUST NOT use a `did:rwp` identifier in such a field to identify an entity that is neither an AgentRecord, an InformationRecord nor an AssertionRecord.
+
+Where no such typed identity exists or is required, the field MUST use an identifier scheme other than `did:rwp`, or the applicable SchemaRecord MUST define an untyped-reference exception explicitly.
+
+<table class="data">
+<thead><tr><th>Type<th>Example</thead>
+<tr><td>Agent<td><code>did:rwp:57b69e22-c8ae-4d5e-8675-ff454ea20fcc:adb9e1e3-4a51-42b2-870b-7bf2c560325f</code>
+<tr><td>Other<td><code>sam.doe@example.com</code>
+</table>
+
