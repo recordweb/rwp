@@ -24,7 +24,7 @@ Trust assumptions of RWP are defined in [[#section-federation-trust-anchor]].
 
 ## Root Schemas ## {#annex-root-schemas}
 
-A <dfn>Root Schema</dfn> is a [=SchemaRecord=] listed in the following table. A [=SchemaRecord=] is a Root Schema only if its DID is listed here. The column `versionHash` identifies the version of the Root Schema that applies to this version of RWP.
+A [=Root Schema=] is a [=SchemaRecord=] listed in the following table. A [=SchemaRecord=] is a Root Schema only if its DID is listed here. The column `versionHash` identifies the version of the Root Schema that applies to this version of RWP.
 
 A later version of the same [=SchemaRecord=], reachable from this version through `previousSchemaVersion`, is not part of this version of RWP. Whether and when an implementation adopts a later version is the decision of the implementation. RWP makes no statement about conformance to a later version before a later version of RWP lists it. A [=Record=] is validated against the version of its [=SchemaRecord=] identified by `metadata.core.schemaVersion`.
 

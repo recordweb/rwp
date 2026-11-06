@@ -129,7 +129,7 @@ An implementation claiming the [=resolver=] role MUST provide a DID resolver tha
 - Returns HTTP 400 when both `versionHash` and `versionTime` are given
 - Returns HTTP 403 where the resolver's applicable access policy does not permit the requester to obtain the DID document
 - Returns HTTP 404 when the DID is unknown, when `versionHash` is unknown, or when `versionTime` is earlier than `created`
-- Returns HTTP 410 when the DID is known but the [=Record=] has been deleted completely (see [Deletion](#section-deletion-regimes)). Payload deletion does NOT result in 410
+- Returns HTTP 410 when the DID is known but the [=Record=] has been deleted completely (see [Deletion](#section-deletionrecord-regimes)). Payload deletion does NOT result in 410
 - Retains every DID document version for as long as the DID is resolvable. Payload deletion does not remove the history
 
 `versionHash` and `versionTime` are mutually exclusive. Without either, the [=resolver=] MUST return the latest version. With `versionHash`, it MUST return exactly that version. With `versionTime`, it MUST return the version with the greatest `updated` less than or equal to the given time.

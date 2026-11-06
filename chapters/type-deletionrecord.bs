@@ -11,7 +11,7 @@ The content of a Version of a DeletionRecord is a JSON object in the primary rep
 <thead><tr><th>Field<th>Required<th>Type<th>Description</thead>
 <tr><td><code>targetDid</code><td>MUST<td>DID<td>DID of the Record concerned
 <tr><td><code>targetVersions</code><td>MAY<td>Array&lt;String&gt;<td><code>versionHash</code> of each Version concerned. MUST NOT be present for <code>full-delete</code>. If absent for <code>payload-only</code>, all Versions that exist at <code>deletedAt</code> are concerned.
-<tr><td><code>deletionRegime</code><td>MUST<td>String<td>One of <code>payload-only</code>, <code>full-delete</code>, see [[#section-deletion-regimes]]
+<tr><td><code>deletionRegime</code><td>MUST<td>String<td>One of <code>payload-only</code>, <code>full-delete</code>, see [[#section-deletionrecord-regimes]]
 <tr><td><code>legalBasis</code><td>MUST<td>String<td>Legal basis of the deletion
 <tr><td><code>requestedBy</code><td>MAY<td>String<td>Party that requested the deletion, see [[#section-agentrecord-responsible]]
 <tr><td><code>approvedBy</code><td>MUST<td>String<td>Agent that approved the deletion, see [[#section-agentrecord-responsible]]
@@ -36,14 +36,14 @@ When a deletion is executed, a DeletionRecord MUST be created and finalised befo
 After the DeletionRecord is finalised, for the regime `payload-only` and for each Version concerned:
 - The content bytes of each Representation MUST be securely overwritten.
 - Each Representation MUST be replaced by a Representation that contains `deleted` with the DID of the DeletionRecord, and that contains neither `content`, `ref` nor `contentHash`.
-- The `versionHash`, `state`, `parents`, `createdAt`, `modifiedAt` and `proof` of the Version remain unchanged. A deleted Version MUST NOT be validated ([[#section-validation-response-codes]]).
+- The `versionHash`, `state`, `parents`, `createdAt`, `modifiedAt` and `proof` of the Version remain unchanged. A deleted Version MUST NOT be validated ([[#subsection-integrity-validation-responsecode]]).
 
 After the DeletionRecord is finalised, for the regime `payload-only`, for the Record:
 - The `recordHash` MUST be recalculated.
 - A new DID document version MUST be created with updated `currentVersionHash` and `updated` ([[#section-didoc-history]]). The previous DID document versions MUST be retained.
 - The DID remains resolvable and the resolver returns HTTP 200.
 
-For the regime `full-delete`, the DID resolver MUST return HTTP 410 ([[#section-resolver-requirements]]).
+For the regime `full-delete`, the DID resolver MUST return HTTP 410 ([[#section-didoc-resolver]]).
 
 
 ## Taxonomy ## {#section-deletionrecord-taxonomy}
