@@ -126,6 +126,7 @@ The `validationResponse` property communicates the result of a [=Validation=] fo
     <tr><td><code>403</code></td><td>Forbidden</td><td>The identified object or information required to calculate its applicable hash exists or was identified, but the [=Consumer=] was not authorised to obtain it.</td></tr>
     <tr><td><code>404</code></td><td>Not Found</td><td>The identified object, or information required to calculate its applicable hash, could not be found or resolved. A system MAY use this outcome to conceal the existence of an object it does not permit the [=Consumer=] to access.</td></tr>
     <tr><td><code>406</code></td><td>Not Acceptable</td><td>The [=Consumer=] cannot process a required format, content type, representation, or other input required for the applicable calculation.</td></tr>
+    <tr><td><code>410</code></td><td>Gone</td><td>The identified Version or its Content was deleted by a DeletionRecord. The applicable hash calculation is not possible.</td></tr>
     <tr><td><code>422</code></td><td>Unprocessable Content</td><td>The required input was available and the applicable hash calculation was performed, but the calculated hash does not equal the declared hash.</td></tr>
     <tr><td><code>424</code></td><td>Failed Dependency</td><td>The [=Validation=] could not be completed because a required dependent resource or information was unavailable, incomplete, or could not be validated. Where the cause is a denied authorisation, 403 applies instead.</td></tr>
   </tbody>
@@ -139,7 +140,7 @@ The codes defined in this section are [=Validation=] result codes. They do not d
 
 When [=Validation=] is exposed through an HTTP API, server-side failures MAY be communicated using applicable HTTP 5xx response codes. Such API failures are not [=Validation=] result codes defined by RWP.
 
-A [=Consumer=] MUST NOT represent the result 403, 404, 406, or 424 as evidence that the object is invalid or has been altered. Only 422 indicates that the applicable hash calculation was performed and the calculated hash does not equal the declared hash.
+A [=Consumer=] MUST NOT represent the result 403, 404, 406, 410, or 424 as evidence that the object is invalid or has been altered. Only 422 indicates that the applicable hash calculation was performed and the calculated hash does not equal the declared hash.
 
 
 ## Hashing Procedure ## {#section-integrity-hashing}
@@ -178,9 +179,9 @@ A [=Proof=] MUST be a Data Integrity proof as defined by [[VC-DATA-INTEGRITY]] a
     <tr><td>type</td><td>MUST</td><td>`DataIntegrityProof`</td></tr>
     <tr><td>cryptosuite</td><td>MUST</td><td>`eddsa-jcs-2022` as defined by [[VC-DI-EDDSA]]</td></tr>
     <tr><td>created</td><td>MUST</td><td>ISO 8601 timestamp. SHOULD equal the `modifiedAt` of the Version.</td></tr>
-    <tr><td>verificationMethod</td><td>MUST</td><td>DID URL of a verification method that is controlled by the signing party</td></tr>
-    <tr><td>purpose</td><td>MUST</td><td>`assertionMethod`</td></tr>
-    <tr><td>signature</td><td>MUST</td><td>Multibase-encoded signature</td></tr>
+    <tr><td>verificationMethod</td><td>MUST</td><td>DID URL of a verification method that is listed in verificationMethod of the DID document of the signing party and in the verification relationship required by proofPurpose</td></tr>
+    <tr><td>proofPurpose</td><td>MUST</td><td>`assertionMethod` for Version proofs, capabilityInvocation for proofs of DID document versions</td></tr>
+    <tr><td>proofValue</td><td>MUST</td><td>Multibase-encoded signature</td></tr>
   </tbody>
 </table>
 
@@ -191,8 +192,8 @@ A [=Proof=] MUST be a Data Integrity proof as defined by [[VC-DATA-INTEGRITY]] a
     "cryptosuite": "eddsa-jcs-2022",
     "created": "2026-10-26T18:20:00Z",
     "verificationMethod": "did:rwp:d2d14675-50c9-463d-b564-1ea50644c836:efd09e7b-5f65-4637-b06c-404a9da97f0b#key-1",
-    "purpose": "assertionMethod",
-    "signature": "zPkfn4jxbW8fYn84s3hDZ73nafs9tMgti3hQ5vm4RFpsYbDjf1ZrnzosLt66TrVEmtS5yiZMacVwx4MiNjyigUM7"
+    "proofPurpose": "assertionMethod",
+    "proofValue": "zPkfn4jxbW8fYn84s3hDZ73nafs9tMgti3hQ5vm4RFpsYbDjf1ZrnzosLt66TrVEmtS5yiZMacVwx4MiNjyigUM7"
   }]
 }
 </pre>
@@ -205,5 +206,7 @@ A [=Proof=] MUST be a Data Integrity proof as defined by [[VC-DATA-INTEGRITY]] a
 
 **Verification.** A [=Verifier=] MUST recalculate the `versionHash` according to [Version Hash Calculation](#section-integrity-versionHash). It MUST then verify at least one [=Proof=] against the resolved verification method. A [=Verifier=] decides according to its own trust policy which verification methods it accepts. A successful [=Proof=] verification establishes that the holder of the verification method key signed this [=Version=]. It does not establish the authority of that holder. Evaluation of the key state at a given past time is outside the scope of this section.
 
-**Key requirements.** The key MUST be an Ed25519 key. The verification method MUST be published in the DID document of the signing party. The signing party MUST be an [=AgentRecord=]; a verification method is not published in the DID documents of other [=Records=]. The key MUST be present in the current DID document version of the signing party at the time of signing. A key that is no longer present in the current version MUST NOT be used for new [=Proofs=].
+**Key requirements.** The key MUST be an Ed25519 key. The key MUST be an Ed25519 key, expressed as Multikey with a publicKeyMultibase that starts with z and encodes the prefix 0xed01 followed by the 32-byte public key. The verification method MUST be published in verificationMethod of the DID document of the signing party and listed in the verification relationship required by the proofPurpose. Its controller MUST be the signing party. The signing party MUST be an [=AgentRecord=]; a verification method is not published in the DID documents of other [=Records=]. The key MUST be present in the current DID document version of the signing party at the time of signing. A key that is no longer present in the current version MUST NOT be used for new [=Proofs=].
+
+NOTE: A successful Proof verification depends on the DID document of the signing party being obtained from the resolver responsible for its namespace, see [[#section-access-trust]]. Whether the signing party is an AgentRecord is determined by the `metadata.core.recordType` of its Record, not by its DID document. A verifier that is not authorised to retrieve this Record cannot establish this and obtains the validation response 403 or 424 ([[#subsection-integrity-validation-responsecode]]). This is not evidence that the Proof is invalid. Neither the registration of a namespace in the GNR nor the conformance of the signing party to the Root AgentRecord Schema establishes the authority of the signing party. This remains subject to the trust policy of the verifier.
 

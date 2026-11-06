@@ -114,12 +114,23 @@ A conforming GNR deployment MUST implement its applicable governance decisions t
 
 ## Cross-Namespace Links ## {#section-federation-cross-namespace}
 
-A [=Record=] in namespace `57b69e22-c8ae-4d5e-8675-ff454ea20fcc` MAY contain [=hard links=] to [=Records=] in other namespaces (e.g. `did:rwp:f32bcec3-b453-4cbb-b416-132117325dc3:d460adee-e574-4064-86c2-fd58e3f678ed`).
+A [=Record=] in `namespace` `57b69e22-c8ae-4d5e-8675-ff454ea20fcc` MAY contain [=hard links=] to [=Records=] in other namespaces (e.g. `did:rwp:f32bcec3-b453-4cbb-b416-132117325dc3:d460adee-e574-4064-86c2-fd58e3f678ed`).
 
 When resolving cross-namespace links, a system MUST:
 
-1. Extract the namespace component from the linked DID
+1. Extract the `namespace` component from the linked DID
 2. Discover the resolver endpoint via GNR lookup
 3. Verify the [=version=] hash of the linked [=Record=] after retrieval
 4. Cache the resolved [=version=] locally with the original hash for integrity verification
+
+
+## Trust Anchor ## {#section-federation-trust-anchor}
+
+NOTE: The <dfn>RecordWeb Trust Association</dfn> (RWTA) publishes the [=Root Agent=] ([[#annex-root-agent]]) and the [=Root Schemas=] ([[#annex-root-schemas]]) in the namespace `d2d14675-50c9-463d-b564-1ea50644c836` (the <dfn>RecordWeb namespace</dfn>). The [=Root Agent=] is the initial controller of the [=Root Schemas=]. The RWTA operates the DID Resolver for the [=RecordWeb namespace=] at `recordweb.org`. The members of the RWTA operate the GNR ([[#section-gnr]]).
+
+For a globally resolvable RWP DID, the `namespace` is resolved through the GNR to the DID Resolver responsible for it ([[#subsection-gnr-resolution]]). The DID document and the verification methods obtained from this resolver are authoritative for the DID. This applies to the [=RecordWeb namespace=] in the same way as to any other `namespace`. For a locally scoped RWP DID, the authoritative resolver is determined by local configuration. A Proof by a locally scoped DID has meaning only in the scope in which its local resolution is trusted.
+
+Neither the registration of a `namespace` in the GNR nor the conformance of an [=AgentRecord=] to the Root `Agent Record Schema` establishes the identity or the authority of the Agent. This remains subject to the trust policy of the verifier. The same applies to the [=Root Agent=], the [=RecordWeb namespace=], and the RWTA.
+
+A resolver operator can present a DID document history that is internally consistent. For the [=RecordWeb namespace=], the resolver operator and the operators of the GNR belong to the same association. The GNR therefore does not provide an independent check of the DID document history of the [=Root Agent=]. A verifier SHOULD retain previously verified DID document versions. The first DID document version of the [=Root Agent=] is identified in [[#annex-root-agent]].
 

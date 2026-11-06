@@ -6,6 +6,11 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [0.0.14] – 2026-11-06
+
+Editorial:
+- Consistency Part III
+
 ## [0.0.13] – 2026-11-05
 
 Editorial:

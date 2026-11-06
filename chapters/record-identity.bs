@@ -47,8 +47,8 @@ The `<contentHash>` component MUST NOT be part of the identity a Record, identif
     <tr>
       <td><code>&lt;recordId&gt;</code></td>
       <td>MUST</td>
-      <td>UUIDv4 (global) or implementation-defined (local)</td>
-      <td>See below, globally or locally resolvable RWP DIDs</td>
+      <td>Implementation-defined (1 to 128 characters from a-z, 0-9, ".", "-" and "_")</td>
+      <td>The first and the last character MUST be a letter or a digit. A UUIDv4 in canonical form is strongly RECOMMENDED. A recordId MUST be unique within its namespace and MUST NOT be reused, not even after a full deletion.</td>
     </tr>
     <tr>
       <td><code>&lt;versionHash&gt;</code></td>
@@ -84,7 +84,9 @@ did:rwp:example.com:f47ac10b
 
 ## Globally resolvable RWP DIDs ## {#section-identity-global}
 
-A globally resolvable RWP DID MUST use a Universally Unique Identifier as `<namespace>` and `<recordId>`, both encoded as UUID version 4 in canonical textual representation.
+A globally resolvable RWP DID MUST use a UUID version 4 in canonical textual representation as `namespace`. The `namespace` MUST be opaque. It MUST NOT encode organisational names, geographical identifiers, network locations, resolver endpoints, or other routing semantics.
+
+The `recordId` of a globally resolvable RWP DID follows [[#section-did-format]]. It SHOULD be a UUIDv4 and MAY be a descriptive identifier. It MUST NOT encode network locations, resolver endpoints, or other routing semantics, and SHOULD NOT contain personal data. An implementation MUST NOT derive the Record type, the owner, or any other property of a Record from the recordId.
 
 The canonical UUIDv4 representation MUST:
 
@@ -92,8 +94,6 @@ The canonical UUIDv4 representation MUST:
 - use lowercase hexadecimal characters only;
 - use hyphens in the `8-4-4-4-12` form;
 - encode UUID version 4 and the RFC 4122 variant.
-
-`<namespace>` and `<recordId>` MUST be opaque. They MUST NOT encode organisational names, geographical identifiers, network locations, resolver endpoints, or other routing semantics.
 
 A DID conforming to this form is eligible for resolution through the `RecordWeb Global Namespace Registry (RW GNR)`. Eligibility for global resolution does not imply that the Record, its metadata, or a DID Document is publicly accessible (see also Chapter [Access Control](#chapter-access-control)).
 
@@ -103,8 +103,6 @@ A DID conforming to this form is eligible for resolution through the `RecordWeb 
 A DID whose `<namespace>` component does not conform to the canonical UUIDv4 syntax is a locally scoped RWP DID.
 
 A locally scoped RWP DID MUST NOT be submitted to, registered in, or resolved through the `RecordWeb Global Namespace Registry (RW GNR)`.
-
-The `<recordId>` component of a locally scoped RWP DID is implementation-defined. It MAY use any syntax supported by the local resolution environment, but MUST NOT use `:`.
 
 Resolution of a locally scoped RWP DID requires additional local knowledge, configuration, credentials, or an applicable local resolver. A client that does not possess such information MUST treat the DID as not globally resolvable and MUST NOT infer a resolver endpoint from the DID value.
 

@@ -47,8 +47,13 @@ An implementation claiming this optional capability MAY carry the `accessPolicy`
 
 An implementation MUST NOT require another implementation to support this extension unless both claim the applicable access-control capability.
 
+## Trust anchor ## {#section-access-trust}
+RWP does not define trust in a signing party. For a globally resolvable DID, the namespace is resolved through the GNR to the DID Resolver responsible for it. The DID document and the verification methods obtained from this resolver are authoritative for the DID. For a locally scoped DID, the authoritative resolver is determined by local configuration. Neither the registration of a namespace in the GNR nor the conformance of an AgentRecord to the Root AgentRecord Schema establishes the identity or the authority of the Agent. These remain subject to the trust policy of the verifier. A Proof by a locally scoped DID has meaning only in the scope in which its local resolution is trusted.
 
-## Delegation Chain ## {#section-delegation-chain}
+A resolver operator can present a DID document history that is internally consistent. A verifier that needs protection against this SHOULD retain previously verified DID document versions.
+
+
+## Delegation Chain ## {#section-access-delegation}
 
 When `delegationAllowed: true`, a listed DID MAY issue a signed delegation token granting access to a third DID. The delegation token MUST:
 

@@ -1,212 +1,41 @@
-Annex A: Normative JSON Schemas {#annex-a}
+Annex A: Record, Version, and Metadata Schemas {#annex-a}
 ==========================================
 
-## A.1 Record, Version, and Metadata Schemas ## {#schema-version}
+## Record Schema ## {#annex-record-schema}
 
-```json
-{
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://recordweb.github.io/rwp/schemas/record.json",
-  "title": "RWP Record",
-  "type": "object",
-  "required": ["did", "payload", "metadata", "recordHash"],
-  "properties": {
-    "did":        { "type": "string", "pattern": "^did:rwp:[^:]+:[^:]+$" },
-    "payload":    { "type": "array", "items": { "$ref": "#/$defs/version" } },
-    "metadata":   { "$ref": "#/$defs/metadata" },
-    "recordHash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
-  },
-  "$defs": {
-    "version": {
-      "type": "object",
-      "required": ["version", "state", "parents", "createdAt", "modifiedAt", "representations"],
-      "properties": {
-        "version":         { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
-        "state":           { "type": "string", "enum": ["draft", "finalized"] },
-        "parents":         { "type": "array", "items": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" } },
-        "createdAt":       { "type": "string", "format": "date-time" },
-        "modifiedAt":      { "type": "string", "format": "date-time" },
-        "proof":           { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/proof" } },
-        "issuance":        { "$ref": "#/$defs/issuance" },
-        "representations": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/representation" } }
-      }
-      "if": { "required": ["issuance"] },
-      "then": {
-        "properties": {
-          "representations": {
-            "minItems": 1, "maxItems": 1,
-            "items": { "required": ["content", "contentHash"], "properties": { "primary": { "const": true } } }
-          }
-        }
-      }
-    },
-    "representation": {
-      "type": "object",
-      "required": ["format", "hash", "primary"],
-      "properties": {
-        "format":      { "type": "string" },
-        "contentHash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
-        "primary":     { "type": "boolean" },
-        "role":        { "type": "string", "enum": ["source", "publication", "preview", "archive"] }
-      }
-    },
-    "metadata": {
-      "type": "object",
-      "required": ["core"],
-      "properties": {
-        "core": {
-          "type": "object",
-          "required": ["recordType", "schemaVersion", "transit"],
-          "properties": {
-            "recordType":    { "type": "string", "pattern": "^did:rwp:" },
-            "schemaVersion": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
-            "transit": { "type": "string", "enum": ["incoming", "internal", "outgoing"] },
-            "provenanceRef": {
-              "type": "object",
-              "required": ["sourceDescription", "capturedAt", "capturedBy"],
-              "properties": {
-                "sourceDescription": { "type": "string" },
-                "capturedAt": { "type": "string", "format": "date-time" },
-                "capturedBy": { "type": "string" },
-                "sourceSystem": { "type": "string" },
-                "sourceId": { "type": "string" },
-                "sourceObjectType": { "type": "string" },
-                "sourceIntegrity": { "type": "string", "enum": ["none", "platform-versioned","source-signed", "externally-hashed"] }
-              },
-              "additionalProperties": false
-            }
-          },
-          "if": { "properties": { "transit": { "const": "incoming" } }, "required": ["transit"] },
-          "then": { "required": ["provenanceRef"] },
-          "else": { "not": { "required": ["provenanceRef"] } }
-        },
-        "governance": {
-          "type": "object",
-          "properties": {
-            "owner":           { "type": "string", "pattern": "^did:rwp:" },
-            "classification":  { "type": "string" },
-            "retentionPolicy": { "type": "string", "pattern": "^did:rwp:" },
-            "tags":            { "type": "array", "items": { "type": "string" } },
-            "deletionRegime":  { "type": "string",
-                                 "enum": ["payload-only", "full-delete", "exempt"] }
-          }
-        },
-        "extensions": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "required": ["type"],
-            "properties": {
-              "type": { "type": "string", "pattern": "^did:rwp:" }
-            }
-          }
-        }
-      }
-    },
-    "proof": {
-      "type": "object",
-      "required": ["type", "cryptosuite", "created", "verificationMethod", "proofPurpose", "proofValue"],
-      "properties": {
-        "type": { "const": "DataIntegrityProof" },
-        "cryptosuite": { "const": "eddsa-jcs-2022" },
-        "created": { "type": "string", "format": "date-time" },
-        "verificationMethod": { "type": "string" },
-        "proofPurpose": { "const": "assertionMethod" },
-        "proofValue": { "type": "string" }
-      },
-      "additionalProperties": false
-    },
-    "issuance": {
-      "type": "object",
-      "required": ["issuedAt"],
-      "properties": {
-        "issuedAt": { "type": "string", "format": "date-time" },
-        "issuedTo": { "type": "string" },
-        "validUntil": { "type": "string", "format": "date-time" },
-        "reason": { "type": "string" }
-      },
-      "additionalProperties": false
-    }
-  }
-}
-```
+The JSON Schema for the [=Record=], Version and Metadata structures is published at <https://recordweb.org/…> with the identifier `$id`. This version of RWP refers to the file with the SHA-256 value `sha256:…`.
 
-## A.2 CaseRecord Payload Schema ## {#schema-case}
 
-This schema defines structural validation only. 
+### Root Agent ### {#annex-root-agent}
 
-```json
-{
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://recordweb.github.io/rwp/schemas/case-record.json",
-  "title": "RWP CaseRecord Payload",
-  "type": "object",
-  "required": ["recordDid","caseType","title","trigger","context","process","decision","result","merkleRoot"],
-  "properties": {
-    "recordDid":  { "type": "string", "pattern": "^did:rwp:" },
-    "caseType":   { "type": "string", "pattern": "^did:rwp:" },
-    "title":      { "type": "string" },
-    "trigger":    { "$ref": "#/$defs/hardLink" },
-    "context":    { "type": "array", "items": { "$ref": "#/$defs/link" } },
-    "process":    { "type": "array", "items": { "$ref": "#/$defs/link" } },
-    "decision":   { "oneOf": [{ "$ref": "#/$defs/hardLink" }, { "type": "null" }] },
-    "result":     { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/hardLink" } },
-    "merkleRoot": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
-  },
-  "$defs": {
-    "hardLink": {
-      "type": "object",
-      "required": ["type","recordDid","version"],
-      "properties": {
-        "type":         { "const": "hard" },
-        "recordDid":    { "type": "string", "pattern": "^did:rwp:" },
-        "version":     { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
-        "role":         { "type": "string" }
-      }
-    },
-    "link": {
-      "type": "object",
-      "required": ["type","recordDid"],
-      "properties": {
-        "type":         { "type": "string", "enum": ["hard","soft"] },
-        "recordDid":    { "type": "string", "pattern": "^did:rwp:" },
-        "version":     { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
-        "role":         { "type": "string" }
-      }
-    }
-  }
-}
-```
+The <dfn>Root Agent</dfn> is the [=AgentRecord=] of the **RecordWeb Trust Association**. It is the initial controller of the Root Schemas ([[#annex-root-schemas]]). It is the owner of the Root Schemas, and the DID documents of the Root Schemas name it as controller.
 
-## A.3 DeletionRecord Payload Schema ## {#schema-deletion}
+<table class="data">
+<thead><tr><th>Name<th>DID<th>versionHash of the Record<th>versionHash of the first DID document</thead>
+<tr><td>RecordWeb Trust Association<td><code>did:rwp:d2d14675-50c9-463d-b564-1ea50644c836:agent-recordweb-trust-association</code><td><code>sha256:…</code><td><code>sha256:…</code>
+</table>
 
-```json
-{
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://recordweb.github.io/rwp/schemas/deletion-record.json",
-  "title": "RWP DeletionRecord Payload",
-  "type": "object",
-  "required": ["deletionRecord"],
-  "properties": {
-    "deletionRecord": {
-      "type": "object",
-      "required": ["targetDid","targetVersion","deletionRegime",
-                   "legalBasis","requestedBy","approvedBy","deletedAt"],
-      "properties": {
-        "targetDid":          { "type": "string", "pattern": "^did:rwp:" },
-        "targetVersion":     { "type": "string",
-                                "pattern": "^sha256:[0-9a-f]{64}$" },
-        "deletionRegime":     { "type": "string",
-                                "enum": ["payload-only","full-delete","exempt"] },
-        "legalBasis":         { "type": "string" },
-        "requestedBy":        { "type": "string", "pattern": "^did:rwp:" },
-        "approvedBy":         { "type": "string", "pattern": "^did:rwp:" },
-        "deletedAt":          { "type": "string", "format": "date-time" },
-        "retainedFields":     { "type": "array",
-                                "items": { "type": "string" } }
-      }
-    }
-  }
-}
-```
+The `versionHash` of the Record identifies the version of the [=AgentRecord=] that applies to this version of RWP. The `versionHash` of the first DID document identifies the first version of its DID document, which publishes the initial verification methods. A verifier MAY use this value as the starting point of the verification of the DID document history ([[#section-didoc-verification]]).
+
+A later version of the [=AgentRecord=] or of its DID document is not part of this version of RWP. A change of verification methods creates a new DID document version ([[#section-didoc-history]]) and does not require a new version of RWP.
+
+Trust assumptions of RWP are defined in [[#section-federation-trust-anchor]].
+
+
+## Root Schemas ## {#annex-root-schemas}
+
+A <dfn>Root Schema</dfn> is a [=SchemaRecord=] listed in the following table. A [=SchemaRecord=] is a Root Schema only if its DID is listed here. The column `versionHash` identifies the version of the Root Schema that applies to this version of RWP.
+
+A later version of the same [=SchemaRecord=], reachable from this version through `previousSchemaVersion`, is not part of this version of RWP. Whether and when an implementation adopts a later version is the decision of the implementation. RWP makes no statement about conformance to a later version before a later version of RWP lists it. A [=Record=] is validated against the version of its [=SchemaRecord=] identified by `metadata.core.schemaVersion`.
+
+<table class="data">
+<thead><tr><th>Record type<th>DID<th>versionHash</thead>
+<tr><td>SchemaRecord<td><code>did:rwp:d2d14675-50c9-463d-b564-1ea50644c836:schema-root-schemarecord</code><td><code>sha256:…</code>
+<tr><td>AgentRecord<td><code>did:rwp:d2d14675-50c9-463d-b564-1ea50644c836:schema-root-agentrecord</code><td><code>sha256:…</code>
+<tr><td>CaseRecord<td><code>did:rwp:d2d14675-50c9-463d-b564-1ea50644c836:schema-root-caserecord</code><td><code>sha256:…</code>
+<tr><td>AssertionRecord<td><code>did:rwp:d2d14675-50c9-463d-b564-1ea50644c836:schema-root-assertionrecord</code><td><code>sha256:…</code>
+<tr><td>DeletionRecord<td><code>did:rwp:d2d14675-50c9-463d-b564-1ea50644c836:schema-root-deletionrecord</code><td><code>sha256:…</code>
+</table>
+
+Where the text of this specification and a Root Schema identified in this annex differ, the Root Schema prevails.
 

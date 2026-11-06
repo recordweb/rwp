@@ -1,13 +1,68 @@
 DeletionRecord Specification {#chapter-deletionrecord}
 =========================================
 
-## Deletion Principles ## {#section-deletion-principles}
+## Definition ## {#section-deletionrecord-definition}
+
+A <dfn>DeletionRecord</dfn> is a [=Record=] and a SystemRecord whose Record type is the Root DeletionRecord Schema or a subclass of it ([[#section-schemarecord-subclass]]). It preserves the execution of a deletion under the regimes `payload-only` and `full-delete` together with its legal basis.
+
+The content of a Version of a DeletionRecord is a JSON object in the primary representation (format `application/json`), defined by the Root DeletionRecord Schema ([[#annex-a]]).
+
+<table class="data">
+<thead><tr><th>Field<th>Required<th>Type<th>Description</thead>
+<tr><td><code>targetDid</code><td>MUST<td>DID<td>DID of the Record concerned
+<tr><td><code>targetVersions</code><td>MAY<td>Array&lt;String&gt;<td><code>versionHash</code> of each Version concerned. MUST NOT be present for <code>full-delete</code>. If absent for <code>payload-only</code>, all Versions that exist at <code>deletedAt</code> are concerned.
+<tr><td><code>deletionRegime</code><td>MUST<td>String<td>One of <code>payload-only</code>, <code>full-delete</code>, see [[#section-deletion-regimes]]
+<tr><td><code>legalBasis</code><td>MUST<td>String<td>Legal basis of the deletion
+<tr><td><code>requestedBy</code><td>MAY<td>String<td>Party that requested the deletion, see [[#section-agentrecord-responsible]]
+<tr><td><code>approvedBy</code><td>MUST<td>String<td>Agent that approved the deletion, see [[#section-agentrecord-responsible]]
+<tr><td><code>deletedAt</code><td>MUST<td>ISO 8601<td>Time of the deletion
+<tr><td><code>retainedFields</code><td>MAY<td>Array&lt;String&gt;<td>Parts of the Record that are retained, for example <code>did</code>, <code>metadata</code>, <code>versionGraph</code>
+</table>
+
+<pre class="example json" title="DeletionRecord content">
+{
+  "targetDid": "did:rwp:bern.ch:f47ac10b-58cc-4372-a567-0e02b2c3d479",
+  "targetVersions": [ "sha256:&lt;versionHash-1&gt;", "sha256:&lt;versionHash-2&gt;" ],
+  "deletionRegime": "payload-only",
+  "legalBasis": "GDPR Art. 17 (Right to erasure)",
+  "approvedBy": "did:rwp:bern.ch:unit-legal",
+  "deletedAt": "2026-06-01T10:00:00Z",
+  "retainedFields": [ "did", "metadata", "versionGraph" ]
+}
+</pre>
+
+When a deletion is executed, a DeletionRecord MUST be created and finalised before the payload is removed.
+
+After the DeletionRecord is finalised, for the regime `payload-only` and for each Version concerned:
+- The content bytes of each Representation MUST be securely overwritten.
+- Each Representation MUST be replaced by a Representation that contains `deleted` with the DID of the DeletionRecord, and that contains neither `content`, `ref` nor `contentHash`.
+- The `versionHash`, `state`, `parents`, `createdAt`, `modifiedAt` and `proof` of the Version remain unchanged. A deleted Version MUST NOT be validated ([[#section-validation-response-codes]]).
+
+After the DeletionRecord is finalised, for the regime `payload-only`, for the Record:
+- The `recordHash` MUST be recalculated.
+- A new DID document version MUST be created with updated `currentVersionHash` and `updated` ([[#section-didoc-history]]). The previous DID document versions MUST be retained.
+- The DID remains resolvable and the resolver returns HTTP 200.
+
+For the regime `full-delete`, the DID resolver MUST return HTTP 410 ([[#section-resolver-requirements]]).
+
+
+## Taxonomy ## {#section-deletionrecord-taxonomy}
+
+<pre class="highlight language-text">
+@prefix rw: &lt;https://w3id.org/recordweb/ontology#&gt; .
+rw:DeletionRecord
+  rdfs:subClassOf rw:SystemRecord .
+</pre>
+
+
+## Deletion Principles ## {#section-deletionrecord-principles}
 
 RecordWeb's immutability and data protection erasure obligations (GDPR, Swiss DSG) are in tension. RWP resolves this tension through a tiered deletion regime.
 
 The applicable regime is declared in the `deletionRegime` field of `metadata.governance` at the time of creation. This field is closely related to `retentionPolicy` (see [metadata.governance](#section-metadata-governance)): `retentionPolicy` references the applicable retention rule, while `deletionRegime` states the deletion behaviour required once that rule's retention period has elapsed or an erasure request is granted. Implementations MUST respect this field and MAY enforce it at the infrastructure level.
 
-## Deletion Regimes ## {#section-deletion-regimes}
+
+## Deletion Regimes ## {#section-deletionrecord-regimes}
 
 RWP defines three deletion regimes:
 
@@ -31,38 +86,9 @@ RWP defines three deletion regimes:
     <tr>
       <td>Deletion exemption</td>
       <td><code>exempt</code></td>
-      <td>No deletion occurs. The statutory retention obligation is documented as metadata.</td>
+      <td>No deletion is executed and no DeletionRecord is created. The statutory retention obligation is expressed by the `retentionPolicy` of the Record.</td>
       <td>Where a statutory retention obligation overrides the erasure claim (e.g. tax records, notarial acts, public register entries).</td>
     </tr>
   </tbody>
 </table>
-
-## DeletionRecord Protocol ## {#section-deletion-record}
-
-When a [=payload=] deletion is executed, a `DeletionRecord` MUST be created and finalised before the payload is removed.
-
-The `DeletionRecord` MUST contain:
-
-```json
-{
-  "deletionRecord": {
-    "targetDid": "did:rwp:bern.ch:f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    "targetVersion": "sha256:version-to-be-deleted...",
-    "deletionRegime": "payload-only",
-    "legalBasis": "GDPR Art. 17 — Right to erasure",
-    "requestedBy": "did:rwp:bern.ch:user-max-mustermann",
-    "approvedBy": "did:rwp:bern.ch:unit-legal",
-    "deletedAt": "2026-06-01T10:00:00Z",
-    "retainedFields": ["did", "metadata", "versionGraph"]
-  }
-}
-```
-
-After the `DeletionRecord` is finalised:
-
-1. The [=payload=] content bytes are securely overwritten
-2. The `hash` field of the affected `representations` entry in the [=version=] is replaced with the string `"deleted:<DeletionRecord-DID>"`
-3. The Record's `recordHash` is recalculated to reflect the deletion
-4. A new DID document version is created with an updated `currentVersion` and `updated` (see [DID Document History](#section-didoc-history)). The previous DID document versions are retained. The DID remains resolvable and the resolver returns HTTP 200.
-5. The DID resolver MUST return HTTP 410 for `full-delete` regimes
 

@@ -27,10 +27,10 @@ An [=AgentRecord=] is a Record whose primary purpose is to identify an entity th
 **System Records:**
 A <dfn>SystemRecord</dfn> is a Record whose primary purpose is to define, document, or prove a RecordWeb system rule, operation, or capability.
 - `SchemaRecord` (see [SchemaRecord](#chapter-schemarecord))
-- `ConformanceRecord` (see [Conformance and Implementation Claims](#chapter-conformancerecord))
 - `DeletionRecord` (see [Payload Deletion](#chapter-deletionrecord))
 - `MergeRecord` (TBD)
 - `MigrationRecord` (TBD)
+- `ConformanceRecord` (see [Conformance and Implementation Claims](#chapter-conformancerecord))
 
 The conformance requirements for these [=Record types=] are profile-, role-, and capability-specific. An implementation MUST support a core [=Record type=] only where this specification requires that support for a claimed profile, role, or exercised capability.
 

@@ -36,7 +36,7 @@ Where the primary Representation of a Payload entry has the format application/j
 Each [=Payload=] entry:
 
 - MUST be validated against the schema before finalisation
-- MUST NOT be changed after finalisation
+- MUST NOT be changed after finalisation, except by the deletion of its Representations according to [[#chapter-deletionrecord]]
 - MUST link to its predecessor versions by directed edges in the version graph (see [Version Graph (DAG)](#section-payload-version-graph))
 
 <pre class='example json' title='Payload'>
@@ -80,10 +80,9 @@ Each [=Payload=] entry:
 
 A <dfn>Representation</dfn> describes one material form of the [=Content=] of a [=Version=].
 
-- Each [=Representation=] MUST contain exactly one of `content` or `ref`.
+- Each [=Representation=] MUST contain exactly one of `content`, `ref` or `deleted`.
 - A [=Representation=] that contains `content` MUST contain `contentHash`.
 - A [=Representation=] that contains `ref` MUST NOT contain `contentHash`.
-- A [=Representation=] MUST NOT contain both `content` and `ref`.
 
 A [=Version=] MAY carry multiple `representations`. This is provided in particular for the transition from working format (draft) to long-term format (finalised). [=Representations=] express the same content in different formats at the same point in the version graph; they MUST NOT be used to express different versions over time, that is the purpose of separate [=versionHash=] entries linked via `parents`.
 
@@ -101,6 +100,7 @@ If a Version contains multiple [=Representations=], ALL of the following MUST ap
     <tr><td><code>content</code></td><td>blob</td><td>MUST WHEN no ref exists</td><td> Contains the inline content of the Representation</td></tr>
     <tr><td><code>contentHash</code></td><td>SHA-256</td><td>MUST WHEN content exists</td><td>Contains the hash calculated in accordance with [[#section-integrity-contentHash]]</td></tr>
     <tr><td><code>ref</code></td><td>string</td><td>MUST WHEN no content exists</td><td>Contains a reference to externally held, locally held, or physical content</td></tr>
+    <tr><td><code>deleted</code></td><td>DID</td><td>MUST WHEN no content and no ref exists</td><td>DID of the DeletionRecord that deleted the Representation. A Representation containing deleted MUST NOT contain content, ref or contentHash.</td></tr>
     <tr><td><code>primary</code></td><td>boolean</td><td>MUST</td><td>Exactly one representation MUST be <code>true</code></td></tr>
     <tr><td><code>role</code></td><td>string</td><td>SHOULD</td><td>Semantic role: <code>source</code>, <code>publication</code>, <code>preview</code>, <code>archive</code></td></tr>
   </tbody>

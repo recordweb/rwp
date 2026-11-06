@@ -10,7 +10,7 @@ For every Record, a <dfn>DID Document</dfn> MUST exist. A DID document is a chai
     <tr><th>Field</th><th>Required</th><th>Description</th></tr>
   </thead>
   <tbody>
-    <tr><td><code>@context</code></td><td>MUST</td><td>W3C DID Context URI</td></tr>
+    <tr><td><code>@context</code></td><td>MUST</td><td>Array of context URIs. MUST start with https://www.w3.org/ns/did/v1. A DID document that contains a Multikey MUST additionally include https://w3id.org/security/multikey/v1</td></tr>
     <tr><td><code>id</code></td><td>MUST</td><td>DID of the [=Record=]; identical to the Record DID. MUST NOT change between versions</td></tr>
     <tr><td><code>recordEndpoint</code></td><td>MUST</td><td>URL at which the [=Record=] can be retrieved. The <code>recordEndpoint</code> and the <code>id</code> together MUST form the full URL.</td></tr>
     <tr><td><code>created</code></td><td>MUST</td><td>ISO 8601 timestamp of DID creation. MUST NOT change between versions</td></tr>
@@ -19,18 +19,33 @@ For every Record, a <dfn>DID Document</dfn> MUST exist. A DID document is a chai
     <tr><td><code>previousVersionHash</code></td><td>MUST</td><td><code>versionHash</code> of the preceding DID document version. Omitted in the first version</td></tr>
     <tr><td><code>proof</code></td><td>MUST (when finalized, unless the schema defines signaturePolicy none)</td><td>One or more Data Integrity proofs over the DID document. See [Proof Procedure](#section-integrity-proof)</td></tr>
     <tr><td><code>service</code></td><td>MAY</td><td>Array of service entries according to [[DID-CORE]] (<code>id</code>, <code>type</code>, <code>serviceEndpoint</code>) declaring additional, optional access channels (see [Service Entries](#section-didoc-service))</td></tr>
+    <tr><td><code>controller</code></td><td>MAY</td><td>AgentRecord(s) that control this DID document, per [[DID-CORE]]. Proofs of this DID document are verified against the DID documents of the controllers.</td></tr>
+    <tr><td><code>verificationMethod</code></td><td>MAY</td><td>Per [[DID-CORE]]. Each entry MUST contain `id` (DID URL), `type` Multikey, `controller` (DID of the AgentRecord) and `publicKeyMultibase`. MUST be present for every key used to sign.</td></tr>
+    <tr><td><code>assertionMethod</code></td><td>MAY</td><td>Verification methods allowed for Version proofs (proofPurpose assertionMethod).</td></tr>
+    <tr><td><code>capabilityInvocation</code></td><td>MAY</td><td>Verification methods allowed for proofs of DID document versions (proofPurpose capabilityInvocation).</td></tr>
   </tbody>
 </table>
 
 <pre class='example json' title='Record components'>
 {
-  "@context": "https://www.w3.org/ns/did/v1",
+  "@context": [
+    "https://www.w3.org/ns/did/v1",
+    "https://w3id.org/security/multikey/v1"
+  ],
   "id": "did:rwp:d2d14675-50c9-463d-b564-1ea50644c836:a95437ee-25e4-469a-a2e1-c2b250b21e15",
   "recordEndpoint": "https://recordweb.org/resolver/records/",
   "created": "2026-10-26T18:20:00Z",
   "updated": "2026-10-26T18:20:00Z",
   "currentVersionHash": "sha256:474425f9f1f2d1fe78bcec3f41a579c02d5261161c489ab22296980075f37895",
-  "proof": []
+  "proof": [],
+  "verificationMethod": [{
+    "id": "did:rwp:d2d14675-50c9-463d-b564-1ea50644c836:efd09e7b-5f65-4637-b06c-404a9da97f0b#key-1",
+    "type": "Multikey",
+    "controller": "did:rwp:d2d14675-50c9-463d-b564-1ea50644c836:efd09e7b-5f65-4637-b06c-404a9da97f0b",
+    "publicKeyMultibase": "z6MkpgYzzH9AJJTnsYYMEaaVPZN2t2iCsz76ShftvkBt5jpP"
+  }],
+  "assertionMethod": [ "did:rwp:d2d14675-50c9-463d-b564-1ea50644c836:a95437ee-25e4-469a-a2e1-c2b250b21e15#key-1" ],
+  "capabilityInvocation": [ "did:rwp:d2d14675-50c9-463d-b564-1ea50644c836:a95437ee-25e4-469a-a2e1-c2b250b21e15#key-1" ]
 }
 </pre>
 
@@ -53,12 +68,12 @@ A new version MUST reference the current latest version as `previousVersionHash`
 
 The `versionHash` identifies a DID document version and is calculated as follows:
 
-1. Serialise the DID document fields `id`, `recordEndpoint`, `service`, `created`, `updated`, `currentVersioHash`, `previousVersionHash`, and `proof` as canonical JSON ([[RFC8785]]). Fields not present are omitted.
+1. Serialise the DID document fields `@context`, `id`, `controller`, `recordEndpoint`, `service`, `verificationMethod`, `assertionMethod`, `capabilityInvocation`, `created`, `updated`, `currentVersionHash`, `previousVersionHash`, and `proof` as canonical JSON ([[RFC8785]]). Fields not present are omitted.
 2. Calculate SHA-256 over the result.
 3. Encode the digest as `sha256:` followed by 64 lowercase hexadecimal characters.
 
 <pre class='example code' title='versionHash calculation'>
-versionHash = "sha256:" + hex( SHA-256( canonicalize({id, recordEndpoint, [service,] created, updated, [currentVersionHash], [previousVersionHash], [proof]}) ) )
+versionHash = "sha256:" + hex( SHA-256( canonicalize({@context, id, [controller], recordEndpoint, [service,] [verificationMethod,] [assertionMethod,] [capabilityInvocation,] created, updated, [currentVersionHash], [previousVersionHash], [proof]}) ) )
 </pre>
 
 Fields not present are omitted.
@@ -72,6 +87,10 @@ A verifier checking a DID document version MUST:
 2. check that `previousVersionHash` equals the `versionHash` of the predecessor;
 3. verify at least one `proof` as defined in [Proof Procedure](#section-integrity-proof);
 4. check that `updated` is later than `updated` of the predecessor.
+
+The verification method of a proof MUST be listed in capabilityInvocation of
+(a) the preceding DID document version, if the DID document belongs to an AgentRecord. For the first version it is the version itself.
+(b) the current DID document of one of its controllers, for any other DID document.
 
 
 ## Service Entries ## {#section-didoc-service}
