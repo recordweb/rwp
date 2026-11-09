@@ -3,7 +3,7 @@ Annex A: Record, Version, and Metadata Schemas {#annex-a}
 
 ## Record Schema ## {#annex-record-schema}
 
-The JSON Schema for the [=Record=], Version and Metadata structures is published at &lt;https://recordweb.org/schemas/rwp/1.0/record.json&gt;. The `$id` of the schema is this URL. This version of RWP refers to the file whose SHA-256 value is `sha256:…`. The value is calculated over the serialisation of the file according to [[RFC8785]] ([[#section-integrity-hashing]]).
+The JSON Schema for the [=Record=], Version and Metadata structures is published at &lt;https://recordweb.org/schemas/rwp/1.0/record.json&gt;. The `$id` of the schema is this URL. This version of RWP refers to the file whose SHA-256 value is `sha256:9f43b391aff10650ed80cbd08a7de460a5260a1d2346e343033d80071492ebb8`. The value is calculated over the serialisation of the file according to [[RFC8785]] ([[#section-integrity-hashing]]).
 
 This schema defines structural validation only. The requirements for hashes, proofs and states are defined in [[#chapter-integrity]] and [[#section-payload-states]].
 
@@ -13,8 +13,8 @@ This schema defines structural validation only. The requirements for hashes, pro
 The <dfn>Root Agent</dfn> is the [=AgentRecord=] of the **RecordWeb Trust Association**. It is the initial controller of the Root Schemas ([[#annex-root-schemas]]). It is the owner of the Root Schemas, and the DID documents of the Root Schemas name it as controller.
 
 <table class="data">
-<thead><tr><th>Name<th>DID<th>versionHash of the Record<th>versionHash of the first DID document</thead>
-<tr><td>RecordWeb Trust Association<td><code>did:rwp:d2d14675-50c9-463d-b564-1ea50644c836:agent-recordweb-trust-association</code><td><code>sha256:…</code><td><code>sha256:…</code>
+<thead><tr><th>Name<th>DID<th>versionHash of the Record<th>versionHash of the first DID document<th>Record URL</thead>
+<tr><td>RecordWeb Trust Association<td><code>did:rwp:d2d14675-50c9-463d-b564-1ea50644c836:agent-recordweb-trust-association</code><td><code>sha256:c389769378c1622ef1d0d7d25c2dee595400bfef6839b5a0cf03af1ee88a2e45</code><td><code>sha256:c389769378c1622ef1d0d7d25c2dee595400bfef6839b5a0cf03af1ee88a2e45</code><td><a href="https://recordweb.org/resolver/records/d2d14675-50c9-463d-b564-1ea50644c836/agent-recordweb-trust-association">record</a>
 </table>
 
 The `versionHash` of the Record identifies the version of the [=AgentRecord=] that applies to this version of RWP. The `versionHash` of the first DID document identifies the first version of its DID document, which publishes the initial verification methods. A verifier MAY use this value as the starting point of the verification of the DID document history ([[#section-didoc-verification]]).
@@ -31,12 +31,12 @@ A [=Root Schema=] is a [=SchemaRecord=] listed in the following table. A [=Schem
 A later version of the same [=SchemaRecord=], reachable from this version through `previousSchemaVersion`, is not part of this version of RWP. Whether and when an implementation adopts a later version is the decision of the implementation. RWP makes no statement about conformance to a later version before a later version of RWP lists it. A [=Record=] is validated against the version of its [=SchemaRecord=] identified by `metadata.core.schemaVersion`.
 
 <table class="data">
-<thead><tr><th>Record type<th>DID<th>versionHash</thead>
-<tr><td>SchemaRecord<td><code>did:rwp:d2d14675-50c9-463d-b564-1ea50644c836:schema-root-schemarecord</code><td><code>sha256:…</code>
-<tr><td>AgentRecord<td><code>did:rwp:d2d14675-50c9-463d-b564-1ea50644c836:schema-root-agentrecord</code><td><code>sha256:…</code>
-<tr><td>CaseRecord<td><code>did:rwp:d2d14675-50c9-463d-b564-1ea50644c836:schema-root-caserecord</code><td><code>sha256:…</code>
-<tr><td>AssertionRecord<td><code>did:rwp:d2d14675-50c9-463d-b564-1ea50644c836:schema-root-assertionrecord</code><td><code>sha256:…</code>
-<tr><td>DeletionRecord<td><code>did:rwp:d2d14675-50c9-463d-b564-1ea50644c836:schema-root-deletionrecord</code><td><code>sha256:…</code>
+<thead><tr><th>Record type<th>DID<th>versionHash<th>Record URL</thead>
+<tr><td>SchemaRecord<td><code>did:rwp:d2d14675-50c9-463d-b564-1ea50644c836:schema-root-schemarecord</code><td><code>sha256:f6fa964c6b4ad09af2d1e2d3c8c30fbb2d812796eccd7e592f56dbd3b8299cd2</code><td><a href="https://recordweb.org/resolver/records/d2d14675-50c9-463d-b564-1ea50644c836/schema-root-schemarecord">record</a>
+<tr><td>AgentRecord<td><code>did:rwp:d2d14675-50c9-463d-b564-1ea50644c836:schema-root-agentrecord</code><td><code>sha256:93692f566c244305f2c6ffccf3987a618281ad186247276b2b288c037ede9b2a</code><td><a href="https://recordweb.org/resolver/records/d2d14675-50c9-463d-b564-1ea50644c836/schema-root-agentrecord">record</a>
+<tr><td>CaseRecord<td><code>did:rwp:d2d14675-50c9-463d-b564-1ea50644c836:schema-root-caserecord</code><td><code>sha256:3622a965594d5b9970f2e5c92c66f878ccfb5a972f61ac3b46ef41dbfa1116e9</code><td><a href="https://recordweb.org/resolver/records/d2d14675-50c9-463d-b564-1ea50644c836/schema-root-caserecord">record</a>
+<tr><td>AssertionRecord<td><code>did:rwp:d2d14675-50c9-463d-b564-1ea50644c836:schema-root-assertionrecord</code><td><code>sha256:fe06970166343fd7ca1c7c948617c7f1869d2273727a66333aa459cd7a123ef4</code><td><a href="https://recordweb.org/resolver/records/d2d14675-50c9-463d-b564-1ea50644c836/schema-root-assertionrecord">record</a>
+<tr><td>DeletionRecord<td><code>did:rwp:d2d14675-50c9-463d-b564-1ea50644c836:schema-root-deletionrecord</code><td><code>sha256:ffb5e75db60bab56ce6c97befdaeaafe5e2c8c3f0acf6931e30b79ea6be09c73</code><td><a href="https://recordweb.org/resolver/records/d2d14675-50c9-463d-b564-1ea50644c836/schema-root-deletionrecord">record</a>
 </table>
 
 Where the text of this specification and a Root Schema identified in this annex differ, the Root Schema prevails.
