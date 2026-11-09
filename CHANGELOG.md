@@ -6,6 +6,11 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [0.0.16] – 2026-11-09
+
+recordEndpoint as Array, to match published schemas
+- [RWP#55](https://github.com/recordweb/rwp/issues/55)
+
 ## [0.0.15] – 2026-11-09
 
 Editorial:

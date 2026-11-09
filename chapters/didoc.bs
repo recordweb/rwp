@@ -12,7 +12,7 @@ For every Record, a <dfn>DID Document</dfn> MUST exist. A DID document is a chai
   <tbody>
     <tr><td><code>@context</code></td><td>MUST</td><td>Array of context URIs. MUST start with https://www.w3.org/ns/did/v1. A DID document that contains a Multikey MUST additionally include https://w3id.org/security/multikey/v1</td></tr>
     <tr><td><code>id</code></td><td>MUST</td><td>DID of the [=Record=]; identical to the Record DID. MUST NOT change between versions</td></tr>
-    <tr><td><code>recordEndpoint</code></td><td>MUST</td><td>URL at which the [=Record=] can be retrieved. The <code>recordEndpoint</code> and the <code>id</code> together MUST form the full URL.</td></tr>
+    <tr><td><code>recordEndpoint</code></td><td>MUST</td><td>Array of URLs at which the [=Record=] can be retrieved. The <code>recordEndpoint</code> and the <code>id</code> together MUST form a full URL.</td></tr>
     <tr><td><code>created</code></td><td>MUST</td><td>ISO 8601 timestamp of DID creation. MUST NOT change between versions</td></tr>
     <tr><td><code>updated</code></td><td>MUST</td><td>ISO 8601 timestamp of this DID document version. Defines <code>versionTime</code> resolution</td></tr>
     <tr><td><code>currentVersionHash</code></td><td>MUST</td><td><code>versionHash</code> of the current finalised [=Record=] version. Omitted if the [=Record=] has no finalised version</td></tr>
@@ -33,7 +33,9 @@ For every Record, a <dfn>DID Document</dfn> MUST exist. A DID document is a chai
     "https://w3id.org/security/multikey/v1"
   ],
   "id": "did:rwp:d2d14675-50c9-463d-b564-1ea50644c836:a95437ee-25e4-469a-a2e1-c2b250b21e15",
-  "recordEndpoint": "https://recordweb.org/resolver/records/",
+  "recordEndpoint": [
+    "https://recordweb.org/resolver/records/"
+  ],
   "created": "2026-10-26T18:20:00Z",
   "updated": "2026-10-26T18:20:00Z",
   "currentVersionHash": "sha256:474425f9f1f2d1fe78bcec3f41a579c02d5261161c489ab22296980075f37895",
