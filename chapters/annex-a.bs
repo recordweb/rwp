@@ -3,7 +3,7 @@ Annex A: Record, Version, and Metadata Schemas {#annex-a}
 
 ## Record Schema ## {#annex-record-schema}
 
-The JSON Schema for the [=Record=], Version and Metadata structures is published at &lt;https://recordweb.org/schemas/rwp/1.0/record.json&gt;. The `$id` of the schema is this URL. This version of RWP refers to the file whose SHA-256 value is `sha256:9f43b391aff10650ed80cbd08a7de460a5260a1d2346e343033d80071492ebb8`. The value is calculated over the serialisation of the file according to [[RFC8785]] ([[#section-integrity-hashing]]).
+The JSON Schema for the [=Record=], Version and Metadata structures is published at [https://recordweb.org/schemas/rwp/1.0/record.json](https://recordweb.org/schemas/rwp/1.0/record.json). The `$id` of the schema is this URL. This version of RWP refers to the file whose SHA-256 value is `sha256:9f43b391aff10650ed80cbd08a7de460a5260a1d2346e343033d80071492ebb8`. The value is calculated over the serialisation of the file according to [[RFC8785]] ([[#section-integrity-hashing]]).
 
 This schema defines structural validation only. The requirements for hashes, proofs and states are defined in [[#chapter-integrity]] and [[#section-payload-states]].
 
