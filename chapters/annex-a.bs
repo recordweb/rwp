@@ -1,6 +1,16 @@
 Annex A: Record, Version, and Metadata Schemas {#annex-a}
 ==========================================
 
+
+## Status of the Annex A schemas (provisional) ## {#annex-a-status}
+
+<div class=advisement>
+The Root Schemas and the Record Schema published in this Annex are labelled version 1.0 and have been finalised, so that dependent schemas can refer to stable hashes. This label denotes the structure of the schemas. It does not mean that RWP 1.0 has been adopted.
+
+The text of this specification and its interpretation are still under active revision. When RWP 1.0 is adopted, the schemas will be reviewed and, where necessary, republished as changed 1.0 Versions of the same SchemaRecords. Their versionHash values will then change! Implementations and application schemas that depend on the current hashes MUST NOT assume that these hashes are permanent before the adoption of RWP 1.0.
+</div>
+
+
 ## Record Schema ## {#annex-record-schema}
 
 The JSON Schema for the [=Record=], Version and Metadata structures is published at [https://recordweb.org/schemas/rwp/1.0/record.json](https://recordweb.org/schemas/rwp/1.0/record.json). The `$id` of the schema is this URL. This version of RWP refers to the file whose SHA-256 value is `sha256:9f43b391aff10650ed80cbd08a7de460a5260a1d2346e343033d80071492ebb8`. The value is calculated over the serialisation of the file according to [[RFC8785]] ([[#section-integrity-hashing]]).
