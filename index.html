@@ -8,7 +8,7 @@
   <meta content="Bikeshed version e0b165ae4, updated Mon Nov 2 15:16:49 2026 -0800" name="generator">
   <link href="https://recordweb.github.io/rwp/" rel="canonical">
   <link href="https://www.w3.org/2008/site/images/favicon.ico" rel="icon">
-  <meta content="1823691d1c4bd097e2d911354db55f9011746815" name="revision">
+  <meta content="d00869ce8c271b290ef6dd2d6de624223468c994" name="revision">
   <meta content="dark light" name="color-scheme">
   <link href="https://www.w3.org/StyleSheets/TR/2021/dark.css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css">
 <style>/* Boilerplate: style-autolinks */
@@ -733,7 +733,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
 </p>
    <h1 class="no-ref p-name" id="title">RecordWeb Protocol (RWP)</h1>
    <p id="w3c-state"><a href="https://www.w3.org/standards/types/#CG-DRAFT">Draft Community Group Report</a>,
-    <time class="dt-updated" datetime="2026-11-09">9 November 2026</time></p>
+    <time class="dt-updated" datetime="2026-11-10">10 November 2026</time></p>
    <details open>
     <summary>More details about this document</summary>
     <div data-fill-with="spec-metadata">
@@ -3511,7 +3511,7 @@ RWP does not define trust in a signing party. For a globally resolvable DID, the
    <h2 class="heading no-num no-toc settled" id="part-8"><span class="content">Part IV: Annexes</span><a class="self-link" href="#part-8"></a></h2>
    <h2 class="heading settled" data-level="20" id="annex-a"><span class="secno">20. </span><span class="content">Annex A: Record, Version, and Metadata Schemas</span><a class="self-link" href="#annex-a"></a></h2>
    <h3 class="heading settled" data-level="20.1" id="annex-record-schema"><span class="secno">20.1. </span><span class="content">Record Schema</span><a class="self-link" href="#annex-record-schema"></a></h3>
-   <p>The JSON Schema for the <a data-link-type="dfn" href="#record" id="ref-for-record⑦⑤">Record</a>, Version and Metadata structures is published at &lt;https://recordweb.org/schemas/rwp/1.0/record.json>. The <code>$id</code> of the schema is this URL. This version of RWP refers to the file whose SHA-256 value is <code>sha256:9f43b391aff10650ed80cbd08a7de460a5260a1d2346e343033d80071492ebb8</code>. The value is calculated over the serialisation of the file according to <a data-link-type="biblio" href="#biblio-rfc8785" title="JSON Canonicalization Scheme (JCS)">[RFC8785]</a> (<a href="#section-integrity-hashing">§ 7.6 Hashing Procedure</a>).</p>
+   <p>The JSON Schema for the <a data-link-type="dfn" href="#record" id="ref-for-record⑦⑤">Record</a>, Version and Metadata structures is published at <a href="https://recordweb.org/schemas/rwp/1.0/record.json">https://recordweb.org/schemas/rwp/1.0/record.json</a>. The <code>$id</code> of the schema is this URL. This version of RWP refers to the file whose SHA-256 value is <code>sha256:9f43b391aff10650ed80cbd08a7de460a5260a1d2346e343033d80071492ebb8</code>. The value is calculated over the serialisation of the file according to <a data-link-type="biblio" href="#biblio-rfc8785" title="JSON Canonicalization Scheme (JCS)">[RFC8785]</a> (<a href="#section-integrity-hashing">§ 7.6 Hashing Procedure</a>).</p>
    <p>This schema defines structural validation only. The requirements for hashes, proofs and states are defined in <a href="#chapter-integrity">§ 7 Record Integrity</a> and <a href="#section-payload-states">§ 6.7 States and Transitions</a>.</p>
    <h3 class="heading settled" data-level="20.2" id="annex-root-agent"><span class="secno">20.2. </span><span class="content">Root Agent</span><a class="self-link" href="#annex-root-agent"></a></h3>
    <p>The <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="root-agent">Root Agent</dfn> is the <a data-link-type="dfn" href="#agentrecord" id="ref-for-agentrecord⑤">AgentRecord</a> of the <strong>RecordWeb Trust Association</strong>. It is the initial controller of the Root Schemas (<a href="#annex-root-schemas">§ 20.3 Root Schemas</a>). It is the owner of the Root Schemas, and the DID documents of the Root Schemas name it as controller.</p>
