@@ -90,7 +90,7 @@ The declaration SHOULD provide machine-readable representations where available,
 
 A SchemaRecord MAY constrain a predicate more narrowly than its declaration. It MUST NOT broaden, reverse or contradict the semantics or direction defined by the declaration. A conformance profile MAY require support for specified predicates. It MUST NOT define a predicate or alter the semantics of one.
 
-INFO: RiC-O predicates are an example of contextual predicates. A SchemaRecord MAY permit them. Their use does not require an implementation to store, exchange or process Records as RDF or JSON-LD: the RiC-O IRI identifies the semantics of the asserted relationship. The declaration identifies the exact RiC-O predicate IRI and the RiC-O version to which it applies, and a SchemaRecord does not permit a RiC-O predicate where an applicable PROV-O predicate expresses the intended semantics.
+Note: RiC-O predicates are an example of contextual predicates. A SchemaRecord MAY permit them. Their use does not require an implementation to store, exchange or process Records as RDF or JSON-LD: the RiC-O IRI identifies the semantics of the asserted relationship. The declaration identifies the exact RiC-O predicate IRI and the RiC-O version to which it applies, and a SchemaRecord does not permit a RiC-O predicate where an applicable PROV-O predicate expresses the intended semantics.
 
 
 ## Relationship to the Version Graph ## {#section-assertionrecord-version-graph}

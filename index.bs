@@ -11,7 +11,7 @@ Abstract:
 Repository: recordweb/rwp
 Markup Shorthands: markdown yes
 Version History: https://github.com/recordweb/rwp/commits/main/index.bs
-!Specification Version: 0.0.17
+!Version: 0.0.17
 </pre>
 
 <div class="copyright">
