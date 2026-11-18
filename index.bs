@@ -193,3 +193,7 @@ path: chapters/privacy-security.bs
 path: chapters/annex-a.bs
 </pre>
 
+<pre class=include>
+path: chapters/annex-b.bs
+</pre>
+
