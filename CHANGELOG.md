@@ -6,10 +6,22 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [0.0.17] – 2026-11-18
+
+Implemented CfC 12 outcomes. See
+- [RWP#44](https://github.com/recordweb/rwp/issues/44)
+- [RWP#45](https://github.com/recordweb/rwp/issues/45)
+- [RWP#46](https://github.com/recordweb/rwp/issues/46)
+- [RWP#47](https://github.com/recordweb/rwp/issues/47)
+- [RWP#48](https://github.com/recordweb/rwp/issues/48)
+- [RWP#49](https://github.com/recordweb/rwp/issues/49)
+
+
 ## [0.0.16] – 2026-11-09
 
 recordEndpoint as Array, to match published schemas
 - [RWP#55](https://github.com/recordweb/rwp/issues/55)
+
 
 ## [0.0.15] – 2026-11-09
 
@@ -17,20 +29,24 @@ Editorial:
 - Consistency Part IV
 - Root Schemas
 
+
 ## [0.0.14] – 2026-11-06
 
 Editorial:
 - Consistency Part III
+
 
 ## [0.0.13] – 2026-11-05
 
 Editorial:
 - Consistency Part II
 
+
 ## [0.0.12] – 2026-11-02
 
 Editorial:
 - Consistency Part I
+
 
 ## [0.0.11] – 2026-10-30
 
@@ -43,11 +59,13 @@ Implemented CfC 11 outcomes. See
 Editorial:
 - Restructure Chaptures
 
+
 ## [0.0.10] – 2026-10-22
 
 Implemented CfC 10 outcomes. See
 Citizen autonomy:
 - [RWC#5](https://github.com/recordweb/rwc/issues/5)
+
 
 ## [0.0.9] – 2026-10-06
 
@@ -57,6 +75,7 @@ Optional Service-Block:
 
 Editorial:
 - Version update, wording, syntax
+
 
 ## [0.0.8] – 2026-10-05
 
@@ -68,6 +87,7 @@ Verifier Model:
 
 Editorial:
 - Version update, wording, syntax
+
 
 ## [0.0.7] – 2026-09-15
 
@@ -90,9 +110,11 @@ Conformance:
 Editorial:
 - Version update
 
+
 ## [0.0.6] – 2026-08-31
 
 - Editorial: Complete restructuring RWP without new normative changes.
+
 
 ## [0.0.5] – 2026-08-24
 
@@ -106,10 +128,12 @@ Implemented CfC 2 outcomes. See
 - [RWP#19](https://github.com/recordweb/rwp/issues/19)
 - Editorial: References in bikeshed-syntax
 
+
 ## [0.0.4] – 2026-08-14
 
 - Implemented CfC 1 outcomes. See [RWC#11](https://github.com/recordweb/rwc/issues/11) and [RWP#12](https://github.com/recordweb/rwp/issues/12).
 - Editorial: References in bikeshed-syntax
+
 
 ## [0.0.3] – 2026-08-06
 
@@ -122,6 +146,7 @@ This version refines the way RWP lists and references external standards, in ord
 
 These changes simplify the dependency landscape for implementers: RWP now lists only its true technical requirements, while keeping conceptual relationships to archival and records management standards in the descriptive sections and in RWC.
 
+
 ## [0.0.2] – 2026-08-04
 
 Editorial alignment between RWC and RWP:
@@ -130,6 +155,7 @@ Editorial alignment between RWC and RWP:
 - RWP §9.5: corrected pseudocode return types and restored missing bracket
 - RWP §14.1: removed duplicate chapter reference in Level 2 conformance list
 - Both documents: added explicit `Version: 0.0.2` in Bikeshed metadata
+
 
 ## [0.0.1] — 2026-06-26
 
