@@ -8,8 +8,8 @@ An existing application does not have to change its data model to take part in R
 
 1. Assign a stable DID to each object that is to be exposed.
 2. Build a Version with at least one Representation from the current data.
-3. Calculate `contentHash`, `versionHash` and `recordHash` as defined in [[#chapter-record-integrity]].
-4. Serve the DID document and the Record over HTTP as defined in [[#section-did-resolver]].
+3. Calculate `contentHash`, `versionHash` and `recordHash` as defined in [[#chapter-integrity]].
+4. Serve the DID document and the Record over HTTP as defined in [[#chapter-didoc]].
 
 The following sections show the calculation steps. The code is illustrative, not normative and not production ready. For a usable example, see: [https://github.com/recordweb/recordweb-org/tree/main/tools](https://github.com/recordweb/recordweb-org/tree/main/tools)
 
