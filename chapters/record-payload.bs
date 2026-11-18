@@ -21,6 +21,7 @@ The [=Payload=] of a [=Record=] is an ordered array of [=Versions=]. Each [=Vers
   </thead>
   <tbody>
     <tr><td><code>versionHash</code></td><td>SHA-256</td><td>MUST</td><td>Contains the hash calculated in accordance with [[#section-integrity-versionHash]].</td></tr>
+    <tr><td><code>versionReason</code></td><td>String</td><td>MAY</td><td>A Version should contain a description of action and events involving the record (According [[ISO15489]] 5.2.3)</td></tr>
     <tr><td><code>state</code></td><td>Enum</td><td>MUST</td><td><code>draft</code> or <code>finalized</code>; additional values permitted per type schema</td></tr>
     <tr><td><code>parents</code></td><td>Array&lt;SHA-256&gt;</td><td>MUST</td><td>Hashes of predecessor Versions; empty for the root Version</td></tr>
     <tr><td><code>createdAt</code></td><td>ISO 8601</td><td>MUST</td><td>Timestamp of Version creation</td></tr>
