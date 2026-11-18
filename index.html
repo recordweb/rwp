@@ -8,7 +8,7 @@
   <meta content="Bikeshed version e0b165ae4, updated Mon Nov 2 15:16:49 2026 -0800" name="generator">
   <link href="https://recordweb.github.io/rwp/" rel="canonical">
   <link href="https://www.w3.org/2008/site/images/favicon.ico" rel="icon">
-  <meta content="a1ab47e71d2bcab44d952b13fd32f6a41fd25a54" name="revision">
+  <meta content="f268b12b4e4704aadc9b26847cc7b589a5ac4d16" name="revision">
   <meta content="dark light" name="color-scheme">
   <link href="https://www.w3.org/StyleSheets/TR/2021/dark.css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css">
 <style>/* Boilerplate: style-autolinks */
@@ -733,21 +733,21 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
 </p>
    <h1 class="no-ref p-name" id="title">RecordWeb Protocol (RWP)</h1>
    <p id="w3c-state"><a href="https://www.w3.org/standards/types/#CG-DRAFT">Draft Community Group Report</a>,
-    <time class="dt-updated" datetime="2026-11-10">10 November 2026</time></p>
+    <time class="dt-updated" datetime="2026-11-18">18 November 2026</time></p>
    <details open>
     <summary>More details about this document</summary>
     <div data-fill-with="spec-metadata">
      <dl>
       <dt>This version:
       <dd><a class="u-url" href="https://recordweb.github.io/rwp/">https://recordweb.github.io/rwp/</a>
-      <dt>Previous Versions:
-      <dd><a href="https://doi.org/10.5281/zenodo.20475345" rel="prev">https://doi.org/10.5281/zenodo.20475345</a>
       <dt>Version History:
       <dd><a href="https://github.com/recordweb/rwp/commits/main/index.bs">https://github.com/recordweb/rwp/commits/main/index.bs</a>
       <dt>Issue Tracking:
       <dd><a href="https://github.com/recordweb/rwp/issues/">GitHub</a>
       <dt class="editor">Editor:
       <dd class="editor h-card p-author vcard"><a class="email fn p-name u-email" href="mailto:nik@triebwerkstatt.ch">Nik Jenzer</a>
+      <dt>Specification Version:
+      <dd>0.0.17
      </dl>
     </div>
    </details>
@@ -1007,6 +1007,16 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
       <li><a href="#annex-root-schemas"><span class="secno">20.4</span> <span class="content">Root Schemas</span></a>
      </ol>
     <li>
+     <a href="#annex-b"><span class="secno">21</span> <span class="content">Annex B: Implementation Guide and Test Vectors (informative) #</span></a>
+     <ol class="toc">
+      <li><a href="#annex-b-purpose"><span class="secno">21.1</span> <span class="content">Purpose</span></a>
+      <li><a href="#annex-b-hashes"><span class="secno">21.2</span> <span class="content">Calculating hashes</span></a>
+      <li><a href="#annex-b-vectors-hash"><span class="secno">21.3</span> <span class="content">Test vectors for hashes</span></a>
+      <li><a href="#annex-b-example"><span class="secno">21.4</span> <span class="content">Complete example: SchemaRecord and instance</span></a>
+      <li><a href="#annex-b-retrieval"><span class="secno">21.5</span> <span class="content">Retrieving the example Records #</span></a>
+      <li><a href="#annex-b-signing"><span class="secno">21.6</span> <span class="content">Signing</span></a>
+     </ol>
+    <li>
      <a href="#w3c-conformance"><span class="secno"></span> <span class="content">Conformance</span></a>
      <ol class="toc">
       <li><a href="#w3c-conventions"><span class="secno"></span> <span class="content">Document conventions</span></a>
@@ -1026,7 +1036,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   </nav>
   <main>
    <div class="copyright">
-    <p>Copyright © 2026 the Contributors to the RecordWeb Protocol (RWP) v0.0.16, published by the <a href="https://www.w3.org/community/recordweb/">RecordWeb Community Group</a> under the <a href="https://www.w3.org/community/about/process/cla/">W3C Community Contributor License Agreement (CLA)</a>. A human-readable <a href="https://www.w3.org/community/about/process/cla-deed/">summary</a> is available.</p>
+    <p>Copyright © 2026 the Contributors to the RecordWeb Protocol (RWP), published by the <a href="https://www.w3.org/community/recordweb/">RecordWeb Community Group</a> under the <a href="https://www.w3.org/community/about/process/cla/">W3C Community Contributor License Agreement (CLA)</a>. A human-readable <a href="https://www.w3.org/community/about/process/cla-deed/">summary</a> is available.</p>
    </div>
    <ul>
     <li data-md>
@@ -1465,12 +1475,22 @@ did:rwp:example.com:f47ac10b
       <td><code>transit</code>
       <td>MUST
       <td>String
-      <td>Direction of the Record relative to its namespace. One of <code>incoming</code>, <code>internal</code>, <code>outgoing</code>. See <a href="#subsection-metadata-transit">Transit</a>.
+      <td>Direction of the Record relative to its namespace. One of <code>incoming</code>, <code>internal</code>, <code>outgoing</code> (See <a href="#subsection-metadata-transit">Transit</a>)
      <tr>
       <td><code>provenanceRef</code>
       <td>MUST if <code>transit</code> is <code>incoming</code>, MUST NOT otherwise
       <td>Object
-      <td>Statement about the origin of the information outside the namespace. See <a href="#subsection-metadata-transit">Transit</a>.
+      <td>Statement about the origin of the information outside the namespace. See <a href="#subsection-metadata-transit">Transit</a>
+     <tr>
+      <td><code>context</code>
+      <td>MAY
+      <td>String
+      <td>Metadata for records should contain a business context (According <a data-link-type="biblio" href="#biblio-iso15489" title="Information and documentation — Records management, Part 1: Concepts and principles">[ISO15489]</a> 5.2.3)
+     <tr>
+      <td><code>abstract</code>
+      <td>MAY
+      <td>String
+      <td>Metadata for records should contain a description of the content of the record (According <a data-link-type="biblio" href="#biblio-iso15489" title="Information and documentation — Records management, Part 1: Concepts and principles">[ISO15489]</a> 5.2.3)
    </table>
    <h4 class="heading settled" data-level="5.1.1" id="subsection-metadata-transit"><span class="secno">5.1.1. </span><span class="content">Transit</span><a class="self-link" href="#subsection-metadata-transit"></a></h4>
    <p>Transit describes the direction of a Record relative to the namespace in which it is created. It is independent of the Record type and of the state of a Version.</p>
@@ -1620,6 +1640,11 @@ did:rwp:example.com:f47ac10b
       <td>MUST
       <td>Contains the hash calculated in accordance with <a href="#section-integrity-versionHash">§ 7.3 Version Hash Calculation</a>.
      <tr>
+      <td><code>versionReason</code>
+      <td>String
+      <td>MAY
+      <td>A Version should contain a description of action and events involving the record (According <a data-link-type="biblio" href="#biblio-iso15489" title="Information and documentation — Records management, Part 1: Concepts and principles">[ISO15489]</a> 5.2.3)
+     <tr>
       <td><code>state</code>
       <td>Enum
       <td>MUST
@@ -1727,7 +1752,7 @@ did:rwp:example.com:f47ac10b
       <td>MIME type incl. profiles
      <tr>
       <td><code>content</code>
-      <td>blob
+      <td>see below
       <td>MUST WHEN no ref exists
       <td> Contains the inline content of the Representation
      <tr>
@@ -1756,6 +1781,15 @@ did:rwp:example.com:f47ac10b
       <td>SHOULD
       <td>Semantic role: <code>source</code>, <code>publication</code>, <code>preview</code>, <code>archive</code>
    </table>
+   <p><strong>Content:</strong></p>
+   <ul>
+    <li data-md>
+     <p>For JSON media types (application/json and +json), content is the JSON value itself (object, array, string, and so on). It is placed unchanged in the hash input.</p>
+    <li data-md>
+     <p>For other textual media types (for example text/markdown), content is a JSON string containing the text (UTF-8).</p>
+    <li data-md>
+     <p>For binary media types (for example application/pdf), content is a JSON string containing the bytes encoded as Base64 per [RFC 4648] §4, with padding and without line breaks. (Alternative: Base64url, if preferred.)</p>
+   </ul>
    <h3 class="heading settled" data-level="6.3" id="section-payload-types"><span class="secno">6.3. </span><span class="content">Permitted Payload Content Types</span><a class="self-link" href="#section-payload-types"></a></h3>
    <p>RWP distinguishes three <a data-link-type="dfn" href="#payload" id="ref-for-payload⑤">Payload</a> content categories:</p>
    <table class="data">
@@ -1988,6 +2022,8 @@ rejected (terminal state, not linkable)
    <h3 class="heading settled" data-level="7.1" id="section-integrity-definition"><span class="secno">7.1. </span><span class="content">Definition</span><a class="self-link" href="#section-integrity-definition"></a></h3>
    <p>The <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="recordhash">recordHash</dfn> is a Record-level <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="integrity">Integrity</dfn> value that covers the entire <a data-link-type="dfn" href="#record" id="ref-for-record④⑨">Record</a> (its <code>did</code>, <code>metadata</code>, and <code>payload</code>) at the time the hash was calculated. It provides evidence that a <a data-link-type="dfn" href="#record" id="ref-for-record⑤⓪">Record</a> has not been altered since that point, independent of whether the alteration occurred in <code>metadata</code> or in <code>payload</code>.</p>
    <p>The <a data-link-type="dfn" href="#recordhash" id="ref-for-recordhash">recordHash</a> is distinct from the <a data-link-type="dfn" href="#proof" id="ref-for-proof">Proof</a> carried by an individual Version (see <a href="#section-integrity-proof">Proof Procedure</a>). A <a data-link-type="dfn" href="#proof" id="ref-for-proof①">Proof</a> is an owner’s cryptographic authorisation of one specific versions’s content at finalisation. The <a data-link-type="dfn" href="#recordhash" id="ref-for-recordhash①">recordHash</a> is an unsigned, purely computational value; it does not require, and MUST NOT be interpreted as, an authorisation or attestation. It exists solely to make unauthorised or accidental modification of any part of the <a data-link-type="dfn" href="#record" id="ref-for-record⑤①">Record</a> detectable.</p>
+   <p>When a hash is calculated, the object that is canonicalised MUST contain only those members that are present in the object being hashed. A member that is absent MUST be omitted from the hash input. It MUST NOT be replaced by null, an empty string, an empty array or a default value. A member that is present with the value null is a different input and yields a different hash.</p>
+   <p>A verifier MUST recalculate a hash from the member set as stored or received. It MUST NOT add, remove or normalise members before canonicalisation.</p>
    <h3 class="heading settled" data-level="7.2" id="section-integrity-recordHash"><span class="secno">7.2. </span><span class="content">Record Hash Calculation</span><a class="self-link" href="#section-integrity-recordHash"></a></h3>
    <p>The <a data-link-type="dfn" href="#recordhash" id="ref-for-recordhash②">recordHash</a> MUST be calculated as follows:</p>
    <ol>
@@ -2018,6 +2054,7 @@ rejected (terminal state, not linkable)
    </ol>
 <pre>contentHash = SHA-256( canonicalize({format, content, primary, role}) )
 </pre>
+   <p>The contentHash is calculated over the canonical JSON of the object {format, content, primary, role}, in which content is the value as it appears in the Representation (including the encoded string for binary content). It is not calculated over the decoded bytes.</p>
    <h3 class="heading settled" data-level="7.5" id="section-integrity-validation"><span class="secno">7.5. </span><span class="content">Validation</span><a class="self-link" href="#section-integrity-validation"></a></h3>
    <p>RWP <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="validation">Validation</dfn> provides data structures and calculation rules that enable a <a data-link-type="dfn" href="#consumer" id="ref-for-consumer">Consumer</a> to validate a RecordWeb object whenever the required information is available.</p>
    <p>A <a data-link-type="dfn" href="#consumer" id="ref-for-consumer①">Consumer</a> MAY perform a Validation at any time and MAY repeat a Validation.</p>
@@ -2225,7 +2262,7 @@ A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="relationrecord"
      <p><code>AssertionRecord</code> (see <a href="#chapter-assertionrecord">AssertionRecord  Specification</a>)</p>
    </ul>
    <p><strong>Agent Records:</strong>
-An <a data-link-type="dfn" href="#agentrecord" id="ref-for-agentrecord②">AgentRecord</a> is a Record whose primary purpose is to identify an entity that bears responsibility for a <a data-link-type="dfn" href="#record" id="ref-for-record⑥⓪">Record</a>, (see <a href="#chapter-agentrecord">AgendRecord Specification</a>)</p>
+An <a data-link-type="dfn" href="#agentrecord" id="ref-for-agentrecord②">AgentRecord</a> is a Record whose primary purpose is to identify an entity that bears responsibility for a <a data-link-type="dfn" href="#record" id="ref-for-record⑥⓪">Record</a>, (see <a href="#chapter-agentrecord">AgentRecord Specification</a>)</p>
    <ul>
     <li data-md>
      <p>Various (see <a href="#chapter-agentrecord">AgentRecord Specification</a>)</p>
@@ -2606,6 +2643,12 @@ rw:StatusAssertion
      <td>MAY
      <td>Array&lt;String>
      <td>Further identifiers of the Agent
+
+    <tr>
+     <td><code>actedOnBehalfOf</code>
+     <td>MAY
+     <td>DID
+     <td>DID of an organisation the agents acted on
 
    </table>
 <pre class="example json" id="example-7dbf2c76" title="AgentRecord content"><a class="self-link" href="#example-7dbf2c76"></a>{
@@ -3585,6 +3628,178 @@ The Root Schemas and the Record Schema published in this Annex are labelled vers
 
    </table>
    <p>Where the text of this specification and a Root Schema identified in this annex differ, the Root Schema prevails.</p>
+   <h2 class="heading settled" data-level="21" id="annex-b"><span class="secno">21. </span><span class="content">Annex B: Implementation Guide and Test Vectors (informative) #</span><a class="self-link" href="#annex-b"></a></h2>
+   <h3 class="heading settled" data-level="21.1" id="annex-b-purpose"><span class="secno">21.1. </span><span class="content">Purpose</span><a class="self-link" href="#annex-b-purpose"></a></h3>
+   <p>An existing application does not have to change its data model to take part in RecordWeb. In the typical case it exposes a thin adapter that generates a Record from its own data at request time and serves it through a resolver. The adapter needs to do four things:</p>
+   <ol>
+    <li data-md>
+     <p>Assign a stable DID to each object that is to be exposed.</p>
+    <li data-md>
+     <p>Build a Version with at least one Representation from the current data.</p>
+    <li data-md>
+     <p>Calculate <code>contentHash</code>, <code>versionHash</code> and <code>recordHash</code> as defined in <a href="#chapter-integrity">§ 7 Record Integrity</a>.</p>
+    <li data-md>
+     <p>Serve the DID document and the Record over HTTP as defined in <a href="#chapter-didoc">§ 3 The DID Document</a>.</p>
+   </ol>
+   <p>The following sections show the calculation steps. The code is illustrative, not normative and not production ready. For a usable example, see: <a href="https://github.com/recordweb/recordweb-org/tree/main/tools">https://github.com/recordweb/recordweb-org/tree/main/tools</a></p>
+   <h3 class="heading settled" data-level="21.2" id="annex-b-hashes"><span class="secno">21.2. </span><span class="content">Calculating hashes</span><a class="self-link" href="#annex-b-hashes"></a></h3>
+   <p>All three hashes use the same pattern: select the fields defined for the hash, serialise them as canonical JSON (<a data-link-type="biblio" href="#biblio-rfc8785" title="JSON Canonicalization Scheme (JCS)">[RFC8785]</a>), and calculate SHA-256 over the UTF-8 bytes.</p>
+   <p>Rules that implementations commonly get wrong:</p>
+   <ul>
+    <li data-md>
+     <p>The hash input of a higher level contains the hash of the lower level <strong>with</strong> the prefix <code>sha256:</code> (for example <code>contentHash</code> inside <code>representations</code>). The DID segments carry the bare lowercase hex value without prefix.</p>
+    <li data-md>
+     <p>An optional field that is absent MUST NOT appear in the hash input (neither as <code>null</code> nor as an empty string). <em>(Pending resolution of the open issue on optional fields.)</em></p>
+    <li data-md>
+     <p><code>proof</code> is not part of the <code>versionHash</code>. It is part of the <code>recordHash</code>, because it is part of <code>payload</code>. The <code>recordHash</code> therefore has to be recalculated after signing.</p>
+    <li data-md>
+     <p>The order is fixed: <code>contentHash</code>, then <code>versionHash</code>, then (after signing) <code>recordHash</code>.</p>
+    <li data-md>
+     <p>Timestamps are used exactly as stored. Do not reformat them.</p>
+   </ul>
+<pre class="highlight language-js"><c- k>import</c-> <c- p>{</c-> createHash <c- p>}</c-> <c- kr>from</c-> <c- t>'node:crypto'</c-><c- p>;</c->
+<c- k>import</c-> canonicalize <c- kr>from</c-> <c- t>'canonicalize'</c-><c- p>;</c-> <c- c1>// RFC 8785</c->
+
+<c- a>const</c-> sha <c- o>=</c-> <c- p>(</c->obj<c- p>)</c-> <c- p>=></c-> <c- t>'sha256:'</c-> <c- o>+</c->
+  createHash<c- p>(</c-><c- t>'sha256'</c-><c- p>).</c->update<c- p>(</c->canonicalize<c- p>(</c->obj<c- p>),</c-> <c- t>'utf8'</c-><c- p>).</c->digest<c- p>(</c-><c- t>'hex'</c-><c- p>);</c->
+
+<c- a>const</c-> pick <c- o>=</c-> <c- p>(</c->o<c- p>,</c-> keys<c- p>)</c-> <c- p>=></c->
+  Object<c- p>.</c->fromEntries<c- p>(</c->keys<c- p>.</c->filter<c- p>((</c->k<c- p>)</c-> <c- p>=></c-> k <c- ow>in</c-> o<c- p>).</c->map<c- p>((</c->k<c- p>)</c-> <c- p>=></c-> <c- p>[</c->k<c- p>,</c-> o<c- p>[</c->k<c- p>]]));</c->
+
+<c- c1>// 1. Representation with inline content</c->
+<c- a>const</c-> rep <c- o>=</c-> <c- p>{</c->
+  format<c- o>:</c-> <c- t>'text/markdown'</c-><c- p>,</c->
+  content<c- o>:</c-> <c- t>'# Hello RecordWeb\n'</c-><c- p>,</c->
+  primary<c- o>:</c-> <c- kc>true</c-><c- p>,</c->
+  role<c- o>:</c-> <c- t>'source'</c-><c- p>,</c->
+<c- p>};</c->
+rep<c- p>.</c->contentHash <c- o>=</c-> sha<c- p>(</c->pick<c- p>(</c->rep<c- p>,</c-> <c- p>[</c-><c- t>'format'</c-><c- p>,</c-> <c- t>'content'</c-><c- p>,</c-> <c- t>'primary'</c-><c- p>,</c-> <c- t>'role'</c-><c- p>]));</c->
+
+<c- c1>// 2. Version</c->
+<c- a>const</c-> t <c- o>=</c-> <c- t>'2026-10-28T08:00:00Z'</c-><c- p>;</c->
+<c- a>const</c-> version <c- o>=</c-> <c- p>{</c->
+  state<c- o>:</c-> <c- t>'draft'</c-><c- p>,</c-> parents<c- o>:</c-> <c- p>[],</c-> createdAt<c- o>:</c-> t<c- p>,</c-> modifiedAt<c- o>:</c-> t<c- p>,</c->
+  representations<c- o>:</c-> <c- p>[</c->rep<c- p>],</c->
+<c- p>};</c->
+version<c- p>.</c->versionHash <c- o>=</c-> sha<c- p>(</c->pick<c- p>(</c->version<c- p>,</c->
+  <c- p>[</c-><c- t>'state'</c-><c- p>,</c-> <c- t>'parents'</c-><c- p>,</c-> <c- t>'createdAt'</c-><c- p>,</c-> <c- t>'modifiedAt'</c-><c- p>,</c-> <c- t>'representations'</c-><c- p>]));</c->
+
+<c- c1>// 3. After signing: recordHash = sha(pick(record, ['did', 'payload', 'metadata']))</c->
+</pre>
+   <h3 class="heading settled" data-level="21.3" id="annex-b-vectors-hash"><span class="secno">21.3. </span><span class="content">Test vectors for hashes</span><a class="self-link" href="#annex-b-vectors-hash"></a></h3>
+   <p>The following values allow an implementer to check the calculation.</p>
+   <p>Input: <code>content</code> is the string <code># Hello RecordWeb</code> followed by a line feed, <code>format</code> is <code>text/markdown</code>, <code>primary</code> is <code>true</code>, <code>role</code> is <code>source</code>, <code>createdAt</code> and <code>modifiedAt</code> are <code>2026-10-28T08:00:00Z</code>, <code>state</code> is <code>draft</code>, <code>parents</code> is empty.</p>
+   <table>
+    <tr>
+     <th>Step
+     <th>Canonical input
+     <th>Result
+
+    <tr>
+     <td>contentHash
+     <td><code>{"content":"# Hello RecordWeb\n","format":"text/markdown","primary":true,"role":"source"}</code>
+     <td><code>sha256:a51af70aabc8b3d0ffc85c780b559726112228b81f0d338bec40805a6aca58d8</code>
+
+    <tr>
+     <td>versionHash
+     <td><code>{"createdAt":"2026-10-28T08:00:00Z","modifiedAt":"2026-10-28T08:00:00Z","parents":[],"representations":[{"content":"# Hello RecordWeb\n","contentHash":"sha256:a51af70aabc8b3d0ffc85c780b559726112228b81f0d338bec40805a6aca58d8","format":"text/markdown","primary":true,"role":"source"}],"state":"draft"}</code> (full hash value in the actual input)
+     <td><code>sha256:14388cb87702b98a2aafe86ad706beb1db7f1459e13e9118f682c6b0806371b3</code>
+
+   </table>
+   <p class="note" role="note"><span class="marker">Note:</span> The versionHash input uses the prefixed form <code>sha256:</code> plus the full 64-character <code>contentHash</code>. The shortened form above is for display only.</p>
+   <p>Same input without <code>role</code>: canonical input <code>{"content":"# Hello RecordWeb\n","format":"text/markdown","primary":true}</code>, contentHash <code>b6c2109c5f51404a685f7fd3d60b2e66ae217f3e9cb2945f19ad16758f28ef22</code>.</p>
+   <h3 class="heading settled" data-level="21.4" id="annex-b-example"><span class="secno">21.4. </span><span class="content">Complete example: SchemaRecord and instance</span><a class="self-link" href="#annex-b-example"></a></h3>
+   <p>This example consists of two finalized Records in the namespace <code>d2d14675-50c9-463d-b564-1ea50644c836</code>. Both are signed with <code>eddsa-jcs-2022</code> by the owner Agent <code>…:efd09e7b-5f65-4637-b06c-404a9da97f0b</code> (key <code>#key-1</code>). The public key is <code>z6MkpgYzzH9AJJTnsYYMEaaVPZN2t2iCsz76ShftvkBt5jpP</code>.</p>
+   <table>
+    <tr>
+     <th>
+     <th>SampleRecord SchemaRecord
+     <th>SampleRecord instance
+
+    <tr>
+     <td>DID
+     <td><code>…:bf9087ea-10c4-4ea3-94b7-1828f37007f8</code>
+     <td><code>…:a95437ee-25e4-469a-a2e1-c2b250b21e15</code>
+
+    <tr>
+     <td>Type (<code>recordType</code>)
+     <td><code>…:1710c421-bb2b-462e-ad6b-fc47c934c276</code> (Root SchemaRecord)
+     <td><code>…:bf9087ea-10c4-4ea3-94b7-1828f37007f8</code> (the SchemaRecord on the left)
+
+    <tr>
+     <td><code>schemaVersion</code>
+     <td><code>sha256:415f04c714d58c915ff0646c842f79b501d654fe6b586243977bc5550e8d7a77</code>
+     <td><code>sha256:b9b5c6ca89de15838077dc5021775938f924fa88f04626bc7496a91d0eaf35fa</code>
+
+    <tr>
+     <td>Timestamp
+     <td><code>2026-10-28T09:00:00Z</code>
+     <td><code>2026-10-28T10:29:00Z</code>
+
+    <tr>
+     <td>contentHash
+     <td><code>sha256:ce7fe35585911185edb268a09968157d5ae562b5afb7ac94576653bd4cb78fc3</code>
+     <td><code>sha256:30b186a5c492b14e2432419905b5343882eb9fc94940fd9e04cfcf7fd4fd058c</code>
+
+    <tr>
+     <td>versionHash
+     <td><code>sha256:b9b5c6ca89de15838077dc5021775938f924fa88f04626bc7496a91d0eaf35fa</code>
+     <td><code>sha256:a86a4b1e25a3b436522a5047e8bf6c485ca502dfeff65fe7a5783228d16fb3e2</code>
+
+    <tr>
+     <td>recordHash
+     <td><code>sha256:01ff63a9de0efc096c7884c12fcfae7bc1817565f82247126a8e30e20574d662</code>
+     <td><code>sha256:57715def0857e907168e5c74240e6e6d2e8679a66f8da7f1d2e7f09e1cf93b06</code>
+
+    <tr>
+     <td>proofValue
+     <td><code>z49pizqFAyb3fWep2FRLWgoXdrdfh1kTPsQXxZNR61wAhZbEnTYBkvCS9KBZtEgpmkwM8FMkCtzmyBjYR3GTmfSyY</code>
+     <td><code>zfLVYZBoebLUnYAHvno1KNdAQztgotFQV9AW1CKNEb2ueqH8xor3PXt971utE9WQyyXcZsEEA3q3VmL5sUi3MSNU</code>
+
+   </table>
+   <p>The instance carries this content: <code>{"title": "Hello RecordWeb", "description": "First instance of the SampleRecord type."}</code>. It conforms to the <code>jsonSchema</code> of the SchemaRecord (<code>title</code> required, <code>description</code> optional, no other properties).</p>
+   <h3 class="heading settled" data-level="21.5" id="annex-b-retrieval"><span class="secno">21.5. </span><span class="content">Retrieving the example Records #</span><a class="self-link" href="#annex-b-retrieval"></a></h3>
+   <p>Both Records and their DID documents are published by a productive resolver. The namespace <code>d2d14675-50c9-463d-b564-1ea50644c836</code> is registered with the resolver endpoint <code>https://recordweb.org/resolver/did</code>. The complete documents, including all fields not shown in the table above, can therefore be retrieved at any time. An implementer can use them as reference data and recalculate every hash and the signature.</p>
+   <table>
+    <tr>
+     <th>Record
+     <th>DID
+     <th>DID document
+     <th>Record
+
+    <tr>
+     <td>SampleRecord SchemaRecord
+     <td><code>did:rwp:d2d14675-50c9-463d-b564-1ea50644c836:bf9087ea-10c4-4ea3-94b7-1828f37007f8</code>
+     <td><a href="https://recordweb.org/resolver/did/did:rwp:d2d14675-50c9-463d-b564-1ea50644c836:bf9087ea-10c4-4ea3-94b7-1828f37007f8">resolver/did/…</a>
+     <td><a href="https://recordweb.org/resolver/records/d2d14675-50c9-463d-b564-1ea50644c836/bf9087ea-10c4-4ea3-94b7-1828f37007f8">resolver/records/…</a>
+
+    <tr>
+     <td>SampleRecord instance
+     <td><code>did:rwp:d2d14675-50c9-463d-b564-1ea50644c836:a95437ee-25e4-469a-a2e1-c2b250b21e15</code>
+     <td><a href="https://recordweb.org/resolver/did/did:rwp:d2d14675-50c9-463d-b564-1ea50644c836:a95437ee-25e4-469a-a2e1-c2b250b21e15">resolver/did/…</a>
+     <td><a href="https://recordweb.org/resolver/records/d2d14675-50c9-463d-b564-1ea50644c836/a95437ee-25e4-469a-a2e1-c2b250b21e15">resolver/records/…</a>
+
+   </table>
+   <p>A DID document is resolved by appending the DID to <code>https://recordweb.org/resolver/did/</code>. Its <code>recordEndpoint</code> member points to the Record, which is retrieved from <code>https://recordweb.org/resolver/records/&lt;namespace>/&lt;record-id></code>. For example:</p>
+<pre class="highlight language-bash">curl -s https://recordweb.org/resolver/did/did:rwp:d2d14675-50c9-463d-b564-1ea50644c836:a95437ee-25e4-469a-a2e1-c2b250b21e15
+curl -s https://recordweb.org/resolver/records/d2d14675-50c9-463d-b564-1ea50644c836/a95437ee-25e4-469a-a2e1-c2b250b21e15
+</pre>
+   <p>The <code>currentVersion</code> member of the DID document equals the <code>versionHash</code> of the last Version in the Record. The <code>recordHash</code> in the Record is the value given in the table. These resolver URLs are stable for the lifetime of the example; the Records are finalized and are not modified.</p>
+   <h3 class="heading settled" data-level="21.6" id="annex-b-signing"><span class="secno">21.6. </span><span class="content">Signing</span><a class="self-link" href="#annex-b-signing"></a></h3>
+   <p>The <code>proof</code> follows <code>eddsa-jcs-2022</code>:</p>
+   <ol>
+    <li data-md>
+     <p>Build the proof configuration: <code>type</code>, <code>cryptosuite</code>, <code>created</code> (= <code>modifiedAt</code> of the Version), <code>verificationMethod</code>, <code>proofPurpose</code> (= <code>assertionMethod</code>).</p>
+    <li data-md>
+     <p>Take the Version without <code>proof</code>.</p>
+    <li data-md>
+     <p>Calculate SHA-256 over the canonical JSON of each, and concatenate: configuration hash first, then Version hash (64 bytes).</p>
+    <li data-md>
+     <p>Sign these bytes with Ed25519 and encode the signature as multibase base58btc (prefix <code>z</code>) in <code>proofValue</code>.</p>
+    <li data-md>
+     <p>Recalculate <code>recordHash</code>.</p>
+   </ol>
+   <p>The signature is deterministic: signing the same input again yields the same <code>proofValue</code>.</p>
   </main>
   <div data-fill-with="conformance">
    <h2 class="heading no-num no-ref settled" id="w3c-conformance"><span class="content">Conformance</span><a class="self-link" href="#w3c-conformance"></a></h2>
