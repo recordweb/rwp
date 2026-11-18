@@ -1,0 +1,127 @@
+Annex B: Implementation Guide and Test Vectors (informative) # {#annex-b}
+==========================================
+
+
+## Purpose ## {#annex-b-purpose}
+
+An existing application does not have to change its data model to take part in RecordWeb. In the typical case it exposes a thin adapter that generates a Record from its own data at request time and serves it through a resolver. The adapter needs to do four things:
+
+1. Assign a stable DID to each object that is to be exposed.
+2. Build a Version with at least one Representation from the current data.
+3. Calculate `contentHash`, `versionHash` and `recordHash` as defined in [[#chapter-integrity]].
+4. Serve the DID document and the Record over HTTP as defined in [[#chapter-didoc]].
+
+The following sections show the calculation steps. The code is illustrative, not normative and not production ready. For a usable example, see: [https://github.com/recordweb/recordweb-org/tree/main/tools](https://github.com/recordweb/recordweb-org/tree/main/tools)
+
+
+## Calculating hashes ## {#annex-b-hashes}
+
+All three hashes use the same pattern: select the fields defined for the hash, serialise them as canonical JSON ([[RFC8785]]), and calculate SHA-256 over the UTF-8 bytes.
+
+Rules that implementations commonly get wrong:
+
+* The hash input of a higher level contains the hash of the lower level **with** the prefix `sha256:` (for example `contentHash` inside `representations`). The DID segments carry the bare lowercase hex value without prefix.
+* An optional field that is absent MUST NOT appear in the hash input (neither as `null` nor as an empty string). *(Pending resolution of the open issue on optional fields.)*
+* `proof` is not part of the `versionHash`. It is part of the `recordHash`, because it is part of `payload`. The `recordHash` therefore has to be recalculated after signing.
+* The order is fixed: `contentHash`, then `versionHash`, then (after signing) `recordHash`.
+* Timestamps are used exactly as stored. Do not reformat them.
+
+```js
+import { createHash } from 'node:crypto';
+import canonicalize from 'canonicalize'; // RFC 8785
+
+const sha = (obj) => 'sha256:' +
+  createHash('sha256').update(canonicalize(obj), 'utf8').digest('hex');
+
+const pick = (o, keys) =>
+  Object.fromEntries(keys.filter((k) => k in o).map((k) => [k, o[k]]));
+
+// 1. Representation with inline content
+const rep = {
+  format: 'text/markdown',
+  content: '# Hello RecordWeb\n',
+  primary: true,
+  role: 'source',
+};
+rep.contentHash = sha(pick(rep, ['format', 'content', 'primary', 'role']));
+
+// 2. Version
+const t = '2026-10-28T08:00:00Z';
+const version = {
+  state: 'draft', parents: [], createdAt: t, modifiedAt: t,
+  representations: [rep],
+};
+version.versionHash = sha(pick(version,
+  ['state', 'parents', 'createdAt', 'modifiedAt', 'representations']));
+
+// 3. After signing: recordHash = sha(pick(record, ['did', 'payload', 'metadata']))
+```
+
+
+## Test vectors for hashes ## {#annex-b-vectors-hash}
+
+The following values allow an implementer to check the calculation.
+
+Input: `content` is the string `# Hello RecordWeb` followed by a line feed, `format` is `text/markdown`, `primary` is `true`, `role` is `source`, `createdAt` and `modifiedAt` are `2026-10-28T08:00:00Z`, `state` is `draft`, `parents` is empty.
+
+<table>
+<tr><th>Step<th>Canonical input<th>Result
+<tr><td>contentHash<td><code>{"content":"# Hello RecordWeb\n","format":"text/markdown","primary":true,"role":"source"}</code><td><code>sha256:a51af70aabc8b3d0ffc85c780b559726112228b81f0d338bec40805a6aca58d8</code>
+<tr><td>versionHash<td><code>{"createdAt":"2026-10-28T08:00:00Z","modifiedAt":"2026-10-28T08:00:00Z","parents":[],"representations":[{"content":"# Hello RecordWeb\n","contentHash":"sha256:a51af70aabc8b3d0ffc85c780b559726112228b81f0d338bec40805a6aca58d8","format":"text/markdown","primary":true,"role":"source"}],"state":"draft"}</code> (full hash value in the actual input)<td><code>sha256:14388cb87702b98a2aafe86ad706beb1db7f1459e13e9118f682c6b0806371b3</code>
+</table>
+
+Note: The versionHash input uses the prefixed form `sha256:` plus the full 64-character `contentHash`. The shortened form above is for display only.
+
+Same input without `role`: canonical input `{"content":"# Hello RecordWeb\n","format":"text/markdown","primary":true}`, contentHash `b6c2109c5f51404a685f7fd3d60b2e66ae217f3e9cb2945f19ad16758f28ef22`.
+
+
+## Complete example: SchemaRecord and instance ## {#annex-b-example}
+
+This example consists of two finalized Records in the namespace `d2d14675-50c9-463d-b564-1ea50644c836`. Both are signed with `eddsa-jcs-2022` by the owner Agent `…:efd09e7b-5f65-4637-b06c-404a9da97f0b` (key `#key-1`). The public key is `z6MkpgYzzH9AJJTnsYYMEaaVPZN2t2iCsz76ShftvkBt5jpP`.
+
+<table>
+<tr><th><th>SampleRecord SchemaRecord<th>SampleRecord instance
+<tr><td>DID<td><code>…:bf9087ea-10c4-4ea3-94b7-1828f37007f8</code><td><code>…:a95437ee-25e4-469a-a2e1-c2b250b21e15</code>
+<tr><td>Type (<code>recordType</code>)<td><code>…:1710c421-bb2b-462e-ad6b-fc47c934c276</code> (Root SchemaRecord)<td><code>…:bf9087ea-10c4-4ea3-94b7-1828f37007f8</code> (the SchemaRecord on the left)
+<tr><td><code>schemaVersion</code><td><code>sha256:415f04c714d58c915ff0646c842f79b501d654fe6b586243977bc5550e8d7a77</code><td><code>sha256:b9b5c6ca89de15838077dc5021775938f924fa88f04626bc7496a91d0eaf35fa</code>
+<tr><td>Timestamp<td><code>2026-10-28T09:00:00Z</code><td><code>2026-10-28T10:29:00Z</code>
+<tr><td>contentHash<td><code>sha256:ce7fe35585911185edb268a09968157d5ae562b5afb7ac94576653bd4cb78fc3</code><td><code>sha256:30b186a5c492b14e2432419905b5343882eb9fc94940fd9e04cfcf7fd4fd058c</code>
+<tr><td>versionHash<td><code>sha256:b9b5c6ca89de15838077dc5021775938f924fa88f04626bc7496a91d0eaf35fa</code><td><code>sha256:a86a4b1e25a3b436522a5047e8bf6c485ca502dfeff65fe7a5783228d16fb3e2</code>
+<tr><td>recordHash<td><code>sha256:01ff63a9de0efc096c7884c12fcfae7bc1817565f82247126a8e30e20574d662</code><td><code>sha256:57715def0857e907168e5c74240e6e6d2e8679a66f8da7f1d2e7f09e1cf93b06</code>
+<tr><td>proofValue<td><code>z49pizqFAyb3fWep2FRLWgoXdrdfh1kTPsQXxZNR61wAhZbEnTYBkvCS9KBZtEgpmkwM8FMkCtzmyBjYR3GTmfSyY</code><td><code>zfLVYZBoebLUnYAHvno1KNdAQztgotFQV9AW1CKNEb2ueqH8xor3PXt971utE9WQyyXcZsEEA3q3VmL5sUi3MSNU</code>
+</table>
+
+The instance carries this content: `{"title": "Hello RecordWeb", "description": "First instance of the SampleRecord type."}`. It conforms to the `jsonSchema` of the SchemaRecord (`title` required, `description` optional, no other properties).
+
+
+## Retrieving the example Records ### {#annex-b-retrieval}
+
+Both Records and their DID documents are published by a productive resolver. The namespace `d2d14675-50c9-463d-b564-1ea50644c836` is registered with the resolver endpoint `https://recordweb.org/resolver/did`. The complete documents, including all fields not shown in the table above, can therefore be retrieved at any time. An implementer can use them as reference data and recalculate every hash and the signature.
+
+<table>
+<tr><th>Record<th>DID<th>DID document<th>Record
+<tr><td>SampleRecord SchemaRecord<td><code>did:rwp:d2d14675-50c9-463d-b564-1ea50644c836:bf9087ea-10c4-4ea3-94b7-1828f37007f8</code><td><a href="https://recordweb.org/resolver/did/did:rwp:d2d14675-50c9-463d-b564-1ea50644c836:bf9087ea-10c4-4ea3-94b7-1828f37007f8">resolver/did/…</a><td><a href="https://recordweb.org/resolver/records/d2d14675-50c9-463d-b564-1ea50644c836/bf9087ea-10c4-4ea3-94b7-1828f37007f8">resolver/records/…</a>
+<tr><td>SampleRecord instance<td><code>did:rwp:d2d14675-50c9-463d-b564-1ea50644c836:a95437ee-25e4-469a-a2e1-c2b250b21e15</code><td><a href="https://recordweb.org/resolver/did/did:rwp:d2d14675-50c9-463d-b564-1ea50644c836:a95437ee-25e4-469a-a2e1-c2b250b21e15">resolver/did/…</a><td><a href="https://recordweb.org/resolver/records/d2d14675-50c9-463d-b564-1ea50644c836/a95437ee-25e4-469a-a2e1-c2b250b21e15">resolver/records/…</a>
+</table>
+
+A DID document is resolved by appending the DID to `https://recordweb.org/resolver/did/`. Its `recordEndpoint` member points to the Record, which is retrieved from `https://recordweb.org/resolver/records/<namespace>/<record-id>`. For example:
+``` bash
+curl -s https://recordweb.org/resolver/did/did:rwp:d2d14675-50c9-463d-b564-1ea50644c836:a95437ee-25e4-469a-a2e1-c2b250b21e15
+curl -s https://recordweb.org/resolver/records/d2d14675-50c9-463d-b564-1ea50644c836/a95437ee-25e4-469a-a2e1-c2b250b21e15
+```
+
+The `currentVersion` member of the DID document equals the `versionHash` of the last Version in the Record. The `recordHash` in the Record is the value given in the table. These resolver URLs are stable for the lifetime of the example; the Records are finalized and are not modified.
+
+
+## Signing ## {#annex-b-signing}
+
+The `proof` follows `eddsa-jcs-2022`:
+
+1. Build the proof configuration: `type`, `cryptosuite`, `created` (= `modifiedAt` of the Version), `verificationMethod`, `proofPurpose` (= `assertionMethod`).
+2. Take the Version without `proof`.
+3. Calculate SHA-256 over the canonical JSON of each, and concatenate: configuration hash first, then Version hash (64 bytes).
+4. Sign these bytes with Ed25519 and encode the signature as multibase base58btc (prefix `z`) in `proofValue`.
+5. Recalculate `recordHash`.
+
+The signature is deterministic: signing the same input again yields the same `proofValue`.
+

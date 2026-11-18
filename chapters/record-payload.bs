@@ -21,6 +21,7 @@ The [=Payload=] of a [=Record=] is an ordered array of [=Versions=]. Each [=Vers
   </thead>
   <tbody>
     <tr><td><code>versionHash</code></td><td>SHA-256</td><td>MUST</td><td>Contains the hash calculated in accordance with [[#section-integrity-versionHash]].</td></tr>
+    <tr><td><code>versionReason</code></td><td>String</td><td>MAY</td><td>A Version should contain a description of action and events involving the record (According [[ISO15489]] 5.2.3)</td></tr>
     <tr><td><code>state</code></td><td>Enum</td><td>MUST</td><td><code>draft</code> or <code>finalized</code>; additional values permitted per type schema</td></tr>
     <tr><td><code>parents</code></td><td>Array&lt;SHA-256&gt;</td><td>MUST</td><td>Hashes of predecessor Versions; empty for the root Version</td></tr>
     <tr><td><code>createdAt</code></td><td>ISO 8601</td><td>MUST</td><td>Timestamp of Version creation</td></tr>
@@ -97,7 +98,7 @@ If a Version contains multiple [=Representations=], ALL of the following MUST ap
   </thead>
   <tbody>
     <tr><td><code>format</code></td><td>string</td><td>MUST</td><td>MIME type incl. profiles</td></tr>
-    <tr><td><code>content</code></td><td>blob</td><td>MUST WHEN no ref exists</td><td> Contains the inline content of the Representation</td></tr>
+    <tr><td><code>content</code></td><td>see below</td><td>MUST WHEN no ref exists</td><td> Contains the inline content of the Representation</td></tr>
     <tr><td><code>contentHash</code></td><td>SHA-256</td><td>MUST WHEN content exists</td><td>Contains the hash calculated in accordance with [[#section-integrity-contentHash]]</td></tr>
     <tr><td><code>ref</code></td><td>string</td><td>MUST WHEN no content exists</td><td>Contains a reference to externally held, locally held, or physical content</td></tr>
     <tr><td><code>deleted</code></td><td>DID</td><td>MUST WHEN no content and no ref exists</td><td>DID of the DeletionRecord that deleted the Representation. A Representation containing deleted MUST NOT contain content, ref or contentHash.</td></tr>
@@ -105,6 +106,11 @@ If a Version contains multiple [=Representations=], ALL of the following MUST ap
     <tr><td><code>role</code></td><td>string</td><td>SHOULD</td><td>Semantic role: <code>source</code>, <code>publication</code>, <code>preview</code>, <code>archive</code></td></tr>
   </tbody>
 </table>
+
+**Content:**
+- For JSON media types (application/json and +json), content is the JSON value itself (object, array, string, and so on). It is placed unchanged in the hash input.
+- For other textual media types (for example text/markdown), content is a JSON string containing the text (UTF-8).
+- For binary media types (for example application/pdf), content is a JSON string containing the bytes encoded as Base64 per [RFC 4648] §4, with padding and without line breaks. (Alternative: Base64url, if preferred.)
 
 
 ## Permitted Payload Content Types ## {#section-payload-types}
