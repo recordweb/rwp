@@ -8,7 +8,7 @@
   <meta content="Bikeshed version e0b165ae4, updated Mon Nov 2 15:16:49 2026 -0800" name="generator">
   <link href="https://recordweb.github.io/rwp/" rel="canonical">
   <link href="https://www.w3.org/2008/site/images/favicon.ico" rel="icon">
-  <meta content="f268b12b4e4704aadc9b26847cc7b589a5ac4d16" name="revision">
+  <meta content="c3e5d6d67fffa192ce417493b708ae848cc2fe40" name="revision">
   <meta content="dark light" name="color-scheme">
   <link href="https://www.w3.org/StyleSheets/TR/2021/dark.css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css">
 <style>/* Boilerplate: style-autolinks */
@@ -746,7 +746,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
       <dd><a href="https://github.com/recordweb/rwp/issues/">GitHub</a>
       <dt class="editor">Editor:
       <dd class="editor h-card p-author vcard"><a class="email fn p-name u-email" href="mailto:nik@triebwerkstatt.ch">Nik Jenzer</a>
-      <dt>Specification Version:
+      <dt>Version:
       <dd>0.0.17
      </dl>
     </div>
@@ -2495,7 +2495,7 @@ rw:AssertionRecord
    </ul>
    <p>The declaration SHOULD provide machine-readable representations where available, for example RDF, JSON-LD, SHACL or JSON Schema. A localised display label MAY accompany the declaration. It MUST NOT replace the predicate IRI as the semantic identifier.</p>
    <p>A SchemaRecord MAY constrain a predicate more narrowly than its declaration. It MUST NOT broaden, reverse or contradict the semantics or direction defined by the declaration. A conformance profile MAY require support for specified predicates. It MUST NOT define a predicate or alter the semantics of one.</p>
-   <p>INFO: RiC-O predicates are an example of contextual predicates. A SchemaRecord MAY permit them. Their use does not require an implementation to store, exchange or process Records as RDF or JSON-LD: the RiC-O IRI identifies the semantics of the asserted relationship. The declaration identifies the exact RiC-O predicate IRI and the RiC-O version to which it applies, and a SchemaRecord does not permit a RiC-O predicate where an applicable PROV-O predicate expresses the intended semantics.</p>
+   <p class="note" role="note"><span class="marker">Note:</span> RiC-O predicates are an example of contextual predicates. A SchemaRecord MAY permit them. Their use does not require an implementation to store, exchange or process Records as RDF or JSON-LD: the RiC-O IRI identifies the semantics of the asserted relationship. The declaration identifies the exact RiC-O predicate IRI and the RiC-O version to which it applies, and a SchemaRecord does not permit a RiC-O predicate where an applicable PROV-O predicate expresses the intended semantics.</p>
    <h3 class="heading settled" data-level="10.5" id="section-assertionrecord-version-graph"><span class="secno">10.5. </span><span class="content">Relationship to the Version Graph</span><a class="self-link" href="#section-assertionrecord-version-graph"></a></h3>
    <p>The version graph is the authoritative representation of version succession between Versions of the same Record. A conforming implementation MUST determine version ancestry, direct parentage, branches and merges exclusively from the <code>parents</code> field and the rules in <a href="#section-payload-version-graph">§ 6.8 Version Graph (DAG)</a>.</p>
    <p>An AssertionRecord using <code>prov:wasRevisionOf</code>, <code>prov:wasDerivedFrom</code> or another provenance predicate MUST NOT create, alter, replace or repair a version-graph edge. Where it documents a relationship between Versions of the same Record, it MAY provide additional attributable evidence, but MUST NOT be used to infer a parent relationship that the version graph does not contain.</p>
