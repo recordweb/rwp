@@ -7,6 +7,10 @@ The <dfn>recordHash</dfn> is a Record-level <dfn>Integrity</dfn> value that cove
 
 The [=recordHash=] is distinct from the [=Proof=] carried by an individual Version (see [Proof Procedure](#section-integrity-proof)). A [=Proof=] is an owner's cryptographic authorisation of one specific versions's content at finalisation. The [=recordHash=] is an unsigned, purely computational value; it does not require, and MUST NOT be interpreted as, an authorisation or attestation. It exists solely to make unauthorised or accidental modification of any part of the [=Record=] detectable.
 
+When a hash is calculated, the object that is canonicalised MUST contain only those members that are present in the object being hashed. A member that is absent MUST be omitted from the hash input. It MUST NOT be replaced by null, an empty string, an empty array or a default value. A member that is present with the value null is a different input and yields a different hash.
+
+A verifier MUST recalculate a hash from the member set as stored or received. It MUST NOT add, remove or normalise members before canonicalisation.
+
 
 ## Record Hash Calculation ## {#section-integrity-recordHash}
 
