@@ -47,6 +47,8 @@ The <dfn>Content</dfn> is represented by the <dfn>contentHash</dfn> and MUST be 
 contentHash = SHA-256( canonicalize({format, content, primary, role}) )
 ```
 
+The contentHash is calculated over the canonical JSON of the object {format, content, primary, role}, in which content is the value as it appears in the Representation (including the encoded string for binary content). It is not calculated over the decoded bytes.
+
 
 ## Validation ## {#section-integrity-validation}
 
