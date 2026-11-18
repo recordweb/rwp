@@ -11,7 +11,7 @@ An existing application does not have to change its data model to take part in R
 3. Calculate `contentHash`, `versionHash` and `recordHash` as defined in [[#chapter-record-integrity]].
 4. Serve the DID document and the Record over HTTP as defined in [[#section-did-resolver]].
 
-The following sections show the calculation steps. The code is illustrative, not normative and not production ready. For a usable example, see: [[https://github.com/recordweb/recordweb-org/tree/main/tools]]
+The following sections show the calculation steps. The code is illustrative, not normative and not production ready. For a usable example, see: [https://github.com/recordweb/recordweb-org/tree/main/tools](https://github.com/recordweb/recordweb-org/tree/main/tools)
 
 
 ## Calculating hashes ## {#annex-b-hashes}
